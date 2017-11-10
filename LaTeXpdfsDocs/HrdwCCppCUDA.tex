@@ -1,0 +1,543 @@
+% file: HrdwCCppCUDA.tex
+%
+% github        : ernestyalumni
+% gmail         : ernestyalumni 
+% linkedin      : ernestyalumni 
+% wordpress.com : ernestyalumni
+%
+% This code is open-source, governed by the Creative Common license.  Use of this code is governed by the Caltech Honor Code: ``No member of the Caltech community shall take unfair advantage of any other member of the Caltech community.'' 
+
+\documentclass[10pt]{amsart}
+\pdfoutput=1
+\usepackage{mathtools,amssymb,caption}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[table]{xcolor}
+\usepackage{pdfpages}
+\usepackage{tikz}
+\usetikzlibrary{matrix,arrows,backgrounds}
+
+\usepackage{breqn} % for dmath
+
+
+%\usepackage{cancel} % for Feynman slash notation
+
+\hypersetup{colorlinks=true,citecolor=[rgb]{0,0.4,0}}
+
+
+%\oddsidemargin=15pt
+%\evensidemargin=5pt
+%\hoffset-45pt
+%\voffset-55pt
+%\topmargin=-4pt
+%\headsep=5pt
+%\textwidth=1120pt
+%\textheight=595pt
+%\paperwidth=1200pt
+%\paperheight=700pt
+%\footskip=40pt
+
+
+
+
+
+
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+%\newtheorem*{main}{Main Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newenvironment{claim}[1]{\par\noindent\underline{Claim:}\space#1}{}
+\newenvironment{claimproof}[1]{\par\noindent\underline{Proof:}\space#1}{\hfill $\blacksquare$}
+
+%This defines a new command \questionhead which takes one argument and
+%prints out Question #. with some space.
+\newcommand{\questionhead}[1]
+  {\bigskip\bigskip
+   \noindent{\small\bf Question #1.}
+   \bigskip}
+
+\newcommand{\problemhead}[1]
+  {
+   \noindent{\small\bf Problem #1.}
+   }
+
+\newcommand{\exercisehead}[1]
+  { \smallskip
+   \noindent{\small\bf Exercise #1.}
+  }
+
+\newcommand{\solutionhead}[1]
+  {
+   \noindent{\small\bf Solution #1.}
+   }
+
+
+  \title[Hardware (Compilers, OS, runtime) and C, C++, to CUDA]{Hardware (Compilers, OS, runtime) and C, C++, to CUDA}
+
+\author{Ernest Yeung \href{mailto:ernestyalumni@gmail.com}{ernestyalumni@gmail.com}}
+\date{1 Nov 2017}
+\keywords{C, C++, CUDA, CUDA C/C++, Compilers, OS, runtime, classes, Object Oriented Programming, Segmentation Fault, memory, memory addresses}
+
+\begin{document}
+
+\definecolor{darkgreen}{rgb}{0,0.4,0}
+\lstset{language=Python,
+ frame=bottomline,
+ basicstyle=\scriptsize,
+ identifierstyle=\color{blue},
+ keywordstyle=\bfseries,
+ commentstyle=\color{darkgreen},
+ stringstyle=\color{red},
+ }
+%\lstlistoflistings
+
+\maketitle
+
+\tableofcontents
+
+\begin{abstract}
+I review what, how, and why Segmentation Fault is and occurs in the specific context of C and hopefully to CUDA, virtual memory addresses in C++, and to CUDA.  
+
+
+\end{abstract}
+
+\section{Introduction; why I'm writing this}  
+
+I didn't realize the importance of having a profound understanding of C/C++ and its relation to hardware, in particular memory (addresses), until I learned more specifically about the work done at NVIDIA from its news and job postings.  Coming from a theoretical and mathematical physics background, I wanted to get myself up to speed as fast as possible, provide good textbook and online references, and directly relate these topics, which seem to be classic topics in computer science (at hardware level) and electrical engineering, to CUDA, to specifically GPU parallel programming with direct CUDA examples.  
+
+Note that there is a version of this LaTeX/pdf file in a "grande" format (not letter format but "landscape" format) that is exactly the same as the content here, but with different size dimensions.  
+
+Meyer (1997) \cite{Meye1997}
+
+
+
+\begin{quotation}
+	"When programmers first began giving up assembly language in favor of using HLLs, they generally understood the low-level ramifications of the HLL statements they were using and could choose their HLL statements appropriately.Unfortunately, the generation of computer programmers that followed them did not have the benefit of mastering assembly language. As such, they were not in a position to wisely choose statements and data structures that HLLs could efficiently translate into machine code."  
+\end{quotation}
+pp. 2, Ch. 1 of Hyde (2006) \cite{Hyde2006}, where HLL stands for high-level language.  I was part of that generation and knew of nothing of assembly.  
+
+\section{80x86 Assembly; 80x86 Architecture}  
+
+cf. Ch. 3 of Hyde (2006) \cite{Hyde2006}
+
+Main difference between complex instruction set computer (CISC) architectures such as 80x86 and reduced instruction set computer (RISC) architectures like PowerPC is the way they use memory.  RISC provde relatively clumsy memory access, and applications avoid accessing memory.  80x86 access memory in many different ways and applications take advantage of these facilities.  
+
+\subsection{Basic 80x86 Architecture}  
+
+Intel CPU generally classified as a \emph{Von Neumann machine}, containing 3 main building blocks:
+\begin{enumerate}
+	\item CPU
+	\item memory
+	\item input/output (I/O) devices
+\end{enumerate}
+These 3 components are connected together using the \emph{system bus}.  System bus consists of 
+\begin{itemize}
+	\item address bus
+	\item data bus
+	\item control bus
+\end{itemize}
+
+CPU communicates with memory and I/O devices by placing a numeric value on the address bus to select 1 of the memory locations or I/O device port locations, each of which has a unique binary numeric address.   \\
+Then the CPU, I/O, and memory devices pass data among themselves by placing data on the data bus.   \\
+Control bus contains signals that determine the direction of data transfer (to or from memory, and to or from an I/O device).  
+
+So 
+\[
+\begin{gathered}
+\begin{gathered}
+\textbf{Memory} \\
+\text{Obj}{(\textbf{Memory})} = \text{ memory locations } 
+\end{gathered} \\ 
+\begin{gathered}
+\textbf{I/O} \\
+\text{Obj}{(\textbf{I/O})} = \text{ I/O device port locations } 
+\end{gathered}
+\end{gathered}
+\]
+and 
+\[
+\begin{gathered}
+\textbf{address bus} \\
+\text{Obj}{(\textbf{address bus})} = \text{ unique binary numeric addresses } 
+\end{gathered}
+\]
+
+Likewise, 
+\[
+\begin{gathered}
+\textbf{data bus} \\
+\text{Obj}{(\textbf{data bus})} = \text{ data } 
+\end{gathered}
+\]
+
+And so
+\[
+\begin{gathered}
+\text{CPU} : \textbf{Memory} \times \textbf{address bus} \to \text{Hom}{(\textbf{Memory} , \textbf{address bus}) } \\ 
+\text{CPU}: (\text{memory location} , \text{unique binary numeric address}) \mapsto \&
+\end{gathered}
+\]
+in the language of category theory.  
+
+\subsection{Registers (for 80x86)}  
+
+cf. 3.3 Basic 80x86 Architecture, from pp. 23 of Hyde (2006) \cite{Hyde2006}.  
+
+Example: to add 2 variables, $x,y$ and store $x+y$ into $z$, you must load 1 of the variables into a register, add the 2nd. operand to the register, and then store register's value into destination variable.  "Registers are middlemen in almost every calculation." Hyde (2006) \cite{Hyde2006}.  
+
+
+There are 4 categories of 80x86 CPU registers: 
+\begin{itemize}
+	\item general-purpose
+	\item special-purpose application-accessible
+	\item segment
+	\item special-purpose kernel-mode
+\end{itemize}
+Segment registers not used very much in modern 32-bit operating systems (e.g. Windows, Linux; what about 64-bit?) and special-purpose kernel-mode registers are intended for writing operating systems, debuggers, and other system-level tools.  
+
+\subsubsection{80x86 General-Purpose Registers}  
+
+80x86 CPUs provide several general-purpose registers, including 8 32-bit registers having the following names: (8 bits in 1 byte, 32-bit is 4 bytes)
+
+\[
+EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP
+\]
+where E is \emph{extended}; 32-bit registers distinguished from 8 16-bit registers with following names 
+
+\[
+AX, BX, CX, DX, SI, DI, BP, SP
+\]
+and finally 
+
+\[
+AL, AH, BL, BH, CL, CH, DL, DH
+\]
+Hyde says that it's important to note about the general-purpose registers is they're not independent.  80x86 doesn't provide 24 separate registers, but overlaps the 32-bit registers with 16-bit registers, and overlaps 16-bit registers with 8-bit registers.  e.g.
+
+\[
+\begin{gathered}
+\&AL \neq \&AH, \text{ but } \\
+\&AL, \&AH \in \&AX \text{and } \&AX \in \&EAX, \text{ so that } \\
+\&AL , \&AH, \&AX \in \&EAX
+\end{gathered}
+\]
+
+\section{Compilers; Compiler Operation and Code Generation}
+
+cf. Ch. 5 Compiler Operation and Code Generation, from pp. 62 and pp. 72- of Hyde (2006) \cite{Hyde2006}
+
+
+
+
+
+\section{gdp; good debugging processes (in C/C++/CUDA)}
+
+\href{https://youtu.be/heEaKf2b1uA}{Learn C the hard way Lecture 4, Using Debugger (GDB) }
+
+
+\section{Pointers in C; Pointers in C categorified (interpreted in Category Theory) and its relation to actual, physical, computer memory and (memory) addresses ((address) bus; pointers, structs, arrays in C}
+
+From Shaw (2015) \cite{Shaw2015}, Exercise 15, 
+
+e.g. \verb|ages[i]|, You're indexing into array \verb|ages|, and you're using the number that's held in $i$ to do it:  
+\[
+\begin{aligned}
+& a : \mathbb{Z} \to \text{Type} \in \textbf{Type}  \\
+& a: i \mapsto a[i]
+\end{aligned} \text{ e.g. } 
+\begin{aligned}
+& a: \mathbb{Z} \to \mathbb{R} \text{ or } \mathbb{Z}  \\
+& a:i \mapsto a[i]
+\end{aligned}
+\]
+
+Index $i\in \mathbb{Z}$ is a location \emph{inside} \verb|ages| or $a$, which can also be called \emph{address}.  Thus, $a[i]$.  
+
+Indeed, from \href{http://en.cppreference.com/w/cpp/language/operator_member_access}{cppreference for Member access operators}, 
+
+Built-in \emph{subscript} operator provides access to an object pointed-to by pointer or array operand.  And so \verb|E1[E2]| is exactly identical to \verb|*(E1+E2)|.  
+
+
+To C, e.g. \verb|ages|, or $a$, is a location in computer's memory where, e.g., all these integers (of \verb|ages|) start, i.e. where $a$ starts.  
+
+\[
+\begin{aligned}
+& \textbf{Memory} , \qquad \, \text{Obj}{(\textbf{Memory})} \ni \text{ memory location.  Also, to specify CPU, } \\ 
+& \textbf{Memory}_{CPU} , \qquad \, \text{Obj}{(\textbf{Memory}_{CPU})} \ni \text{ computer memory location }
+\end{aligned}
+\]
+
+It's \emph{also} an address, and C compiler will replace e.g. \verb|ages| or array $a$, anywhere you type it, with address of very 1st integer (or 1st element) in, e.g. \verb|ages|, or array $a$.  
+
+\[
+\begin{gathered}
+\begin{aligned}
+\textbf{Arrays} & \xleftrightarrow{ \cong } \textbf{address}  \\
+\text{Obj}{(\textbf{Arrays} )} & \xleftrightarrow{ \cong } \text{Obj}{(\textbf{address} )}  \\
+a & \xleftrightarrow{ \cong } \verb|0x17|  \\
+\end{aligned}
+\end{gathered}
+\]
+
+"But here's the trick": e.g. "\verb|ages| is an address inside the \emph{entire computer}." (Shaw (2015) \cite{Shaw2015}).  
+
+It's not like $i$ that's just an address inside \verb|ages|.  \verb|ages| array name is actually an address in the computer.     
+
+"This leads to a certain realization: C thinks your whole computer is 1 massive array of bytes."  
+
+"What C does is layer on top of this massive array of bytes the concept of types and sizes of those types." (Shaw (2015) \cite{Shaw2015}).  
+
+
+Let 
+\[
+\begin{gathered}
+\begin{aligned}
+& \textbf{Memory}_{CPU} := 1 \text{ massive array of bytes } \\
+& \text{Obj}{(\textbf{Memory}_{CPU})} 
+\end{aligned}  \qquad \, \qquad \, 
+\begin{aligned}
+& \textbf{Type} \\
+& \text{Obj}{(\textbf{Type})} \ni \verb|int|, \verb|char|, \verb|float| \\
+& \text{Obj}{(\textbf{Type})}  \xrightarrow{\texttt{sizeof}} \mathbb{Z}^+  \\
+& T \xmapsto{ \texttt{sizeof} } \verb|sizeof|(T) \\
+& \verb|float| \xmapsto{ \texttt{sizeof}} \verb|sizeof|(\verb|float|)
+\end{aligned}
+\end{gathered}
+\]
+
+
+How C is doing the following with your arrays:  
+
+\begin{itemize}
+	\item \emph{Create} a block of memory inside your computer:  
+	\[
+	\text{Obj}{(\textbf{Memory}_{CPU})} \supset \text{ Memory block }  
+	\]
+	Let $\text{Obj}{(\textbf{Memory}_{CPU})}$ be an ordered set.  Clearly, then memory can be indexed.  Let $b\in \mathbb{Z}^+$ be this index.  Then Memory block(0) $= \text{Obj}{(\textbf{Memory}_{CPU})}(b)$.  		
+	\item \emph{Pointing} the name \verb|ages|, or $a$, to beginning of that (memory) block.  
+	
+	Entertain, possibly, a category of pointers, $\textbf{Pointers} \equiv \textbf{ptrs}$.  
+	\[
+	\begin{gathered}
+	\textbf{ptrs} \\
+	\text{Obj}{(\textbf{ptrs})} \ni a, \text{ e.g. } \verb|ages|  
+	\end{gathered}
+	\]	
+	\[
+	\begin{gathered}
+	a \mapsto \text{Memory block}(0) \\ 
+	\text{Obj}{(\textbf{ptrs})} \to \text{Obj}{(\textbf{Memory}_{CPU})}
+	\end{gathered}
+	\]
+	\item \emph{indexing} into the block, by taking the base address of \verb|ages|, or $a$ 
+\end{itemize}
+
+\[
+\begin{gathered}
+\begin{aligned}
+&	a \xmapsto{ \cong } \text{ base address $0x17$ } \\
+&	\text{Obj}{((T)\textbf{array})} \xrightarrow{ \cong } \text{Obj}{(\textbf{addresses})}  \\	
+&	a[i] \equiv a+i \xmapsto{ \cong } \text{ base address + i * } \verb|sizeof|(T)  \xmapsto{ * } a[i] \in T \text{ where $T$, e.g. $T = \mathbb{Z},\mathbb{R}$ } \\ 
+& \text{Obj}{((T)\textbf{array}} \xrightarrow{ \cong } \text{Obj}{(\textbf{addresses})} \to T  
+\end{aligned}
+\end{gathered}
+\]
+
+"A pointer is simply an address pointing somewhere inside computer's memory with a type specifier."  Shaw (2015) \cite{Shaw2015}
+
+
+C knows where pointers are pointing, data type they point at, size of those types, and how to get the data for you.  
+
+\subsubsection{Practical Pointer Usage}
+\begin{itemize}
+	\item Ask OS for memory block (chunk of memory) and use pointer to work with it.  This includes strings and \verb|structs|.  
+	\item Pass by reference - pass large memory blocks (like large structs) to functions with a pointer, so you don't have to pass the entire thing to the function.  
+	\item Take the address of a function, for dynamic callback. (function of functions)
+\end{itemize}
+
+"You should go with arrays whenever you can, and then only use pointers as performance optimization if you absolutely have to."  Shaw (2015) \cite{Shaw2015}
+
+\subsubsection{Pointers are not Arrays}  
+
+No matter what, pointers and arrays are not the same thing, even though C lets you work with them in many of the same ways.  
+
+From Eli Bendersky's website, \href{https://eli.thegreenplace.net/2009/10/21/are-pointers-and-arrays-equivalent-in-c}{Are pointers and arrays equivalent in C?}
+
+He also emphasizes that 
+
+\subsubsection{Variable names in C are just labels}  
+
+"A variable in C is just a convenient, alphanumeric pseudonym of a memory location." (Bendersky, \cite{Bend}).  What a compiler does is, create label in some memory location, and then access this label instead of always hardcoding the memory value.   
+
+"Well, actually the address is not hard-coded in an absolute way because of loading and relocation issues, but for the sake of this discussion we don't have to get into these details." (Bendersky, \cite{Bend}) (EY : 20171109 so it's on the address bus?)
+
+Compiler assigns label \emph{at compile time}.  Thus, the great difference between arrays and pointers in C.  
+
+\subsubsection{Arrays passed to functions are converted to pointers}  
+
+cf. Bendersky, \cite{Bend}.  
+
+Arrays passed into functions are always converted into pointers.  The argument declaration \verb|char arr_place[]| in  
+
+\begin{lstlisting}
+void foo(char arr_arg[], char* ptr_arg)
+{
+char a = arr_arg[7];
+char b = ptr_arg[7];
+}
+\end{lstlisting} 
+
+is just syntactic sugar to stand for \verb|char* arr_place|.  
+
+From Kernighan and Ritchie (1988) \cite{KeRi1988}, pp. 99 of Sec. 5.3, Ch. 5 Pointers and Arrays,  
+
+\begin{quotation}
+	When an array name is passed to a function, what is passed is the location of the initial element.  Within the called function, this argument is a local variable, and so an array name parameter is a pointer, that is, a variable containing an address.  
+\end{quotation}
+
+Why?  
+
+The C compiler has no choice here, since, \\
+array name is a label the C compiler replaces \emph{at compile time}  with the address it represents (which for arrays is the address of the 1st element of the array).  
+
+But function isn't called at compile time; it's called \emph{at run time}.  \\
+At run time, (where) something should be placed on the stack to be considered as an argument.  
+
+Compiler cannot treat array references inside a function as labels and replace them with addresses, because it has no idea what actual array will be passed in at run time.  
+
+EY : 20171109 It can't anticipate the exact arguments that'll it be given \emph{at run-time}; at the very least, my guess is, it's given instructions.  
+
+Bendersky \cite{Bend} concludes by saying the difference between arrays and pointers does affect you.  One way is how arrays can't be manipulated the way pointers can.  Pointer arithmetic isn't allowed for arrays and assignment to an array of a pointer isn't allowed.  cf. van der Linden (1994) \cite{Vand1994}. Ch. 4, 9, 10.  
+
+Bendersky \cite{Bend} has this one difference example, "actually a common C gotcha":  
+
+"Suppose one file contains a global array:"  
+
+\begin{lstlisting}
+char my_Arr[256]  
+\end{lstlisting}
+
+Programmer wants to use it in another file, \emph{mistakingly} declares as  
+\begin{lstlisting}
+extern char* my_arr; 
+\end{lstlisting}
+
+When he tries to access some element of the array using this pointer, he'll most likely get a segmentation fault or a fatal exception (nomenclature is OS-dependent).  
+
+To understand why, Bendersky \cite{Bend} gave this hint:  look at the assembly listing  
+
+\begin{lstlisting}
+char a = array_place[7];
+
+0041137E  mov  al,byte ptr [_array_place+7 (417007h)]
+00411383  mov  byte ptr [a],al
+
+char b = ptr_place[7];
+
+00411386  mov  eax,dword ptr [_ptr_place (417064h)]
+0041138B  mov  cl,byte ptr [eax+7]
+0041138E  mov  byte ptr [b],cl
+\end{lstlisting}
+
+or my own, generated from \verb|gdb| on Fedora 25 Workstation Linux:
+
+\begin{lstlisting}
+0x00000000004004b1 <main+11>:	movzbl 0x200b8f(%rip),%eax        # 0x601047 <array_place+7>
+0x00000000004004b8 <main+18>:	mov    %al,-0x1(%rbp)
+
+0x00000000004004bb <main+21>:	mov    0x200be6(%rip),%rax        # 0x6010a8 <ptr_place>
+0x00000000004004c2 <main+28>:	movzbl 0x7(%rax),%eax
+0x00000000004004c6 <main+32>:	mov    %al,-0x2(%rbp)
+\end{lstlisting}
+
+"How will the element be accessed via the pointer?  What's going to happen if it's not actually a pointer but an array?"  Bendersky \cite{Bend}   
+
+EY : 20171106.  Instruction-level, the pointer has to     
+\begin{itemize}
+	\item \verb|mov    0x200be6(%rip),%rax| - 1st., copy value of the pointer (which holds an address), into \verb|%rax| register.  
+	\item \verb|movzbl 0x7(%rax),%eax| - off that address in register `%rax`, offset by 7 (or whatever the offset would be) and get value ther with \verb|%eax| register/instruction  
+	\item \verb|mov    %al,-0x2(%rbp)| - \verb|mov| contents \verb|-0x2(%rbp)|into register \verb|%al|
+\end{itemize}
+
+If it's not actually a pointer, but an array, the value is copied into the \verb|%rax| register is an actual \verb|char| (or \verb|float|, some type).  \emph{Not} an address that the registers may have been expecting!  
+
+
+\subsection{Structs in C}
+From Shaw (2015) \cite{Shaw2015}, Exercise 16, 
+
+\verb|struct| in C is a collection of other data types (variables) that are stored in 1 block of memory.  You can access each variable independently by name.  
+
+\begin{itemize}
+	\item The \verb|struct| you make, i.e.g \verb|struct Person| is now a \emph{compound data type}, meaning you can refer to \verb|struct Person| using the same kinds of expressions you would for other (data) types.
+	\item This lets you pass the whole \verb|struct| to other functions
+	\item You can access individual members of \verb|struct| by their names using \verb|x->y| if dealing with a ptr.  
+\end{itemize}  
+
+If you didn't have \verb|struct|, you'd have to figure out the size, packing, and location of memory of the contents.  In C, you'd let it handle the memory structure and structuring of these compound data types, \verb|struct|s.  (Shaw (2015) \cite{Shaw2015})
+
+
+
+\part{C, Stack, Heap Memory Management in C}
+
+\section{C, Stack and Heap Memory Management, Heap and Stack Memory Allocation}  
+
+
+cf. Ex. 17 of Shaw (2015) \cite{Shaw2015}
+
+Consider chunk of RAM called stack, another chunk of RAM called heap.  Difference between heap and stack depends on where you get the storage.  
+
+Heap is all the remaining memory on computer.  Access it with \verb|malloc| to get more.  \\
+Each time you call \verb|malloc|, the OS uses internal functions (EY : 20171110 address bus or overall system bus?) to register that piece of memory to you, then returns ptr to it.  
+
+When done, use \verb|free| to return it to OS so OS can use it for other programs.  Failing to do so will cause program to \emph{leak} memory.  (EY: 20171110, meaning this memory is unavailable to the OS?)
+
+Stack, on a special region of memory, stores temporary variables, which each function creates as locals to that function.  How stack works is that each argument to function is \emph{pushed} onto stack and then used inside the function.  Stack is really a stack data structure, LIFO (last in, first out).  This also happens with all local variables in \verb|main|, such as \verb|char action|, \verb|int id|.  The advantage of using stack is when function exits, \emph{C compiler} pops these variables off of stack to clean up.  
+
+Shaw's mantra: If you didn't get it from \verb|malloc|, or a function that got it from \verb|malloc|, then it's on the stack.  
+
+3 primary problems with stacks and heaps: 
+\begin{itemize}
+	\item If you get a memory block from \verb|malloc|, and have that ptr on the stack, then when function exits, ptr will get popped off and lost.  
+	\item If you put too much data on the stack (like large structs and arrays), then you can cause a \emph{stack overflow} and program will abort.  Use the heap with \verb|malloc|.  
+	\item If you take a ptr, to something on stack, and then pass or return it from your function, then the function receiving it will \emph{segmentation fault}, because actual data will get popped off and disappear.  You'll be pointing at dead space.  
+\end{itemize}
+cf. Ex. 17 of Shaw (2015) \cite{Shaw2015}
+
+
+
+\begin{thebibliography}{9}
+\bibitem{Meye1997}
+Bertrand Meyer. \textbf{Object-Oriented Software Construction} (Book/CD-ROM) (2nd Edition) 2nd Edition.   Prentice Hall; 2 edition (April 13, 1997).  ISBN-13: 978-0136291558
+
+\bibitem{Hyde2004}
+Randall Hyde.  \textbf{Write Great Code: Volume 1: Understanding the Machine} October 25, 2004.  No Starch Press; 1st edition (October 25, 2004).  ISBN-13: 978-1593270032
+
+\bibitem{Hyde2006}
+Randall Hyde.  \textbf{Write Great Code, Volume 2: Thinking Low-Level, Writing High-Level}.   1st Edition.  No Starch Press; 1 edition (March 18, 2006).  ISBN-13: 978-1593270650
+
+\bibitem{Shaw2015}
+Zed A. Shaw.  \textbf{Learn C the Hard Way: Practical Exercises on the Computational Subjects You Keep Avoiding (Like C)} (Zed Shaw's Hard Way Series) 1st Edition.  Addison-Wesley Professional; 1 edition (September 14, 2015) ISBN-13: 978-0321884923.  
+
+\bibitem{Bend}
+Eli Bendersky.   \href{https://eli.thegreenplace.net/2009/10/21/are-pointers-and-arrays-equivalent-in-c}{Are pointers and arrays equivalent in C?}
+
+\bibitem{KeRi1988}
+Brian W. Kernighan, Dennis M. Ritchie.  \textbf{C Programming Language}, 2nd Ed. 1988.   
+
+\bibitem{Vand1994}
+Peter van der Linden.  \textbf{Expert C Programming: Deep C Secrets} 1st Edition.  Prentice Hall; 1st edition (June 24, 1994)  ISBN-13: 978-0131774292
+
+\end{thebibliography}
+
+\end{document}
+
