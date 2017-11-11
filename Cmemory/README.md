@@ -105,7 +105,57 @@ and so
 As a sanity check, do the same with `ptr_vs_arr_onlyassign.c`.  
 
 
+`ptr_vs_arr_more.c` explicitly shows the "A graphical explanation" in [Eli Bendersky's webpage](https://eli.thegreenplace.net/2009/10/21/are-pointers-and-arrays-equivalent-in-c).  
+
+
+
 # Segmentation Faults  
+
+cf. [Debugging Segmentation Faults and Pointer Problems, CProgramming](https://www.cprogramming.com/debugging/segfaults.html)
+
+"When your program runs, it has access to certain portions of memory. First, you have local variables in each of your functions; these are stored in the stack. Second, you may have some memory, allocated during runtime (using either malloc, in C, or new, in C++), stored on the heap (you may also hear it called the "free store"). Your program is only allowed to touch memory that belongs to it -- the memory previously mentioned. Any access outside that area will cause a segmentation fault."  
+
+"There are 4 common mistakes that lead to segmentation faults:"  
+* dereferencing NULL, 
+* dereferencing an uninitialized pointer, 
+* dereferencing a pointer that has been freed (or deleted, in C++) or that has gone out of scope (in the case of arrays declared in functions), and 
+* writing off the end of an array.
+
+"A 5th way of causing a segfault is a recursive function that uses all of the stack space. On some systems, this will cause a "stack overflow" report, and on others, it will merely appear as another type of segmentation fault."
+
+"The strategy for debugging all of these problems is the same:  
+- load the core file into GDB, 
+- do a backtrace, 
+- move into the scope of your code, and 
+- list the lines of code that caused the segmentation fault.   
+ 
+
+
+## on stack memory, no `malloc`, uninitialized pointers/arrays  
+
+
+In this case, uninitialized pointer to a `struct Stack`  
+
+```  
+(gdb) run
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/heapstack/stack_stack_arr 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000000000040050e in createStack (N=10) at stack_stack_arr.c:32
+32		stack->N = N;
+(gdb) print stack
+$1 = (struct Stack *) 0x0
+
+```  
+
+Printing out `stack` reveals that it points to memory address `0x0` (the `0x` indicates that the value following it is in hexadecimal, traditional for printing memory addresses).  
+The address `0x0` is invalid -- in fact, it's `NULL`. If you dereference a pointer that stores the location `0x0` then you'll definitely get a segmentation fault, just as we did.
+
+cf. `CMemory/heapstack/stack_stack_arr_fail.c`  
+
+### `ex15.c`  
+
+
 
 ## Given a C "string" or `char[]`, `printf` an element that is outside its "length", found at run-time (because it compiles) when OS uses `libstr count`  
 
