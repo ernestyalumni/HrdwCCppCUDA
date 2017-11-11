@@ -1,6 +1,6 @@
 /**
  * 	@file 	stack_arr.c
- * 	@brief 	Exercise 12. Sizes and Arrays. 
+ * 	@brief 	C implementation with arrays of stack 
  * 	@ref	http://www.geeksforgeeks.org/stack-data-structure-introduction-program/
  * 	@details 3 (or 4?) basic operations; 
  * 	- push, if stack is full, then it's said to be an Overflow condition
@@ -8,12 +8,14 @@
  * 	- peek or top, returns top element of stack.  
  * 	- isEmpty, returns true if stack empty, else false
  * 
+ * Pros; easy to implement, memory not saved as pointers; Cons; no dynamic, doesn't grow and shrink depending on runtime needs
+ * 
  * COMPILATION TIP : -Wall warning all, -g debugger, gdb can step through 
  * gcc -Wall -g stack_arr.c -o stack_arr
  * */
 #include <stdio.h> 
-#include <stdlib.h>
-#include <limits.h>  
+#include <stdlib.h> // malloc
+#include <limits.h>  // INT_MIN
 
 // A structure to represent a stack  
 struct Stack
