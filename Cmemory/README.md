@@ -153,6 +153,34 @@ The address `0x0` is invalid -- in fact, it's `NULL`. If you dereference a point
 
 cf. `CMemory/heapstack/stack_stack_arr_fail.c`  
 
+## Buffer Overflows (stack overflows)
+
+### blow stack by using more memory than is available to this thread 
+
+- e.g. `Cmemory/heapstack/main_on_main.c`  
+
+```  
+int main() 
+{
+	main();
+}  
+```  
+
+Also, similarly (fill up stack), *infinite recursion* (no base case, or just no stopping of computation)  
+
+- e.g. `Cmemory/heapstack/infiniterecursion.c`   
+
+```  
+int add(int n)
+{
+	return n + add(n+1);
+}  
+
+int main(){
+	add(2);
+}
+```  
+
 ### `ex15.c`  
 
 
