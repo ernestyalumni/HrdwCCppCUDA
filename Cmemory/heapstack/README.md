@@ -394,6 +394,7 @@ Stack level 0, frame at 0x7fffffffdd70:
   rbp at 0x7fffffffdd60, rip at 0x7fffffffdd68
 ```  
 
+We see that those function calls, with *decreasing addresses* in that stack segment region, are saved registers and taking up all of the stack (eventually!).  
 
 
 
