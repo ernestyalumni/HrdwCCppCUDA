@@ -192,6 +192,207 @@ The result of running/execution is
 Segmentation fault (core dumped)
 ```  
 The problem is the recursion which fills up the stack with its function calls.  This can be explicitly shown with `gdb`:  
+```  
+(gdb) run
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/heapstack/main_on_main 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004004af in main () at main_on_main.c:12
+12		main();
+(gdb) bt
+#0  0x00000000004004af in main () at main_on_main.c:12
+(gdb) print &main
+$1 = (int (*)()) 0x4004a6 <main>
+(gdb) x &main
+0x4004a6 <main>:	0xe5894855  
+...
+(gdb) break
+Breakpoint 1 at 0x4004af: file main_on_main.c, line 12.
+
+(gdb) next
+
+Breakpoint 1, 0x00000000004004af in main () at main_on_main.c:12
+12		main();
+(gdb) bt
+#0  0x00000000004004af in main () at main_on_main.c:12
+(gdb) next
+
+Breakpoint 1, 0x00000000004004af in main () at main_on_main.c:12
+12		main();
+(gdb) bt
+#0  0x00000000004004af in main () at main_on_main.c:12
+(gdb) next
+
+Breakpoint 1, 0x00000000004004af in main () at main_on_main.c:12
+12		main();
+(gdb) bt
+#0  0x00000000004004af in main () at main_on_main.c:12
+```  
+
+Remember to look at the stack directly with `info frame`:  
+
+```  
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdd80:
+ rip = 0x4004af in main (main_on_main.c:12); saved rip = 0x4004b4
+ source language c.
+ Arglist at 0x7fffffffdd70, args: 
+ Locals at 0x7fffffffdd70, Previous frame's sp is 0x7fffffffdd80
+ Saved registers:
+  rbp at 0x7fffffffdd70, rip at 0x7fffffffdd78
+(gdb) next
+
+Breakpoint 1, 0x00000000004004af in main () at main_on_main.c:12
+12		main();
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdd70:
+ rip = 0x4004af in main (main_on_main.c:12); saved rip = 0x4004b4
+ source language c.
+ Arglist at 0x7fffffffdd60, args: 
+ Locals at 0x7fffffffdd60, Previous frame's sp is 0x7fffffffdd70
+ Saved registers:
+  rbp at 0x7fffffffdd60, rip at 0x7fffffffdd68
+(gdb) next
+
+Breakpoint 1, 0x00000000004004af in main () at main_on_main.c:12
+12		main();
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdd60:
+ rip = 0x4004af in main (main_on_main.c:12); saved rip = 0x4004b4
+ source language c.
+ Arglist at 0x7fffffffdd50, args: 
+ Locals at 0x7fffffffdd50, Previous frame's sp is 0x7fffffffdd60
+ Saved registers:
+  rbp at 0x7fffffffdd50, rip at 0x7fffffffdd58
+```  
+We see *directly* how the stack is "growing downward", saving to registers of decreasing addresses! (**!!!**)
+  
+- `infiniterecursion.c`  
+
+Same thing with infinite recursion, either no base case, or calling itself over and over.  
+
+The `gdb` strategy is this: 
+- `(gdb) run`, see signal `SIGSEGV` Segmentation Fault (who exactly knows the stack is overflow?  It happens at *runtime.* I'm guessing compiler is done with its job, compiling the machine instructions already.  Address bus assigned the addresses to a chunk of memory (memory block).  Then OS must be responsible for throwing back that stack segment is full.),  
+- seeing signal `SIGSEGV`, `(gdb) break`.   
+- `(gdb) run` again.  Then step through, observing the stack *directly* with `next`, `info frame`, `next`, `info frame`, ...  
+
+```  
+(gdb) run
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/heapstack/infiniterecursion 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004004ae in add (
+    n=<error reading variable: Cannot access memory at address 0x7fffff7feffc>)
+    at infiniterecursion.c:12
+12	{
+(gdb) break
+Breakpoint 1 at 0x4004ae: file infiniterecursion.c, line 12.
+(gdb) next
+
+Program terminated with signal SIGSEGV, Segmentation fault.
+The program no longer exists.
+(gdb) run
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/heapstack/infiniterecursion 
+
+Breakpoint 1, 0x00000000004004ae in add (n=0) at infiniterecursion.c:12
+12	{
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffddf0:
+ rip = 0x4004ae in add (infiniterecursion.c:12); saved rip = 0x4004d5
+ called by frame at 0x7fffffffde00
+ source language c.
+ Arglist at 0x7fffffffdde0, args: n=0
+ Locals at 0x7fffffffdde0, Previous frame's sp is 0x7fffffffddf0
+ Saved registers:
+  rbp at 0x7fffffffdde0, rip at 0x7fffffffdde8
+(gdb) next
+13		return n + add(n+1);
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffddf0:
+ rip = 0x4004b1 in add (infiniterecursion.c:13); saved rip = 0x4004d5
+ called by frame at 0x7fffffffde00
+ source language c.
+ Arglist at 0x7fffffffdde0, args: n=2
+ Locals at 0x7fffffffdde0, Previous frame's sp is 0x7fffffffddf0
+ Saved registers:
+  rbp at 0x7fffffffdde0, rip at 0x7fffffffdde8
+(gdb) next
+
+Breakpoint 1, 0x00000000004004ae in add (n=0) at infiniterecursion.c:12
+12	{
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffddd0:
+ rip = 0x4004ae in add (infiniterecursion.c:12); saved rip = 0x4004be
+ called by frame at 0x7fffffffddf0
+ source language c.
+ Arglist at 0x7fffffffddc0, args: n=0
+ Locals at 0x7fffffffddc0, Previous frame's sp is 0x7fffffffddd0
+ Saved registers:
+  rbp at 0x7fffffffddc0, rip at 0x7fffffffddc8
+(gdb) next
+13		return n + add(n+1);
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffddd0:
+ rip = 0x4004b1 in add (infiniterecursion.c:13); saved rip = 0x4004be
+ called by frame at 0x7fffffffddf0
+ source language c.
+ Arglist at 0x7fffffffddc0, args: n=3
+ Locals at 0x7fffffffddc0, Previous frame's sp is 0x7fffffffddd0
+ Saved registers:
+  rbp at 0x7fffffffddc0, rip at 0x7fffffffddc8
+(gdb) next
+
+Breakpoint 1, 0x00000000004004ae in add (n=32767) at infiniterecursion.c:12
+12	{
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffddb0:
+ rip = 0x4004ae in add (infiniterecursion.c:12); saved rip = 0x4004be
+ called by frame at 0x7fffffffddd0
+ source language c.
+ Arglist at 0x7fffffffdda0, args: n=32767
+ Locals at 0x7fffffffdda0, Previous frame's sp is 0x7fffffffddb0
+ Saved registers:
+  rbp at 0x7fffffffdda0, rip at 0x7fffffffdda8
+(gdb) next
+13		return n + add(n+1);
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffddb0:
+ rip = 0x4004b1 in add (infiniterecursion.c:13); saved rip = 0x4004be
+ called by frame at 0x7fffffffddd0
+ source language c.
+ Arglist at 0x7fffffffdda0, args: n=4
+ Locals at 0x7fffffffdda0, Previous frame's sp is 0x7fffffffddb0
+ Saved registers:
+  rbp at 0x7fffffffdda0, rip at 0x7fffffffdda8
+(gdb) next
+
+Breakpoint 1, 0x00000000004004ae in add (n=0) at infiniterecursion.c:12
+12	{
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdd90:
+ rip = 0x4004ae in add (infiniterecursion.c:12); saved rip = 0x4004be
+ called by frame at 0x7fffffffddb0
+ source language c.
+ Arglist at 0x7fffffffdd80, args: n=0
+ Locals at 0x7fffffffdd80, Previous frame's sp is 0x7fffffffdd90
+ Saved registers:
+  rbp at 0x7fffffffdd80, rip at 0x7fffffffdd88
+(gdb) next
+13		return n + add(n+1);
+(gdb) next
+
+Breakpoint 1, 0x00000000004004ae in add (n=0) at infiniterecursion.c:12
+12	{
+(gdb) info frame
+Stack level 0, frame at 0x7fffffffdd70:
+ rip = 0x4004ae in add (infiniterecursion.c:12); saved rip = 0x4004be
+ called by frame at 0x7fffffffdd90
+ source language c.
+ Arglist at 0x7fffffffdd60, args: n=0
+ Locals at 0x7fffffffdd60, Previous frame's sp is 0x7fffffffdd70
+ Saved registers:
+  rbp at 0x7fffffffdd60, rip at 0x7fffffffdd68
+```  
 
 
 
