@@ -208,6 +208,10 @@ But otherwise it exits normally.
 When adding this `for`-loop, using **`printf`**, 
 
 ```  
+	char* arr_states[] = { "123", "124", "125", "126" };
+	int num_of_states = 6; // 6 will guarantee Segmentation Fault, outside of the End of Strings \00
+
+
 	for (i=0; i<num_of_states;i++){
 		printf("state %d %s \n", 
 			i, 
@@ -242,4 +246,18 @@ Program received signal SIGSEGV, Segmentation fault.
 strlen () at ../sysdeps/x86_64/strlen.S:106
 106		movdqu	(%rax), %xmm4
 
-```
+```  
+
+# Registers  
+
+cf. [X86-64 Architecture Guide](http://cons.mit.edu/sp17/x86-64-architecture-guide.html)  
+
+| Register | Purpose | Saved across calls |   
+| :------- | ------- | :----------------- |   
+| `%rsp`   | stack pointer | Yes | 
+| `%rbp`   | callee-saved; base pointer | Yes |  
+| `%r10-r11` | temporary | No | 
+| `%r12-r15` | callee-saved registers | Yes |  
+
+ 
+
