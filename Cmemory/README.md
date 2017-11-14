@@ -248,6 +248,66 @@ strlen () at ../sysdeps/x86_64/strlen.S:106
 
 ```  
 
+## [more Segmentation Faults](https://en.wikipedia.org/wiki/Segmentation_fault)  
+
+The operating system (OS) is running the program (its instructions).  Only from the hardware, with [memory protection](https://en.wikipedia.org/wiki/Memory_protection), with the OS be signaled to a memory access violation, such as writing to read-only memory or writing outside of allotted-to-the-program memory, i.e. data segments.  On x86_64 computers, this [general protection fault](https://en.wikipedia.org/wiki/General_protection_fault) is initiated by protection mechanisms from the hardware (processor).  From there, OS can signal the fault to the (running) process, and stop it (abnormal termination) and sometimes core dump.      
+
+For [virtual memory](https://en.wikipedia.org/wiki/Virtual_memory), the memory addresses are mapped by program called *virtual addresses* into *physical addresses* and the OS manages virtual addresses space, hardcare in the CPU called memory management unit (*MMU*) translates virtual addresses to physical addresses, and kernel manages memory hierarchy (eliminating possible overlays).  In this case, it's the *hardware* that detects an attempt to refer to a non-existent segment, or location outside the bounds of a segment, or to refer to location not allowed by permissions for that segment (e.g. write on read-only memory).   
+
+- 'derefnullptr.c' - point to `NULL`, dereference pointer -> MAYBE cause Segmentation Fault (not guaranteed by C/C++ standard, and dependent upon if you can write to memory at 0 (`0x00`)).   
+
+	* `gdb` debugging results:   
+```  
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000004004a6 <+0>:	push   %rbp
+   0x00000000004004a7 <+1>:	mov    %rsp,%rbp
+   0x00000000004004aa <+4>:	movq   $0x0,-0x8(%rbp)
+   0x00000000004004b2 <+12>:	mov    -0x8(%rbp),%rax
+=> 0x00000000004004b6 <+16>:	movzbl (%rax),%eax
+   0x00000000004004b9 <+19>:	mov    %al,-0x9(%rbp)
+   0x00000000004004bc <+22>:	mov    $0x0,%eax
+   0x00000000004004c1 <+27>:	pop    %rbp
+   0x00000000004004c2 <+28>:	retq  	
+
+(gdb) break main
+Breakpoint 1 at 0x4004aa: file derefnullptr.c, line 17.
+(gdb) break *main+27
+Breakpoint 2 at 0x4004c1: file derefnullptr.c, line 20.
+(gdb) run
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/derefnullptr 
+
+Breakpoint 1, main () at derefnullptr.c:17
+17		char *cptr = NULL;  
+
+(gdb) p cptr  // we're pointing to 0x0
+$1 = 0x0
+(gdb) p &cptr
+$2 = (char **) 0x7fffffffde18
+
+(gdb) c
+Continuing.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004004b6 in main () at derefnullptr.c:18
+18		char chout = *cptr;  // Segmentation Fault occurs here 
+
+(gdb) x/10x $rax
+0x0:	Cannot access memory at address 0x0
+(gdb) x/10x $eax
+0x0:	Cannot access memory at address 0x0
+(gdb) x/10x $rbp
+0x7fffffffde20:	0x004004d0	0x00000000	0xf7a31431	0x00007fff
+0x7fffffffde30:	0x00040000	0x00000000	0xffffdf08	0x00007fff
+0x7fffffffde40:	0xf7b9a188	0x00000001
+```  
+Accessing memory at address `0x0` is problematic.  But I think the problem is the `movzbl (%rax),%eax`, (note `movzbl` is `mov`, but taking into account +,- signs).  
+
+
+
+
+
+
 # Registers  
 
 cf. [X86-64 Architecture Guide](http://cons.mit.edu/sp17/x86-64-architecture-guide.html)  
