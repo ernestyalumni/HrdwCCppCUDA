@@ -1015,6 +1015,11 @@ Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/heapstack/chararr_main
 The last part, ` +"\xc0\xdb\xff\xff\xff\x7f" ` is supposed to be the address of the start of the buffer.  Then the shell code, above, should "first" within the string of length 272, or such that the shell code will write over the return address of the function.  
 
 
+## Heap Memory Leaks examples  
 
+- `heapoutofbounds2.c` - I was not able to cause any memory leak that was not available in the next runtime, by looking directly at the contents of the (memory) addresses with `gdb`.  My strategy with using `gdb` for this was the following:  
+
+do 1st `disassemble main`, then `break *main+13, break *main+41` (strategy is to break at function calls and before `ret` (return),  
+then `run, step, continue`, and use `print p` and `x`, including `x/100x` or `x`, to examine specific variables.    
 
 
