@@ -637,12 +637,132 @@ $10 = 0x602010 ""
 
 So at least we can conclude *definitively*  that in this case, for `movzbl`, RAX doesn't have to deal with invalid memory address `0x0`.  
 
+- `derefnullfptr.c` - more on ptr, initialized or pointing to null, 0.  
 
+`null pointer` has a value reserved to indicate that the pointer does not refer to a valid object.  This, for C, is `NULL` *and* `0`, the integer literal constant zero.     
 
+Null ptr shouldn't be confused with uninitialized ptr: A null ptr is guaranteed to compare unequal to any ptr that points to a valid object.  However, depending on language, uninitialized ptr may not gurantee to point to a valid object.  cf. [wikipedia, "Null pointer"](https://en.wikipedia.org/wiki/Null_pointer)
 
- 
+```  
+int main() {
+	float *fptr = 0; // doesn't "initialize" *fptr to 0, instead, C reads it as it does NULL; // this line alone still compiles	
+	// *fptr; // this line also DOES NOT trigger a Segmentation Fault 
+	*fptr = 10.f;  // results in Segmentation Fault  
+//	float fout = *fptr;  // results in Segmentation Fault 
+}   
+```   
 
+Again, using `gdb`, with the strategy of taking a look at `disassemble main` (or `disassemble ` *functionofinterest*), and looking at code directly (and gathering the line numbers for the code, of interest), and setting break points (`b ` *linenumberofcode* and `b *main + ` *integeroffsetseenindisassemblefunction*), and using `continue c`, :
 
+```  
+(gdb) c
+Continuing.
+
+Breakpoint 3, main () at derefnullfptr.c:19
+19		*fptr = 10.f;  // results in Segmentation Fault  
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000004004a6 <+0>:	push   %rbp
+   0x00000000004004a7 <+1>:	mov    %rsp,%rbp
+   0x00000000004004aa <+4>:	movq   $0x0,-0x8(%rbp)
+=> 0x00000000004004b2 <+12>:	mov    -0x8(%rbp),%rax
+   0x00000000004004b6 <+16>:	movss  0xa2(%rip),%xmm0        # 0x400560
+   0x00000000004004be <+24>:	movss  %xmm0,(%rax)
+   0x00000000004004c2 <+28>:	mov    $0x0,%eax
+   0x00000000004004c7 <+33>:	pop    %rbp
+   0x00000000004004c8 <+34>:	retq   
+End of assembler dump.
+(gdb) p fptr
+$3 = (float *) 0x0
+(gdb) p &fptr
+$4 = (float **) 0x7fffffffde18
+(gdb) i r
+rax            0x4004a6	4195494
+rbx            0x0	0
+rcx            0x0	0
+rdx            0x7fffffffdf18	140737488346904
+rsi            0x7fffffffdf08	140737488346888
+rdi            0x1	1
+rbp            0x7fffffffde20	0x7fffffffde20
+rsp            0x7fffffffde20	0x7fffffffde20
+r8             0x400540	4195648
+r9             0x7ffff7de81b0	140737351942576
+r10            0xc	12
+r11            0x1	1
+r12            0x4003b0	4195248
+r13            0x7fffffffdf00	140737488346880
+r14            0x0	0
+r15            0x0	0
+rip            0x4004b2	0x4004b2 <main+12>
+eflags         0x246	[ PF ZF IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+
+... 
+
+(gdb) c
+Continuing.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004004be in main () at derefnullfptr.c:19
+19		*fptr = 10.f;  // results in Segmentation Fault  
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000004004a6 <+0>:	push   %rbp
+   0x00000000004004a7 <+1>:	mov    %rsp,%rbp
+   0x00000000004004aa <+4>:	movq   $0x0,-0x8(%rbp)
+   0x00000000004004b2 <+12>:	mov    -0x8(%rbp),%rax
+   0x00000000004004b6 <+16>:	movss  0xa2(%rip),%xmm0        # 0x400560
+=> 0x00000000004004be <+24>:	movss  %xmm0,(%rax)
+   0x00000000004004c2 <+28>:	mov    $0x0,%eax
+   0x00000000004004c7 <+33>:	pop    %rbp
+   0x00000000004004c8 <+34>:	retq   
+End of assembler dump.
+(gdb) i r
+rax            0x0	0
+rbx            0x0	0
+rcx            0x0	0
+rdx            0x7fffffffdf18	140737488346904
+rsi            0x7fffffffdf08	140737488346888
+rdi            0x1	1
+rbp            0x7fffffffde20	0x7fffffffde20
+rsp            0x7fffffffde20	0x7fffffffde20
+r8             0x400540	4195648
+r9             0x7ffff7de81b0	140737351942576
+r10            0xc	12
+r11            0x1	1
+r12            0x4003b0	4195248
+r13            0x7fffffffdf00	140737488346880
+r14            0x0	0
+r15            0x0	0
+rip            0x4004be	0x4004be <main+24>
+eflags         0x10246	[ PF ZF IF RF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+
+```  
+
+We clearly see that the problem is at what register RAX has to deal with; trying to open up the contents at invalid (memory) address `0x0`.  
+
+For completeness, the right way to do this is this:  
+
+```  
+#include <stdio.h>
+
+int main() {
+	float fvar = 20.f; 
+	float *fptr = &fvar; 
+	*fptr = 10.f; 
+	printf(" fvar, fptr : %f, %f", fvar, *fptr); // 10.f, 10.f, as expected.  
+```
 
 
 
