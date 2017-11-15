@@ -254,7 +254,14 @@ The operating system (OS) is running the program (its instructions).  Only from 
 
 For [virtual memory](https://en.wikipedia.org/wiki/Virtual_memory), the memory addresses are mapped by program called *virtual addresses* into *physical addresses* and the OS manages virtual addresses space, hardcare in the CPU called memory management unit (*MMU*) translates virtual addresses to physical addresses, and kernel manages memory hierarchy (eliminating possible overlays).  In this case, it's the *hardware* that detects an attempt to refer to a non-existent segment, or location outside the bounds of a segment, or to refer to location not allowed by permissions for that segment (e.g. write on read-only memory).   
 
-- 'derefnullptr.c' - point to `NULL`, dereference pointer -> MAYBE cause Segmentation Fault (not guaranteed by C/C++ standard, and dependent upon if you can write to memory at 0 (`0x00`)).   
+- 'derefnullptr.c' - point to `NULL`, dereference pointer -> maybe cause Segmentation Fault (not guaranteed by C/C++ standard, and dependent upon if you can write to memory at 0 (`0x00`)).   
+
+```  
+#include <stdio.h> // printf, NULL
+... 
+char *cptr = NULL; // no SegFault yet
+char chout = *cptr; // Segmentation Fault occurs here  
+```  
 
 	* `gdb` debugging results:   
 ```  
@@ -303,6 +310,337 @@ Program received signal SIGSEGV, Segmentation fault.
 ```  
 Accessing memory at address `0x0` is problematic.  But I think the problem is the `movzbl (%rax),%eax`, (note `movzbl` is `mov`, but taking into account +,- signs).  
 
+- 'derefwildptr.c' - wild ptr (uninitialized ptr) may point to memory that may or may not exist, and may or may not be readable or writable.  Reading from a wild ptr may result in random data but no segmentation fault.   
+
+```  
+int main() {
+	char *cptr;  
+	*cptr;
+	char chout = *cptr;  // Segmentation Fault occurs here 
+} 
+```  
+
+	* `gdb` debugging results; strategy I took was to set up break points directly at the line number of the code itself, and after looking at `disassemble main` and seeing where `ret` instruction occurred, and other "places of interest" (such as a function call with `call` instruction):  
+
+```  
+(gdb) b 18
+Breakpoint 1 at 0x4004aa: file derefwildptr.c, line 18.
+(gdb) b 19
+Note: breakpoint 1 also set at pc 0x4004aa.
+Breakpoint 2 at 0x4004aa: file derefwildptr.c, line 19.
+(gdb) b 20
+Note: breakpoints 1 and 2 also set at pc 0x4004aa.
+Breakpoint 3 at 0x4004aa: file derefwildptr.c, line 20.
+(gdb) b *main+19
+Breakpoint 4 at 0x4004b9: file derefwildptr.c, line 22.
+
+...
+
+(gdb) r
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/derefwildptr 
+
+Breakpoint 1, main () at derefwildptr.c:20
+20		char chout = *cptr;  // Segmentation Fault occurs here 
+(gdb) p cptr
+$3 = 0x0
+(gdb) p &cptr
+$4 = (char **) 0x7fffffffde18
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000004004a6 <+0>:	push   %rbp
+   0x00000000004004a7 <+1>:	mov    %rsp,%rbp
+=> 0x00000000004004aa <+4>:	mov    -0x8(%rbp),%rax
+   0x00000000004004ae <+8>:	movzbl (%rax),%eax
+   0x00000000004004b1 <+11>:	mov    %al,-0x9(%rbp)
+   0x00000000004004b4 <+14>:	mov    $0x0,%eax
+   0x00000000004004b9 <+19>:	pop    %rbp
+   0x00000000004004ba <+20>:	retq   
+End of assembler dump.
+(gdb) i r
+rax            0x4004a6	4195494
+rbx            0x0	0
+rcx            0x0	0
+rdx            0x7fffffffdf18	140737488346904
+rsi            0x7fffffffdf08	140737488346888
+rdi            0x1	1
+rbp            0x7fffffffde20	0x7fffffffde20
+rsp            0x7fffffffde20	0x7fffffffde20
+r8             0x400530	4195632
+r9             0x7ffff7de81b0	140737351942576
+r10            0xc	12
+r11            0x1	1
+r12            0x4003b0	4195248
+r13            0x7fffffffdf00	140737488346880
+r14            0x0	0
+r15            0x0	0
+rip            0x4004aa	0x4004aa <main+4>
+eflags         0x246	[ PF ZF IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+(gdb) s
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00000000004004ae in main () at derefwildptr.c:20
+20		char chout = *cptr;  // Segmentation Fault occurs here 
+(gdb) p cptr
+$5 = 0x0
+(gdb) p &cptr
+$6 = (char **) 0x7fffffffde18
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x00000000004004a6 <+0>:	push   %rbp
+   0x00000000004004a7 <+1>:	mov    %rsp,%rbp
+   0x00000000004004aa <+4>:	mov    -0x8(%rbp),%rax
+=> 0x00000000004004ae <+8>:	movzbl (%rax),%eax
+   0x00000000004004b1 <+11>:	mov    %al,-0x9(%rbp)
+   0x00000000004004b4 <+14>:	mov    $0x0,%eax
+   0x00000000004004b9 <+19>:	pop    %rbp
+   0x00000000004004ba <+20>:	retq   
+End of assembler dump.
+(gdb) i r
+rax            0x0	0
+rbx            0x0	0
+rcx            0x0	0
+rdx            0x7fffffffdf18	140737488346904
+rsi            0x7fffffffdf08	140737488346888
+rdi            0x1	1
+rbp            0x7fffffffde20	0x7fffffffde20
+rsp            0x7fffffffde20	0x7fffffffde20
+r8             0x400530	4195632
+r9             0x7ffff7de81b0	140737351942576
+r10            0xc	12
+r11            0x1	1
+r12            0x4003b0	4195248
+r13            0x7fffffffdf00	140737488346880
+r14            0x0	0
+r15            0x0	0
+rip            0x4004ae	0x4004ae <main+8>
+eflags         0x10246	[ PF ZF IF RF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+```  
+
+The problem seemed to be pinpointed to pointer `cptr`, (see `p cptr`) and how it's pointing to invalid (memory) address `0x0`, and register RAX, having to move the contents of this invalid (memory) address with the `movzbl` instruction.   
+
+That the problem occurs at this instruction level, `movzbl (%rax),%eax` as further evidenced as compiling and running only (i.e. commenting out the line `char chout = *cptr`):  
+```  
+int main() {
+	char *cptr;
+	*cptr;
+}
+``` 
+does *NOT* trigger a Segmentation Fault.  
+
+- 'derefdanglingptr.c'  
+
+``` 
+char *cptr = malloc(10*sizeof(char)); 
+free(cptr);
+char chout = *cptr;  
+``` 
+
+
+Dangling ptr (freed ptr, which points to memory that has been freed/deallocated/deleted) may point to memory that may or may not exist and may or may not be readable or writable.  Reading from a dangling ptr may result in valid data for a while, and then random data as it's overwritten.    
+  
+I didn't obtain a Segmentation Fault in this case.  We can take a look with `gdb` about what's going on, focusing on the RAX register.  
+
+The strategy is to use `continue c` to go from break point to break point, set from looking at the line number of the code and looking at `disasemble main`; and at each "step through", look at changes in `i r` (`info registers`) and `p cptr` and `p &cptr`, and `bt` (`backtrace`) to check "where we are":  
+
+```  
+(gdb) r
+Starting program: /home/topolo/PropD/HrdwCCppCUDA/Cmemory/derefdanglingptr 
+
+Breakpoint 1, main () at derefdanglingptr.c:18
+18		char *cptr = malloc(10*sizeof(char)); // sizeof(char) = 1 anyways 
+(gdb) p cptr
+$1 = 0x0
+(gdb) p &cptr
+$2 = (char **) 0x7fffffffde08
+(gdb) i r
+rax            0x400546	4195654
+rbx            0x0	0
+rcx            0x0	0
+rdx            0x7fffffffdf08	140737488346888
+rsi            0x7fffffffdef8	140737488346872
+rdi            0x1	1
+rbp            0x7fffffffde10	0x7fffffffde10
+rsp            0x7fffffffde00	0x7fffffffde00
+r8             0x4005f0	4195824
+r9             0x7ffff7de81b0	140737351942576
+r10            0xc	12
+r11            0x1	1
+r12            0x400450	4195408
+r13            0x7fffffffdef0	140737488346864
+r14            0x0	0
+r15            0x0	0
+rip            0x40054e	0x40054e <main+8>
+eflags         0x206	[ PF IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+(gdb) bt
+#0  main () at derefdanglingptr.c:18  
+
+...  
+
+(gdb) c
+Continuing.
+
+Breakpoint 7, main () at derefdanglingptr.c:19
+19		free(cptr);
+(gdb) i r
+rax            0x602010	6299664
+rbx            0x0	0
+rcx            0x7ffff7dd1ae0	140737351850720
+rdx            0x602010	6299664
+rsi            0x602020	6299680
+rdi            0x7ffff7dd1ae0	140737351850720
+rbp            0x7fffffffde10	0x7fffffffde10
+rsp            0x7fffffffde00	0x7fffffffde00
+r8             0x602000	6299648
+r9             0x0	0
+r10            0x602010	6299664
+r11            0x246	582
+r12            0x400450	4195408
+r13            0x7fffffffdef0	140737488346864
+r14            0x0	0
+r15            0x0	0
+rip            0x40055c	0x40055c <main+22>
+eflags         0x206	[ PF IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+(gdb) bt
+#0  main () at derefdanglingptr.c:19
+(gdb) p cptr
+$5 = 0x602010 ""
+(gdb) p &cptr
+$6 = (char **) 0x7fffffffde08
+
+(gdb) c
+Continuing.
+
+Breakpoint 8, main () at derefdanglingptr.c:21
+21		char chout = *cptr;   
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x0000000000400546 <+0>:	push   %rbp
+   0x0000000000400547 <+1>:	mov    %rsp,%rbp
+   0x000000000040054a <+4>:	sub    $0x10,%rsp
+   0x000000000040054e <+8>:	mov    $0xa,%edi
+   0x0000000000400553 <+13>:	callq  0x400440 <malloc@plt>
+   0x0000000000400558 <+18>:	mov    %rax,-0x8(%rbp)
+   0x000000000040055c <+22>:	mov    -0x8(%rbp),%rax
+   0x0000000000400560 <+26>:	mov    %rax,%rdi
+   0x0000000000400563 <+29>:	callq  0x400430 <free@plt>
+=> 0x0000000000400568 <+34>:	mov    -0x8(%rbp),%rax
+   0x000000000040056c <+38>:	movzbl (%rax),%eax
+   0x000000000040056f <+41>:	mov    %al,-0x9(%rbp)
+   0x0000000000400572 <+44>:	mov    $0x0,%eax
+   0x0000000000400577 <+49>:	leaveq 
+   0x0000000000400578 <+50>:	retq   
+End of assembler dump.
+(gdb) i r
+rax            0x0	0
+rbx            0x0	0
+rcx            0x7ffff7dd1a00	140737351850496
+rdx            0x0	0
+rsi            0x7ffff7dd1ae8	140737351850728
+rdi            0xffffffff	4294967295
+rbp            0x7fffffffde10	0x7fffffffde10
+rsp            0x7fffffffde00	0x7fffffffde00
+r8             0x602010	6299664
+r9             0x0	0
+r10            0x8bc	2236
+r11            0x7ffff7a97240	140737348465216
+r12            0x400450	4195408
+r13            0x7fffffffdef0	140737488346864
+r14            0x0	0
+r15            0x0	0
+rip            0x400568	0x400568 <main+34>
+eflags         0x206	[ PF IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+(gdb) c
+Continuing.
+
+Breakpoint 4, 0x000000000040056c in main () at derefdanglingptr.c:21
+21		char chout = *cptr;   
+(gdb) disassemble main
+Dump of assembler code for function main:
+   0x0000000000400546 <+0>:	push   %rbp
+   0x0000000000400547 <+1>:	mov    %rsp,%rbp
+   0x000000000040054a <+4>:	sub    $0x10,%rsp
+   0x000000000040054e <+8>:	mov    $0xa,%edi
+   0x0000000000400553 <+13>:	callq  0x400440 <malloc@plt>
+   0x0000000000400558 <+18>:	mov    %rax,-0x8(%rbp)
+   0x000000000040055c <+22>:	mov    -0x8(%rbp),%rax
+   0x0000000000400560 <+26>:	mov    %rax,%rdi
+   0x0000000000400563 <+29>:	callq  0x400430 <free@plt>
+   0x0000000000400568 <+34>:	mov    -0x8(%rbp),%rax
+=> 0x000000000040056c <+38>:	movzbl (%rax),%eax
+   0x000000000040056f <+41>:	mov    %al,-0x9(%rbp)
+   0x0000000000400572 <+44>:	mov    $0x0,%eax
+   0x0000000000400577 <+49>:	leaveq 
+   0x0000000000400578 <+50>:	retq   
+End of assembler dump.
+(gdb) i r
+rax            0x602010	6299664
+rbx            0x0	0
+rcx            0x7ffff7dd1a00	140737351850496
+rdx            0x0	0
+rsi            0x7ffff7dd1ae8	140737351850728
+rdi            0xffffffff	4294967295
+rbp            0x7fffffffde10	0x7fffffffde10
+rsp            0x7fffffffde00	0x7fffffffde00
+r8             0x602010	6299664
+r9             0x0	0
+r10            0x8bc	2236
+r11            0x7ffff7a97240	140737348465216
+r12            0x400450	4195408
+r13            0x7fffffffdef0	140737488346864
+r14            0x0	0
+r15            0x0	0
+rip            0x40056c	0x40056c <main+38>
+eflags         0x206	[ PF IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+(gdb) p &cptr
+$9 = (char **) 0x7fffffffde08
+(gdb) p cptr
+$10 = 0x602010 ""
+...  
+
+```   
+
+So at least we can conclude *definitively*  that in this case, for `movzbl`, RAX doesn't have to deal with invalid memory address `0x0`.  
+
+
+
+
+ 
 
 
 
@@ -314,6 +652,7 @@ cf. [X86-64 Architecture Guide](http://cons.mit.edu/sp17/x86-64-architecture-gui
 
 | Register | Purpose | Saved across calls |   
 | :------- | ------- | :----------------- |   
+| `%rax`   | temp register; return value | No |  
 | `%rsp`   | stack pointer | Yes | 
 | `%rbp`   | callee-saved; base pointer | Yes |  
 | `%r10-r11` | temporary | No | 
