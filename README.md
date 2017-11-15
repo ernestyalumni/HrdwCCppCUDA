@@ -3,7 +3,9 @@ Hardware C, C++, and CUDA; code demonstrating C, C++, CUDA interactions with har
 
 - `./learn-c-the-hard-way-lectures`, from Zed Shaw (original author)'s github repository, [`learn-c-the-hard-way-lectures`](https://github.com/zedshaw/learn-c-the-hard-way-lectures)
 
-- Reference for *Registers* (x86_64 architecture) are on `./Cmemory/README.md`  
+- `./Cmemory/` - memory layout in C, heap and stack memory management in C, Segmentation Fault cases in C, including stack overflow, buffer overflow, dereferencing pointers to null pointers, wild pointers (uninitialized), dangling pointers, down to instruction level (with `gdb`).  
+	* `./Cmemory/heapstack` - heap and stack C examples, including stack overflow, buffer overflow, and (nasty) memory leak (heap overflow) examples.  
+	* Reference for *Registers* (x86_64 architecture) are on `./Cmemory/README.md`  
 
 # `gdb`  
 
@@ -60,7 +62,42 @@ https://www.exploit-db.com/docs/28475.pdf
 
 ### `delete [breakpoint]` [delete a break point]() 
 
+### [`disassemble`](http://visualgdb.com/gdbreference/commands/disassemble)  
 
+Disassembles a function or function fragment (into machine instruction).  
+
+** Syntax ** 
+```  
+disassemble
+disassemble [Function]
+disassemble [Address]
+disassemble [Start],[End]
+disassemble [Function],+[Length]
+disassemble [Address],+[Length]
+disassemble /m [...]
+disassemble /r [...]  
+```  
+
+** Parameters **  
+  
+`Function`  
+    Specifies the function to disassemble. If specified, the disassemble command will produce the disassembly output of the entire function.  
+`Address`  
+    Specifies the address inside a function to disassemble. Note that when only one address is specified, this command will disassemble the entire function that includes the given address, including the instructions above it.  
+`Start/End`  
+    Specifies starting and ending addresses to disassemble. If this form is used, the command won't disassemble the entire function, but only the instructions between the starting and ending addresses.  
+`Length`  
+    Specifies the amount of bytes to disassemble starting from the given address or function.   
+`/m`  
+    When this option is specified, the disassemble command will show the source lines that correspond to the disassembled instructions.  
+`/r`  
+    When this option is specified, the disassemble command will show the raw byte values of all disassembled instructions.   
+
+
+e.g. 
+```  
+disassemble main  
+```  
 
 ### `i` , `i[nfo]`
 
@@ -156,3 +193,5 @@ Single stepping until exit from function, which has no line number information.
 
 - [Buffer Overflow (vs) Buffer OverRun (vs) Stack Overflow [duplicate]](https://stackoverflow.com/questions/1144088/buffer-overflow-vs-buffer-overrun-vs-stack-overflow)
 - [Segfault on stack overflow](https://stackoverflow.com/questions/81202/segfault-on-stack-overflow)
+- [Segmentation Fault - C [duplicate]](https://stackoverflow.com/questions/10668504/segmentation-fault-c)
+- [Memory Layout of C Programs 2.7, GeeksforGeeks](http://www.geeksforgeeks.org/memory-layout-of-c-program/)
