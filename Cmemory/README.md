@@ -763,6 +763,21 @@ int main() {
 	printf(" fvar, fptr : %f, %f", fvar, *fptr); // 10.f, 10.f, as expected.  
 ```
 
+This is also ok:
+
+```  
+#include <stdio.h>
+
+int main() {
+	float *fptr = NULL; // doesn't "initialize" *fptr to 0, instead, C reads it as it does NULL; // this line alone still compiles	
+	
+	float fvar = 10.f; 
+	fptr = &fvar;  
+	
+	printf(" fptr :  %f " , *fptr ); // 10.f
+} 
+```  
+
 
 
 # Registers  
