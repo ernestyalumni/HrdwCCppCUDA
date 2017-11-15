@@ -127,7 +127,7 @@ cf. [Debugging Segmentation Faults and Pointer Problems, CProgramming](https://w
 - load the core file into GDB, 
 - do a backtrace, 
 - move into the scope of your code, and 
-- list the lines of code that caused the segmentation fault.   
+- list the lines of code that caused the segmentation fault."   
  
 
 
@@ -255,15 +255,13 @@ The operating system (OS) is running the program (its instructions).  Only from 
 For [virtual memory](https://en.wikipedia.org/wiki/Virtual_memory), the memory addresses are mapped by program called *virtual addresses* into *physical addresses* and the OS manages virtual addresses space, hardcare in the CPU called memory management unit (*MMU*) translates virtual addresses to physical addresses, and kernel manages memory hierarchy (eliminating possible overlays).  In this case, it's the *hardware* that detects an attempt to refer to a non-existent segment, or location outside the bounds of a segment, or to refer to location not allowed by permissions for that segment (e.g. write on read-only memory).   
 
 - 'derefnullptr.c' - point to `NULL`, dereference pointer -> maybe cause Segmentation Fault (not guaranteed by C/C++ standard, and dependent upon if you can write to memory at 0 (`0x00`)).   
-
 ```  
 #include <stdio.h> // printf, NULL
 ... 
 char *cptr = NULL; // no SegFault yet
 char chout = *cptr; // Segmentation Fault occurs here  
 ```  
-
-	* `gdb` debugging results:   
+* `gdb` debugging results:   
 ```  
 (gdb) disassemble main
 Dump of assembler code for function main:
@@ -308,6 +306,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x7fffffffde30:	0x00040000	0x00000000	0xffffdf08	0x00007fff
 0x7fffffffde40:	0xf7b9a188	0x00000001
 ```  
+
 Accessing memory at address `0x0` is problematic.  But I think the problem is the `movzbl (%rax),%eax`, (note `movzbl` is `mov`, but taking into account +,- signs).  
 
 - 'derefwildptr.c' - wild ptr (uninitialized ptr) may point to memory that may or may not exist, and may or may not be readable or writable.  Reading from a wild ptr may result in random data but no segmentation fault.   
@@ -320,7 +319,7 @@ int main() {
 } 
 ```  
 
-	* `gdb` debugging results; strategy I took was to set up break points directly at the line number of the code itself, and after looking at `disassemble main` and seeing where `ret` instruction occurred, and other "places of interest" (such as a function call with `call` instruction):  
+* `gdb` debugging results; strategy I took was to set up break points directly at the line number of the code itself, and after looking at `disassemble main` and seeing where `ret` instruction occurred, and other "places of interest" (such as a function call with `call` instruction):  
 
 ```  
 (gdb) b 18
