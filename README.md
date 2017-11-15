@@ -1,11 +1,12 @@
 # HrdwCCppCUDA
 Hardware C, C++, and CUDA; code demonstrating C, C++, CUDA interactions with hardware
 
-- `./learn-c-the-hard-way-lectures`, from Zed Shaw (original author)'s github repository, [`learn-c-the-hard-way-lectures`](https://github.com/zedshaw/learn-c-the-hard-way-lectures)
-
 - `./Cmemory/` - memory layout in C, heap and stack memory management in C, Segmentation Fault cases in C, including stack overflow, buffer overflow, dereferencing pointers to null pointers, wild pointers (uninitialized), dangling pointers, down to instruction level (with `gdb`).  
 	* `./Cmemory/heapstack` - heap and stack C examples, including stack overflow, buffer overflow, and (nasty) memory leak (heap overflow) examples.  
 	* Reference for *Registers* (x86_64 architecture) are on `./Cmemory/README.md`  
+
+- `./learn-c-the-hard-way-lectures`, from Zed Shaw (original author)'s github repository, [`learn-c-the-hard-way-lectures`](https://github.com/zedshaw/learn-c-the-hard-way-lectures)
+
 
 # `gdb`  
 
