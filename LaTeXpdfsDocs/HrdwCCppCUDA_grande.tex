@@ -728,8 +728,51 @@ In modern OS's, page tables are usually set up to make the address 0 an invalid 
 
 cf. [What happens in OS when we dereference a NULL pointer in C?](https://stackoverflow.com/questions/12645647/what-happens-in-os-when-we-dereference-a-null-pointer-in-c)
 
-   
+\part{C++}  
 
+\section{static}
+
+
+
+\section{Free Store}  
+
+
+cf. \href{http://www.gotw.ca/gotw/009.htm}{GotW \#9, Memory Management - Part I}
+
+Free store is 1 of the 2 dynamic memory areas, allocated/freed by new/delete (free store and heap).  Object lifetime can be less than the time the storage is allocated.  
+
+Let $t_{0,\text{obj}}, t_{f,\text{obj}}$, $t_{f,\text{obj}} \geq t_{0,\text{obj}}$, \\
+\phantom{Let } $t_{0,\text{alloc}}, t_{f,\text{alloc}}$, $t_{f,\text{alloc}} \geq t_{0,\text{alloc}}$, \\  
+with the condition that 
+\[
+t_{0,\text{alloc}} \leq t_{0,\text{obj}} \leq t_{f,\text{obj}} \leq t_{f,\text{alloc}}
+\].  
+
+For $t \in (t_{0,\text{alloc}} , t_{0,\text{obj}} )$, storage may be accessed and manipulated through a \verb|void*| but non of the proto-object's \emph{nonstatic} members or member functions may be accessed, have their addresses taken, or be otherwise manipulated.  
+
+
+
+cf. 11.2 Introduction of Ch. 11 Select Operations \cite{Stro2013}.  
+
+
+
+
+\section{Copy vs. Move}  
+cf. 17.1 Introduction of Ch. 17 Construction, Cleanup, Copy, and Move of Stroustrup \cite{Stro2013}.  
+
+Difference between \emph{move} and \emph{copy}: after a copy, 2 objects must have same value; whereas after a move, the source of the move isn't required to have its original value.  So moves can be used when source object won't be used again.  
+
+Refs.: Sec. 3.2.1.2, Sec. 5.2, notion of moving a resource, Sec. 13.2-Sec.13.3, object lifetime and errors explored further in Stroustrup \cite{Stro2013}  
+  
+  
+5 situations in which an object is copied or moved:   
+\begin{itemize}
+	\item as source of an \emph{assignment}
+	\item as object initializer 
+	\item as function argument
+	\item as function return value
+	\item as an exception  
+\end{itemize}
 
 \end{multicols*}
 
@@ -757,6 +800,14 @@ Peter van der Linden.  \textbf{Expert C Programming: Deep C Secrets} 1st Edition
 
 \bibitem{Ferr2010}
 Leo Ferres.  "Memory management in C: The heap and the stack".  \href{http://www.inf.udec.cl/~leo/teoX.pdf}{Memory management in C: The heap and the stack}
+
+
+\bibitem{Stro2013}
+Bjarne Stroustrup.  \textbf{The C++ Programming Language}, 4th Edition. Addison-Wesley Professional; 4 edition (May 19, 2013).  ISBN-13: 978-0321563842
+
+\bibitem{GhJa1997} 
+Carlo Ghezzi, Mehdi Jazayeri.  \textbf{Programming Language Concepts} 3rd Edition.  Wiley; 3 edition (June 23, 1997).  ISBN-13: 978-0471104261  \url{https://vowi.fsinf.at/images/7/72/TU_Wien-Programmiersprachen_VL_(Puntigam)_-_E-Book_SS08.pdf}
+
 
 
 \end{thebibliography}
