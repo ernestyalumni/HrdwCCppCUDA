@@ -742,6 +742,12 @@ Refs.: Sec. 3.2.1.2, Sec. 5.2, notion of moving a resource, Sec. 13.2-Sec.13.3, 
 	\item as an exception  
 \end{itemize}
 
+\subsection{Move Constructor}  
+
+For a class, to control what happens when we move, or move and assign object of this class type, use special member function \emph{move constructor}, \emph{move-assignment operator}, and define these operations.  Move constructor and move-assignment operator take a (usually nonconst) rvalue reference, to its type.  Typically, move constructor moves data from its parameter into the newly created object.  After move, it must be safe to run the destructor on the given argument.  cf. Ch. 13 of Lippman, Lajole, and Moo (2012) \cite{LLM2012}
+
+
+
 \section{vtable; virtual table}  
 
 I was given this answer to a question I posed to a 20 year C++ veteran and it was such an important answer (as I did not know a virtual table existed, at all before), that I will copy this, repeat this and explore this extensively:  
@@ -845,7 +851,8 @@ Bjarne Stroustrup.  \textbf{The C++ Programming Language}, 4th Edition. Addison-
 \bibitem{GhJa1997} 
 Carlo Ghezzi, Mehdi Jazayeri.  \textbf{Programming Language Concepts} 3rd Edition.  Wiley; 3 edition (June 23, 1997).  ISBN-13: 978-0471104261  \url{https://vowi.fsinf.at/images/7/72/TU_Wien-Programmiersprachen_VL_(Puntigam)_-_E-Book_SS08.pdf}
 
-
+\bibitem{LLM2012}
+Stanley B. Lippman, Jos\'{e}e Lajoie, Barbara E. Moo. \textbf{C++ Primer} (5th Edition).  Addison-Wesley Professional; 5 edition (August 16, 2012) ISBN-13: 978-0321714114 
 
 
 
