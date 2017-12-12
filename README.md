@@ -6,7 +6,7 @@ Hardware C, C++, and CUDA; code demonstrating C, C++, CUDA interactions with har
 	* Reference for *Registers* (x86_64 architecture) are on `./Cmemory/README.md`  
 
 - `./learn-c-the-hard-way-lectures`, from Zed Shaw (original author)'s github repository, [`learn-c-the-hard-way-lectures`](https://github.com/zedshaw/learn-c-the-hard-way-lectures)
-
+- `./Cppcls` - all about C++ classes, C++ class inheritance, `vtable`s, `virtual`    
 
 # `gdb`  
 
