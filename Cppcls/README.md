@@ -304,7 +304,11 @@ As you can clearly see, 2 instructions, `sub`, `jmp`, perform pointer adjustment
 
 cf. [What every C++ programmer should know, The hard part](http://web.archive.org/web/20131210001207/http://thomas-sanchez.net/computer-sciences/2011/08/15/what-every-c-programmer-should-know-the-hard-part/)
 
+*More links*
 
+(I haven't worked this out but this is a very thorough and well written explanation):  
+
+[C++ vtables - Part 1 - Basics (1204 words)](https://shaharmike.com/cpp/vtable-part1/)
 
 ## `virtual`  
 

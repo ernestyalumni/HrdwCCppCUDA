@@ -67,7 +67,7 @@ https://www.exploit-db.com/docs/28475.pdf
 
 Disassembles a function or function fragment (into machine instruction).  
 
-** Syntax ** 
+*Syntax* 
 ```  
 disassemble
 disassemble [Function]
@@ -79,7 +79,7 @@ disassemble /m [...]
 disassemble /r [...]  
 ```  
 
-** Parameters **  
+*Parameters*  
   
 `Function`  
     Specifies the function to disassemble. If specified, the disassemble command will produce the disassembly output of the entire function.  
@@ -221,7 +221,7 @@ Get the base address of the vtable, like `print &'vtable for Type'`.
 
 Get the base address of the typeinfo for the type, like `print &'typeinfo for Type'`.
 
-### 'p instanceClassobjyouwant->clsmemberyouwant`; how to get value of a data member of a class instance object in gdb  
+### `p instanceClassobjyouwant->clsmemberyouwant`; how to get value of a data member of a class instance object in gdb  
 
 [How to get value of a data member in gdb?](https://stackoverflow.com/questions/10814170/how-to-get-value-of-a-data-member-in-gdb)
 
@@ -230,7 +230,7 @@ p instanceClassobjyouwant->clsmemberyouwant
 ```
 Also, to get memory address (location) info, do 
 
-``` 
+```  
 p &(instanceClassobjyouwant->clsmemberyouwant)
 ``` 
 
