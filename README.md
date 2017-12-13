@@ -108,13 +108,13 @@ disassemble main
 
 Displays the contents of general-purpose processor registers.  
 
-#### Syntax
+*Syntax*  
 ```  
 info registers
 info registers [Register name]
 ```  
 
-#### Parameters
+*Parameters*
 
 *Register name*  
     If specified, the info registers command will show the contents of a given register only. If omitted, the command will show the contents of all general-purpose CPU registers. 
@@ -128,6 +128,78 @@ e.g. `info registers eax`, `info registers cx`
 
 cf. [how can one see content of stack with gdb](https://stackoverflow.com/questions/7848771/how-can-one-see-content-of-stack-with-gdb)
 
+### `info vtbl`, `info vtbl expressionornameofobject`  
+
+
+
+cf. [info vtbl command](http://visualgdb.com/gdbreference/commands/info_vtbl)
+
+Displays information about a virtual method table (vtable) of an object
+
+*Syntax* 
+```
+info vtbl [Expression]
+```  
+
+*Parameters*
+
+*Expression*  
+    Specifies an expression that will be evaluted to get the pointer to the object which virtual method table should be displayed.
+
+*Remarks*
+
+Vtable contains the list of pointers to virtual methods defined in the class of the object.  
+The address of the vtable can also be used to identify the actual type of the object using the **info symbol** command.
+
+e.g. 
+
+```  
+class BaseClass
+{
+public:
+    virtual void Test()
+    {
+    }
+};
+
+class ChildClass : public BaseClass
+{
+public:
+    virtual void Test()
+    {
+    }
+};
+
+typedef int UnusedType, UsedType;
+
+int main(int argc, char **argv)
+{
+    BaseClass *pObject = new ChildClass();
+    asm("int3");
+    delete pObject;
+    return 0;
+}
+```  
+
+We will now use the **info vtbl** command to display vtable and show that the object pointed by a **BaseClass** pointer is actually an instance of **ChildClass**:
+
+```  
+(gdb) run
+Starting program: /home/bazis/test
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+main (argc=1, argv=0xbffff064) at test.cpp:23
+23 delete pObject;
+(gdb) print pObject
+$1 = (BaseClass *) 0x804b008
+(gdb) info vtbl pObject
+vtable for 'BaseClass' @ 0x80486c8 (subobject @ 0x804b008):
+[0]: 0x80485f4 <ChildClass::Test()>
+(gdb) info symbol 0x80486c8
+vtable for ChildClass + 8 in section .rodata of /home/bazis/test
+```  
+
+
 ### `kill`  
 Kill the program being debugged? (y or n) y
 
@@ -139,9 +211,28 @@ Finding (memory) address of a variable, e.g.
 p &arr
 ``` 
 
-
 cf. [Finding address of a local variable in C with GDB](https://stackoverflow.com/questions/10835822/finding-address-of-a-local-variable-in-c-with-gdb)
 
+### `p &'vtable for Classyouwanttoknowabout'`, `p &'typeinfo for Classyouwanttoknowabout'`    
+
+cf. [Print vtbl functions of any class in GDB](https://stackoverflow.com/questions/37213562/print-vtbl-functions-of-any-class-in-gdb)
+
+Get the base address of the vtable, like `print &'vtable for Type'`.
+
+Get the base address of the typeinfo for the type, like `print &'typeinfo for Type'`.
+
+### 'p instanceClassobjyouwant->clsmemberyouwant`; how to get value of a data member of a class instance object in gdb  
+
+[How to get value of a data member in gdb?](https://stackoverflow.com/questions/10814170/how-to-get-value-of-a-data-member-in-gdb)
+
+```
+p instanceClassobjyouwant->clsmemberyouwant
+```
+Also, to get memory address (location) info, do 
+
+``` 
+p &(instanceClassobjyouwant->clsmemberyouwant)
+``` 
 
 ### `s`, `step`  
 Single stepping until exit from function, which has no line number information.
