@@ -314,3 +314,41 @@ cf. [What every C++ programmer should know, The hard part](http://web.archive.or
 
 cf. Ch. 21 Class Hierarchies, **The C++ Programming Language**, Bjarne Stroustrup.  2013.  
 
+## pImpl - pointer to Implementation; shallow copy, deep copy
+
+cf. Item 22: "When using the Pimpl Idiom, define special member functions in the implementation file," pp. 147 of Meyers (2014)   
+
+``` 
+class Widget { 			// still in header "widget.h" 
+	public:
+		Widget();
+		~Widget();		// dtor is needed-see below 
+		... 
+	
+	private:
+		struct Impl;	// declare implementation struct 
+		Impl *pImpl;	// and pointer to it
+};
+```  
+
+Because `Widget` no longer mentions types \verb|std::string, std::vector|, and `Gadget, Widget` clients no longer need to `#include` headers for these types.  That speeds compilation.  
+
+*incomplete type* is a type that has been declared, but not defined, e.g. `Widget::Impl`.  There are very few things you can do with an incomplete type, but declaring a pointer to it is 1 of them.  
+
+`std::unique_ptr`s is advertised as supporting incomplete types.  But, when `Widget w;`, `w`, is destroyed (e.g. goes out of scope), destructor is called and if in class definition using `std::unique_ptr`, we didn't declare destructor, compiler generates destructor, and so compiler inserts code to call destructor for `Widget`'s data member `m_Impl` (or `pImpl`).  
+
+`m_Impl` (or `pImpl`) is a `std::unique_ptr<Widget::Impl>`, i.e., a `std::unique_ptr` using default deleter. The default deleter is a function that uses `delete` on raw pointer inside the `std::unique_ptr`.  Prior to using `delete`, however, implementations typically have default deleter employ C++11's `static_assert` to ensure that raw pointer doesn't point to an incomplete type.  When compiler generates code for the destruction of the `Widget w`, then, it generally encounters a `static_assert` that fails, and that's usually what leads to the error message.  
+
+To fix the problem, you need to make sure that at point where code to destroy `std::unique_ptr<Widget::Impl>` is generated, `Widget::Impl` is a complete type.  The type becomes complete when its definition has been seen, and `Widget::Impl` is defined inside `widget.cpp`.  For successful compilation, have compiler see body of `Widget`'s destructor (i.e. place where compiler will generate code to destroy the `std::unique_ptr` data member) only inside `widget.cpp` after `Widget::Impl` has been defined.  
+
+For compiler-generated move assignment operator, move assignment operator needs to destroy object pointed to by `m_Impl` (or `pImpl`) before reassigning it, but in the `Widget` header file, `m_Impl` (or `pImpl`) points to an incomplete type.  Situation is different for move constructor.  Problem there is that compilers typically generate code to destroy `pImpl` in the event that an exception arises inside the move constructor, and destroying `pImpl` requires `Impl` be complete.  
+
+Because problem is same as before, so is the fix - *move definition of move operations into the implementation file*.  
+
+For copying data members, support copy operations by writing these functions ourselves, because (1) compilers won't generate copy operations for classes with move-only types like `std::unique_ptr` and (2) even if they did, generated functions would copy only the `std::unique_ptr` (i.e. perform a *shallow copy*), and we want to copy what the pointer points to (i.e., perform a *deep copy*).  
+
+If we use `std::shared_ptr`, there'd be no need to declare destructor in `Widget`.  
+
+Difference stems from differing ways smart pointers support custom deleters.  For `std::unique_ptr`, type of deleter is part of type of smart pointer, and this makes it possible for compilers to generate smaller runtime data structures and faster runtime code.  A consequence of this greater efficiency is that pointed-to types must be complete when compiler-generated special functions (e.g. destructors or move operations) are used.  For `std::shared_ptr`, type of deleter is not part of the type of smart pointer.  This necessitates larger runtime data structures and somewhat slower code, but pointed-to types need not be complete when compiler-generated special functions are employed.  
+  
+
