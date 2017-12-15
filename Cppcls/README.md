@@ -125,6 +125,49 @@ int main()
 Compiler error is because *compiler-created temporary objects cannot be bound to non-const references*. 
 
 
+cf. [Meaning of "const" last in a C++ method declaration? ](https://stackoverflow.com/questions/751681/meaning-of-const-last-in-a-c-method-declaration) 
+
+When you add const keyword to a method, the this pointer will essentially become const, and therefore you can't change any member data (unless use mutable).  
+
+e.g.  
+```  
+class MyClass1
+{
+	private:
+		mutable int counter;
+	public:
+		MyClass1() : counter(0) {}
+		
+		void Foo() {
+			counter++;
+			std::cout << "Foo" << std::endl;
+		}
+		
+		void Foo() const {
+			counter++;
+			std::cout << "Foo const" << std::endl;
+		}
+		
+		int GetInvocations() const
+		{
+			return counter;
+		}
+};  
+```  
+ 
+cf. ["&" meaning after variable type, means you're passing the variable by reference](https://stackoverflow.com/questions/11604190/meaning-after-variable-type)  
+  
+It means you're passing the variable by reference, i.e. The & means function accepts *address* (or reference) to a variable, instead of *value* of the variable.  
+
+e.g. 
+```  
+int x = 42;
+int& y = x;
+
+MyClass cc;
+MyClass & ccc=cc;
+const MyClass& c=cc;
+```  
 
 
 ## vtable, virtual table  
