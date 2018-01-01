@@ -1047,6 +1047,9 @@ If we use \verb|std::shared_ptr|, there'd be no need to declare destructor in \v
 
 Difference stems from differing ways smart pointers support custom deleters.  For \verb|std::unique_ptr|, type of deleter is part of type of smart pointer, and this makes it possible for compilers to generate smaller runtime data structures and faster runtime code.  A consequence of this greater efficiency is that pointed-to types must be complete when compiler-generated special functions (e.g. destructors or move operations) are used.  For \verb|std::shared_ptr|, type of deleter is not part of the type of smart pointer.  This necessitates larger runtime data structures and somewhat slower code, but pointed-to types need not be complete when compiler-generated special functions are employed.  
 
+
+
+
 \end{multicols*}
 
 \begin{thebibliography}{9}
