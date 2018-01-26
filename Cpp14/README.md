@@ -33,7 +33,15 @@ constexpr T&& forward( typename std::remove_reference<T>::type&& t ) noexcept;
 
 #### Perfect forwarding 
 
-cf. [Perfect forwarding and universal references in C++, Eli Bendersky](https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c/)
+cf. [Perfect forwarding and (erroneous) "universal references" in C++, Eli Bendersky](https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c/)
+
+We'd like to define a function with generic parameters that forwards its parameters *perfectly* to some other function 
+
+Let `func(E1, E2, ..., En)` be an arbitrary function call with generic parameters `E1, E2, ..., En`.  
+We'd like to write a function `wrapper` such that 
+`wrapper(E1, E2, ..., En)` is equivalent to `func(E1, E2, ... En)`  
+
+Suppose f is a functor.  We want to create g that is the same space of functors as f.  
 
 
 
@@ -76,6 +84,128 @@ pattern ...
 ```  
 
 ### rvalue references  
+
+cf. [Perfect Forwarding in C++11 Agop.me](https://agop.me/post/perfect-forwarding-cpp-11.html)
+
+#### So, what's an rvalue reference?  
+
+rvalue reference is a reference that binds to an rvalue, like a temporary object.  
+Note that lvalue references to `const` (e.g. `const Foo& foo = bar + baz;`) can also bind to rvalues,  
+*but rvalue references allow you to modify the referenced object*.  You can't do that with lvalue references to `const`!  
+
+```  
+// Reference to const std::string.
+const std::string& fooLvalueRefConst = bar + baz; // OK
+fooLvalueRefConst[0] = 'f'; 						// Error! foo is a reference to const std::string!  
+
+// Rvalue reference to std::string.
+std::string&& fooRvalueRef = bar + baz; 	// OK
+fooRvalueRef[0] = 'f';						// OK
+```  
+
+##### Cool. But why do that?  
+
+*To avoid making an unnecessary copy!  Consider common scenario of using a reference to `const` in a constructor to initialize a member:  
+```  
+class Foo
+{
+public:
+	std::string member;
+	
+	Foo(const std::string& member): member{member} {}
+}; 
+
+// Later on...
+
+Foo foo{bar + baz};  
+```  
+ 
+What happens?  `bar + baz` creates a temporary `std::string`, the `const std::string& member` parameter binds to that temporary, and then that temporary is copied to `Foo::member`.  
+
+By using rvalue reference, we can skip copying temporary by *moving* it directly into the member:
+```  
+class Foo
+{
+public:
+	std::string member;
+	
+	Foo(std::string&& member): member{std::move(member)} {}
+}; 
+
+// Later on...
+
+Foo foo{bar + baz}; 
+```  
+
+Now, `bar + baz` creates temporary, `std::string&& member` parameter binds to that temporary, and invote `Foo::member's` move constructor with `member{std::move(member)}`  
+
+Note `member` parameter (of `Foo`) itself is *not* an rvalue; it's an lvalue of type rvalue reference.  
+
+`std::move(member)` cast `member` parameter back to an rvalue.  
+
+"That last part is *very important*.  Rvalue references mark binding sites (e.g. `Foo&& foo` mean that `foo` can bind to temporary object), but references themselves are lvalues (`foo` wouldn't bind to another rvalue reference without `std::move()`).  
+
+
+ Perfect forwarding allows us to write 1 function (or constructor), and "perfectly forward" each parameter either as rvalue or as lvalue, depending on how it was passed in.  
+ 
+ i.e.  
+ 
+```  
+// Forwards temporary as an rvalue into Foo::member.  
+// Zero copies, one move.  
+Foo foo{bar + baz};
+
+// Forwards bar as an lvalue into Foo::member.
+// One copy, zero moves.
+Foo foo2{bar}; 
+```  
+
+*Here's how* to write the new constructor:
+
+```  
+class Foo
+{
+public:
+	std::string member;
+	
+	template<typename T>
+	Foo(T&& member): member{std::forward<T>(member)} {}  
+};
+
+```  
+
+Works through template type deduction and  
+reference collapsing.  
+
+e.g.  
+
+```  
+
+class Foo2
+{
+	public:
+		std::string member;
+		std::string member2;
+		
+		template<
+			typename T, 	// Parameter 1
+			typename U, 	// Parameter 2,
+			// Template type checking,
+			typename = typename std::enable_if< // condition to check
+				// Check type of parameter 1.
+				std::is_constructible<std::string, T>::value &&
+				// Check type of parameter 2. 
+				std::is_constructible<std::string, U>::value>::type>				
+		Foo2(T&& member, U&& member2): 
+			member{std::forward<T>(member)},
+			member2{std::forward<U>(member2)}
+		{ }
+};  
+```  
+
+
+
+
 
 cf. [C++ Source, A Brief Introduction to Rvalue References, Howard E. Hinnant, Bjarne Stroustrup, and Bronek Kozicki](http://www.artima.com/cppsource/rvalue.html)  
 
