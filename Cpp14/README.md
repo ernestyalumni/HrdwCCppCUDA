@@ -6,6 +6,38 @@
 
 e.g. `explicit` used so one doesn't implicit convert from array of chars to string.  
 
+### ['std::forward'](http://en.cppreference.com/w/cpp/utility/forward)  
+
+```  
+template< class T >
+T&& forward( typename std::remove_reference<T>::type& t ) noexcept ; 
+
+template< class T >
+constexpr T&& forward( typename std::remove_reference<T>::type& t ) noexcept;
+
+```  
+1) forwards lvalues as either l values or as rvalues, depending on `T`
+
+
+
+
+```  
+template< class T >
+T&& forward( typename std::remove_reference<T>::type&& t ) noexcept;  
+
+template< class T >
+constexpr T&& forward( typename std::remove_reference<T>::type&& t ) noexcept; 
+```  
+
+2) Forwards rvalues as rvalues and prohibits forwarding of rvalues as lvalues 
+
+#### Perfect forwarding 
+
+cf. [Perfect forwarding and universal references in C++, Eli Bendersky](https://eli.thegreenplace.net/2014/perfect-forwarding-and-universal-references-in-c/)
+
+
+
+
 
 ### [Parameter pack](http://en.cppreference.com/w/cpp/language/parameter_pack), e.g. `Args&&...`  
 
@@ -42,6 +74,49 @@ Parameter pack expansion (appears in body of a variadic template)
 ```  
 pattern ...  
 ```  
+
+### rvalue references  
+
+cf. [C++ Source, A Brief Introduction to Rvalue References, Howard E. Hinnant, Bjarne Stroustrup, and Bronek Kozicki](http://www.artima.com/cppsource/rvalue.html)  
+
+An *lvalue reference* is formed by place an `&` after some type. 
+```  
+A a;
+A& a_ref1 = a; 	// an lvalue reference  
+```  
+
+*rvalue reference* formed by placing an `&&` after some type.  
+```  
+A a;
+A&& a_ref2 = a; 	// an rvalue reference 
+```  
+
+An rvalue reference behaves just like an lvalue reference except that it can bind to a temporary (an rvalue), 
+whereas you can't bind a (non const) lvalue reference to an rvalue.  
+
+- cannot bind (non const) lvalue to rvalue
+
+```  
+A& a_ref3 = A(); 	// Error! 
+A&& a_ref4 = A(); 	// Ok
+```  
+
+#### `move`, `std::move`  
+
+`move` accepts either an lvalue or rvalue argument, and return an rvalue, *without* triggering copy construction  
+
+`move` : { lvalue, rvalue } -> { rvalue }
+
+It's now up to client code to overload key functions on whether their argument is an lvalue or rvalue (e.g. copy constructor and assignment operator)  
+
+When argument is lvalue, argument must be copied from.  When is an rvalue, it can safely be moved from.  
+
+#### Perfect Forwarding (from rvalue referenceperspective, from Hinnant, Stroustrup, Kozicki)   
+
+Imagine writing generic factory function that  
+returns a `std::shared_ptr` for a newly constructed generic type.  
+Obviously, factory function must accept exactly same sets of arguments as constructors of the type of objects constructed.  
+
 
 
 
