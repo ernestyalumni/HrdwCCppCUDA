@@ -78,7 +78,7 @@ s1 = s2;
 ```  
 - destructor releasing resources owned by `s1`, `s2`, and temporary variable holding result of `ident(s1)`  
 
-cf. [`ctor_17/ctor.cpp`]()
+cf. [`ctor_17/ctor.cpp`](https://github.com/ernestyalumni/HrdwCCppCUDA/blob/master/Cpp14/Strou/ctor_17/ctor.cpp)
 
 Constructors, destructors, and copy and move operations for type are not logically separate.  We must define them as matched set, or suffer logical or performance problems.  
 
@@ -101,6 +101,8 @@ class X {
 	// ...
 
 ```
+
+## `unordered_map`, `unordered_set`  
 
 
 
