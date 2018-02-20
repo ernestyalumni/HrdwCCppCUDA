@@ -11,3 +11,15 @@ Reasons for *return type deduction*
 2. refactor code   
 
 
+#### `std::clog`  
+
+cf. [`std::clog` cplusplus](http://www.cplusplus.com/reference/iostream/clog/)
+
+`<iostream>` 
+
+`extern ostream clog;`
+standard output stream for logging, 
+
+In terms of *static initialization order*, `clog` guaranteed to properly constructed and initialized no later than 1st time object of type `ios_bas::Init` is constructed, with inclusion of `<iostream>` counting as at least 1 initialization of such objects with `static duration`  
+
+
