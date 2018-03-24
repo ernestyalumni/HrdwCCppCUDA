@@ -23,6 +23,8 @@
 /** @ref http://en.cppreference.com/w/cpp/numeric/complex */
 #include <complex>
 
+#include <stdexcept> // std::out_of_range
+
 int glob; 
 
 constexpr void bad1(int a)      // error: constexpr function cannot be void
@@ -51,6 +53,16 @@ constexpr int bad3(int a)
     }
 }
 
+constexpr const int* addr(const int& r) { return &r; } // OK
+
+constexpr int low { 0 };
+constexpr int high { 99 };
+
+constexpr int check(int i)
+{
+    return (low <= i && i < high) ? i : throw std::out_of_range("Not in range.");
+}
+
 int main(int argc, char* argv[])
 {
     bad1(2);
@@ -61,4 +73,29 @@ int main(int argc, char* argv[])
     std::cout << " bad2(-3) : " << bad2(3) << std::endl;
 
     constexpr std::complex<float> z { 2.0 }; 
+    int test_r { 32 };
+    addr(test_r);
+
+    /**
+     * in particular, it can be tricky to determine whether 
+     * result of such a function is a constant expression 
+     * */
+    static const int x { 5 }; 
+    constexpr const int* p1 { addr(x) };    // OK
+    constexpr int xx { *p1 };               // OK
+
+    static int y;
+    constexpr const int* p2 { addr(y) };    // OK
+//    constexpr int yy { *y };                // error: attempt to read a variable
+
+    static const int y2 { 32 };
+//    constexpr int yy { *y2 }; // error: invalid type argument of unary '*' (have 'int')
+    constexpr int yy { *p1 };
+    std::cout << " yy : " << yy << std::endl;
+
+    addr(5);
+//    constexpr const int* tp { addr }; // error: cannot convert 'const int* (*)(const int&)' to 'const int* const' in initialization
+
+
+
 }

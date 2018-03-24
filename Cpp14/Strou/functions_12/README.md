@@ -223,4 +223,174 @@ constexpr const int* addr(const int& r) { return& r; } // OK
 ```  
 
 However, doing so brings us away from the fundamental role of `constexpr` functions as part of constant expression evaluation.  
+Particularly, it can be tricky to determine whether the result of such a function is a constant expression. Consider:  
+```  
+static const int x = 5;
+constexpr const int* p1 = addr(x);      // OK
+constexpr int xx = *p1;                 // OK
 
+static int y; 
+constexpr const int* p2 = addr(y);      // OK
+constexpr int yy = *y;                  // error: attempt to read a variable 
+
+constexpr const int* tp = addr(5);      // error: address of temporary
+```  
+
+### Conditional Evaluation (in `constexpr`)
+
+cf. pp. 313 12.1.6.2 Conditional Evaluation Ch. 12 **Functions** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+### `[[noreturn]]` Functions  
+
+`[[...]]` is called an *attribute* and can be placed just about anywhere in C++ syntax.  
+In general, an attribute specifies some implementation-dependent property about the syntactic entity that precedes it.  
+There are only 2 standard attributes (Sec. iso.7.6) 
+* `[[noreturn]]` 
+* `[[carries_dependency]]` 
+
+Placing `[[noreturn]]` at start of a function declaration indicates function isn't expected to return.  e.g. 
+```  
+[[noreturn]] void exit(int);
+```  
+
+### Local Variables  
+
+cf. pp. 314 12.1.8 Local Variables Ch. 12 **Functions** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+A name defined in a function is commonly referred to as a *local name*.  
+A local variable or constant is initialized when a thread of execution reaches its definition.  
+Unless declared `static`, each invocation of the function has its own copy of the variable.  
+If local variable declared `static`, a single, statically allocated object (Sec. 6.4.2) will be used to represent that variable in all calls of the function.  e.g.
+```
+void f(int a)
+{
+    while (a--) {
+        static int n = 0;   // initialized once
+        int x = 0;          // initialized 'a' times in each call of f()  
+
+        cout << "n == " << n++ << ", x == " << x++ << '\n';
+    }
+}
+
+int main()
+{
+    f(3);
+}
+```  
+
+This prints:
+```  
+n == 0, x == 0 
+n == 1, x == 0
+n == 2, x == 0 
+```  
+
+Initialization of `static` local variables doesn't lead to a data race (Sec. 5.3.1) unless you enter function containing it recursively or a deadlock occurs (Sec.iso.6.7).  That is, the C++ implementation must guard the initialization of a local `static` variable with some kind of lock-free construct (e.g., a `call_once`, Sec. 42.3.3).  
+Effect of initializing a local `static` recursively is undefined.  e.g.  
+
+```  
+int fn(int n)
+{
+    static int n1 = n;      // OK
+    static int n2 = fn(n-1) + 1; // undefined
+    return n;
+}
+```
+
+`static` local variable allows function to preserve information between calls without introducing a global variable that might be accessed and corrupted by other functions (cf. Sec. 16.2.12)  
+
+`static` local variable is useful for avoiding order dependencies among nonlocal variables (sec. 15.4.1)
+
+There are no local functions; if you need 1, use a function object or a lambda expression (Sec. 3.4.3, 11.4)
+
+### Argument Passing  
+
+cf. pp. 316 12.2 Argument Passing Ch. 12 **Functions** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+When a function is called (using suffix `()`, known as the *call operator* or *application operator*), store is set aside for its *formal arguments* (also known as its *parameters*); each formal argument initialized by its corresponding actual argument.   
+Semantics of argument passing are identical to semantics of initialization (copy initialization, to be precise, Sec. 16.2.6).  
+Type of an actual argument is checked against type of the corresponding formal argument, and all standard and user-defined type conversions are performed.  
+Unless a formal argument (parameter) is a reference, a copy of the actual argument is passed to the function.  
+
+#### `const` reference (argument passing)  
+
+argument might be declared `const` reference to indicate that the reference is used for efficiency reasons only, and not to enable called function to change value of the object:
+
+Absence of `const` in declaration of reference argument taken as statement of intent to modify the variable.  
+
+Similarly, declaring pointer argument `const` means that value of an object pointed to by that argument isn't changed by the function. 
+
+Following rules for reference initialization, a literal, a constant, and an argument that requires conversion can be passed as a `const T&` argument, but not as a plain (non-`const`) `T&` argument.  
+Allowing conversions for a `const T&` argument ensures that such an argument can be given exactly the same set of values as a `T` argument by passing the value in a temporary, if necessary.  
+
+#### 12.2.2 Array Arguments
+cf. pp. 318 12.2.2 Array Arguments Passing Ch. 12 **Functions** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+Arrays differ from other types in that an array isn't passed by value.  Instead, a pointer is passed (by value).  
+
+A parameter of array type is equivalent to a parameter of pointer type.  
+```  
+void odd(int* p);
+void odd(int a[]);
+void odd(int buf[1020]);
+```   
+These 3 declarations are equivalent and declare the same function.  
+
+Size of an array isn't available to called function. This is a major source of errors, but 
+- a 2nd. argument specifying size can be passed, e.g. 
+```
+void compute1(int* vec_ptr, int vec_size); // one way
+```
+- preferable to pass a reference to some container, e.g. `vector`, `array`, `map`  
+
+If you really want to pass an array, rather than a container, or pointer to 1st element of an array,  
+declare a parameter of type reference to array.  
+
+```
+void f(int(&r)[4]);  
+
+void g()
+{
+  int a1[] = {1,2,3,4};
+  int a2[] = {1,2}; 
+
+  f(a1);    // OK
+  f(a2);    // error: wrong number of elements
+}
+```
+Note number of elements is part of a reference-to-array type. That makes such references far less flexible than pointers and containers (such as `vector`). 
+
+Main use of reference to arrays is in templates, where number of elements is then deduced. e.g. 
+``` 
+template <class T, int N> void f(T(&r)[N])
+{
+    // ...
+}
+
+int a1[10]; 
+double a2[100];
+
+void g()
+{
+  f(a1);        // T is int; N is 10
+  f(a2);        // T is double; N is 100
+}
+```
+
+
+
+#### Rules of thumb for passing arguments
+
+1. Use pass-by-value for small objects
+2. Use pass-by-`const`-reference to pass large values that you don't need to modify 
+3. Return a result as `return` value rather than modifying an object through an argument 
+4. Use rvalue references to implement move (Sec. 3.3.2, 17.5.2) and forwarding (Sec. 23.5.2.1).  
+5. Pass a pointer if "no object" is a valid alternative (and represent "no object" by `nullptr`). 
+6. Use pass-by-reference only if you have to.  
+
+
+
+
+### Pointer to Function
+
+cf. pp. 332 12.5 Pointer to Function Ch. 12 **Functions** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
