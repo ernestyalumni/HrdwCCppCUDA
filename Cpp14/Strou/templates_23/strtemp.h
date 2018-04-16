@@ -1,10 +1,10 @@
 /**
- * @file   : array_args.cpp
+ * @file   : strtemp.j
  * @author : Ernest Yeung
  * @email  : ernestyalumni@gmail.com
- * @brief  : array argument passing.
- * @ref    : 12.2 Argument Passing Ch. 12 Functions; Bjarne Stroustrup, The C++ Programming Language, 4th Ed., Stroustrup  
- * pp. 47 Ch. 3 GCD; Edward Scheinerman, C++ for Mathematicians: An Introduction for Students and Professionals. Taylor & Francis Group, 2006.   
+ * @brief  : Simple String Template header file
+ * @ref    : pp. 668, 23.2 A Simple String Template Ch. 23 Numerics; Bjarne Stroustrup, The C++ Programming Language, 4th Ed., Stroustrup  
+ * http://en.cppreference.com/w/cpp/types/numeric_limits
  * If you find this code useful, feel free to donate directly and easily at this direct PayPal link: 
  * 
  * https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
@@ -18,4 +18,14 @@
  * Peace out, never give up! -EY
  * 
  * */
-#include <iostream>
+
+template<typename C>
+class String{
+    public:
+        String();
+        explicit String(const C*);
+        String(const String&);
+        String operator=(const String&);
+
+        C& operator[](int n) { return ptr[n]; }              
+}
