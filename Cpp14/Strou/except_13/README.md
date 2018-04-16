@@ -88,4 +88,10 @@ class Locked_file_handle
 
 finally
 
+cf. `Finally.cpp` 
 
+## Enforcing Invariants 
+
+cf. pp. 359, 13.4 Enforcing Invariants, Ch. 13 **Exception Handling** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
+When a ctor can't establish its class invariant (Sec. 2.4.3.2, Sec. 17.2.1), object isn't usable
