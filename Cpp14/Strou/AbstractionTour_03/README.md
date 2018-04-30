@@ -236,7 +236,7 @@ Classes in class hierarchies are different: we tend to allocate them on free sto
 
 functions returning a ptr to an object allocated on free store are dangerous. 
 
-### Copy and Move operations 
+### Copy and Move operations, Copying Containers, copy constructor, copy assignment
 
 cf. pp. 72, Sec. 3.3 Copy and Move. Ch. 3 **A Tour of C++: Abstraction Mechanisms** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
 
@@ -246,3 +246,17 @@ When we design a class, we must always consider if and how object might be copie
 - for simple concrete types, memberwise copy is often exactly the right semantics for copy. 
 - for some sophisticated concrete types, such as `Vector`, memberwise copy isn't the right semantics for copy, and 
 - for abstract types it almost never is
+
+**`this`** - the name `this` is predefined in member functions and points to the object for which the member function is called. 
+
+A copy constructor and copy assignment for a class `X` are typically declared to take an argument of type `const X&`.  
+
+#### Move
+
+`&&` means "rvalue reference" and is a reference to which we can bind an rvalue (Sec. 6.4.1).  
+- "rvalue" roughly means "something that can appear on left-hand (right-hand?) side of an assignment" 
+ 	- so rvalue is - to a 1st approximation - a value that you can't assign to, such as an integer returned by a function call, and a rvalue reference is a reference to something that nobody else can assign to. The `res` local variable in `operator+()` for `Vector`s is an example. 
+- move constructor *doesn't* take a `const` argument: after all, a move constructor is supposed to remove the value from its argument. 
+- move operation is applied when a rvalue reference is used as an initializer or as right-hand side of an assignment.
+
+
