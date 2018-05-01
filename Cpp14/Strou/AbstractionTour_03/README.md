@@ -259,4 +259,28 @@ A copy constructor and copy assignment for a class `X` are typically declared to
 - move constructor *doesn't* take a `const` argument: after all, a move constructor is supposed to remove the value from its argument. 
 - move operation is applied when a rvalue reference is used as an initializer or as right-hand side of an assignment.
 
+### Resource Management 
 
+cf. pp. 76, Sec. 3.3.3 Resource Management. Ch. 3 **A Tour of C++: Abstraction Mechanisms** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+use standard-library `std::vector` to hold `thread`s 
+
+We can acheive *strong resource safety*, i.e. eliminate resource leaks for a general notion of a resource.  
+Examples are `vector`s holding memory, **`thread`s holding system threads, `fstream`s holding file handles**.
+
+#### Suppressing Operations, delete constructors
+
+cf. pp. 77, Sec. 3.3.4 Suppressing Operations. Ch. 3 **A Tour of C++: Abstraction Mechanisms** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+Using default copy or move for a class in a hierarchy is typically a disaster: given only a pointer to a base, we simply don't know what members the derived class has (Sec. 3.2.2), so we can't know how to copy them. 
+Best thing to do is usually to *delete* the default copy and move operations.  
+
+If you need to copy an object in a class hierarchy, write some kind of clone function (Sec. 22.2.4). 
+
+A base class in a class hierarchy is just 1 example of an object we wouldn't want to copy. A resource handle generally can't be copied just by copying its members (Sec. 5.2, Sec. 17.2.2). 
+
+`=delete` mechanism is general, i.e. it can be used to suppress any operation (Sec. 17.6.4). 
+
+## Templates 
+
+cf. pp. 78, Sec. 3.4 Templates. Ch. 3 **A Tour of C++: Abstraction Mechanisms** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
