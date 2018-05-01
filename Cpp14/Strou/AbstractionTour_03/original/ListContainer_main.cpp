@@ -21,7 +21,7 @@
  * Peace out, never give up! -EY
  * 
  * COMPILATION TIPS:
- *  g++ -std=c++14 ListContainer.cpp ListContainer_main.cpp -o ListContainer_main
+ *  g++ -std=c++14 ListContainer.cpp ListContainer_main.cpp Container.cpp -o ListContainer_main
  * */
 #include <algorithm> 	// std::move
 #include <iostream> 

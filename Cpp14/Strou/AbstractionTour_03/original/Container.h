@@ -26,7 +26,7 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
-#include <iostream> // std::cout (include only for debugging/demonstration)
+//#include <iostream> // std::cout (include only for debugging/demonstration)
 
 namespace Containers
 {
@@ -34,6 +34,16 @@ namespace Containers
 class Container
 {
 	public:
+
+//		Container() = delete;
+		Container() = default;
+
+		Container(const Container&) = delete;
+		Container& operator=(const Container&) = delete;
+
+		Container(Container&&) = delete;
+		Container& operator=(Container&&) = delete;
+
 		virtual double& operator[](int) = 0;	// pure virtual function
 		virtual int size() const = 0;
 		virtual ~Container()

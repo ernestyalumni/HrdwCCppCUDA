@@ -21,7 +21,7 @@
  * Peace out, never give up! -EY
  * 
  * COMPILATION TIPS:
- *  g++ -std=c++14 VectorExample.cpp VectorExample_main.cpp -o VectorExample_main
+ *  g++ -std=c++14 VectorExample.cpp VectorExample_main.cpp Container.cpp -o VectorExample_main
  * */
 #include "VectorExample.h"
 
