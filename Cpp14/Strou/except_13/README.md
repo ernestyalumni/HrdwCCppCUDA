@@ -122,7 +122,7 @@ All 3 shared a common view that preconditions should be defined and obeyed.
 need to *assert*: 
 * choose between compile-time asserts (evaluated by compiler) and run-time asserts (evaluated at run time) 
 * for run-time asserts, need  a choice of throw, terminate, or ignore
-* no code shoudl be generated unless some logical condition is `true` , e.g. some runtime asserts shouldn't be evaluated unless logical condition is `true`. Usually, logical condition is something like a debug flag, level of checking, or mask to select aong asserts to enforce 
+* no code should be generated unless some logical condition is `true` , e.g. some runtime asserts shouldn't be evaluated unless logical condition is `true`. Usually, logical condition is something like a debug flag, level of checking, or mask to select aong asserts to enforce 
 * asserts shouldn't be verbose or complicated to write (because they can be very common) 
 
 The standard offers 2 simple mechanisms: 
@@ -145,5 +145,130 @@ struct My_error2: std::runtime_error
   }
 };
 ``` 
+
+### *stack unwinding* 
+
+*stack unwinding* - Process of passing the exception "up the stack" from the point of throw to a handler
+
+#### `std::runtime_error`; overloading it
+
+Because an exception is potentially copied several times before it's caught, we don't usually put huge amounts of data in it. Exceptions containing a few words are very common. 
+
+Semantics of exception propagation are those of initialization, so objects of types with move semantics (e.g. `string`s) aren't expensive to throw. 
+* Some of the most common exceptions carry no information; name of the type is sufficient to report the error.
+
+``` 
+struct Some_error
+{};
+
+int main()
+{
+  try
+  {
+    throw Some_error{};
+  }
+  catch (Some_error& some_error)
+  {
+    std::cout << " Whoops, caught a Some_error" << '\n';
+  }
+}
+```  
+cf. `./tryblock_eg.cpp`
+
+Use either directly or as base classes (i.e. overloading exception types for exception objects):
+
+``` 
+struct MyError2 : std::runtime_error
+{
+  using std::runtime_error::runtime_error;
+
+  const char* what() const noexcept
+  {
+    return "\nMy_error2\n";
+  }
+};
+
+void C(Dummy d, int i)
+{
+  std::cout << "Entering FunctionC" << '\n';
+  d.set_name(" C");
+//  throw std::runtime_error("huh");
+  throw MyError2("huh");
+
+  std::cout << "Exiting FunctionC" << std::endl;
+}
+  try
+  {
+    Dummy d(" M");
+    A(d, 1);
+  }
+  catch (const MyError2& e)
+  {
+    std::cout << " Caught an exception of type: '" << typeid(e).name() << 
+      " which says '" << e.what() << "'\n";
+  } //  Caught an exception of type: '8MyError2 which says '
+``` 
+cf. `./StackUnwinding_eg2.cpp`
+
+
+
+`std::runtime_error` 
+
+Defined in header `<stdexcept>` 
+``` 
+class runtime_error; 
+```   
+Defines a type of object to be thrown as exception. Reports errors that are due to events beyond the scope of the program and can not be easily predicted. 
+
+
+##### Member functions (of `std::runtime_error`)
+
+* (constructor) - constructs the exception object 
+
+`std::runtime_error::runtime_error` 
+
+``` 
+explicit runtime_error(const std::string& what_arg);
+explicit runtime_error(const char* what_arg);
+``` 
+Constructs the exception object with `what_arg` as explanatory string that can be accessed through `what()`. 
+
+#### Inherited from `std::exception` for `std::runtime_error` 
+
+##### Member functions (inherited from `std::exception` for `std::runtime_error`) 
+
+(destructor) [ virtual] - destroys the exception object (virtual public member function of `std::exception`) 
+
+`what` [virtual] - returns an explanatory string (virtual public member function of `std::exception`)
+
+cf. [`std::runtime_error`](http://en.cppreference.com/w/cpp/error/runtime_error) 
+
+
+#### `noexcept` Functions, `noexcept` specifier 
+
+cf. pp. 359, 13.4 Enforcing Invariants, Ch. 13 **Exception Handling** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
+ `noexcept` specifier - specifies whether a function could throw exceptions.
+
+##### Syntax for `noexcept`
+
+`noexcept` - Same as `noexcept(true)` 
+
+Every function in C++ is either *non-throwing* or *potentially throwing*: 
+* *potentially-throwing* functions are 
+  * functions declared with noexcept specifier whose `expression` evaluates to `false` 
+  * functions declared without noexcept specifier except for 
+    * destructors, unless destructor of any potentially-constructed base or member is *potentially-throwing* 
+    * default constructors, copy constructors, move constructors, defaulted on 1st declaration unless 
+      * 
+    * copy-assignment operators, move-assignment operators 
+
+##### Notes for `noexcept` 
+
+Note that **noexcept** specification on function isn't a compile-time check; it's merely a method for programmer to inform compiler whether or not function should throw exceptions. 
+
+Declaring a function `noexcept` can be most valuable for a programmer reasoning about a program and for compiler optimizing a program. Programmer need not worry about providing `try`- clauses (for dealing with failures in a `noexcept` function), and optimizer need not worry about control paths from exception handling. 
+
+By adding a `noexcept` specifier, we indicate our code wasn't written to cope with a `throw`.  
 
 

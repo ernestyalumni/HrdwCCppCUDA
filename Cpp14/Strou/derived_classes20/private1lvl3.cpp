@@ -20,7 +20,7 @@
  * COMPILATION TIPS:
  *  g++ -std=c++17 -c factor.cpp
  * */
-#include "private2lvl2.h"
+#include "private1lvl3.h"
 
 #include <iostream>
 #include <string>

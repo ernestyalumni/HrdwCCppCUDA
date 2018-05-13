@@ -36,6 +36,8 @@ Object of type `std::initializer_list<T>` is a lightweight proxy object that pro
 
 #### `std::runtime_error` 
 
+e.g. `./Strou/except_13/StackUnwinding_eg2.cpp` 
+
 Defined in header `<stdexcept>` 
 ``` 
 class runtime_error; 
@@ -65,3 +67,27 @@ Constructs the exception object with `what_arg` as explanatory string that can b
 
 cf. [`std::runtime_error`](http://en.cppreference.com/w/cpp/error/runtime_error) 
  
+
+#### `noexcept` specifier
+
+e.g. `./Strou/except_13/noexcept_eg.cpp` 
+
+ `noexcept` specifier - specifies whether a function could throw exceptions.
+
+##### Syntax for `noexcept`
+
+`noexcept` - Same as `noexcept(true)` 
+
+Every function in C++ is either *non-throwing* or *potentially throwing*: 
+* *potentially-throwing* functions are 
+  * functions declared with noexcept specifier whose `expression` evaluates to `false` 
+  * functions declared without noexcept specifier except for 
+    * destructors, unless destructor of any potentially-constructed base or member is *potentially-throwing* 
+    * default constructors, copy constructors, move constructors, defaulted on 1st declaration unless 
+      * 
+    * copy-assignment operators, move-assignment operators 
+
+##### Notes for `noexcept` 
+
+Note that **noexcept** specification on function isn't a compile-time check; it's merely a method for programmer to inform compiler whether or not function should throw exceptions. 
+
