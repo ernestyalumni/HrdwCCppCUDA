@@ -20,6 +20,7 @@ uses of `unique_ptr`:
 `unique_ptr<T,D>` (Sec. iso.20.7.1.2)
 `cp` is the contained pointer 
 
+| | |
 | :--------- | :--------- | 
 | `unique_ptr up {}` | Default ctor: `cp = nullptr`; constexpr; noexcept | 
 | `unique_ptr up {p}` | `cp=p`; use default deleter; explicit; noexcept  |
@@ -31,6 +32,7 @@ uses of `unique_ptr`:
 |`up = nullptr` | `up.reset(nullptr)`; that is, delete `up`'s old object, if any |
 | `bool b {up};` | Conversion to `bool: up.cp != nullptr`; explicit |
 
+| | |
 | :--------- | :--------- |
 | `x=*up` | `x = up.cp;` for contained non-arrays only | 
 | `x= up->m` | `x = up.cp->m`; for contained non-arrays only |
@@ -54,5 +56,21 @@ Note: `unique_ptr` doesn't offer a copy ctor or copy assignment. If you feel the
 
 To avoid slicing (Sec. 17.5.1.4), a `Derived[]` isn't accepted as an argument to a `unique_ptr<Base[]>` even if `Base` is a public base of `Derived`. 
 
- 
+## `shared_ptr` 
+
+cf. pp. 990, Sec. 34.3.2. `shared_ptr` Ch. 34 **Memory and Resources** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.
+
+Used where 2 pieces of code need access to some data, but neither has exclusive ownership (in sense of destroying the object). 
+
+`shared_ptr` deleted when use count goes to 0. 
+
+Don't use `shared_ptr` just to pass a pointer from 1 owner to another; that's what `unique_ptr` is for. 
+- if you've been using counted pointers as return values from factory functions (Sec. 21.2.4) and the like, consider upgrading to `unique_ptr`. 
+
+Don't thoughtlessly replace pointers with `shared_ptr`s in an attempt to prevent memory leaks; 
+* circular linked structure of `shared_ptr` can cause a resource leak. You'll need some logical complication to break the circle, e.g. use a `weak_ptr` (Sec. 34.3.3)
+* Objects with shared ownership tend to stay "live" for longer than scoped objects (thus causing higher average resource usage). 
+* Shared pointers in a multi-threaded environment can be expensive (because of need to prevent data races on use count)
+* dtor for shared object doesn't execute at predictable time. e.g. which locks are set at time of dtor's execution? Which files are open? In general, which objects are "live" and in appropriate states at (unpredictable) point of execution?
+* If a single (last) node keeps a large data structure alive, cascade of destructor calls triggerdd by its deletion can cause a significant "garbage collection delay." 
 
