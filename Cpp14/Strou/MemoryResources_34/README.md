@@ -27,8 +27,7 @@ uses of `unique_ptr`:
 | `unique_ptr up {p, del}` | `cp = p`; `del` is the deleter; noexcept    | 
 | `unique_ptr up {up2}`    | Move ctor: `cp.p = up2.p`; `up2.p = nullptr`; noexcept |
 | `up.~unique_ptr()` | Destructor: if `cp!=nullptr` invoke `cp`'s deleter | 
-| `up = up2` | Move assignment: `up.reset(up2.cp);` `up2.cp = nullptr`; 
-`up` gets `up2`'s deleter; `up`'s old object (if any) is deleted; noexcept |
+| `up = up2` | Move assignment: `up.reset(up2.cp);` `up2.cp = nullptr`; `up` gets `up2`'s deleter; `up`'s old object (if any) is deleted; noexcept |
 |`up = nullptr` | `up.reset(nullptr)`; that is, delete `up`'s old object, if any |
 | `bool b {up};` | Conversion to `bool: up.cp != nullptr`; explicit |
 
@@ -41,8 +40,7 @@ uses of `unique_ptr`:
 | `del=up.get_deleter()` | `del` is `up`'s deleter |
 | `p=up.release()` | `p=up.cp`; `up.cp = nullptr` | 
 | `up.reset(p)` | If `up.cp != nullptr` call deleter for `up.cp`; `up.cp = p` |
-|`up.reset()` | `up.cp = pionter{}` (probably `nullptr`); 
-  call the deleter for the old value of `up.cp` | 
+|`up.reset()` | `up.cp = pionter{}` (probably `nullptr`); call the deleter for the old value of `up.cp` | 
 |`up.swap(up2)` | Exchange `up` and `up2`'s values; noexcept |
 | `up == up2` | `up.cp == up2.cp` |
 | `up < up2` | `up.cp < up2.cp` |
@@ -74,3 +72,36 @@ Don't thoughtlessly replace pointers with `shared_ptr`s in an attempt to prevent
 * dtor for shared object doesn't execute at predictable time. e.g. which locks are set at time of dtor's execution? Which files are open? In general, which objects are "live" and in appropriate states at (unpredictable) point of execution?
 * If a single (last) node keeps a large data structure alive, cascade of destructor calls triggerdd by its deletion can cause a significant "garbage collection delay." 
 
+`shared_ptr<T>` (Sec. iso.20.7.1.2)
+`cp` is the contained pointer; `uc` is the use count 
+
+| | |
+| :--------- | :--------- | 
+| `shared_ptr sp {}` | Default ctor: `cp = nullptr`; `uc=0` noexcept | 
+| `shared_ptr sp {p}` | ctor `cp=p`; `uc = 1`  |
+| `shared_ptr sp {p, del}` | ctor `cp = p`, `uc = 1`; use deleter `del`  | 
+| `shared_ptr sp {p, del, a}` | ctor `cp = p`, `uc = 1`; use deleter `del` and allocator `a` | 
+| `shared_ptr sp {sp2}`    | Move and copy ctors: move ctor moves and then sets `sp2.cp = nullptr`; copy ctor copies and uses `++uc` for now shared `uc`  |
+| `sp.~shared_ptr()` | Destructor: `--uc`; delete the object pointed to by `cp` if `uc` became `0`, using the deleter (default deleter is `delete`) | 
+| `sp = sp2` | Copy assignment: `++uc` for the now-shared `uc`; noexcept  |
+|`sp = move(sp2)` | `up.reset(nullptr)`; that is, delete `up`'s old object, if any |
+| `bool b {sp};` | Conversion to `bool: sp.uc == nullptr`; explicit |
+
+| | |
+| :--------- | :--------- |
+| `x=*up` | `x = up.cp;` for contained non-arrays only | 
+| `x= up->m` | `x = up.cp->m`; for contained non-arrays only |
+| `x = up[n]` | `x=up.cp[n]`; for contained arrays only |
+| `x=up.get()` | `x = up.cp` | 
+| `del=up.get_deleter()` | `del` is `up`'s deleter |
+| `p=up.release()` | `p=up.cp`; `up.cp = nullptr` | 
+| `up.reset(p)` | If `up.cp != nullptr` call deleter for `up.cp`; `up.cp = p` |
+|`sp.reset()` | `up.cp = pionter{}` (probably `nullptr`); call the deleter for the old value of `up.cp` | 
+|`up.swap(up2)` | Exchange `up` and `up2`'s values; noexcept |
+| `sp == sp2` | `sp.cp == sp2.cp` |
+| `up < up2` | `up.cp < up2.cp` |
+| `up != up2` | `!(up == up2)` | 
+| `up > up2` | `up2 < up` | 
+| `up <= up2` | `!(up2 > up)` | 
+| `up >= up2` | `!(up2 < up)` |
+| `swap(up, up2)` | `sp.swap(sp2)` |
