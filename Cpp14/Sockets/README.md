@@ -352,6 +352,12 @@ struct in_addr
 };
 
 ``` 
+
+* The `sin_addr` member is defined as the structure `in_addr`, which holds the IP number in network byte order. If you examine the structure `in_addr`, you'll see that it consists of 1 32-bit unsigned integer. 
+* Finally, remainder of structure is padded to 16 bytes by the member `sin_zero[8]` for 8 bytes. This member doesn't require any initialization and isn't used. 
+
+cf. http://www.ccplusplus.com/2011/10/struct-sockaddrin.html
+
 cf. http://man7.org/linux/man-pages/man7/ip.7.html
 
 
@@ -384,7 +390,13 @@ Structure `sockaddr` is a generic contained that just allows OS to be able to re
 cf. https://www.cs.rutgers.edu/~pxk/417/notes/sockets/udp.html 
 
 
+`htonl, htons` - convert values between host and network byte order 
 
+``` 
+#include <arpa/inet.h>
+``` 
+
+cf. https://linux.die.net/man/3/htons
 
 
 ## TCP vs. UDP
@@ -443,6 +455,8 @@ https://www.geeksforgeeks.org/socket-programming-cc/
 https://courses.engr.illinois.edu/cs241/sp2012/
 
 http://www.csd.uoc.gr/~hy556/material.html
+
+https://www.cs.rutgers.edu/~pxk/417/notes/sockets/udp.html
 
 ### Google search key words 
 
