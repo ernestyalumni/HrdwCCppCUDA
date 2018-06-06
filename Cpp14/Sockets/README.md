@@ -327,7 +327,7 @@ struct sockaddr_in
 {
   unsigned short sin_family   // Internet protocol (AF_INET)
   unsigned short sin_port;    // Address port (16 bits)
-  struct in_Addr sin_addr;    // Internet address (32 bits)
+  struct in_addr sin_addr;    // Internet address (32 bits)
   char sin_zero[8];           // Not used
 }
 ``` 
@@ -387,6 +387,12 @@ Structure `sockaddr` is a generic contained that just allows OS to be able to re
     * e.g. if machine has both Wi-Fi and ethernet connections, that machine will have 2 addresses, 1 for each interface. 
     - Most of the time, we don't care to specify a specific interface and can let the operating system use whatever it wants. Special address for this is 0.0.0.0, defined by symbolic constant `INADDR_ANY`. 
 
+##### **`INADDR_ANY`** 
+
+`INADDR_ANY` is special IP address 0.0.0.0 which binds the transport endpoint to all IP addresses on the machine.  
+
+cf. `demo-tcp-03`
+
 cf. https://www.cs.rutgers.edu/~pxk/417/notes/sockets/udp.html 
 
 
@@ -397,6 +403,55 @@ cf. https://www.cs.rutgers.edu/~pxk/417/notes/sockets/udp.html
 ``` 
 
 cf. https://linux.die.net/man/3/htons
+
+
+## `sendto` - send a message on a socket 
+
+cf. http://pubs.opengroup.org/onlinepubs/007904875/functions/sendto.html 
+
+```
+#include <sys/socket.h>
+ssize_t sendto(int socket, const void *message, size_t length,
+  int flags, const struct sockaddr *dest_addr,
+  socklen_t dest_len);
+```
+
+`sendto()` send a message through a connection-mode or connectionless-mode socket. If socket is connection-mode, `dest_addr` shall be ignored. 
+
+arguments:
+`socket` - specifies socket fd
+`message` - points to a buffer containing message to be sent.
+`length` - specfies size of message in bytes
+`flags` - specifies type of message transmission. Values of this argument formed by logically OR'ing 0 or more of the following flags: 
+  `MSG_EOR` - terminates a record (if supported by the protocol) 
+  `MSG_OOB` - sends out-of-band data on sockets that support out-of-band data. Significance and semantics of out-of-band data are protocol-specific. 
+
+`dest_addr` - points to a `sockaddr` structure containing destination address. Length and format of address depend on the address family of socket  
+`dest_addr` specifies address of the target. 
+
+`dest_len` specifies length of `sockaddr` structure pointed to by `dest_addr` argument. 
+
+Returns, upon successful completion, `sendto()` shall return number of bytes sent. Otherwise, -1 shall be returned and `errno` set to indicate error.
+
+## `recvfrom` - receive a message from a socket 
+
+
+
+### `::getsockname` - get socket name 
+
+cf. http://man7.org/linux/man-pages/man2/getsockname.2.html
+
+``` 
+#include <sys/socket.h>
+
+int ::getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
+```
+
+`getsockname()` returns current address to which socket `sockfd` is bound, in the buffer pointed to by `addr`. The `addrlen` arugment should be initialized to indicate amount of space (in bytes) pointed to by `addr`. On return, it contains actual size of the socket address.
+
+Returned address is truncated if buffer provided is too small. 
+
+Returns - on success, 0 is returned, on error -1 is returned, and `errno` is set appropriately. 
 
 
 ## TCP vs. UDP
@@ -457,6 +512,8 @@ https://courses.engr.illinois.edu/cs241/sp2012/
 http://www.csd.uoc.gr/~hy556/material.html
 
 https://www.cs.rutgers.edu/~pxk/417/notes/sockets/udp.html
+
+https://www.binarytides.com/socket-programming-c-linux-tutorial/
 
 ### Google search key words 
 

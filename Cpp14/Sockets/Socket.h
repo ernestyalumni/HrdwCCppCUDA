@@ -182,6 +182,7 @@ class Socket
       unsigned int address_length {
         socket_address_.size()
       };
+#if 0
       if (::getsockname(
         fd_, 
 //        socket_address_.get_sockaddr_in(),
@@ -190,6 +191,7 @@ class Socket
       {
         throw std::runtime_error("getsockname failed");
       }
+#endif 
     }
 
   protected:
