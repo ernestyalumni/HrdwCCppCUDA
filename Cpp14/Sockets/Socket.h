@@ -74,11 +74,18 @@ enum class CommonDomains : int
   packet = AF_PACKET // low level packet interface 
 };
 
-class SocketAddress : public ::sockaddr_in
+//------------------------------------------------------------------------------
+/// \brief RAII class for ::sockaddr_in
+///
+/// \details INADDR_ANY is the IP address and 0 is the socket (port).
+/// ::htonl converts a long integer (e.g. address) to a network representation
+/// (IP-standard byte ordering)
+//------------------------------------------------------------------------------
+class SocketAddress
 {
   public:
 
-    // sin_port, s_addr_in
+    // Constructor matching low-level API for ::sockaddr_in
     explicit SocketAddress(
       const uint16_t sin_family = AF_INET,
       const uint16_t sin_port = 0,
@@ -87,24 +94,39 @@ class SocketAddress : public ::sockaddr_in
       sin_port_{::htons(sin_port)},
       in_addr_{::htonl(s_address)},
       sockaddr_in_{::sockaddr_in{sin_family_, sin_port_, in_addr_}},
-      sockaddr_in_uptr_{std::make_unique<::sockaddr_in>(sockaddr_in_)}
+      sockaddr_in_uptr_{std::make_unique<::sockaddr_in>(sockaddr_in_)},
+      socket_length_uptr_{
+        std::make_unique<socklen_t>(sizeof(::sockaddr_in))}
     {}
 
     // Accessors
-
-    ::sockaddr_in sockaddr_in() const
-    {
-      return sockaddr_in_;
-    }
-
     std::unique_ptr<::sockaddr_in> sockaddr_in_uptr()
     {
       return std::move(sockaddr_in_uptr_);
     }
 
-    auto get_sockaddr_in()
+    std::unique_ptr<socklen_t> socket_length_uptr()
+    {
+      return std::move(socket_length_uptr_);
+    }
+
+    auto get_sockaddr_in_uptr()
     {
       return sockaddr_in_uptr_.get();
+    }
+
+    auto get_socket_length_uptr()
+    {
+      return sockaddr_in_uptr_.get();
+    }
+
+    std::unique_ptr<::sockaddr> to_sockaddr_uptr() const
+    {
+      return 
+        std::make_unique<::sockaddr>(
+          *(reinterpret_cast<::sockaddr*>(
+            sockaddr_in_uptr_.get()))
+        );
     }
 
     // Setters
@@ -115,7 +137,14 @@ class SocketAddress : public ::sockaddr_in
 
     const unsigned int size() const 
     {
-      return sizeof(sockaddr_in_);
+      return sizeof(::sockaddr_in);
+    }
+
+  protected:
+
+    ::sockaddr_in sockaddr_in() const
+    {
+      return sockaddr_in_;
     }
 
   private:
@@ -129,6 +158,8 @@ class SocketAddress : public ::sockaddr_in
 
     ::sockaddr_in sockaddr_in_;
     std::unique_ptr<::sockaddr_in> sockaddr_in_uptr_;
+
+    std::unique_ptr<socklen_t> socket_length_uptr_;
 };
 
 
@@ -143,16 +174,9 @@ class Socket
 {
   public:
 
-    #if 0
-    Socket():
-      fd_{::socket(AF_INET, SOCK_DGRAM, 0)}
-    {
-      check_fd();
-    }
-    #endif 
-
     explicit Socket(const int domain = AF_INET, const int type = SOCK_DGRAM,
       const int protocol = 0, uint32_t s_address = INADDR_ANY):
+      domain_{domain}, type_{type}, protocol_{protocol},
       fd_{::socket(domain, type, protocol)},
       socket_address_{static_cast<uint16_t>(domain), 0, s_address}
     {
@@ -164,11 +188,15 @@ class Socket
       ::close(fd_);
     }
 
+#if 0
+
+
     void bind()
     {
       if (::bind(
         fd_, 
-        reinterpret_cast<const ::sockaddr*>(socket_address_.get_sockaddr_in()), 
+        reinterpret_cast<const ::sockaddr*>(
+          socket_address_.get_sockaddr_in()), 
 //        socket_address_.get_sockaddr_in(),
         sizeof(socket_address_.get_sockaddr_in())) < 0)
       {
@@ -176,13 +204,13 @@ class Socket
       }
     }
 
+
     void get_socket_name() const
     {
       // length of address (for ::getsockname)
       unsigned int address_length {
         socket_address_.size()
       };
-#if 0
       if (::getsockname(
         fd_, 
 //        socket_address_.get_sockaddr_in(),
@@ -192,17 +220,36 @@ class Socket
         throw std::runtime_error("getsockname failed");
       }
 #endif 
+
+    // Accessors
+    const int domain() const
+    {
+      return domain_;
+    }
+
+    const int type() const
+    {
+      return type_;
+    }
+
+    const int protocol() const
+    {
+      return protocol_;
     }
 
   protected:
 
     // protected, so one wouldn't be able to do something like ::close(fd)
-    int fd() const
+    const int fd() const
     {
       return fd_;
     }
 
   private:
+    int domain_;
+    int type_;
+    int protocol_;
+
     int fd_;
 
     SocketAddress socket_address_;

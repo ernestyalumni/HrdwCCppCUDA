@@ -29,6 +29,7 @@
 
 using Sockets::CommonDomains;
 using Sockets::Socket;
+using Sockets::SocketAddress;
 
 class TestSocket : public Socket
 {
@@ -52,5 +53,8 @@ int main()
   std::cout << " CommonDomains::packet : " << 
     static_cast<int>(CommonDomains::packet) << '\n'; // 17
 
+  // SocketAddressConstructsCorrectly
+    SocketAddress socket_address {
+      static_cast<uint32_t>(CommonDomains::ipv4_internet), 0, INADDR_ANY};
 
 }
