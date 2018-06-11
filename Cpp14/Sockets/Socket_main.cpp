@@ -26,6 +26,9 @@
 #include "Socket.h"
 
 #include <iostream>
+#include <unistd.h> // ::close
+
+#include <stdexcept>
 
 using Sockets::CommonDomains;
 using Sockets::Socket;
@@ -54,7 +57,43 @@ int main()
     static_cast<int>(CommonDomains::packet) << '\n'; // 17
 
   // SocketAddressConstructsCorrectly
+    std::cout << "Create a SocketAddress. \n";
     SocketAddress socket_address {
       static_cast<uint32_t>(CommonDomains::ipv4_internet), 0, INADDR_ANY};
+
+    std::cout << " sin_family : " << 
+      socket_address.get_sockaddr_in_uptr()->sin_family << '\n'; // 2
+
+    std::cout << " sin_port : " << 
+      socket_address.get_sockaddr_in_uptr()->sin_port << '\n'; // 0
+
+    std::cout << " sin_addr.s_addr : " << 
+      socket_address.get_sockaddr_in_uptr()->sin_addr.s_addr << '\n'; // 0
+
+  // TestSocketBinds
+  try
+  {
+    test_socket.bind();
+  }
+  catch (const std::runtime_error& e)
+  {
+    std::cout << " runtime error was caught, with message : '" << e.what() << 
+      " \n";
+  }
+
+  // TestSocketCanGetSocketName
+  try
+  {
+    const int get_socket_name_result {test_socket.get_socket_name()};
+    std::cout << " get_socket_name_result : " << get_socket_name_result << '\n';
+  }
+  catch (const std::runtime_error& e)
+  {
+    std::cout << " runtime error was caught, with message : '" << e.what() << 
+      " \n";    
+  }
+
+  // TestSocketFdAccessorCanBeClosedExternally
+  ::close(test_socket.fd());
 
 }

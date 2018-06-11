@@ -100,24 +100,14 @@ class SocketAddress
     {}
 
     // Accessors
-    std::unique_ptr<::sockaddr_in> sockaddr_in_uptr()
-    {
-      return std::move(sockaddr_in_uptr_);
-    }
-
-    std::unique_ptr<socklen_t> socket_length_uptr()
-    {
-      return std::move(socket_length_uptr_);
-    }
-
     auto get_sockaddr_in_uptr()
     {
       return sockaddr_in_uptr_.get();
     }
 
-    auto get_socket_length_uptr()
+    socklen_t* get_socket_length_ptr() const
     {
-      return sockaddr_in_uptr_.get();
+      return socket_length_uptr_.get();
     }
 
     std::unique_ptr<::sockaddr> to_sockaddr_uptr() const
@@ -129,15 +119,15 @@ class SocketAddress
         );
     }
 
+    const unsigned int size() const 
+    {
+      return sizeof(::sockaddr_in);
+    }
+
     // Setters
     void set_sockaddr_in_uptr(std::unique_ptr<::sockaddr_in> sockaddr_in_uptr)
     {
       sockaddr_in_uptr_ = std::move(sockaddr_in_uptr);
-    }
-
-    const unsigned int size() const 
-    {
-      return sizeof(::sockaddr_in);
     }
 
   protected:
@@ -145,6 +135,17 @@ class SocketAddress
     ::sockaddr_in sockaddr_in() const
     {
       return sockaddr_in_;
+    }
+
+    // Accessors
+    std::unique_ptr<::sockaddr_in> sockaddr_in_uptr()
+    {
+      return std::move(sockaddr_in_uptr_);
+    }
+
+    std::unique_ptr<socklen_t> socket_length_uptr()
+    {
+      return std::move(socket_length_uptr_);
     }
 
   private:
@@ -183,43 +184,51 @@ class Socket
       check_fd();
     }
 
+    explicit Socket(SocketAddress& socket_address, 
+      const int domain = AF_INET, const int type = SOCK_DGRAM,
+      const int protocol = 0):
+      domain_{domain}, type_{type}, protocol_{protocol},
+      fd_{::socket(domain, type, protocol)},
+      socket_address_{std::move(socket_address)}
+    {
+      check_fd();
+    }
+
     ~Socket()
     {
       ::close(fd_);
     }
 
-#if 0
-
-
     void bind()
     {
       if (::bind(
         fd_, 
-        reinterpret_cast<const ::sockaddr*>(
-          socket_address_.get_sockaddr_in()), 
-//        socket_address_.get_sockaddr_in(),
-        sizeof(socket_address_.get_sockaddr_in())) < 0)
+        socket_address_.to_sockaddr_uptr().get(),
+        socket_address_.size()
+        ) < 0)
       {
         throw std::runtime_error("bind failed");
       }
     }
 
-
-    void get_socket_name() const
+    int get_socket_name() const
     {
-      // length of address (for ::getsockname)
-      unsigned int address_length {
-        socket_address_.size()
+      const int get_socket_name_result {
+        ::getsockname(
+          fd_,
+          socket_address_.to_sockaddr_uptr().get(),
+          socket_address_.get_socket_length_ptr()
+        )
       };
-      if (::getsockname(
-        fd_, 
-//        socket_address_.get_sockaddr_in(),
-        reinterpret_cast<::sockaddr*>(socket_address_.get_sockaddr_in()),
-        &address_length) < 0)
+      if (get_socket_name_result < 0)
       {
         throw std::runtime_error("getsockname failed");
       }
-#endif 
+      else
+      {
+        return get_socket_name_result;
+      } 
+    }   
 
     // Accessors
     const int domain() const
@@ -263,8 +272,6 @@ class Socket
       return;
     }
 };
-
-
 
 } // namespace Sockets
 

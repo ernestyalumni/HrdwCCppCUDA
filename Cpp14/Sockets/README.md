@@ -435,6 +435,32 @@ Returns, upon successful completion, `sendto()` shall return number of bytes sen
 
 ## `recvfrom` - receive a message from a socket 
 
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+
+ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags,
+  struct sockaddr *src_addr, socklen_t *addrlen);
+```
+
+`recvfrom()` calls are used to receive messages from a socket, and may be used to receive data on a socket whether or not it's connection-oriented. 
+
+If `src_addr` is not NULL, and underlying protocol provides the source address, 
+  - this source address is filled in. 
+If `src_addr` is NULL, nothing is filled in, `addrlen` isn't used, and should also be NULL. 
+
+`addrlen` is a value-result argument, which the caller should initialize before call to the size of buffer associated with `src_addr`, and modified on return to indicate actual size of source address. 
+
+`recv()` call normally used only on a *connected* socket, and is identical to `recvfrom()` with a NULL `src_addr` argument. 
+
+`select` or `poll` maybe used to determine when more data arrives. 
+
+**Notes** 
+
+Prototypes given above follow `glibc2`. 
+
 
 
 ### `::getsockname` - get socket name 
@@ -453,6 +479,22 @@ Returned address is truncated if buffer provided is too small.
 
 Returns - on success, 0 is returned, on error -1 is returned, and `errno` is set appropriately. 
 
+
+### `::inet_aton` - Internet address manipulation
+
+``` 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h> // inet_aton
+
+int inet_aton(const char *cp, struct in_addr *inp);
+```
+
+`inet_aton()` converts the Internet host address `cp` from the IPv4 numbers-and-dots notation into binary form (in network byte order) and stores it in the structure that `inp` points to. 
+
+`inet_aton()` returns nonzero if the address is valid, 0 if not.
+
+https://linux.die.net/man/3/inet_aton
 
 ## TCP vs. UDP
 
@@ -514,6 +556,14 @@ http://www.csd.uoc.gr/~hy556/material.html
 https://www.cs.rutgers.edu/~pxk/417/notes/sockets/udp.html
 
 https://www.binarytides.com/socket-programming-c-linux-tutorial/
+
+Beej has a lot of introductory material to socket programming.
+
+https://beej.us/guide/bgnet/html/multi/sendman.html
+
+https://beej.us/guide/bgnet/html/multi/syscalls.html#bind
+
+
 
 ### Google search key words 
 
