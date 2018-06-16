@@ -1,12 +1,10 @@
 /**
- * @file   : Complex_main.cpp
+ * @file   : Thread.h
  * @author : Ernest Yeung
  * @email  : ernestyalumni@gmail.com
- * @brief  : Complex numbers (double type) as Concrete class 
- * @details Concrete class - defining property is its representation is its 
- * 	 definition
- * @ref    : 3.2.1.1 An Arithmetic Type, Ch. 3 A Tour of C++: Abstraction 
- * 	Mechanisms. Bjarne Stroustrup, The C++ Programming Language, 4th Ed.
+ * @brief  : Thread RAII (Resource Acquisition Is Initialization)
+ * @ref    : https://stackoverflow.com/questions/35150629/stdthread-detachable-and-exception-safety
+ * 
  * If you find this code useful, feel free to donate directly and easily at this direct PayPal link: 
  * 
  * https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
@@ -16,20 +14,37 @@
  * helped students with their studies, and I know what it's like to not have money as a student, but love physics 
  * (or math, sciences, etc.), so I am committed to keeping all my material open-source and free, whether or not 
  * sufficiently crowdfunded, under the open-source MIT license: 
- *  feel free to copy, edit, paste, make your own versions, share, use as you wish.    
+ * 	feel free to copy, edit, paste, make your own versions, share, use as you wish.    
  * Peace out, never give up! -EY
  * 
  * COMPILATION TIPS:
- *  g++ -std=c++14 FileOpen.cpp FileOpen_main.cpp -o FileOpen_main
+ *  g++ -std=c++17 -c factor.cpp
  * */
-#include "Complex.h"
+#include <thread>
 
-using namespace Fields;
-
-int main()
+class Thread
 {
+	public:
 
-	//----------------------------------------------------------------------------
-	/// ComplexConstructs
-	Complex a{2.3};
-}
+		Thread();
+
+		explicit Thread(std::thread&& th): 
+			th_{std::move(th)}
+		{}
+
+		Thread(const Thread&) = delete;
+		Thread(Thread&&) = default;
+		Thread& operator=(const Thread&) = delete;
+		Thread& operator=(Thread&&) = default;
+
+		~Thread()
+		{
+			if (th_.joinable())
+			{
+				th_.join();
+			}
+		}
+
+	private:
+		std::thread th_;
+};

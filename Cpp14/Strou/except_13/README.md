@@ -271,4 +271,52 @@ Declaring a function `noexcept` can be most valuable for a programmer reasoning 
 
 By adding a `noexcept` specifier, we indicate our code wasn't written to cope with a `throw`.  
 
+#### Function `try`-Blocks, `try`-block in constructor, at base-or-member initializers
+
+cf. pp. 371, 13.5.2.4 Function `try`-Blocks, Ch. 13 **Exception Handling** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
+For most functions, all we gain from using a function `try`-block is a bit of notational convenience. 
+However, `try`-block allows us to deal with exceptions thrown by base-or-member initializers in constructors (Sec. 17.4). 
+By default, if exception is thrown in base-or-member initializer, exception is passed on to whatever invoked the constructor for member's class. 
+However, constructor itself can catch such exceptions by enclosing complete function body - including member initializer list - in `try` block. 
+e.g.
+``` 
+class X
+{
+  private:
+    std::vector<int> vi;
+    std::vector<std::string> vs;
+
+  // ...
+
+  public:
+    X(int, int);
+    // ...
+};
+
+X::X(int sz1, int sz2)
+try 
+  : vi(sz1), // construct vi with sz1 ints
+    vs(sz2) // construct vs with sz2 strings
+{
+  // ...
+}
+catch (std::exception& err)
+{
+  // exceptions thrown vi and vs are caught here
+  // ...
+}
+```
+So we can catch exceptions thrown by member constructors. 
+However, we can't "repair" the object and return normally as if exception had not happened; exception from member constructor means member may not be in valid state. Also, other member objects will either not be constructed or already have had their destructors invoked as part of stack unwinding. 
+
+The best we can do in a `catch`-clause of function `try`-block for constructor or destructor is to throw an exception. Default action is to rethrow original exception when we "fall off the end" of `catch`-clause (Sec.iso.15.3)
+
+There are no such restrictions for `try`-block of ordinary function.
+
+
+
+
+
+
 

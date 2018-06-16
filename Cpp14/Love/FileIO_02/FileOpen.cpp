@@ -1,12 +1,11 @@
 /**
- * @file   : Complex_main.cpp
+ * @file   : FileOpen.cpp
  * @author : Ernest Yeung
  * @email  : ernestyalumni@gmail.com
- * @brief  : Complex numbers (double type) as Concrete class 
- * @details Concrete class - defining property is its representation is its 
- * 	 definition
- * @ref    : 3.2.1.1 An Arithmetic Type, Ch. 3 A Tour of C++: Abstraction 
- * 	Mechanisms. Bjarne Stroustrup, The C++ Programming Language, 4th Ed.
+ * @brief  : opening, reading, writing a file as RAII 
+ * @ref    : pp. 26 Ch. 2 File I/O; 
+ *   Robert Love, Linux System Programming,  
+ * @detail : Using RAII for files. 
  * If you find this code useful, feel free to donate directly and easily at this direct PayPal link: 
  * 
  * https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
@@ -22,14 +21,12 @@
  * COMPILATION TIPS:
  *  g++ -std=c++14 FileOpen.cpp FileOpen_main.cpp -o FileOpen_main
  * */
-#include "Complex.h"
+#include "FileOpen.h"
 
-using namespace Fields;
+#include <fcntl.h>  // O_RDONLY
+#include <string>
 
-int main()
-{
-
-	//----------------------------------------------------------------------------
-	/// ComplexConstructs
-	Complex a{2.3};
-}
+FileOpen::FileOpen(const std::string& filename):
+  filename_{filename},
+  fd_{::open(filename.c_str(), O_RDONLY)}
+{}

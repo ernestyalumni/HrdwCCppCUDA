@@ -5,6 +5,8 @@
  * @brief  : class File_ptr that acts like a FILE* 
  * @ref    : pp. 355 13.3 Resource Management Ch. 13 Exception Handling; 
  *   Bjarne Stroustrup, The C++ Programming Language, 4th Ed., Stroustrup  
+ *   http://en.cppreference.com/w/cpp/io/c
+ *   http://en.cppreference.com/w/cpp/io/c/fopen
  * @detail : Handle resource acquisition and release problems using objects of 
  *  classes with constructors and destructors. 
  * If you find this code useful, feel free to donate directly and easily at this direct PayPal link: 
@@ -22,17 +24,17 @@
  * COMPILATION TIPS:
  *  g++ -std=c++17 -c factor.cpp
  * */
-#include <stdio.h> // FILE
-#include <stdexcept> // runtime_error
 #include <iostream>
+#include <stdexcept> // runtime_error
+#include <stdio.h> // FILE, fopen, fclose
 
 class File_ptr
 {
   public:
     File_ptr(const char* n, const char* a): // open file n
-      p{fopen(n, a)}
+      p_{fopen(n, a)}
     {
-      if (p == nullptr)
+      if (p_ == nullptr)
       {
         throw std::runtime_error{"File_ptr: Can't open file"};
       }
@@ -43,9 +45,9 @@ class File_ptr
     {}
 
     explicit File_ptr(FILE* pp):   // assume ownership of pp
-      p{pp}
+      p_{pp}
     {
-      if (p == nullptr)
+      if (p_ == nullptr)
       {
         throw std::runtime_error{"File_ptr: nullptr"};
       }
@@ -61,18 +63,39 @@ class File_ptr
 
     ~File_ptr()
     {
-      fclose(p);
+      fclose(p_);
     }
 
     operator FILE*()
     {
-      return p;
+      return p_;
     }
   private:
-    FILE* p;
+    FILE* p_;
 };
 
 int main()
 {
+  //----------------------------------------------------------------------------
+  /// \details
+  /// Defined in header <cstdio>
+  /// std::FILE* fopen(const char* filename, const char* mode)
+  /// File access mode string, Meaning, Action if file already exists, Action 
+  ///  doesn't exist if file 
+  /// "r", read, read from start, failure to open
+  /// "w", write, destory contents, create new
+  /// "a", append, write to end, create new
+  /// "r+", read extended (Open a file for read/write), read from start, error
+  //----------------------------------------------------------------------------
 
+  File_ptr file_ptr_write("Example0.txt", "w"); 
+
+  //----------------------------------------------------------------------------
+  /// error message received: 
+  /// terminate called after throwing an instance of 'std::runtime_error'
+  /// what():  File_ptr: Can't open file
+  /// Aborted (core dumped)
+  //----------------------------------------------------------------------------
+
+  //File_ptr file_ptr_read_fail("Example1.txt", "r");
 }

@@ -4,10 +4,6 @@
  * 	@ref	Construction, Cleanup, Copy, and Move Ch. 17 Bjarne Stroustrup, The C++ Programming Language, 4th Ed. 2013 Addison-Wesley 
  * 	@details 
  * 
- * https://stackoverflow.com/questions/11604190/meaning-after-variable-type  
- * "&" meaning after variable type, means you're passing the variable by reference, 
- * The & means function accepts address (or reference) to a variable, instead of value of the variable.  
- * 
  * COMPILATION TIP : -Wall warning all, -g debugger, gdb can step through 
  * g++ -Wall -g ctor.cpp -o ctor
  * */
