@@ -23,3 +23,8 @@ convert values between host and big-/little-endian byte order.
 uint16_t htobe16(uint16_t host_16bits);
 
 ```
+
+
+https://github.com/google/sensei/blob/master/sensei/util/endian.h
+in 
+https://github.com/google/sensei
