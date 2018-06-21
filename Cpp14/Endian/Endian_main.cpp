@@ -25,10 +25,53 @@
 ///  g++ -std=c++14 stdarray.cpp -o stdarray
 //------------------------------------------------------------------------------
 #include "Endian/Endian.h"
+#include <cmath> // std::nan
 
 #include <iostream>
 
+using namespace Endian;
+
 int main()
 {
-  
+  const double pi {3.1415926535897932384626433};
+
+  std::cout << " pi : " << pi << " pi (hex) : " << std::hex << pi << '\n';
+
+  std::cout << GetDoubleBitsNice(pi) << '\n';
+
+  std::cout << GetDoubleBitsHex(pi) << '\n';
+
+  std::cout << std::hexfloat << pi << '\n';
+
+  DoubleRepresentationUnion pi_union;
+  pi_union.x = pi;
+  std::cout << pi_union.raw.mantissa << ' ' << pi_union.raw.exponent << ' ' << 
+    ' ' << pi_union.raw.sign << '\n';
+
+  // NansPlayground
+  // http://en.cppreference.com/w/cpp/numeric/math/nan
+  double f1 {std::nan("1")};
+  std::cout << GetDoubleBitsNice(f1) << '\n';
+
+  std::cout << GetDoubleBitsHex(f1) << '\n';
+
+  std::cout << std::hexfloat << f1 << '\n';
+
+  DoubleRepresentationUnion nan_union;
+  nan_union.x = f1;
+  std::cout << nan_union.raw.mantissa << ' ' << nan_union.raw.exponent << ' ' << 
+    ' ' << nan_union.raw.sign << '\n';
+
+  double f2 {std::nan("2")};
+  std::cout << GetDoubleBitsNice(f2) << '\n';
+
+  std::cout << GetDoubleBitsHex(f2) << '\n';
+
+  std::cout << std::hexfloat << f2 << '\n';
+
+  nan_union.x = f2;
+  std::cout << nan_union.raw.mantissa << ' ' << nan_union.raw.exponent << ' ' << 
+    ' ' << nan_union.raw.sign << '\n';
+
+
 }
