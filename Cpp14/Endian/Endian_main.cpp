@@ -31,6 +31,52 @@
 
 using namespace Endian;
 
+// Trivially Copyable Examples
+char a;
+char b[5];
+
+struct s1 
+{
+  char c[5];
+  int d;
+};
+
+class c1:
+  public s1
+{
+  protected:
+    int a;
+  public:
+    c1():
+      a{7}
+    {}
+};
+
+union u1
+{
+  s1 s;
+  c1 c;
+};
+
+
+// Not Trivially Copyable 
+// User supplied copy ctor
+struct s2
+{
+  s2 (s2 const& s):
+    ch {'q'}
+  {}
+
+  char ch;
+};
+
+class c2
+{
+  virtual void f() // Virtual member
+  {}
+};
+
+
 int main()
 {
   const double pi {3.1415926535897932384626433};
@@ -72,6 +118,42 @@ int main()
   nan_union.x = f2;
   std::cout << nan_union.raw.mantissa << ' ' << nan_union.raw.exponent << ' ' << 
     ' ' << nan_union.raw.sign << '\n';
+
+
+  // \ref https://github.com/CppCon/CppCon2017/blob/master/Presentations/Type%20Punning%20In%20C%2B%2B17%20-%20Avoiding%20Pun-defined%20Behavior/Type%20Punning%20In%20C%2B%2B17%20-%20Avoiding%20Pun-defined%20Behavior%20-%20Scott%20Schurr%20-%20CppCon%202017.pdf
+  // Scott Schurr, "Type Punning in C++17 - Avoiding Pun-defined Behavior"
+//  static_assert(std::is_trivially_copyable<T>::value)  
+
+  // Trivially Copyable Examples
+  c1 a1[7];
+
+  // Not Trivially Copyable
+  char& r1(a); // Reference
+
+  // Examples of Modifying const [dcl.type.cv] Sec. 4
+
+  // initialized as required
+  const int* ciq = new const int (3);
+
+  const int* ciq2 {new const int {3}};
+
+  std::cout << " ciq2 : " << ciq2 << " *ciq2 : " << *ciq2 << " ciq2[0] : " <<
+    ciq2[0] << '\n';
+
+  // cast required
+  int* iq = const_cast<int*>(ciq2);
+
+  std::cout << " iq : " << iq << " *iq : " << *iq << " iq[0] : " << iq[0] <<
+    '\n';
+
+  // undefined: modifies a const object
+  *iq = 4;
+
+  std::cout << " ciq2 : " << ciq2 << " *ciq2 : " << *ciq2 << " ciq2[0] : " <<
+    ciq2[0] << '\n';
+
+  std::cout << " iq : " << iq << " *iq : " << *iq << " iq[0] : " << iq[0] <<
+    '\n';
 
 
 }
