@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 FileOpen_main.cpp FileOpen.cpp -o FileOpen_main
+///  g++ -std=c++14 Socket_main.cpp -o Socket_main
 //------------------------------------------------------------------------------
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
@@ -163,6 +163,46 @@ class SocketAddress
     std::unique_ptr<socklen_t> socket_length_uptr_;
 };
 
+//------------------------------------------------------------------------------
+/// \brief Derived class for ::sockaddr_in
+///
+/// \details INADDR_ANY is the IP address and 0 is the socket (port).
+/// ::htonl converts a long integer (e.g. address) to a network representation
+/// (IP-standard byte ordering)
+/// 
+/// data members of ::sockaddr_in (and thus SocketAddressIn), in order:
+/// struct sockaddr_in
+/// {
+///   sa_family_t sin_family;
+///   in_port_t sin_port;
+///   struct in_addr sin_addr; 
+/// } 
+//------------------------------------------------------------------------------
+class SocketAddressIn: public ::sockaddr_in
+{
+  public:
+
+    explicit SocketAddressIn(
+      const uint16_t sin_family = AF_INET,
+      const uint16_t sin_port = 0,
+      const uint32_t s_address = INADDR_ANY):
+      ::sockaddr_in {sin_family, ::htons(sin_port), ::htonl(s_address)}
+    {}
+
+    explicit SocketAddressIn(const uint16_t sin_port):
+      SocketAddressIn {AF_INET, ::htons(sin_port), INADDR_ANY}
+    {}
+
+    const unsigned int size() const 
+    {
+      return sizeof(::sockaddr_in);
+    }
+
+    ::sockaddr* to_sockaddr()
+    {
+      return reinterpret_cast<::sockaddr*>(this);
+    }
+};
 
 //------------------------------------------------------------------------------
 /// \brief Socket class (usually for IP Socket)
@@ -272,6 +312,110 @@ class Socket
       return;
     }
 };
+
+//------------------------------------------------------------------------------
+/// \brief Socket class (usually for IP Socket), version 2
+/// \details Create a IP Socket; can be a UDP Socket or TCP/IP Socket.
+///   Request the Internet address protocol. 
+///   (It could be) a datagram interface (UDP/IP), or socket stream.
+/// \ref https://www.cs.rutgers.edu/~pxk/417/notes/sockets/demo-udp-01.html
+//------------------------------------------------------------------------------
+class SocketV2
+{
+  public:
+
+    explicit SocketV2(
+      const int domain,
+      const int type,
+      const int protocol = 0,
+      const uint16_t sin_port = 0,
+      uint32_t s_address = INADDR_ANY):
+      fd_{::socket(domain, type, protocol)},
+      socket_address_in_{static_cast<uint16_t>(domain), sin_port, s_address}
+    {
+      check_fd();
+    }
+
+    explicit SocketV2(
+      SocketAddressIn& socket_address_in, 
+      const int domain, const int type, const int protocol = 0):
+      fd_{::socket(domain, type, protocol)},
+      socket_address_in_{std::move(socket_address_in)}
+    {
+      check_fd();
+    }
+
+    ~SocketV2()
+    {
+      ::close(fd_);
+    }
+
+    void bind()
+    {
+      if (::bind(fd_, 
+            socket_address_in_.to_sockaddr(),
+            socket_address_in_.size()) < 0)
+      {
+        throw std::runtime_error("bind failed");
+      }
+    }
+
+    int get_socket_name()
+    {
+      const int get_socket_name_result {
+        ::getsockname(
+          fd_,
+          socket_address_in_.to_sockaddr(),
+          socket_length_uptr_.get()
+        )
+      };
+      if (get_socket_name_result < 0)
+      {
+        throw std::runtime_error("getsockname failed");
+      }
+      else
+      {
+        return get_socket_name_result;
+      } 
+    }   
+
+  protected:
+
+    // protected, so one wouldn't be able to do something like ::close(fd)
+    const int fd() const
+    {
+      return fd_;
+    }
+
+    SocketAddressIn& socket_address_in()
+    {
+      return socket_address_in_;
+    }
+
+    socklen_t* get_socket_length_ptr() const
+    {
+      return socket_length_uptr_.get();
+    }
+
+  private:
+
+    void check_fd()
+    {
+      if (fd_ < 0)
+      {
+        throw std::runtime_error("socket construction failed");
+      }
+      return;
+    }
+
+    int fd_;
+
+    SocketAddressIn socket_address_in_;
+
+    std::unique_ptr<socklen_t> socket_length_uptr_ {
+      std::make_unique<socklen_t>(sizeof(::sockaddr_in))};
+};
+
 
 } // namespace Sockets
 

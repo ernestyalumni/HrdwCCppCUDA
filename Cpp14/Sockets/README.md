@@ -457,6 +457,8 @@ If `src_addr` is NULL, nothing is filled in, `addrlen` isn't used, and should al
 
 `select` or `poll` maybe used to determine when more data arrives. 
 
+**Return** - all 3 (`recv`, `recvfrom`, `recvmsg`) return length of the message on successful completion.
+
 **Notes** 
 
 Prototypes given above follow `glibc2`. 
@@ -495,6 +497,24 @@ int inet_aton(const char *cp, struct in_addr *inp);
 `inet_aton()` returns nonzero if the address is valid, 0 if not.
 
 https://linux.die.net/man/3/inet_aton
+
+## Even more for TCP
+
+### `::setsockopt` - set the socket options
+
+``` 
+#include <sys/socket.h>
+
+int setsockopt(int socket, int level, int option_name,
+    const void *option_value, socklen_t option_len);
+```
+`socket` - file descriptor of associated socket 
+`level` - protocol level to be specified
+`option_name` - `setsockopt` set option specified by `option_name`, at the protocol level specified by `level`, to value pointed to by `option_value` argument, for `socket` associated to fd `socket`. 
+`option_value` - value pointed to to be set by `setsockopt`
+
+
+**Returns** - upon successful completion, `setsockopt()` return 0; otherwise, return -1 and `errno` set to indicate error.
 
 ## TCP vs. UDP
 
@@ -538,8 +558,25 @@ https://linux.die.net/man/3/inet_aton
 UDP sockets are bound to ports.
 
 
+## References
+
+[Paul Krzyzanowski, "Distributed Systems 07. Group Communication & Multicast"](https://www.cs.rutgers.edu/%7Epxk/417/notes/content/07-groups-slides.pdf)
+
+[OS: IPC I CIT 595 Spring 2010](https://www.seas.upenn.edu/~cit595/cit595s10/lectures/ipc1.pdf)
+
+For TCP/IP examples: 
+
+https://www.geeksforgeeks.org/socket-programming-cc/
+
+https://www.binarytides.com/server-client-example-c-sockets-linux/
+
+https://www.thegeekstuff.com/2011/12/c-socket-programming/?utm_source=feedburner
+
+
 
 ## Interesting links
+
+https://fenix.tecnico.ulisboa.pt/downloadFile/1407993358851967/06-IPC.pdf
 
 https://en.wikipedia.org/wiki/Network_socket 
 

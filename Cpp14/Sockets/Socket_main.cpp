@@ -26,27 +26,267 @@
 #include "Socket.h"
 
 #include <iostream>
-#include <unistd.h> // ::close
-
+#include <memory>
+#include <netinet/in.h> // ::sockaddr_in
 #include <stdexcept>
+#include <unistd.h> // ::close
+#include <string>
 
 using Sockets::CommonDomains;
 using Sockets::Socket;
 using Sockets::SocketAddress;
+using Sockets::SocketAddressIn;
+using Sockets::SocketV2;
 
 class TestSocket : public Socket
 {
   public:
+
     using Socket::fd;
+};
+
+class TestSocketV2 : public SocketV2
+{
+  public:
+
+    using SocketV2::SocketV2; 
+    using SocketV2::fd;
+    using SocketV2::socket_address_in;
 };
 
 int main()
 {
+
+  // ::sockaddr_inConstructs
+  ::sockaddr_in test_sockaddr_in {AF_INET, ::htons(8888), ::htonl(INADDR_ANY)};
+  std::cout << " test_sockaddr_in.sin_family : " << 
+    test_sockaddr_in.sin_family << 
+    " (test_sockaddr_in.sin_family == AF_INET): " << 
+    (test_sockaddr_in.sin_family == AF_INET) << '\n';
+
+  std::cout << " test_sockaddr_in.sin_port : " << 
+    test_sockaddr_in.sin_port << 
+    " ::ntohs(test_sockaddr_in.sin_port): " << 
+    ::ntohs(test_sockaddr_in.sin_port) << '\n';
+
+  std::cout << " test_sockaddr_in.sin_addr.s_addr : " << 
+    test_sockaddr_in.sin_addr.s_addr << 
+    " ::ntohl(test_sockaddr_in.sin_addr.s_addr): " << 
+    ::ntohl(test_sockaddr_in.sin_addr.s_addr) << '\n';
+
+  // SocketAddressInConstructs
+  SocketAddressIn test_tcp_socket_address_in;
+
+  // Construct with an actual port number.
+  SocketAddressIn test_tcp_socket_address_in1 {AF_INET, 8888, INADDR_ANY};
+  std::cout << "\n SocketAddressConstructs \n";
+
+  std::cout << " test_tcp_socket_address_in.sin_family : " << 
+    test_tcp_socket_address_in.sin_family << 
+    " (test_tcp_socket_address_in.sin_family == AF_INET): " << 
+    (test_tcp_socket_address_in.sin_family == AF_INET) << '\n';
+
+  std::cout << " test_tcp_socket_address_in.sin_port : " << 
+    test_tcp_socket_address_in.sin_port << 
+    " ::ntohs(test_tcp_socket_address_in.sin_port): " << 
+    ::ntohs(test_tcp_socket_address_in.sin_port) << '\n';
+
+  std::cout << " test_tcp_socket_address_in.sin_addr.s_addr : " << 
+    test_tcp_socket_address_in.sin_addr.s_addr << 
+    " ::ntohl(test_tcp_socket_address_in.sin_addr.s_addr): " << 
+    ::ntohl(test_tcp_socket_address_in.sin_addr.s_addr) << '\n';
+
+  std::cout << " test_tcp_socket_address_in1.sin_family : " << 
+    test_tcp_socket_address_in1.sin_family << 
+    " (test_tcp_socket_address_in1.sin_family == AF_INET): " << 
+    (test_tcp_socket_address_in1.sin_family == AF_INET) << '\n';
+
+  std::cout << " test_tcp_socket_address_in1.sin_port : " << 
+    test_tcp_socket_address_in1.sin_port << 
+    " ::ntohs(test_tcp_socket_address_in1.sin_port): " << 
+    ::ntohs(test_tcp_socket_address_in1.sin_port) << '\n';
+
+  std::cout << " test_tcp_socket_address_in1.sin_addr.s_addr : " << 
+    test_tcp_socket_address_in1.sin_addr.s_addr << 
+    " ::ntohl(test_tcp_socket_address_in1.sin_addr.s_addr): " << 
+    ::ntohl(test_tcp_socket_address_in1.sin_addr.s_addr) << '\n';
+
   // SocketDefaultConstructs
+  std::cout << "\n SocketConstructs \n";
   TestSocket test_socket;
   std::cout << " test_socket.fd() : " << test_socket.fd() << '\n';
 
+  // ::bindBindsSocketAddressInWithSocket
+  std::cout << "\n ::bindBindsSocketAddressInWithSocket \n";
+
+  // WORKS but DOES NOT BIND
+  std::unique_ptr<::sockaddr> test_tcp_socket_address_uptr {
+    std::make_unique<::sockaddr>(
+      reinterpret_cast<::sockaddr&>(test_tcp_socket_address_in))
+  };
+
+  // this WORKS but BIND ERROR
+//  std::shared_ptr<SocketAddressIn> test_tcp_socket_address_in_uptr {
+  //  std::make_shared<SocketAddressIn>(test_tcp_socket_address_in)
+ // };
+
+  // std::reinterpret_pointer_cast only in C++17
+//  std::shared_ptr<::sockaddr> test_tcp_socket_address_uptr {
+  //  std::reinterpret_pointer_cast<::sockaddr, SocketAddressIn>(
+    //  test_tcp_socket_address_in_uptr)
+//  };
+
+  // this compiles but BIND error
+//  std::unique_ptr<::sockaddr> test_tcp_socket_address_uptr (
+  //  std::move(reinterpret_cast<::sockaddr*>(&test_tcp_socket_address_in)));
+
+  // this does NOT WORK
+//  std::unique_ptr<::sockaddr> test_tcp_socket_address_uptr {
+  //  reinterpret_cast<std::unique<::sockaddr>>(test_tcp_socket_address_in_uptr)
+  //};
+  
+  // compiles but BIND error, invalid pointer
+//  std::unique_ptr<::sockaddr> test_tcp_socket_address_uptr {
+  //  reinterpret_cast<::sockaddr*>(&test_tcp_socket_address_in)
+  //};
+
+  const int bind_result {
+    ::bind(
+      test_socket.fd(),
+      test_tcp_socket_address_uptr.get(),
+      test_tcp_socket_address_in.size())
+  };
+  std::cout << " bind_result : " << bind_result << '\n';
+
+  SocketAddressIn test_socket_address_in;
+  TestSocket test_socket1;
+  std::cout << " test_socket1.fd() : " << test_socket1.fd() << '\n';
+
+  sockaddr* test_socket_address_ptr {
+    reinterpret_cast<::sockaddr*>(&test_socket_address_in)
+  };
+
+  const int bind_result1 {
+    ::bind(
+      test_socket1.fd(),
+      test_socket_address_ptr,
+      test_socket_address_in.size())
+  };
+  std::cout << " bind_result1 : " << bind_result1 << '\n';
+
+  SocketAddressIn test_socket_address_in2;
+  TestSocket test_socket2;
+  std::cout << " test_socket2.fd() : " << test_socket2.fd() << '\n';
+
+  const int bind_result2 {
+    ::bind(
+      test_socket2.fd(),
+      test_socket_address_in2.to_sockaddr(),
+      test_socket_address_in2.size())
+  };
+  std::cout << " bind_result2 : " << bind_result2 << '\n';
+
+  // ::getsocknameGetsActualPort
+  std::cout << "\n ::getsocknameGetsActualPort \n";
+
+
+  // this DOES NOT WORK
+//  std::unique_ptr<::sockaddr> test_tcp_socket_address_uptr {
+  //  std::make_unique<::sockaddr>(
+    //  reinterpret_cast<::sockaddr*>(&test_tcp_socket_address_in))
+  //};
+
+  // this WORKS
+//  ::sockaddr* test_tcp_socket_address_reference {
+//    reinterpret_cast<::sockaddr*>(&test_tcp_socket_address_in)
+//  };
+
+  // this WORKS
+//  ::sockaddr& test_tcp_socket_address_reference {
+  //  reinterpret_cast<::sockaddr&>(test_tcp_socket_address_in)
+  //};
+
+  std::unique_ptr<socklen_t> socket_length_uptr {
+    std::make_unique<socklen_t>(sizeof(::sockaddr_in))};
+
+  std::cout << " *(socket_length_uptr.get()) : " <<
+    *(socket_length_uptr.get()) << '\n';
+
+  const int get_socket_name_result {
+    ::getsockname(test_socket.fd(), 
+    test_tcp_socket_address_uptr.get(),
+    socket_length_uptr.get())};
+  std::cout << " get_socket_name_result : " << get_socket_name_result << '\n';
+  std::cout << " test_tcp_socket_address_uptr.get() : " <<
+    test_tcp_socket_address_uptr.get() <<
+    " *test_tcp_socket_address_uptr.get() " << 
+    std::string(test_tcp_socket_address_uptr.get()->sa_data) << '\n';
+  for (int i {0}; i < 12; i++)
+  {
+    std::cout << test_tcp_socket_address_uptr.get()->sa_data[i] << ' ';
+  }
+
+  std::cout << " test_tcp_socket_address_in.sin_family : " << 
+    test_tcp_socket_address_in.sin_family << 
+    " (test_tcp_socket_address_in.sin_family == AF_INET): " << 
+    (test_tcp_socket_address_in.sin_family == AF_INET) << '\n';
+
+  std::cout << " test_tcp_socket_address_in.sin_port : " << 
+    test_tcp_socket_address_in.sin_port << 
+    " ::ntohs(test_tcp_socket_address_in.sin_port): " << 
+    ::ntohs(test_tcp_socket_address_in.sin_port) << '\n';
+
+  std::cout << " test_tcp_socket_address_in.sin_addr.s_addr : " << 
+    test_tcp_socket_address_in.sin_addr.s_addr << 
+    " ::ntohl(test_tcp_socket_address_in.sin_addr.s_addr): " << 
+    ::ntohl(test_tcp_socket_address_in.sin_addr.s_addr) << '\n';
+
+  socklen_t socket_length {sizeof(::sockaddr_in)};
+
+  const int get_socket_name_result1 {
+    ::getsockname(test_socket1.fd(), 
+      test_socket_address_ptr,
+      &socket_length)};
+  std::cout << " get_socket_name_result1 : " << get_socket_name_result1 << '\n';
+
+  std::cout << " test_socket_address_in.sin_family : " << 
+    test_socket_address_in.sin_family << 
+    " (test_socket_address_in.sin_family == AF_INET): " << 
+    (test_socket_address_in.sin_family == AF_INET) << '\n';
+
+  std::cout << " test_socket_address_in.sin_port : " << 
+    test_socket_address_in.sin_port << 
+    " ::ntohs(test_socket_address_in.sin_port): " << 
+    ::ntohs(test_socket_address_in.sin_port) << '\n';
+
+  std::cout << " test_socket_address_in.sin_addr.s_addr : " << 
+    test_socket_address_in.sin_addr.s_addr << 
+    " ::ntohl(test_socket_address_in.sin_addr.s_addr): " << 
+    ::ntohl(test_socket_address_in.sin_addr.s_addr) << '\n';
+
+  const int get_socket_name_result2 {
+    ::getsockname(test_socket2.fd(), 
+      test_socket_address_in2.to_sockaddr(),
+      &socket_length)};
+  std::cout << " get_socket_name_result2 : " << get_socket_name_result1 << '\n';
+
+  std::cout << " test_socket_address_in2.sin_family : " << 
+    test_socket_address_in2.sin_family << 
+    " (test_socket_address_in2.sin_family == AF_INET): " << 
+    (test_socket_address_in2.sin_family == AF_INET) << '\n';
+
+  std::cout << " test_socket_address_in2.sin_port : " << 
+    test_socket_address_in2.sin_port << 
+    " ::ntohs(test_socket_address_in2.sin_port): " << 
+    ::ntohs(test_socket_address_in2.sin_port) << '\n';
+
+  std::cout << " test_socket_address_in2.sin_addr.s_addr : " << 
+    test_socket_address_in2.sin_addr.s_addr << 
+    " ::ntohl(test_socket_address_in2.sin_addr.s_addr): " << 
+    ::ntohl(test_socket_address_in2.sin_addr.s_addr) << '\n';
+
   // CommonDomainsRepresentsSocketCommunicationDomains
+  std::cout << "\n CommonDomainsRepresentsSocketCommunicationDomains \n";  
   std::cout << " CommonDomains::unix : " << 
     static_cast<int>(CommonDomains::unix) << '\n'; // 1
   std::cout << " CommonDomains::local : " << 
@@ -95,5 +335,29 @@ int main()
 
   // TestSocketFdAccessorCanBeClosedExternally
   ::close(test_socket.fd());
+
+  // TestSocketV2ConstructsBindsAndGetsSocketName
+  std::cout << "\n TestSocketV2ConstructsBindsAndGetsSocketName \n";
+
+  TestSocketV2 test_udp_socket_v2 {AF_INET, SOCK_DGRAM};
+  test_udp_socket_v2.bind();
+  test_udp_socket_v2.get_socket_name();
+
+  std::cout << " test_udp_socket_v2.socket_address_in().sin_family : " << 
+    test_udp_socket_v2.socket_address_in().sin_family << 
+    " (test_udp_socket_v2.socket_address_in().sin_family == AF_INET): " << 
+    (test_udp_socket_v2.socket_address_in().sin_family == AF_INET) << '\n';
+
+  std::cout << " test_udp_socket_v2.socket_address_in().sin_port : " << 
+    test_udp_socket_v2.socket_address_in().sin_port << 
+    " ::ntohs(test_udp_socket_v2.socket_address_in().sin_port): " << 
+    ::ntohs(test_udp_socket_v2.socket_address_in().sin_port) << '\n';
+
+  std::cout << " test_udp_socket_v2.socket_address_in().sin_addr.s_addr : " << 
+    test_udp_socket_v2.socket_address_in().sin_addr.s_addr << 
+    " ::ntohl(test_udp_socket_v2.socket_address_in().sin_addr.s_addr): " << 
+    ::ntohl(test_udp_socket_v2.socket_address_in().sin_addr.s_addr) << '\n';
+
+  
 
 }
