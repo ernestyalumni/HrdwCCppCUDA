@@ -29,11 +29,15 @@
 // \ref http://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 // \ref http://pubs.opengroup.org/onlinepubs/7908799/xns/netinetin.h.html
 #include <arpa/inet.h> // htonl, htons
+#include <cerrno> // errno
+#include <cstring> // strerror
+#include <iostream>
+#include <memory>
 #include <netinet/in.h> // ::sockaddr_in
 #include <stdexcept> // std::runtime_error
 #include <sys/socket.h> // AF_INET
+#include <system_error>
 #include <unistd.h> // ::close, ::sleep, ::unlink
-#include <memory>
 
 namespace Sockets
 {
@@ -236,7 +240,12 @@ class Socket
 
     ~Socket()
     {
-      ::close(fd_);
+      if (::close(fd_) < 0)
+      {
+//        throw std::runtime_error( // throw will always call terminate; 
+        // dtors default to noexcept
+        std::cout << "Failed to close file descriptor, fd_ (::close)\n";
+      }
     }
 
     void bind()
@@ -294,6 +303,20 @@ class Socket
       return fd_;
     }
 
+    int close()
+    {
+      const int close_result {::close(fd_)};
+      if (close_result < 0)
+      {
+        std::cout << " errno : " << std::strerror(errno) << '\n';
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to close file descriptor (::close) \n");
+      }
+      return close_result;
+    }
+
   private:
     int domain_;
     int type_;
@@ -347,7 +370,12 @@ class SocketV2
 
     ~SocketV2()
     {
-      ::close(fd_);
+      if (::close(fd_) < 0)
+      {
+//        throw std::runtime_error( // throw will always call terminate; 
+        // dtors default to noexcept
+          std::cout << "Failed to close file descriptor, fd_ (::close)\n";
+      }
     }
 
     void bind()
@@ -395,6 +423,20 @@ class SocketV2
     socklen_t* get_socket_length_ptr() const
     {
       return socket_length_uptr_.get();
+    }
+
+    int close()
+    {
+      const int close_result {::close(fd_)};
+      if (close_result < 0)
+      {
+        std::cout << " errno : " << std::strerror(errno) << '\n';
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to close file descriptor (::close) \n");
+      }
+      return close_result;
     }
 
   private:
