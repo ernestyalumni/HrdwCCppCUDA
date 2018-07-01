@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 FileOpen_main.cpp FileOpen.cpp -o FileOpen_main
+///  g++ -std=c++14 ../MessageQueue_main.cpp -o -lrt ../MessageQueue_main
 //------------------------------------------------------------------------------
 #ifndef _MESSAGEQUEUE_H_
 #define _MESSAGEQUEUE_H_
@@ -90,6 +90,11 @@ class MessageAttributes: public ::mq_attr
     {
       return sizeof(::mq_attr);
     }
+
+    ::mq_attr* to_mq_attr()
+    {
+      return reinterpret_cast<::mq_attr*>(this);
+    }
 };
 
 //------------------------------------------------------------------------------
@@ -104,12 +109,15 @@ class MessageQueue
     explicit MessageQueue(
       const std::string& queue_name):
       message_queue_descriptor_{
-        ::mq_open(
+        open(
           queue_name.c_str(),
-          static_cast<mode_t>(AllModes::owner_read_write_execute)
-        )},
+          static_cast<long>(AllFlags::send_and_receive) | 
+            static_cast<long>(AllFlags::create) |
+            static_cast<long>(AllFlags::exclusive_existence),
+          static_cast<mode_t>(AllModes::owner_read_write_execute),
+          message_attributes_.to_mq_attr())},
       queue_name_{queue_name}
-      {}
+    {}
 
     ~MessageQueue()
     {
@@ -122,7 +130,72 @@ class MessageQueue
       }
     }
 
+#if 0
+    friend mqd_t open_message_queue(
+      const MessageQueue message_queue,
+      int oflag = static_cast<long>(AllFlags::send_only),
+      mode_t mode = static_cast<mode_t>(AllModes::owner_read_write_execute))
+
+    {
+      return open(
+        message_queue.queue_name(),
+        oflag,
+        mode,
+        message_queue.to_mq_attr());
+    }
+#endif
+
+    void add_to_queue(
+      const char* message_ptr,
+      const size_t message_length,
+      const unsigned int message_priority)
+    {
+      message_queue_send(
+        message_queue_descriptor_,
+        message_ptr,
+        message_length,
+        message_priority);
+    }
+
+    // Accessors
+    std::string queue_name() const
+    {
+      return queue_name_;
+    }
+
   protected:
+
+    mqd_t open(const std::string& name, int oflag)
+    {
+      const mqd_t message_queue_descriptor {
+        ::mq_open(name.c_str(), oflag)
+      };
+
+      if (message_queue_descriptor < 0)
+      {
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to open message queue (::mq_open) \n");
+      }
+      return message_queue_descriptor;
+    }
+
+    mqd_t open(const std::string& name, int oflag, mode_t mode, mq_attr* attr)
+    {
+      const mqd_t message_queue_descriptor {
+        ::mq_open(name.c_str(), oflag, mode, attr)
+      };
+
+      if (message_queue_descriptor < 0)
+      {
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to open message queue (::mq_open) \n");
+      }
+      return message_queue_descriptor;
+    }
 
     int unlink()
     {
@@ -151,10 +224,55 @@ class MessageQueue
       return close_result;
     }
 
+    // Accessors
+    ::mq_attr* to_mq_attr()
+    {
+      return message_attributes_.to_mq_attr();
+    }
+
+    const mqd_t message_queue_descriptor() const
+    {
+      return message_queue_descriptor_;
+    }
+
   private:
+
+    void message_queue_send(
+      const mqd_t mqdes,
+      const char* msg_ptr,
+      size_t msg_len,
+      unsigned int msg_prio)
+    {
+      if (::mq_send(mqdes, msg_ptr, msg_len, msg_prio) < 0)
+      {
+        std::cout << " errno : " << std::strerror(errno) << '\n';
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to send message (::mq_send) to message queue descriptor.\n");        
+      }
+    }
+
+    void message_queue_receive(
+      const mqd_t mqdes, 
+      char *msg_ptr,
+      const size_t msg_len,
+      unsigned int* msg_prio)
+    {
+      if (::mq_receive(mqdes, msg_ptr, msg_len, msg_prio) < 0)
+      {
+        std::cout << " errno : " << std::strerror(errno) << '\n';
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to receive message (::mq_receive) to message queue descriptor.\n"); 
+      }
+    }
 
     mqd_t message_queue_descriptor_;
     std::string queue_name_;
+    MessageAttributes message_attributes_;
+
 };
 
 

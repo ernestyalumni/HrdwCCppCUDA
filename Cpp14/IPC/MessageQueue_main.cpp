@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 Socket_main.cpp -o Socket_main
+///  g++ -std=c++14 -lrt MessageQueue_main.cpp -o MessageQueue_main
 //------------------------------------------------------------------------------
 #include "MessageQueue/MessageQueue.h"
 
@@ -76,6 +76,27 @@ int main()
     message_attributes.mq_maxmsg << ' ' << message_attributes.mq_msgsize <<
     ' ' << message_attributes.mq_curmsgs << '\n';
 
+  // MessageQueueConstructsVia::openWithMessageAttributes
+  // \ref https://stackoverflow.com/questions/3056307/how-do-i-use-mqueue-in-a-c-program-on-a-linux-based-system
+  {
+    std::cout << " MessageQueueConstructsVia::openWithMessageAttributes: \n";
+    // maximum number of messages allowed in queue
+    constexpr long test_maximum_messages {16};
+
+    constexpr long test_maximum_message_size {sizeof(int)};
+    std::cout << " test_maximum_message_size: " <<
+      test_maximum_message_size << '\n';
+
+    MessageAttributes message_attributes {
+      static_cast<long>(AllFlags::send_and_receive) |
+        static_cast<long>(AllFlags::create) |
+        static_cast<long>(AllFlags::exclusive_existence),
+      test_maximum_messages,
+      test_maximum_message_size        
+    };
+
+
+  }
 
 }
 
