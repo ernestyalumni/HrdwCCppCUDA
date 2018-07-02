@@ -57,6 +57,7 @@ struct mq_attr
 
 If `oldattr` field isn't NULL, then buffer that it points to is used to return an `mq_attr` structure that contains same information that's returned by `mq_getattr()`. 
 
+On success `mq_getattr()` and `mq_setattr()` **return** 0; on error, -1 is **returned**, with `errno` set to indicate error.
 
 ### Create a Message Queue; `mq_open`
 
@@ -150,7 +151,7 @@ cf. [MQ_RECEIVE(3) Linux Programmer's Manual](http://man7.org/linux/man-pages/ma
 ```
 #include <mqueue.h>
 
-ssize_T mq_receive(mqd_t mqdes, char *msg_ptr,
+ssize_t mq_receive(mqd_t mqdes, char *msg_ptr,
   size_t msg_len, unsigned int* msg_prio)
 
 #include <time.h>

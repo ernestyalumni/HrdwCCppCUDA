@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 ../MessageQueue_main.cpp -o -lrt ../MessageQueue_main
+///  g++ -std=c++14 -lrt ../MessageQueue_main.cpp -o ../MessageQueue_main
 //------------------------------------------------------------------------------
 #ifndef _MESSAGEQUEUE_H_
 #define _MESSAGEQUEUE_H_
@@ -86,6 +86,9 @@ class MessageAttributes: public ::mq_attr
       ::mq_attr {mq_flags, mq_maxmsg, mq_msgsize}
     {}
 
+    MessageAttributes(const MessageAttributes&) = default;
+    MessageAttributes& operator=(const MessageAttributes&) = default;
+
     const unsigned int size() const 
     {
       return sizeof(::mq_attr);
@@ -118,6 +121,34 @@ class MessageQueue
           message_attributes_.to_mq_attr())},
       queue_name_{queue_name}
     {}
+
+    explicit MessageQueue(
+      const std::string& queue_name,
+      const int oflag,
+      const mode_t mode,
+      const MessageAttributes message_attributes):
+      message_attributes_{message_attributes},
+      message_queue_descriptor_{
+        open(queue_name.c_str(), oflag, mode, message_attributes_.to_mq_attr())},
+      queue_name_{queue_name}
+    {}
+
+    explicit MessageQueue(
+      const std::string& queue_name,
+      const int oflag,
+      const mode_t mode):
+      message_queue_descriptor_{
+        open(queue_name.c_str(), oflag, mode, nullptr)},
+      queue_name_{queue_name}
+    {}
+
+    explicit MessageQueue(const std::string& queue_name, const int oflag):
+      message_queue_descriptor_{open(queue_name.c_str(), oflag)},
+      queue_name_{queue_name}
+    {
+      get_message_attributes();
+    }
+
 
     ~MessageQueue()
     {
@@ -155,12 +186,32 @@ class MessageQueue
         message_ptr,
         message_length,
         message_priority);
+      message_priority_ = message_priority;
+    }
+
+    ssize_t remove_from_queue(char* message_ptr, const size_t message_length)
+    {
+      return message_queue_receive(
+        message_queue_descriptor_,
+        message_ptr,
+        message_length,
+        &message_priority_);
     }
 
     // Accessors
     std::string queue_name() const
     {
       return queue_name_;
+    }
+
+    const MessageAttributes message_attributes() const
+    {
+      return message_attributes_;
+    }
+
+    unsigned int message_priority() const
+    {
+      return message_priority_;
     }
 
   protected:
@@ -196,6 +247,14 @@ class MessageQueue
       }
       return message_queue_descriptor;
     }
+
+    void get_message_attributes()
+    {
+      message_queue_get_message_attributes(
+        message_queue_descriptor_,
+        message_attributes_.to_mq_attr());
+    }
+
 
     int unlink()
     {
@@ -253,13 +312,14 @@ class MessageQueue
       }
     }
 
-    void message_queue_receive(
+    ssize_t message_queue_receive(
       const mqd_t mqdes, 
       char *msg_ptr,
       const size_t msg_len,
       unsigned int* msg_prio)
     {
-      if (::mq_receive(mqdes, msg_ptr, msg_len, msg_prio) < 0)
+      ssize_t mq_receive_result {::mq_receive(mqdes, msg_ptr, msg_len, msg_prio)};
+      if (mq_receive_result < 0)
       {
         std::cout << " errno : " << std::strerror(errno) << '\n';
         throw std::system_error(
@@ -267,12 +327,27 @@ class MessageQueue
           std::generic_category(),
           "Failed to receive message (::mq_receive) to message queue descriptor.\n"); 
       }
+      return mq_receive_result;
     }
 
+    void message_queue_get_message_attributes(
+      const mqd_t mqdes,
+      ::mq_attr* attr)
+    {
+      if (::mq_getattr(mqdes, attr) < 0)
+      {
+        std::cout << " errno : " << std::strerror(errno) << '\n';
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to get message attributes (::mq_getattr).\n");         
+      }
+    }
+
+    MessageAttributes message_attributes_;
     mqd_t message_queue_descriptor_;
     std::string queue_name_;
-    MessageAttributes message_attributes_;
-
+    unsigned int message_priority_ {1};
 };
 
 

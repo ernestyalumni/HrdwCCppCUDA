@@ -29,7 +29,9 @@
 #include <mqueue.h>
 
 using IPC::AllFlags;
+using IPC::AllModes;
 using IPC::MessageAttributes;
+using IPC::MessageQueue;
 using IPC::maximum_message_size;
 using IPC::maximum_number_of_messages;
 
@@ -76,12 +78,45 @@ int main()
     message_attributes.mq_maxmsg << ' ' << message_attributes.mq_msgsize <<
     ' ' << message_attributes.mq_curmsgs << '\n';
 
+  // MessageAttributesCopyConstructs
+  {
+    std::cout << "\n MessageAttributesCopiesWith::mq_setattr: \n";
+
+    // maximum number of messages allowed in queue
+    constexpr long test_maximum_messages {16};
+
+    constexpr long test_maximum_message_size {sizeof(int)};
+
+    MessageAttributes message_attributes1 {
+      static_cast<long>(AllFlags::send_and_receive) |
+        static_cast<long>(AllFlags::create) |
+        static_cast<long>(AllFlags::exclusive_existence),
+      test_maximum_messages,
+      test_maximum_message_size        
+    };
+
+    std::cout << message_attributes1.mq_flags << ' ' <<
+      message_attributes1.mq_maxmsg << ' ' << message_attributes1.mq_msgsize <<
+      ' ' << message_attributes1.mq_curmsgs << '\n';
+
+    MessageAttributes message_attributes2 {message_attributes1};
+
+    std::cout << message_attributes2.mq_flags << ' ' <<
+      message_attributes2.mq_maxmsg << ' ' << message_attributes2.mq_msgsize <<
+      ' ' << message_attributes2.mq_curmsgs << '\n';
+
+  }
+
   // MessageQueueConstructsVia::openWithMessageAttributes
   // \ref https://stackoverflow.com/questions/3056307/how-do-i-use-mqueue-in-a-c-program-on-a-linux-based-system
   {
     std::cout << " MessageQueueConstructsVia::openWithMessageAttributes: \n";
+
     // maximum number of messages allowed in queue
     constexpr long test_maximum_messages {16};
+
+    const std::string queue_name {"/test_queue"};
+    const std::string queue_name1 {"/test_queue1"};
 
     constexpr long test_maximum_message_size {sizeof(int)};
     std::cout << " test_maximum_message_size: " <<
@@ -95,6 +130,37 @@ int main()
       test_maximum_message_size        
     };
 
+    MessageAttributes message_attributes1 {
+      static_cast<long>(AllFlags::send_and_receive) |
+        static_cast<long>(AllFlags::create) |
+        static_cast<long>(AllFlags::exclusive_existence),
+      test_maximum_messages,
+      test_maximum_message_size        
+    };
+
+    std::cout << message_attributes.mq_flags << ' ' <<
+      message_attributes.mq_maxmsg << ' ' << message_attributes.mq_msgsize <<
+      ' ' << message_attributes.mq_curmsgs << '\n';
+
+    const int mq_open_result {
+      ::mq_open(
+        queue_name.c_str(),
+        static_cast<long>(AllFlags::send_and_receive) |
+          static_cast<long>(AllFlags::create) |
+          static_cast<long>(AllFlags::exclusive_existence),
+        static_cast<mode_t>(AllModes::owner_read_write_execute),
+        message_attributes.to_mq_attr()
+        )};
+
+    std::cout << " mq_open_result : " << mq_open_result << std::endl;
+
+    MessageQueue message_queue1 {
+      queue_name1,
+      static_cast<long>(AllFlags::send_and_receive) |
+        static_cast<long>(AllFlags::create) |
+        static_cast<long>(AllFlags::exclusive_existence),
+      static_cast<mode_t>(AllModes::owner_read_write_execute),
+      message_attributes1};
 
   }
 
