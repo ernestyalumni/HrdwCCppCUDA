@@ -199,7 +199,7 @@ int mq_unlink(const char*);
 
 ```
 
-### ** `mq_unlink`** remove a message queue
+### **`mq_unlink`** remove a message queue
 
 [MQ_UNLINK, Linux Programmer's Manual](http://man7.org/linux/man-pages/man2/mq_unlink.2.html)
 
