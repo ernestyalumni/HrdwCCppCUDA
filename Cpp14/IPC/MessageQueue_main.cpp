@@ -54,6 +54,20 @@ int main()
   std::cout << " AllFlags::nonblocking : " << 
     static_cast<long>(AllFlags::nonblocking) << '\n'; // 2048
 
+  // AllModesRepresentsModes
+  std::cout << "\n AllModesRepresentsModes \n";  
+  std::cout << " AllModes::owner_read_write_execute : " << 
+    static_cast<mode_t>(AllModes::owner_read_write_execute) << '\n'; // 0
+  std::cout << " AllModes::owner_read : " << 
+    static_cast<mode_t>(AllModes::owner_write) << '\n'; // 1
+  std::cout << " AllModes::owner_write : " << 
+    static_cast<mode_t>(AllModes::owner_write) << '\n'; // 2 
+  std::cout << " AllModes::owner_execute : " << 
+    static_cast<mode_t>(AllModes::owner_execute) << '\n'; // 2 
+  std::cout << (static_cast<mode_t>(AllModes::owner_read) |
+    static_cast<mode_t>(AllModes::owner_write)) << '\n';
+  std::cout << static_cast<mode_t>(AllModes::all_read_write)  << '\n';
+
 
   // ::mq_attrConstructs
   std::cout << "\n ::mq_attrConstructs\n";
@@ -73,10 +87,10 @@ int main()
 
   // MessageAttributesConstructs
   std::cout << "\n MessageAttributesConstructs\n";
-  MessageAttributes message_attributes {};
-  std::cout << message_attributes.mq_flags << ' ' <<
-    message_attributes.mq_maxmsg << ' ' << message_attributes.mq_msgsize <<
-    ' ' << message_attributes.mq_curmsgs << '\n';
+  MessageAttributes attributes {};
+  std::cout << attributes.mq_flags << ' ' <<
+    attributes.mq_maxmsg << ' ' << attributes.mq_msgsize <<
+    ' ' << attributes.mq_curmsgs << '\n';
 
   // MessageAttributesCopyConstructs
   {
@@ -87,7 +101,7 @@ int main()
 
     constexpr long test_maximum_message_size {sizeof(int)};
 
-    MessageAttributes message_attributes1 {
+    MessageAttributes attributes1 {
       static_cast<long>(AllFlags::send_and_receive) |
         static_cast<long>(AllFlags::create) |
         static_cast<long>(AllFlags::exclusive_existence),
@@ -95,15 +109,15 @@ int main()
       test_maximum_message_size        
     };
 
-    std::cout << message_attributes1.mq_flags << ' ' <<
-      message_attributes1.mq_maxmsg << ' ' << message_attributes1.mq_msgsize <<
-      ' ' << message_attributes1.mq_curmsgs << '\n';
+    std::cout << attributes1.mq_flags << ' ' <<
+      attributes1.mq_maxmsg << ' ' << attributes1.mq_msgsize <<
+      ' ' << attributes1.mq_curmsgs << '\n';
 
-    MessageAttributes message_attributes2 {message_attributes1};
+    MessageAttributes attributes2 {attributes1};
 
-    std::cout << message_attributes2.mq_flags << ' ' <<
-      message_attributes2.mq_maxmsg << ' ' << message_attributes2.mq_msgsize <<
-      ' ' << message_attributes2.mq_curmsgs << '\n';
+    std::cout << attributes2.mq_flags << ' ' <<
+      attributes2.mq_maxmsg << ' ' << attributes2.mq_msgsize <<
+      ' ' << attributes2.mq_curmsgs << '\n';
 
   }
 
@@ -122,7 +136,7 @@ int main()
     std::cout << " test_maximum_message_size: " <<
       test_maximum_message_size << '\n';
 
-    MessageAttributes message_attributes {
+    MessageAttributes attributes {
       static_cast<long>(AllFlags::send_and_receive) |
         static_cast<long>(AllFlags::create) |
         static_cast<long>(AllFlags::exclusive_existence),
@@ -130,7 +144,7 @@ int main()
       test_maximum_message_size        
     };
 
-    MessageAttributes message_attributes1 {
+    MessageAttributes attributes1 {
       static_cast<long>(AllFlags::send_and_receive) |
         static_cast<long>(AllFlags::create) |
         static_cast<long>(AllFlags::exclusive_existence),
@@ -138,10 +152,11 @@ int main()
       test_maximum_message_size        
     };
 
-    std::cout << message_attributes.mq_flags << ' ' <<
-      message_attributes.mq_maxmsg << ' ' << message_attributes.mq_msgsize <<
-      ' ' << message_attributes.mq_curmsgs << '\n';
+    std::cout << attributes.mq_flags << ' ' <<
+      attributes.mq_maxmsg << ' ' << attributes.mq_msgsize <<
+      ' ' << attributes.mq_curmsgs << '\n';
 
+#if 0
     const int mq_open_result {
       ::mq_open(
         queue_name.c_str(),
@@ -149,7 +164,7 @@ int main()
           static_cast<long>(AllFlags::create) |
           static_cast<long>(AllFlags::exclusive_existence),
         static_cast<mode_t>(AllModes::owner_read_write_execute),
-        message_attributes.to_mq_attr()
+        attributes.to_mq_attr()
         )};
 
     std::cout << " mq_open_result : " << mq_open_result << std::endl;
@@ -160,7 +175,8 @@ int main()
         static_cast<long>(AllFlags::create) |
         static_cast<long>(AllFlags::exclusive_existence),
       static_cast<mode_t>(AllModes::owner_read_write_execute),
-      message_attributes1};
+      attributes1};
+#endif 
 
   }
 

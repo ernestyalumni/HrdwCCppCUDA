@@ -38,7 +38,7 @@
 namespace IPC
 {
 
-constexpr long maximum_number_of_messages {1000};
+constexpr long maximum_number_of_messages {500};
 constexpr long maximum_message_size {100};
 
 //------------------------------------------------------------------------------
@@ -59,12 +59,19 @@ enum class AllFlags : long
 //------------------------------------------------------------------------------
 /// \brief enum class for all flags.
 /// \details In <sys/stat.h>
+/// S_IRWXU is bitwise OR of S_IRUSR, S_IWUSR, and S_IXUSR.
 /// \ref http://pubs.opengroup.org/onlinepubs/7908799/xsh/sysstat.h.html
 //------------------------------------------------------------------------------
 enum class AllModes : mode_t
 {
   owner_read_write_execute = S_IRWXU, // read, write, execute/search by owner
-
+  owner_read = S_IRUSR, // read permission, owner
+  owner_write = S_IWUSR, // write permission, owner
+  owner_execute = S_IXUSR, // execute permission, owner
+  group_read = S_IRGRP, // read permission, owner
+  group_write = S_IWGRP, // write permission, owner
+  group_execute = S_IXGRP, // execute permission, owner
+  all_read_write = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH
 };
 
 std::string queue_name(const std::string& name)
@@ -98,6 +105,17 @@ class MessageAttributes: public ::mq_attr
     {
       return reinterpret_cast<::mq_attr*>(this);
     }
+
+    friend std::ostream& operator<<(
+      std::ostream& os,
+      const MessageAttributes& attributes)
+    {
+      os << "mq_flags : " << attributes.mq_flags <<
+        " mq_maxmsg : " << attributes.mq_maxmsg <<
+        " mq_msgsize : " << attributes.mq_msgsize <<
+        " mq_curmsgs : " << attributes.mq_curmsgs;
+      return os; 
+    }
 };
 
 //------------------------------------------------------------------------------
@@ -118,7 +136,7 @@ class MessageQueue
             static_cast<long>(AllFlags::create) |
             static_cast<long>(AllFlags::exclusive_existence),
           static_cast<mode_t>(AllModes::owner_read_write_execute),
-          message_attributes_.to_mq_attr())},
+          attributes_.to_mq_attr())},
       queue_name_{queue_name}
     {}
 
@@ -126,10 +144,10 @@ class MessageQueue
       const std::string& queue_name,
       const int oflag,
       const mode_t mode,
-      const MessageAttributes message_attributes):
-      message_attributes_{message_attributes},
+      const MessageAttributes attributes):
+      attributes_{attributes},
       message_queue_descriptor_{
-        open(queue_name.c_str(), oflag, mode, message_attributes_.to_mq_attr())},
+        open(queue_name.c_str(), oflag, mode, attributes_.to_mq_attr())},
       queue_name_{queue_name}
     {}
 
@@ -146,9 +164,8 @@ class MessageQueue
       message_queue_descriptor_{open(queue_name.c_str(), oflag)},
       queue_name_{queue_name}
     {
-      get_message_attributes();
+      get_attributes();
     }
-
 
     ~MessageQueue()
     {
@@ -179,14 +196,14 @@ class MessageQueue
     void add_to_queue(
       const char* message_ptr,
       const size_t message_length,
-      const unsigned int message_priority)
+      const unsigned int priority)
     {
       message_queue_send(
         message_queue_descriptor_,
         message_ptr,
         message_length,
-        message_priority);
-      message_priority_ = message_priority;
+        priority);
+      priority_ = priority;
     }
 
     ssize_t remove_from_queue(char* message_ptr, const size_t message_length)
@@ -195,7 +212,12 @@ class MessageQueue
         message_queue_descriptor_,
         message_ptr,
         message_length,
-        &message_priority_);
+        &priority_);
+    }
+
+    void unlink()
+    {
+      message_queue_unlink();
     }
 
     // Accessors
@@ -204,14 +226,26 @@ class MessageQueue
       return queue_name_;
     }
 
-    const MessageAttributes message_attributes() const
+    const MessageAttributes attributes() const
     {
-      return message_attributes_;
+      return attributes_;
+    }    
+
+    unsigned int priority() const
+    {
+      return priority_;
     }
 
-    unsigned int message_priority() const
+    friend std::ostream& operator<<(
+      std::ostream& os,
+      const MessageQueue& message_queue)
     {
-      return message_priority_;
+      os << "attributes : " << message_queue.attributes() <<
+        " message_queue_descriptor : " <<
+        message_queue.message_queue_descriptor() <<
+        " queue_name : " << message_queue.queue_name() <<
+        " priority : " << message_queue.priority();
+      return os; 
     }
 
   protected:
@@ -248,25 +282,11 @@ class MessageQueue
       return message_queue_descriptor;
     }
 
-    void get_message_attributes()
+    void get_attributes()
     {
-      message_queue_get_message_attributes(
+      message_queue_get_attributes(
         message_queue_descriptor_,
-        message_attributes_.to_mq_attr());
-    }
-
-
-    int unlink()
-    {
-      const int unlink_result {::mq_unlink(queue_name_.c_str())};
-      if (unlink_result < 0)
-      {
-        std::cout << " errno : " << std::strerror(errno) << '\n';
-        throw std::system_error(
-          errno,
-          std::generic_category(),
-          "Failed to unlink queue_name_ (::mq_link) \n");        
-      }      
+        attributes_.to_mq_attr());
     }
 
     int close()
@@ -286,7 +306,7 @@ class MessageQueue
     // Accessors
     ::mq_attr* to_mq_attr()
     {
-      return message_attributes_.to_mq_attr();
+      return attributes_.to_mq_attr();
     }
 
     const mqd_t message_queue_descriptor() const
@@ -330,7 +350,7 @@ class MessageQueue
       return mq_receive_result;
     }
 
-    void message_queue_get_message_attributes(
+    void message_queue_get_attributes(
       const mqd_t mqdes,
       ::mq_attr* attr)
     {
@@ -344,10 +364,23 @@ class MessageQueue
       }
     }
 
-    MessageAttributes message_attributes_;
+    void message_queue_unlink()
+    {
+      const int unlink_result {::mq_unlink(queue_name_.c_str())};
+      if (unlink_result < 0)
+      {
+        std::cout << " errno : " << std::strerror(errno) << '\n';
+        throw std::system_error(
+          errno,
+          std::generic_category(),
+          "Failed to unlink queue_name_ (::mq_link) \n");        
+      }      
+    }
+
+    MessageAttributes attributes_;
     mqd_t message_queue_descriptor_;
     std::string queue_name_;
-    unsigned int message_priority_ {1};
+    unsigned int priority_ {1};
 };
 
 
