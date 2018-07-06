@@ -25,6 +25,45 @@
 
 #include "Thread.h"
 
+class NameValue
+{
+  public:
+    explicit NameValue(const std::string& name, const float value):
+      name_{name}, value_{value}
+    {}
+
+    void run()
+    {
+      std::cout << " Running : " << name_ << " " << value_ << '\n';
+      value_ *= 2.;
+      std::cout << " New value : " << value_ << '\n';
+    }
+
+  private:
+    std::string name_;
+    float value_;
+};
+
+class ValueUnit
+{
+  public:
+    explicit ValueUnit(const double value, const std::string& name):
+      value_{value}, name_{name}
+    {}
+
+    void run()
+    {
+      std::cout << " Running : " << name_ << " " << value_ << '\n';
+      value_ += 1.;
+      std::cout << " New value : " << value_ << '\n';
+    }
+
+  private:
+    double value_;
+    std::string name_;
+};
+
+
 void hello()
 {
 	std::cout << "Hello Concurrent World\n";
@@ -34,5 +73,9 @@ int main()
 {
 	std::thread t(hello);
 	std::cout << "Not yet moved to a Thread class \n";
-	Thread thread {std::move(t)};
+	BasicThread thread {std::move(t)};
+
+
+  Thread<NameValue> name_value_thread {"g", 9.8f};
+
 }

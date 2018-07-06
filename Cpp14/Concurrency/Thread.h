@@ -22,20 +22,54 @@
  * */
 #include <thread>
 
+class BasicThread
+{
+	public:
+
+		BasicThread();
+
+		explicit BasicThread(std::thread&& th): 
+			th_{std::move(th)}
+		{}
+
+		BasicThread(const BasicThread&) = delete;
+		BasicThread(BasicThread&&) = default;
+		BasicThread& operator=(const BasicThread&) = delete;
+		BasicThread& operator=(BasicThread&&) = default;
+
+		~BasicThread()
+		{
+			if (th_.joinable())
+			{
+				th_.join();
+			}
+		}
+
+	private:
+		std::thread th_;
+};
+
+template <class Executable>
 class Thread
 {
 	public:
 
-		Thread();
-
-		explicit Thread(std::thread&& th): 
-			th_{std::move(th)}
+		template <typename ... Args>
+		explicit Thread(Args&&... arguments):
+			executable_{std::forward<Args>(arguments)...},
+			th_{std::thread{executable_.run}}
 		{}
 
+		// Not copyable, but movable
 		Thread(const Thread&) = delete;
-		Thread(Thread&&) = default;
 		Thread& operator=(const Thread&) = delete;
+		Thread(Thread&&) = default;
 		Thread& operator=(Thread&&) = default;
+
+		void run_it()
+		{
+			executable_.run();
+		}
 
 		~Thread()
 		{
@@ -46,5 +80,8 @@ class Thread
 		}
 
 	private:
+
+		Executable executable_;
 		std::thread th_;
+
 };
