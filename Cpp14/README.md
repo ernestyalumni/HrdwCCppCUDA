@@ -1,3 +1,44 @@
+20180131 update  
+
+### `std::conditional` 
+
+```  
+template< bool B, class T, flass F>  
+struct condition;  
+```  
+Provides member typedef type, which is defined as T if B is `true` at compile time, or as F if it is `false`.  
+
+#### Member types (of `std::conditional`)  
+
+`type` - T if `B == true`, F if `B == false`  
+
+#### Helper types (of `std::conditional`)  
+
+```  
+template< bool B, class T, class F > 
+using conditional_t = typename conditional<B,T,F>::type;  
+```  
+
+
+
+### [`std::enable_if`](http://en.cppreference.com/w/cpp/types/enable_if)  
+
+```  
+template< bool B, class T = void >
+struct enable_if;  
+```  
+
+If B is `true`, `std::enable_if` has public member typedef type, equal to T; otherwise, there's no member typedef.  
+
+This metafunction is a convenient way to leverage SFINAE to conditionally remove functions from [overload resolution](http://en.cppreference.com/w/cpp/language/overload_resolution) based on type traits and to provide separate function overloads and specializations for different type traits.  
+Can be used as additional function argument (not applicable to operator overloads), as  
+return type (not applicable to constructors and destructors), or as  
+class template or function template parameter.  
+
+
+
+cf. Ray Lischner.  **Exploring C++11** (Expert's Voice in C++). 2nd. ed.  Apress.  Dec. 23, 2013.  ISBN-13: 978-1430261933
+
 20180124 update  
 
 ### [`explicit` specifier](http://en.cppreference.com/w/cpp/language/explicit)  
