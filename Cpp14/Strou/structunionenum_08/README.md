@@ -98,3 +98,28 @@ not possible to take address of a field
 ### Fields and `struct`s  
 
 bundle several fields, such tiny variables together, in a `struct`  
+
+# Enumerations
+
+## `enum class`es
+
+`enum class`es for which enumerator names are local to the `enum` and values don't implicitly convert to other types.
+
+`enum class` is scoped and strongly typed enumeration. 
+
+By default, enumerator values are assigned increasing from 0.
+
+It's possible to declare an `enum class` without defining it (Sec. 6.3) until later.
+
+Explicit conversion with `static_cast` are necessary because `class enum` doesn't support implicit conversion.
+
+cf. 8.4 Enumerations, 8.4.1 `enum` classes, Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
+See `Enums.h`, `Enums_main.cpp`
+
+## `enum`
+
+Namespace pollution is a problem.
+
+pp. 223, cf. 8.4 Enumerations, 8.4.2 Plain `enum`s, Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
