@@ -22,7 +22,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 stdarray.cpp -o stdarray
+///  g++ -std=c++14 Endian_main.cpp -o Endian_main
 //------------------------------------------------------------------------------
 #include "Endian/Endian.h"
 #include <cmath> // std::nan

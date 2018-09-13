@@ -85,3 +85,17 @@ class Thread
 		std::thread th_;
 
 };
+
+/// \details Use CRTP (Curiously Recurring template pattern), idiom in C++ in
+/// which class X derived from a class template instantiation using X itself
+/// as template argument.
+template <class T>
+class ThreadRAII : public T
+{
+	public:
+
+		template <typename ... Args>
+		explicit ThreadRAII(Args&&... arguments):
+			th_{}
+
+};

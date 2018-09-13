@@ -1,12 +1,14 @@
 //------------------------------------------------------------------------------
-/// \file CompileTimeAssertions_main.cpp
+/// \file stdremove_reference.cpp
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
-/// \brief  Main driver file for Compile-time assertions.
-/// \ref 2.1 Compile-Time Assertions. Ch. 2 Techniques. pp. 19
-///   Andrei Alexandrescu. Modern C++: Design Generic Programming and Design
-///   Patterns Applied.
-/// \details 
+/// \brief  Main driver file for examples of std::remove_reference
+/// reference deduction. 
+/// \ref 23.5.2.1 Reference Deduction Ch. 23 Templates; Bjarne Stroustrup, 
+///   The C++ Programming Language, 4th Ed., Stroustrup; Ch.23
+/// https://en.cppreference.com/w/cpp/types/remove_reference
+/// \details If type T is a reference type, provides member typedef typedef
+/// type which is the type referred to by T. Otherwise type is T.
 /// \copyright If you find this code useful, feel free to donate directly and
 /// easily at this direct PayPal link: 
 ///
@@ -25,13 +27,28 @@
 /// COMPILATION TIPS:
 ///  g++ -std=c++14 Socket_main.cpp -o Socket_main
 //------------------------------------------------------------------------------
+#include <iostream> // std::cout 
+#include <type_traits> // std::is_same, std::remove_reference
 
-#include "CompileTimeAssertions.h"
-
-using Techniques::CompileTime::CompileTimeError;
-using Techniques::CompileTime::safe_reinterpret_cast;
+template <class T1, class T2>
+void print_is_same()
+{
+  std::cout << std::is_same<T1, T2>() << '\n';
+}
 
 int main()
 {
-  
+  std::cout << std::boolalpha;
+
+  print_is_same<int, int>();  // true
+  print_is_same<int, int&>(); // false
+  print_is_same<int, int &&>(); // false
+
+  // C++11 style first
+//  print_is_same<int, std::remove_reference<int>::type>();
+  print_is_same<int, std::remove_reference_t<int>>(); // true
+  print_is_same<int, std::remove_reference_t<int &>>(); // true
+  print_is_same<int, std::remove_reference_t<int &&>>(); // true
+
 }
+

@@ -4,7 +4,10 @@
 /// \email  ernestyalumni@gmail.com
 /// \brief  Examples demonstrating std::forward and perfect forwarding.
 /// \ref https://en.cppreference.com/w/cpp/utility/forward     
-/// \details  
+/// \details When `t` is a "forwarding reference" (a function argument that's
+/// an rvalue reference to a cv-unqualified function template parameter), this
+/// overload forwards argument to another function with the value category it
+/// had when passed to the calling function. 
 /// \copyright If you find this code useful, feel free to donate directly and easily at 
 /// this direct PayPal link: 
 ///

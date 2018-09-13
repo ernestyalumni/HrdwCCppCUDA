@@ -182,6 +182,29 @@ References and `const` must be initialized (Sec. 7.7, Sec. 7.5); therefore, a cl
 *For what types does it make sense to have a default value?*
 *Does this type have a "special" value we can "naturally" use as a default?*
 
+#### Initializer-List Constructors
+
+cf. pp. 495 17.3.4 Initializer-List Constructors. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+[`std::initializer_list`](https://en.cppreference.com/w/cpp/utility/initializer_list)
+
+##### `std::initializer_list`
+
+Object of type `std::initializer_list<T>` is a lightweight proxy object that provides access to an array of objects of type `const T`. 
+
+Initializer lists maybe implemented as a pair of pointers or pointer and length; copying a `std::initializer_list` doesn't copy underlying objects.
+
+(since C++14)
+Underlying array is temporary array of type `const T[N]`, which each element is copy-initialized (except narrowing conversions invalid) from corresponding element of original initializer list. 
+	Lifetime of underlying array is same as any temporary object.
+
+See `../stdinitializer_list_eg.cpp`
+
+Distinction between direct initialization and copy initialization (Sec. 16.2.6) is maintained for `{}` initialization. 
+
+For a container, this implies that distinction is applied to both container and its elements:
+* container's initializer-list ctor can be `explicit` or not
+* ctor of element type of the initializer list can be `explicit` or not.
 
 
 

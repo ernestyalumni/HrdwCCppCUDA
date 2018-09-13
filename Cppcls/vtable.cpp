@@ -1,5 +1,5 @@
 /**
- * 	@file 	vtable.c
+ * 	@file 	vtable.cpp
  * 	@brief 	write virtual function in C++, then use same to achieve dynamic or runtime polymorphism  
  * 	@ref	http://web.archive.org/web/20100209040010/http://www.codersource.net/published/view/325/virtual_functions_in.aspx
  * 	@details In this example, the pointer is of type base but it points to the derived class object.  

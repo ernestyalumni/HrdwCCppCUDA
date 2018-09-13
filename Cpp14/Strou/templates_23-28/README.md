@@ -1,4 +1,4 @@
-# Templates
+# Templates, Generic Programming
 
 ## Templates
 
@@ -39,6 +39,13 @@ String<C>::String(): // String<C>'s constructor
 
 ```
 
+## Function Templates
+
+cf. pp. 684, Ch. 23.5 Function Templates. Ch. 23. **Templates** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.
+
+When a function template is called, the *types of the function arguments* determine which version of the template is used; i.e. the template arguments are deduced from the function arguments. 
+
+
 ### Template Instantiation
 
 cf. pp. 671, Ch. 23.2.2 Template Instantiation. **Templates** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. Ch. 23.
@@ -47,5 +54,160 @@ cf. pp. 671, Ch. 23.2.2 Template Instantiation. **Templates** by Bjarne Stroustr
 
 In general, it's the implementation's job - *not* the programmer's - to ensure that specializations of a template are generated for each template argument list used.
 
+
+## Template argument deduction (TAD)
+
+### Reference deduction by template argument deduction
+
+cf. pp. 688, Ch. 23.5.2.1 Reference Deduction. **Templates** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. Ch. 23.
+
+It can be useful to have different actions taken for lvalues and rvalues. 
+
+e.g. `XRef.h`, `XRef_main.cpp` 
+
+``` 
+template <typename T>
+class XRef
+{
+  public:
+
+    XRef(const int i, T* p): // store a pointer: Xref is the owner
+      index_{i}, elem_{p}, owned_{true}
+    {}
+
+    XRef(int i, T& r):
+      index_{i}, elem_{&r}, owned_{false}
+    {}
+
+    XRef(int i, T&& r):
+      index_{i}, elem_{new T{std::move(r)}}, owned_{true}
+    {}
+
+    ~XRef()
+    {
+      if (owned_)
+      {
+        delete elem_;
+      }
+    }
+
+    // Accessors
+    int index() const
+    {
+      return index_;
+    }
+
+    const T elem() const
+    {
+      return *elem_;
+    }
+
+  private:
+    int index_;
+    T* elem_;
+    bool owned_;
+
+}; // END of class XRef
+```
+
+``` 
+  std::string x {"There and back again"};
+
+  XRef<std::string> r1 {7, "Here"};       // r1 owns a copy of string{"Here"}
+  XRef<std::string> r2 {9, x};            // r2 just refers to x
+  XRef<std::string> r3 {3, new std::string{"There"}};   // r3 owns the string{"There"}
+```
+`r1` picks `XRef(int, std::string&&)` because `"Here"` is a rvalue. 
+`r2` picks `XRef(int, std::string&)` because `x` is a lvalue.
+
+Lvalues and rvalues are distinguished by *template argument deduction*: an lvalue of type `X` is deduced as an `X&` and an rvalue as `X`. (or is it `T`, `T&`)
+
+This differs from binding of values to non-template argument rvalue references (Sec. 12.2.1) but is especially useful for argument forwarding (Sec. 35.5.1). 
+
+``` 
+template <typename T>
+  T&& std::forward(typename remove_reference_t<T>& t) noexcept; // Sec. 35.5.1
+
+template <typename T>
+  T&& std::forward(typename remove_reference_t<T>&& t) noexcept;
+
+
+```
+
+
+
+
+
+## Generic Programming
+
+cf. pp. 699, Ch. 24.1 Introduction. Ch. 24**Generic Programming** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
+Templates offer:
+* ability to pass types (as well as values and templates) as arguments without loss of information. 
+  - This implies excellent opportunities for inlining, of which current implementations take great advantage. 
+* delayed type checking (done at instantiation time). This implies opportunities to weave together information from different contexts. 
+* ability to pass constant values as arguments. This implies ability to do compile-time computation.
+
+*generic programming* - first and most common use of templates is to support *generic programming*, i.e. programming focused on design, implementation, and use of general algorithms, "general" meaning algorithm can be designed to accept a wide variety of types as long as they meet algorithm's requirements on its arguments.
+
+templates provide (compile-time) parametric polymorphism. Type checking provided for templates checks use of arguments in the template definition, ratherh than against explicit interface (in a template delcaration) - we operate on values, and presence and meaning of an operation depend solely on its operand values.
+
+template programming run-time cost is 0, and errors that, in a run-time typed language manifest themselves as exceptions, become compile-time errors in C++.
+
+*Lifting* - generalizing an algorithm to allow greatest (reasonable) range of argument types 
+*Concepts* - carefully specifying requirements of an algorithm (or class) on its arguments.
+
+### Lifting; Algorithms and Lifting
+
+cf. pp. 700, Ch. 24.2 Algorithms and Lifting. Ch. 24**Generic Programming** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
+
+How do we get from a function doing specific operations on specific data to an algorithm doing more general operations on a variety of data types? 
+
+The most effective way of getting a good algorithm is to generalize from one - and preferably more - concrete example; such a generalization is called *lifting*.
+
+### SFINAE, Class template SFINAE, Function template SFINAE
+
+[Class template SFINAE C++patterns](https://cpppatterns.com/patterns/class-template-sfinae.html) 
+
+Conditionally instantiate a class template depending on template arguments.
+
+``` 
+#include <type_traits> 
+
+template <typename T, typename Enable = void>
+class foo; 
+
+template <typename T> class foo<T, typename std::enable_if<std::is_integral<T>::value>::type> 
+{ }; 
+
+template <typename T> class foo<T, typename std::enable_if<std::is_floating_point<T>::value>::type> { };
+```
+
+If you want to simply prevent a template from being instantiated for certain template arguments, consider using `static_assert` instead.
+
+
+[Function template SFINAE](https://cpppatterns.com/patterns/function-template-sfinae.html)
+
+Conditionally instantiate a function template depending on template arguments.
+
+``` 
+#include <type_traits> 
+#include <limits> 
+#include <cmath> 
+
+template <typename T> 
+typename std::enable_if<std::is_integral<T>::value, bool>::type   
+equal(T lhs, T rhs) 
+{   
+  return lhs == rhs; 
+  } 
+
+template <typename T> 
+typename std::enable_if<std::is_floating_point<T>::value, bool>::type   
+equal(T lhs, T rhs) 
+{   
+  return std::abs(lhs - rhs) < 0.0001; 
+}
+```
 
 

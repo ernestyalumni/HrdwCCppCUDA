@@ -59,6 +59,14 @@ If `oldattr` field isn't NULL, then buffer that it points to is used to return a
 
 On success `mq_getattr()` and `mq_setattr()` **return** 0; on error, -1 is **returned**, with `errno` set to indicate error.
 
+###### Attributes of `mq_getattr`, `mq_setattr`
+
+| Interface | Attribute | Value |
+| --------- | --------- | ----- |
+| `mq_getattr()`, `mq_setattr()` | Thread safety | MT-Safe |
+
+
+
 ### Create a Message Queue; `mq_open`
 
 cf. [MQ_OPEN(3) Linux Programmer's Manual](http://man7.org/linux/man-pages/man3/mq_open.3.html)

@@ -318,6 +318,9 @@ struct sockaddr
 Particular form of `sockaddr` used for TCP/IP addresses:
 
 ``` 
+#include <netinet/in.h> // ::sockaddr_in
+#include <netinet/ip.h> // superset of previous
+
 struct in_addr
 {
   unsigned long s_addr; // Internet address (32-bits)
@@ -337,6 +340,9 @@ struct sockaddr_in
 For `ip` 
 
 ``` 
+#include <netinet/in.h> // ::sockaddr_in
+#include <netinet/ip.h> // superset of previous
+
 struct sockaddr_in 
 {
   sa_family_t sin_family; // address family: AF_INET 
@@ -365,6 +371,9 @@ Structure `sockaddr` is a generic contained that just allows OS to be able to re
   - For IP networking, we use `struct sockaddr_in`, which is defined in header `netinet/in.h`. 
 
   ```
+#include <netinet/in.h> // ::sockaddr_in
+#include <netinet/ip.h> // superset of previous
+
   struct sockaddr_in 
   {
     __uint8_t     sin_len;

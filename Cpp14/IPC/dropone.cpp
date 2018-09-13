@@ -46,7 +46,7 @@ constexpr long maximum_message_length {70};
 
 int main()
 {
-  const unsigned int message_priority {1};
+  const unsigned int priority {1};
 
   const pid_t my_pid {::getpid()};
   std::cout << " my_pid : " << my_pid << " \n";
@@ -87,6 +87,6 @@ int main()
   message_queue.add_to_queue(
     message_content.data(),
     message_content.size(),
-    message_priority);
+    priority);
 
 }

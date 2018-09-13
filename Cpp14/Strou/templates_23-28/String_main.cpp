@@ -54,4 +54,6 @@ int main() // count the occurrences of each word on input
   // ... write out result ...
 //  std::cout << 
 
+  
+
 }

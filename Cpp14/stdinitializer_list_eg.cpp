@@ -1,31 +1,38 @@
-/**
- * @file   : stdinitializer_list_eg.cpp
- * @author : Ernest Yeung
- * @email  : ernestyalumni@gmail.com
- * @brief  : Example of std::initializer_list.  
- * @details Object of type std::initializer_list<T>, lightweight proxy object 
- * 	that provides access to an array of objects of type const T
- * @ref    : http://en.cppreference.com/w/cpp/utility/initializer_list
- * If you find this code useful, feel free to donate directly and easily at this direct PayPal link: 
- * 
- * https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
- * 
- * which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
- * Otherwise, I receive emails and messages on how all my (free) material on physics, math, and engineering have 
- * helped students with their studies, and I know what it's like to not have money as a student, but love physics 
- * (or math, sciences, etc.), so I am committed to keeping all my material open-source and free, whether or not 
- * sufficiently crowdfunded, under the open-source MIT license: 
- *  feel free to copy, edit, paste, make your own versions, share, use as you wish.    
- * Peace out, never give up! -EY
- * 
- * COMPILATION TIPS:
- *  g++ -std=c++14 FileOpen.cpp FileOpen_main.cpp -o FileOpen_main
- * */
+//------------------------------------------------------------------------------
+/// \file   : stdinitializer_list_eg.cpp
+/// \author : Ernest Yeung
+/// \email  : ernestyalumni@gmail.com
+/// \brief  : Example of std::initializer_list.  
+/// \details Object of type std::initializer_list<T>, lightweight proxy object 
+/// 	that provides access to an array of objects of type const T
+/// \ref    : http://en.cppreference.com/w/cpp/utility/initializer_list
+/// Ch. 17 Constructors; Bjarne Stroustrup, 17.3.4 Initializer-List
+/// Constructors. The C++ Programming Language, 4th Ed., Stroustrup; 
+/// If you find this code useful, feel free to donate directly and easily at
+/// this direct PayPal link: 
+/// 
+/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
+/// 
+/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// Otherwise, I receive emails and messages on how all my (free) material on
+/// physics, math, and engineering have helped students with their studies, and
+/// I know what it's like to not have money as a student, but love physics (or
+/// math, sciences, etc.), so I am committed to keeping all my material
+/// open-source and free, whether or not sufficiently crowdfunded, under the
+/// open-source MIT license: feel free to copy, edit, paste, make your own
+/// versions, share, use as you wish.    
+/// Peace out, never give up! -EY
+/// 
+/// COMPILATION TIPS:
+///  g++ -std=c++14 stdinitializer_list_eg.cpp -o stdinitializer_list_eg
+//------------------------------------------------------------------------------
+
 #include <iostream>
 #include <vector>
 #include <initializer_list>
 
 #include <algorithm> // std::copy
+#include <vector>
 
 template <class T>
 struct S
@@ -52,6 +59,24 @@ struct S
 template <typename T>
 void templated_fn(T) 
 {}
+
+/// \ref pp. 498 Ch. 17 Construction, Stroustrup
+/// \details elements of initializer_list are immutable.
+int f(std::initializer_list<int> x, int val)
+{
+  // *x.begin() = val; // error: attempt to change the value of an
+  // initializer-list element
+  return *x.begin(); // OK
+}
+
+void g()
+{
+  for (int i {0}; i != 10; ++i)
+  {
+    std::cout << f({1, 2, 3}, i) << '\n';
+  }
+}
+
 
 int main()
 {
@@ -169,5 +194,43 @@ int main()
 
   delete[] ptr_to_5_elements;
   delete[] ptr_to_6_elements;
+
+  std::cout << " f : " << '\n';
+
+  f({1,2,3,4,5,6,7}, 9);
+  g();
+
+  /// \ref pp. 498 17.3.4.3. Direct and Copy Initialization
+  /// \details distinction between direct initialization and copy
+  /// initialization (Sec. 16.2.6) maintained for `{}` initialization. For a
+  /// container, this implies that distinction is applied to both container and
+  /// its elements
+  /// * The container's initializer-list ctor can be explicit or not
+  /// * ctor of element type of initializer list can be explicit or not
+  /// direct initialization vs. copy initialization distinction applied to
+  /// elements.
+  std::vector<std::vector<double>> vs = 
+  {
+    {10, 11, 12, 13, 14}, // OK: vector of 5 elements
+    {10}, // OK: vector of 1 element
+    // 10, // error : vector<double>(int) is explicit
+    std::vector<double>{10, 11, 12, 13}, // OK : vector for 5 elements
+    std::vector<double>{10}, // OK vector of 1 element with value 10.0
+    std::vector<double>(10), // OK: vector of 10 elements with value 0.0
+
+  };
+
+  std::vector<double> v1 {7}; // OK : v1 has 1 element (with the value 7)
+  std::vector<double> v2 = {9}; // OK: v2 has 1 element (with value 9)
+
+  std::vector<double> v12 {7, 8, 9}; // OK: v1 has 3 elements with values 
+  // {7,8,9}
+  std::vector<double> v22 = {9, 8, 7}; // OK: v2 has 3 elements with values 
+  // { 9,8,7}
+
+  std::vector<std::string> v13 { "Anya"}; // OK: v1 has 1 element 
+  std::vector<std::string> v23 = {"Courtney"}; // OK; v2 has 1 element
+
+
 
 }
