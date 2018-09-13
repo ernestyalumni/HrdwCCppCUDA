@@ -92,6 +92,96 @@ A type that has no destructor declared, such as a built-in type, is considered t
 
 cf. pp. 486 17.2.3 Base and Member Destructors Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.   
 
+ctors and dtors interact correctly with class hierarchies (Sec. 3.2.4, Ch. 20). ctor builds a class object "from the bottom up":
+
+1. ctor invokes its base class ctors
+2. then, it invokes member ctors
+3. executes its own body.
+
+dtors "tears down" object in reverse order:
+1. dtor executes its own body,
+2. then invokes its member dtors
+3. invokes its base class dtors.
+
+In particular a `virtual` base is constructed before any base might use it and destroyed after all such bases (Sec. 21.3.5.1). This ordering ensures a base or member isn't used before it has been initialized or used after it's been destroyed.
+
+ctors execute member and base ctors in declaration order (**not the order of initializers**); if 2 ctors used a different order, dtor could not (without serious overhead) guarantee to destroy in reverse order of construction (See Sec. 17.4).
+
+### `virtual` Destructors.
+
+A destructor can be declared to be `virtual` and usually should be for a class with a virtual function. 
+
+The reason we need a `virtual` destructor is that an object usually manipulated through the interface provided by a base class is often also `delete`d through that interface.
+
+A common guideline is that a dtor for a base class must be either public and virtual or protected and nonvirtual. cf. http://www.gotw.ca/publications/mill18.htm
+
+See https://en.cppreference.com/w/cpp/language/destructor and `./virtual_dtors_main.cpp`
+
+cf. http://www.gotw.ca/publications/mill18.htm
+
+1. Prefer to make interfaces nonvirtual, using Template Method, or NVI, Non-Virtual Interface Idiom; 
+	- make interface of base class stable and nonvirtual, while delegating customizable work to nonpublic virtual functions responsible for implementing customizable behavior; virtual functions are designed to let derived classes customize behavior; it's better to not let publicly derived classes also customize inherited interface, which is supposed to be consistent.
+2. Prefer to make virtual functions private
+	- lets derived classes override function to customize behavior needed, without further exposing virtual functions directly by making them callable by derived classes; virtual functions exist to allow customization; unless they also need to be invoked directly from within derived classes' code, there's no need to make them anything but private
+3. Only if derived classes need base implementation of virtual function, make virtual function protected.
+4. base class destructor should be either public and virtual, or protected and nonvirtual. 
+  - once execution reaches body of a base class dtor, any derived object parts have already been destroyed and no longer exist.
+
+### Class Object Initialization 
+
+cf. pp. 489 17.3 Class Object Initialization Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.   
+
+We can initialize objects of a class for which we have not defined a ctor using 
+* memberwise initialization
+* copy initialization, or 
+* default initialization (without an initializer or with an empty initializer list)
+
+Where no ctor requiring arguments is declared, it's also possible to leave out the initializer completely. e.g. 
+
+```
+struct Work
+{
+	string author;
+	string name;
+	int year;
+};
+
+Work alpha;
+```
+For this, rules are not as clean; for statically allocated objects (Sec. 6.4.2), rules are exactly as if you had used `{}`, so value of `alpha` is `{"", "", 0}`; however, for local variables and free-store objects, default initialization is done only for members of class type, and members of built-in type are left uninitialized, so value of `beta` is `{"","",unknown}`.
+
+Reason for this complication is to improve performance in rare critical cases. e.g.
+```
+struct Buf
+{
+	int count;
+	char buf[16 * 1024];
+};
+```
+
+You can use `Buf` as a local variable without initializing it before using it as a target for an input operation. Most local variable initializations aren't performance critical, and uninitialized local variables are a major source of errors.
+If you want guaranteed initialization or simply dislike surprises, supply an initializer, such as `{}`. 
+
+cf. pp. 491 17.3.2 Initialization Using Constructors. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+ctor often used to establish an invariant for its class, and to acquire necessary resources.
+
+If a ctor is declared for a class, some ctor will be used for every object.
+
+The usual overload resolution rules (Sec. 12.3) apply for ctors.
+
+Note that `{}`-initializer notation doesn't allow narrowing (Sec. 2.2.2); another reason to prefer the `{}` style.
+
+#### Default constructors
+
+References and `const` must be initialized (Sec. 7.7, Sec. 7.5); therefore, a class containing such members can't be default constructed unless programmer supplies in-class member initializers (Sec. 17.4.4) or defines a default ctor that initializes them (Sec. 17.4.1). 
+
+*When should a class have a default ctor?*
+- "when you use it as the element type for an array, etc."
+
+*For what types does it make sense to have a default value?*
+*Does this type have a "special" value we can "naturally" use as a default?*
+
 
 
 
