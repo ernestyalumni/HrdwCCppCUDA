@@ -206,6 +206,56 @@ For a container, this implies that distinction is applied to both container and 
 * container's initializer-list ctor can be `explicit` or not
 * ctor of element type of the initializer list can be `explicit` or not.
 
+#### Member and Base Initialization
+
+cf. pp. 501 17.4.1 Member Initialization. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+It's usually a good idea to be explicit about initializing members. Note that an "implicitly initialized" member of a built-in type is left uninitialized (Sec. 17.3.1)
+
+A ctor can initialize members and bases of its class, but not members or bases of its members or bases. e.g.
+
+```
+struct B
+{
+	B(int);
+};
+
+struct BB : B {};
+
+struct BBB: BB {
+	BBB(int i) : B(i) {} // error: trying to initialize base's base
+}
+```
+
+*delegating constructor (or forwarding constructor)* - member-style initializer using class's own name (its ctor name) calls another ctor as part of the construction.
+
+```
+class X
+{
+		int a;
+	public:
+		X(int x) { if (0 < x && x <= max) a = x; else throw Bad_X(x);}
+		X() : X{42}{}
+		X(string s): X {to<int>(s)} {}
+}
+```
+
+You can't both delegate and explicitly initialize a member.
+Delegating by calling another ctor in a ctor's member and base initializer list is very different from explicitly calling a ctor in the body of a ctor (simply creates a new unnamed object (a temporary) and does nothing).
+
+An object is not considered constructed until its ctor completes. A dtor won't be called for an object unless its original ctor completed.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
