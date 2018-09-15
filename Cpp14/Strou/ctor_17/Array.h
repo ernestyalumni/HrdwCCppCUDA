@@ -33,7 +33,10 @@
 namespace CUDA
 {
 
-template <typename T, std::size_t N>
+//------------------------------------------------------------------------------
+/// \brief Array
+//------------------------------------------------------------------------------
+template <typename T, std::size_t N_0>
 class Array
 {
   public:
@@ -44,6 +47,32 @@ class Array
     }
 
     ~Array()
+    {
+      cudaFree(data_);
+    }
+
+  private:
+    // static member constant provides symbolic names for constants needed
+    // elsewhere in the class declaration.
+    static constexpr std::size_t N {N_0};
+    T data_[N];
+};
+
+
+//------------------------------------------------------------------------------
+/// \brief A first draft for an Array
+//------------------------------------------------------------------------------
+template <typename T, std::size_t N>
+class ArrayDraft
+{
+  public:
+
+    ArrayDraft()
+    {
+      cudaMallocManaged((void**)&data_, N);
+    }
+
+    ~ArrayDraft()
     {
       cudaFree(data_);
     }

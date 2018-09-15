@@ -246,10 +246,42 @@ Delegating by calling another ctor in a ctor's member and base initializer list 
 An object is not considered constructed until its ctor completes. A dtor won't be called for an object unless its original ctor completed.
 
 
+Member initialization is done in declaration order (Sec. 17.2.3), so first `m1` is initialized to value of a global variable `count2`. 
+
+cf. `member_base_initialization_main.cpp`
+
+##### `static` Member Initialization
+
+`static` class member is statically allocated rather than part of each object of the class.  
+Generally, `static` member declaration acts as a declaration for a definition outside the class.
+However, for a few simple special cases, it's possible to initialize `static` member in class declaration. `static` member must be `const` of an integral or enumeration type, or `constexpr` of literal type. 
+
+If (and only if) you use an initialized member in a way that requires it to be stored as an object in memory, member must be (uniquely) defined somewhere. Initializer may not be repeated:
+
+```
+const int Curious::c1; 	// don't repeat initializer here
+const int* p = &Curious::c1; // OK: Curious::c1 has been defined
+```
+
+Main use of member constants is to provide symbolic names for constants needed elsewhere in class declaration.
+
+## Copy and Move.
+
+cf. pp. 507 17.5 Copy and Move. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+* *Copy* `x=y` effect is that values `x` and `y` are both equal to `y`'s value before assignment
+* *Move* leaves `x` with `y`'s former value and `y` with some *moved-from state*.
+
+Typically, a move can't throw, whereas copy might (because it may need to acquire a resource), and move is often more efficient than a copy. 
+When you write a move operation, you should leave source object in a valid but unspecified state because it'll eventually be destroyed and dtor can't destroy an object left in invalid state.
+Als, standard-library algorithms rely on being able to assign to (using move or copy) a moved-from object.
+So, design your moves not to throw, and leave their source object in state that allows destruction and assignment.
 
 
-
-
+A `virtual` base (Sec. 21.3.5) may appear as base of several classes in a hierarchy.
+A default copy ctor (Sec. 17.6) will correctly copy it.
+If you define your own copy ctor, simplest technique is to repeatedly copy the `virtual` base. (?)
+	Where base object is small, and `virtual` base occurs only a few times in a hierarchy, that can be more efficient than techniques for avoiding the replicated copies. (???)
 
 
 
