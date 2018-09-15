@@ -269,7 +269,7 @@ Main use of member constants is to provide symbolic names for constants needed e
 
 cf. pp. 507 17.5 Copy and Move. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
 
-* *Copy* `x=y` effect is that values `x` and `y` are both equal to `y`'s value before assignment
+* *Copy* `x=y` effect is that values `x` and `y` are both equal to `y`'s value before assignment. `x=y` should imply `x==y`
 * *Move* leaves `x` with `y`'s former value and `y` with some *moved-from state*.
 
 Typically, a move can't throw, whereas copy might (because it may need to acquire a resource), and move is often more efficient than a copy. 
@@ -277,13 +277,72 @@ When you write a move operation, you should leave source object in a valid but u
 Als, standard-library algorithms rely on being able to assign to (using move or copy) a moved-from object.
 So, design your moves not to throw, and leave their source object in state that allows destruction and assignment.
 
+cf. pp. 509 17.5.1.1 Beware of Default Constructors. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+When writing a copy operation, be sure to copy every base and member. For larger classes, chances of forgetting go up; worse when someone long after the initial design adds a member to a class, it's easy to forget to add it to the list of members to be copied. This is 1 reason to prefer the default (compiler-generated) copy operations (Sec. 17.6).
+
+cf. pp. 509 17.5.1.2 Copy of Bases. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+
 
 A `virtual` base (Sec. 21.3.5) may appear as base of several classes in a hierarchy.
 A default copy ctor (Sec. 17.6) will correctly copy it.
 If you define your own copy ctor, simplest technique is to repeatedly copy the `virtual` base. (?)
 	Where base object is small, and `virtual` base occurs only a few times in a hierarchy, that can be more efficient than techniques for avoiding the replicated copies. (???)
 
+*shallow copy* - e.g. object that contain pointer, default copy operation copies a pointer member, but doesn't copy the object (if any) that it points to: e.g.
+```
+struct S
+{
+	int* p;
+};
 
+S x {new int{0}};
+S y {x};
+```
+we can manipulate part of `x`'s state through `y`.
+Shallow copy leaves 2 objects with a *shared state*.
+
+*deep copy* - copying complete state of an object
+
+Often, better alternative to deep copy is not a shallow copy, but a move operation, which minimizes copying without adding complexity (Sec. 3.3.2, Sec. 17.5.2)
+
+
+cf. pp. 512 17.5.1.3 Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+### *copy-on-write* idiom
+
+cf. pp. 512 17.5.1.3 Meaning of Copy. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Copy-on-write
+
+Idea is that a copy doesn't actually need independence until a shared state is written to, so we can delay the copying of the shared state until just before the first write to it.
+
+cf. `./CopyOnWrite/*`
+
+
+
+
+
+
+
+
+
+
+cf. pp. 512 17.5.1.4 Slicing. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+
+
+
+
+
+
+
+
+### Move
+
+Many objects in a computer resemble physical objects (which we don't copy without need and only at considerable cost) more than integer values (which we typically copy because that's easier and cheaper than alternatives).
+	Examples are locks, sockets, file handles, threads, long strings, and large vectors.
 
 
 
