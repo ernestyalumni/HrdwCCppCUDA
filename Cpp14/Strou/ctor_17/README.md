@@ -344,6 +344,82 @@ cf. pp. 512 17.5.1.4 Slicing. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bj
 Many objects in a computer resemble physical objects (which we don't copy without need and only at considerable cost) more than integer values (which we typically copy because that's easier and cheaper than alternatives).
 	Examples are locks, sockets, file handles, threads, long strings, and large vectors.
 
+Move ctors and move assignments take non-`const` (rvalue) reference arguments: they can, and usually do, write to their argument. However, argument of a move operation must always be left in a state that the dtor can cope with (and preferably deal with very cheaply and easily).
+
+For resource handles, move operations tend to be significantly simpler and more efficient than copy operations.
+  	In particular, move operations typically don't throw exceptions; they don't acquire resources or do complicated operations, so they don't need to.
+
+How does compiler know when it can use a move operation rather than a copy operation?
+In a few cases, such as for return value, language rules say it can (because next action is defined to destroy the element)
+In general, we have to tell it by giving an rvalue reference argument. 
+
+`std::move` is a standard-library function return an rvalue reference to its argument (Sec. 35.5.1): `std::move(x)` means "give me an rvalue reference to `x`". 
+
+#### Default operations; Generating default operations.
+
+cf. pp. 517 17.5.2 Generating Default Operations. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+Compiler can generate copy and dtor for us as needed. By default, a class provides
+* default ctor
+* copy ctor
+* copy assignment
+* move ctor
+* move assignment
+* dtor
+
+By default, compiler generates each of these operations if a program uses it. However,
+- If programmer declares any ctor, default ctor not generated.
+- If programmer declares a copy operation, a move operation, or a destructor for a class, no copy operation, move operation, or destructor is generated for that class.
+
+Using `= default` is always better than writing your own implementation of the default semantics.
+
+Default menaing of each generated operation, as implemented when compiler generates it, is to apply the operation to each base and non-`static` data member of the class; i.e. we get memberwise copy, memberwise default construction, etc.
+
+Note that value of a moved-from object of a built-in type is unchanged. That's the simplest and fastest thing for the compiler to do.
+
+Whenever possible,
+1. Establish an invariant in a ctor (including possibly resource acquisition)
+2. Maintain invariant with copy and move operations
+3. Do any needed cleanup in dtor
+
+For every class, we should ask:
+1. Is a default ctor needed (because default 1 is not adequate or has been suppressed by another ctor)?
+2. Is dtor needed (e.g. because some resource needs to be released)?
+3. Are copy operations needed (because default copy semantics is not adequate, e.g. because class ismeant to be a base class or because it contains pointers to objects that must be deleted by the class)?
+4. Are move operations needed (because default semantics is not adequate, e.g. because an empty object doesn't make sense)?
+
+#### `delete`d Functions
+
+cf. pp. 524 17.6.4 `delete`d Functions. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+Most obvious use is to eliminate otherwise defaulted functions. For example, it's common to want to prevent copying of classes used as bases because such copying easily leads to slicing (Sec. 17.5.1.4):
+
+We can `delete` any function that we can declare.
+e.g. eliminate a specialization from set of possible specializations of a function template.
+
+- eliminate an undesired conversion. e.g.
+```
+struct Z
+{
+	Z(double); // can initialize with a double
+	Z(int) = delete; // but not with an integer
+}
+
+void f()
+{
+//	Z z1 {1}; // error: Z(int) deleted
+	Z z2 {1.0}; // OK
+}
+```
+
+You can't have a local variable that can't be destroyed (Sec. 17.2.2),
+you can't allocate object on free store when you have `=delete`d its class's memory allocation operator (Sec. 19.2.5).
+
+Note difference between a `= delete`d function and 1 that simply hasn't been declared.
+In former, compiler notes that programmer has tried to use the `delete`d function and gives an error. 
+In latter, compiler looks for alternatives, such as not invoking a dtor, or using a global `operator new()`.
+
+
 
 
 

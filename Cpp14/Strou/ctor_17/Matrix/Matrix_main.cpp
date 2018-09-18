@@ -28,6 +28,7 @@
 #include "Matrix.h"
 
 #include <iostream>
+#include <utility> // std::move
 
 using Modules::Matrices::Matrix;
 
@@ -57,4 +58,22 @@ int main()
   H2_copy1.set_element(0, 1, 3);
   std::cout << H2_copy1 << '\n';
 
+  // MatrixMoveConstructs.
+  Matrix<int> H2_2 {std::move(H2)};
+  std::cout << H2_2 << '\n';
+  std::cout << H2.dim()[0] << H2.dim()[1] << '\n';
+
+  // MatrixMoveAssigns.
+  Matrix<int> H2_3 = {std::move(H2_2)};
+  std::cout << H2_3 << '\n';
+  std::cout << H2_2.dim()[0] << H2_2.dim()[1] << '\n';
+
+  // MatricesAdd.
+  Matrix<int> G4 {4, 4, {0, 1, 2, 3, 
+                        4, 5, 6, 7,
+                        -1, -2, -3, -4, 
+                        -5, -6, -7, -8}};
+
+  Matrix<int> I4 {G4 + H4};
+  std::cout << I4 << '\n';
 }

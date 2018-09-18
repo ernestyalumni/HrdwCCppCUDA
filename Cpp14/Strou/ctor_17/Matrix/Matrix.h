@@ -31,6 +31,7 @@
 #include <iostream>
 #include <memory> // std::uninitialized_copy
 #include <stdexcept> // std::runtime_error
+#include <utility> // std::move
 
 namespace Modules
 {
@@ -60,12 +61,37 @@ class Matrix
  		Matrix(const Matrix&);									// copy constructor
  		Matrix& operator=(const Matrix&);				// copy assignment
 
- 		Matrix(Matrix&&) = default;												// move constructor
- 		Matrix& operator=(Matrix&&) = default;						// move assignment
+ 		Matrix(Matrix&&);												// move constructor
+ 		Matrix& operator=(Matrix&&);						// move assignment
 
  		~Matrix()
  		{
  			delete[] elements_;
+ 		}
+
+ 		//--------------------------------------------------------------------------
+ 		/// \details Having move operations affects idiom for returning large
+ 		/// objects from functions.
+ 		/// Matrix has a move ctor so that "return by value" is simple and
+ 		/// efficient, as well as "natural." Without move operations, we have
+ 		/// performance problems and must resort to workarounds.
+ 		//--------------------------------------------------------------------------
+ 		template <class U>
+ 		friend Matrix<U> operator+(const Matrix<U>& a, const Matrix<U>& b)
+ 		{
+ 			if (a.dim()[0] != b.dim()[0] || a.dim()[1] != b.dim()[1])
+ 			{
+ 				throw std::runtime_error("unequal Matrix sizes in +");
+ 			}
+
+ 			Matrix res {a.dim()[0], a.dim()[1]};
+ 			const auto n = a.size();
+ 			for (int i {0}; i != n; ++i)
+ 			{
+ 				res.elements_[i] = a.elements_[i] + b.elements_[i];
+ 			}
+
+ 			return res;
  		}
 
  	//----------------------------------------------------------------------------
@@ -115,6 +141,18 @@ class Matrix
 		bool valid_indices(const int i, const int j) const
 		{
 			return (i < dim_[0] && j < dim_[1]);
+		}
+
+		//-------------------------------------------------------------------------
+		/// \details How does the compiler know when it can use a move operation,
+		/// rather than a copy operation? In general, we have to tell it by giving
+		/// a rvalue reference argument.
+		//-------------------------------------------------------------------------
+		void swap(T& a, T& b) // "perfect swap" (almost)
+		{
+			T tmp = std::move(a);
+			a = std::move(b);
+			b = std::move(tmp);
 		}
 
 		std::array<int, 2> dim_;			// 2 dimensions
@@ -178,6 +216,32 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& A)
   return os;
 }
 
+//------------------------------------------------------------------------------
+/// \brief Move constructor.
+/// \details Move constructo simply takes representation from its source and
+/// replace it with an empty Matrix.
+//------------------------------------------------------------------------------
+template <class T>
+Matrix<T>::Matrix(Matrix&& a): // move constructor
+	dim_{a.dim_},
+	elements_{a.elements_} // grab a's representation
+{
+	a.dim_ = {0, 0};
+	a.elements_ = nullptr; // clear a's representation
+}
+
+//------------------------------------------------------------------------------
+/// \brief Move assignment.
+/// \details Idea behind using a swap to implement a move assignment is that
+/// the source do necessary cleanup work for us.
+//------------------------------------------------------------------------------
+template <class T>
+Matrix<T>& Matrix<T>::operator=(Matrix&& a) // move assignment
+{
+	swap(dim_, a.dim_); // swap representations.
+	swap(elements_, a.elements_);
+	return *this;
+}
 
 
 } // namespace Matrices
