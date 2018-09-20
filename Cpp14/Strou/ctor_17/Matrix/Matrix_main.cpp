@@ -76,4 +76,9 @@ int main()
 
   Matrix<int> I4 {G4 + H4};
   std::cout << I4 << '\n';
+
+  I4 += H4;
+  std::cout << I4 << '\n';
+
+  
 }

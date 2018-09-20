@@ -36,7 +36,7 @@ namespace CUDA
 //------------------------------------------------------------------------------
 /// \brief Array
 //------------------------------------------------------------------------------
-template <typename T, std::size_t N_0>
+template <typename T, std::size_t N>
 class Array
 {
   public:
@@ -52,9 +52,7 @@ class Array
     }
 
   private:
-    // static member constant provides symbolic names for constants needed
-    // elsewhere in the class declaration.
-    static constexpr std::size_t N {N_0};
+
     T data_[N];
 };
 
@@ -62,7 +60,7 @@ class Array
 //------------------------------------------------------------------------------
 /// \brief A first draft for an Array
 //------------------------------------------------------------------------------
-template <typename T, std::size_t N>
+template <typename T, std::size_t N_0>
 class ArrayDraft
 {
   public:
@@ -78,6 +76,10 @@ class ArrayDraft
     }
 
   private:
+
+    // static member constant provides symbolic names for constants needed
+    // elsewhere in the class declaration.
+    static constexpr std::size_t N {N_0};
 
     T data_[N];
 };

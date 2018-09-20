@@ -37,7 +37,7 @@ int main()
 {
   CopyOnWrite<int> copy_on_write_int_5 {new int[5]};
 
-  CopyOnWrite<char*> s1 = "Hello";
+  CopyOnWrite<char> s1 = "Hello";
   std::cout << *s1 << '\n';
 
   char &c = s1->operator[](4); // Non-const detachment does nothing here

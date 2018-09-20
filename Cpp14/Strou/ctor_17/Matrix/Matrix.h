@@ -78,6 +78,7 @@ class Matrix
  		//--------------------------------------------------------------------------
  		template <class U>
  		friend Matrix<U> operator+(const Matrix<U>& a, const Matrix<U>& b)
+ 		// return-by-value
  		{
  			if (a.dim()[0] != b.dim()[0] || a.dim()[1] != b.dim()[1])
  			{
@@ -91,8 +92,34 @@ class Matrix
  				res.elements_[i] = a.elements_[i] + b.elements_[i];
  			}
 
- 			return res;
+ 			return res; 
  		}
+
+ 		//--------------------------------------------------------------------------
+ 		/// \ref pp. 533 18.2.4 Passing Objects. Ch. 18 Operator Overloading;
+ 		/// Bjarne Stroustrup, The C++ Programming Language, 4th Ed.
+ 		/// \details operators that return 1 of their argument objects can - and
+ 		/// usually do - return a reference; particularly, common for operator
+ 		/// functions that are implemented as members.
+ 		//--------------------------------------------------------------------------
+ 		Matrix& operator+=(const Matrix& a) // return-by-value
+ 		{
+ 			if (dim_[0] != a.dim_[0] || dim_[1] != a.dim_[1])
+ 			{
+ 				throw std::runtime_error("bad Matrix += argument");
+ 			}
+
+			T* p = elements_;
+			T* q = a.elements_;
+			T* end = p + dim_[0] * dim_[1];
+			while (p != end)
+			{
+				*p++ += *q++;
+			}
+
+			return *this;
+ 		}
+
 
  	//----------------------------------------------------------------------------
  	/// Accessors 
