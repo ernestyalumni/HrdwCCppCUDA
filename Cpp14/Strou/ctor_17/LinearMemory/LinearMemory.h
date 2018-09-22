@@ -307,6 +307,15 @@ class Array
 
 //------------------------------------------------------------------------------
 /// \brief Linear memory allocated using cudaMallocPitch
+///
+/// \details Allocation appropriately padded to meet alignment requirements,
+/// ensuring best performance when accessing row addresses.
+///   width = L_1, height = L_2
+/// Allocates width x height = L_1 x L_2 2D array of T values.
+/// Let row r = 0, 1, ... (L_2 - 1).
+/// Let pitch = p \in \mathbb{Z}^+.
+/// Then p * r = 0, p, 2p, ... (L_2 - 1)p = number of bytes prior to rth row.
+/// 
 //------------------------------------------------------------------------------
 template <typename T, std::size_t L_1, std::size_t L_2>
 class ArrayPitched
@@ -315,17 +324,115 @@ class ArrayPitched
 
     ArrayPitched()
     {
-      cudaMallocPitch((void**)&d_data_, &pitch_, L_1 * sizeof(T), L_2);
+      cudaError_t cuda_error {
+        cudaMallocPitch((void**)&d_data_, &pitch_, L_1 * sizeof(T), L_2)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error = cudaMemset(d_data_, 0, size_);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
     }
 
-    ~ArrayPitched()
+    //--------------------------------------------------------------------------
+    /// \brief Constructor for a public interface (API) from host C-style arrays
+    //--------------------------------------------------------------------------
+    explicit ArrayPitched(T* h_data)
     {
-      cudaFree(d_data_);
+      cudaError_t cuda_error {
+        cudaMallocPitch((void**)&d_data_, &pitch_, L_1 * sizeof(T), L_2)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error = cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+    }
+
+    // Copyable.
+    ArrayPitched(const ArrayPitched& a)               // copy constructor
+    {
+      cudaError_t cuda_error {
+        cudaMallocPitch((void**)&d_data_, &pitch_, L_1 * sizeof(T), L_2)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error =
+        cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);      
+
+      pitch_ = a.pitch_;
+    }
+
+    ArrayPitched& operator=(const ArrayPitched& a)    // copy assignment
+    {
+      cudaError_t cuda_error {
+        cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice)
+      };
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);            
+
+      pitch_ = a.pitch_;
+      return *this;
+    }
+
+    // Movable.
+    /// \ref https://docs.microsoft.com/en-us/cpp/cpp/move-constructors-and-move-assignment-operators-cpp?view=vs-2017
+    ArrayPitched(ArrayPitched&& a):
+      d_data_{nullptr},
+      pitch_{0}
+    {
+      d_data_ = a.d_data_;
+      a.d_data_ = nullptr;
+      pitch_ = a.pitch_;
+    }    
+
+    ArrayPitched& operator=(ArrayPitched&& a)
+    {
+      // Perform no operation if you try to assign the object to itself.
+      if (this != &a)
+      {
+        cudaError_t cuda_error {cudaFree(d_data_)};
+        CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+        //d_data_ = a.d_data_;
+        std::swap(d_data_, a.d_data_);
+        a.d_data_ = nullptr;        
+        pitch_ = a.pitch_;
+        a.pitch_ = 0;
+      }
+      return *this;
+    }
+
+    virtual ~ArrayPitched()
+    {
+      if (d_data_ != nullptr)
+      {
+        cudaError_t cuda_error {cudaFree(d_data_)};
+        CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+      }
+    }
+
+    std::size_t pitch() const
+    {
+      return pitch_;
+    }
+
+    __device__ inline T* get_row(const std::size_t r)
+    {
+      return reinterpret_cast<T*>(
+        reinterpret_cast<char*>(d_data_) + r * pitch_);
+    }
+
+  protected:
+
+    //--------------------------------------------------------------------------
+    /// \brief Accessor to underlying CUDA C-style array
+    //--------------------------------------------------------------------------
+    T* data()
+    {
+      return d_data_;
     }
 
   private:
 
-    T d_data_[L_1 * L_2];
+    static constexpr std::size_t size_ {L_2 * L_1 * sizeof(T)};
+
+    T* d_data_;
     std::size_t pitch_;
 };
 
