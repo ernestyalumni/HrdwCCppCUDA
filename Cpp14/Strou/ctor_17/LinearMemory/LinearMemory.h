@@ -6,6 +6,7 @@
 /// \ref 3.2.2. Device Memory of 3.2 CUDA C Runtime of Programming Guide of
 /// CUDA Toolkit Documentation
 /// https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cuda-c-runtime     
+/// https://devtalk.nvidia.com/default/topic/938748/will-this-cause-troubles-/
 /// \details RAII for CUDA C-style arrays or linear memory.
 /// \copyright If you find this code useful, feel free to donate directly and
 /// easily at this direct PayPal link: 
@@ -23,13 +24,16 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  nvcc -std=c++14 Array_main.cpp -o Array_main
+///   nvcc -std=c++14 LinearMemory_main.cu -o LinearMemory_main
 //------------------------------------------------------------------------------
 #ifndef _CUDA_LINEAR_MEMORY_H_
 #define _CUDA_LINEAR_MEMORY_H_
 
+#include "../Utilities/Exception.h" // check_cuda_error
+
 #include <cstddef> // std::size_t
 #include <cuda_runtime_api.h> // cudaMallocManaged, cudaFree
+#include <utility> // std::move, std::swap
 
 #include <iostream>
 
@@ -42,14 +46,18 @@ namespace LinearMemory
 //------------------------------------------------------------------------------
 /// \brief Linear memory allocated using cudaMalloc
 //------------------------------------------------------------------------------
-template <typename T, std::size_t N>
+template <typename T, std::size_t L>
 class ArrayMalloc
 {
   public:
 
     ArrayMalloc()
     {
-      cudaMalloc((void**)&d_data_, size_);
+      cudaError_t cuda_error {cudaMalloc((void**)&d_data_, size_)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error = cudaMemset(d_data_, 0, size_);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
     }
 
     //--------------------------------------------------------------------------
@@ -57,21 +65,63 @@ class ArrayMalloc
     //--------------------------------------------------------------------------
     explicit ArrayMalloc(T* h_data)
     {
-      cudaMalloc((void**)&d_data_, size_);
+      cudaError_t cuda_error {cudaMalloc((void**)&d_data_, size_)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
 
-      cudaError_t cuda_error {
-        cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice)
-      };
-
-      if (cuda_error != cudaSuccess)
-      {
-        std::cout << " no cudaSuccess for cudaMemcpy upon ctor" << std::endl;
-      }
+      cuda_error = cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
     }
 
-    ~ArrayMalloc()
+    // Copyable.
+    ArrayMalloc(const ArrayMalloc& a)               // copy constructor
     {
-      cudaFree(d_data_);
+      cudaError_t cuda_error {cudaMalloc((void**)&d_data_, size_)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error =
+        cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);      
+    }
+
+    ArrayMalloc& operator=(const ArrayMalloc& a)    // copy assignment
+    {
+      cudaError_t cuda_error {
+        cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice)
+      };
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);            
+    }
+
+    // Movable.
+    /// \ref https://docs.microsoft.com/en-us/cpp/cpp/move-constructors-and-move-assignment-operators-cpp?view=vs-2017
+    ArrayMalloc(ArrayMalloc&& a):
+      d_data_{nullptr}
+    {
+      d_data_ = a.d_data_;
+      a.d_data_ = nullptr;
+    }    
+
+    ArrayMalloc& operator=(ArrayMalloc&& a)
+    {
+      // Perform no operation if you try to assign the object to itself.
+      if (this != &a)
+      {
+        cudaError_t cuda_error {cudaFree(d_data_)};
+        CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+        //d_data_ = a.d_data_;
+        std::swap(d_data_, a.d_data_);
+        a.d_data_ = nullptr;        
+      }
+      return *this;
+    }
+
+    virtual ~ArrayMalloc()
+    {
+      if (d_data_ != nullptr)
+      {
+        cudaError_t cuda_error {cudaFree(d_data_)};
+        CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+      }
     }
 
     //--------------------------------------------------------------------------
@@ -82,11 +132,7 @@ class ArrayMalloc
       cudaError_t cuda_error {
         cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice)
       };
-
-      if (cuda_error != cudaSuccess)
-      {
-        std::cout << " no cudaSuccess for cudaMemcpy " << std::endl;
-      }
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
 
       return *this;
     }
@@ -99,96 +145,175 @@ class ArrayMalloc
       cudaError_t cuda_error {
         cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice)
       };
-
-      if (cuda_error != cudaSuccess)
-      {
-        std::cout << " no cudaSuccess for cudaMemcpy " << std::endl;
-      }
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
     }
 
-
-    // binary arithmetic
-/*    template<typename U, std::size_t M>
-    friend ArrayMalloc<U, M> operator+(
-      ArrayMalloc<U, M> a, const ArrayMalloc<U, M>& b)
+    void copy_to_host(T* h_data) const
     {
-
+      cudaError_t cuda_error {
+        cudaMemcpy(h_data, d_data_, size_, cudaMemcpyDeviceToHost)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
     }
-*/
+
+
+  protected:
 
     //--------------------------------------------------------------------------
     /// \brief Accessor to underlying CUDA C-style array
     //--------------------------------------------------------------------------
-    T* operator()()
-    {
-      return d_data_;
-    }
-
-    T* get()
+    T* data()
     {
       return d_data_;
     }
 
     //--------------------------------------------------------------------------
-    /// \brief Getter interface (API) from host C-style arrays
+    /// \brief Getter interface (API) from linear memory to host C-style arrays
     //--------------------------------------------------------------------------
-    void copy_to_h(T* h_data) const
-    {
-      cudaMemcpy(h_data, d_data_, size_, cudaMemcpyDeviceToHost);
-    }
-
+    // TO-DO: deprecated.
+    // void operator()(T* h_data) const
+    // {
+    //  cudaError_t cuda_error {
+    //    cudaMemcpy(h_data, d_data_, size_, cudaMemcpyDeviceToHost)};
+    //  CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+    //}
 
   private:
 
-    static constexpr std::size_t size_ {N * sizeof(T)};
-    // \ref https://eli.thegreenplace.net/2009/10/21/are-pointers-and-arrays-equivalent-in-c
+    static constexpr std::size_t size_ {L * sizeof(T)};
+    /// \ref https://eli.thegreenplace.net/2009/10/21/are-pointers-and-arrays-equivalent-in-c
     T* d_data_;
 };
 
 //------------------------------------------------------------------------------
 /// \brief Linear memory allocated using cudaMallocManaged
 //------------------------------------------------------------------------------
-template <typename T, std::size_t N>
+template <typename T, std::size_t L>
 class Array
 {
   public:
 
     Array()
     {
-      cudaMallocManaged((void**)&d_data_, size_);
-    }
+      cudaError_t cuda_error {cudaMalloc((void**)&d_data_, size_)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
 
-    ~Array()
-    {
-      cudaFree(d_data_);
+      cuda_error = cudaMemset(d_data_, 0, size_);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
     }
 
     //--------------------------------------------------------------------------
-    /// \brief Public interface (API) from host C-style arrays
+    /// \brief Constructor for a public interface (API) from host C-style arrays
     //--------------------------------------------------------------------------
-    Array& operator()(T* h_data)
+    explicit Array(T* h_data)
     {
-      cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice);
+      cudaError_t cuda_error {cudaMalloc((void**)&d_data_, size_)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error = cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+    }
+
+    // Copyable.
+    Array(const Array& a)               // copy constructor
+    {
+      cudaError_t cuda_error {cudaMalloc((void**)&d_data_, size_)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+      cuda_error =
+        cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice);
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);      
+    }
+
+    Array& operator=(const Array& a)    // copy assignment
+    {
+      cudaError_t cuda_error {
+        cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice)
+      };
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);            
+    }
+
+    // Movable.
+    /// \ref https://docs.microsoft.com/en-us/cpp/cpp/move-constructors-and-move-assignment-operators-cpp?view=vs-2017
+    Array(Array&& a):
+      d_data_{nullptr}
+    {
+      d_data_ = a.d_data_;
+      a.d_data_ = nullptr;
+    }    
+
+    Array& operator=(Array&& a)
+    {
+      // Perform no operation if you try to assign the object to itself.
+      if (this != &a)
+      {
+        cudaError_t cuda_error {cudaFree(d_data_)};
+        CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+
+        //d_data_ = a.d_data_;
+        std::swap(d_data_, a.d_data_);
+        a.d_data_ = nullptr;        
+      }
       return *this;
+    }
+
+    virtual ~Array()
+    {
+      if (d_data_ != nullptr)
+      {
+        cudaError_t cuda_error {cudaFree(d_data_)};
+        CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+      }
+    }
+
+    //--------------------------------------------------------------------------
+    /// \brief Setter interface (API) from host C-style arrays
+    //--------------------------------------------------------------------------
+    void set(T* h_data)
+    {
+      cudaError_t cuda_error {
+        cudaMemcpy(d_data_, h_data, size_, cudaMemcpyHostToDevice)
+      };
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+    }
+
+    //--------------------------------------------------------------------------
+    /// \brief Getter interface (API) from host C-style arrays
+    /// \details Copies from device to the host argument array.
+    //--------------------------------------------------------------------------
+    void get(T* h_data) const
+    {
+      cudaError_t cuda_error {
+        cudaMemcpy(h_data, d_data_, size_, cudaMemcpyDeviceToHost)};
+      CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);
+    }
+
+  protected:
+
+    //--------------------------------------------------------------------------
+    /// \brief Accessor to underlying CUDA C-style array
+    //--------------------------------------------------------------------------
+    T* data()
+    {
+      return d_data_;
     }
 
   private:
 
-    static constexpr std::size_t size_ {N * sizeof(T)};
-    T d_data_[N];
+    static constexpr std::size_t size_ {L * sizeof(T)};
+    T* d_data_;
 };
 
 //------------------------------------------------------------------------------
 /// \brief Linear memory allocated using cudaMallocPitch
 //------------------------------------------------------------------------------
-template <typename T, std::size_t N_1, std::size_t N_2>
+template <typename T, std::size_t L_1, std::size_t L_2>
 class ArrayPitched
 {
   public:
 
     ArrayPitched()
     {
-      cudaMallocPitch((void**)&d_data_, &pitch_, N_1 * sizeof(T), N_2);
+      cudaMallocPitch((void**)&d_data_, &pitch_, L_1 * sizeof(T), L_2);
     }
 
     ~ArrayPitched()
@@ -198,14 +323,14 @@ class ArrayPitched
 
   private:
 
-    T d_data_[N_1 * N_2];
+    T d_data_[L_1 * L_2];
     std::size_t pitch_;
 };
 
 //------------------------------------------------------------------------------
 /// \brief Linear memory allocated using cudaMalloc3D
 //------------------------------------------------------------------------------
-template <typename T, std::size_t N_1, std::size_t N_2, std::size_t N_3>
+template <typename T, std::size_t L_1, std::size_t L_2, std::size_t L_3>
 class Array3D
 {
   public:
@@ -214,8 +339,8 @@ class Array3D
     // error: there are no arguments to ‘make_cudaExtent’ that depend on a
     // template parameter, so a declaration of ‘make_cudaExtent’ must be
     // available
-    //  extent_{make_cudaExtent(N_1 * sizeof(T), N_2, N_3)}
-      extent_{N_3, N_2, N_1}
+    //  extent_{make_cudaExtent(L_1 * sizeof(T), L_2, L_3)}
+      extent_{L_3, L_2, L_1}
     {
       cudaMalloc3D(&dev_pitched_ptr_, extent_);
     }
@@ -235,8 +360,6 @@ class Array3D
     cudaExtent extent_;
     cudaPitchedPtr dev_pitched_ptr_;
 };
-
-
 
 } // namespace LinearMemory
 

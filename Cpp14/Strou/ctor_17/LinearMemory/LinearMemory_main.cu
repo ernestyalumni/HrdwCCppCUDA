@@ -25,16 +25,40 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  nvcc -std=c++14 Array_main.cpp -o Array_main
+///   nvcc -std=c++14 LinearMemory_main.cu -o LinearMemory_main
 //------------------------------------------------------------------------------
 #include "LinearMemory.h"
 
 #include <cstddef> // std::size_t
 #include <cmath> // sin, cos
 #include <iostream>
+#include <utility> // std::move
 
 using CUDA::LinearMemory::Array;
 using CUDA::LinearMemory::ArrayMalloc;
+
+template <typename T, std::size_t L>
+class TestArrayMalloc : public ArrayMalloc<T, L>
+{
+  public:
+
+    using ArrayMalloc = ArrayMalloc<T, L>;
+    using ArrayMalloc::ArrayMalloc;
+
+    using ArrayMalloc::data;
+};
+
+template <typename T, std::size_t L>
+class TestArray : public Array<T, L>
+{
+  public:
+
+    using Array = Array<T, L>;
+    using Array::Array;
+
+    using Array::data;
+};
+
 
 template <typename T>
 __global__ void vector_addition(T*a, T* b, T* c, const std::size_t M)
@@ -79,10 +103,11 @@ int main()
       std::cout << h_a[i] << ' ' << h_b[i] << ' ';
     }
 
-    ArrayMalloc<float, N> d_a {h_a};
-    ArrayMalloc<float, N> d_b;
+    TestArrayMalloc<float, N> d_a {h_a};
+    TestArrayMalloc<float, N> d_b;
     d_b.set(h_b);    
-    ArrayMalloc<float, N> d_c;    
+    // this works as well: d_b(h_b);
+    TestArrayMalloc<float, N> d_c;    
 
     // ArrayMallocCopies.
     {
@@ -92,8 +117,8 @@ int main()
       h_a_test = (float*)malloc(N * sizeof(float));
       h_b_test = (float*)malloc(N * sizeof(float));
 
-      cudaMemcpy(h_a_test, d_a(), N * sizeof(float), cudaMemcpyDeviceToHost);
-      cudaMemcpy(h_b_test, d_b.get(), N * sizeof(float), cudaMemcpyDeviceToHost);
+      cudaMemcpy(h_a_test, d_a.data(), N * sizeof(float), cudaMemcpyDeviceToHost);
+      cudaMemcpy(h_b_test, d_b.data(), N * sizeof(float), cudaMemcpyDeviceToHost);
 
 //      d_a.get(h_a_test);
 
@@ -113,9 +138,19 @@ int main()
     std::size_t gridSize = (float)ceil((float)N/blockSize);
 
     // Execute the addition kernel
-    vector_addition<float><<<gridSize, blockSize>>>(d_a(), d_b(), d_c(), N);
+    vector_addition<float><<<gridSize, blockSize>>>(
+      d_a.data(),
+      d_b.data(),
+      d_c.data(), N);
 
-    d_c.copy_to_h(h_c);
+    //d_c(h_c);
+    d_c.copy_to_host(h_c);
+
+    for (int i {0}; i < 5; i++)
+    {
+      std::cout << h_c[i] << ' ';
+    }
+
 
     // Sum up vector c and print result divided by N, this should equal 1.
     float sum {0};
@@ -129,5 +164,204 @@ int main()
     free(h_b);
     free(h_c);
   }
+
+  // ArrayFollowsRuleOf5
+  {
+    constexpr std::size_t L {100000};
+
+    // Host input vectors
+    float *h_a;
+    float *h_b;
+    // Host output vector
+    float *h_c;
+
+    h_a = (float*)malloc(L * sizeof(float));
+    h_b = (float*)malloc(L * sizeof(float));
+    h_c = (float*)malloc(L * sizeof(float));
+
+    // Initialize vectors on host
+    for (std::size_t i {0}; i < L; i++)
+    {
+      h_a[i] = sin(i) * sin(i);
+      h_b[i] = cos(i) * cos(i);
+    }
+
+    // ArrayDefaultConstructsTo0
+    std::cout << "\n ArrayDefaultConstructsTo0 \n";
+    Array<float, L> d_a;
+
+    {
+      float* h_a_test;
+      h_a_test = (float*)malloc(L * sizeof(float));
+
+      d_a.get(h_a_test);
+
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_a_test[i] << ' '; // should be all 0
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_a_test[i] << ' '; // should be all 0
+      }
+
+      free(h_a_test);
+    }    
+
+    // ArraySetsAndGetsFromCArray
+    std::cout << "\n ArraySetsAndGetsFromCArray \n";
+    {
+      float* h_a_test;
+
+      h_a_test = (float*)malloc(L * sizeof(float));
+      d_a.set(h_a);
+      d_a.get(h_a_test);
+
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_a_test[i] << ' ' << h_a[i] << ' '; // should be the same
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_a_test[i] << ' ' << h_a[i] << ' '; // should be the same
+      }
+      std::cout << std::endl;
+
+      free(h_a_test);
+    }    
+
+    // ArrayCopies.
+    std::cout << "\n ArrayCopies \n";
+    {
+      // ArrayCopyConstructs.
+      Array<float, L> d_a_copy {d_a}; // copy construct.
+
+      float* h_a_test;
+      h_a_test = (float*)malloc(L * sizeof(float));
+      d_a_copy.get(h_a_test);
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_a_test[i] << ' '; // should be sin^2
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_a_test[i] << ' '; // should be sin^2
+      }
+
+      // Check independence of d_a and d_a_copy
+      float* h_a_test2;
+      h_a_test2 = (float*)malloc(L * sizeof(float));
+      d_a.get(h_a_test2);
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_a_test2[i] << ' '; // should be sin^2
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_a_test2[i] << ' '; // should be sin^2
+      }
+
+      free(h_a_test);
+      free(h_a_test2);
+    }    
+
+    {
+      // ArrayCopyAssigns.
+      const Array<float, L> d_a_test {d_a};
+
+      Array<float, L> d_a_copy = d_a_test; // copy assign.
+
+      float* h_a_test;
+      h_a_test = (float*)malloc(L * sizeof(float));
+      d_a_copy.get(h_a_test);
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_a_test[i] << ' '; // should be sin^2
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_a_test[i] << ' '; // should be sin^2
+      }
+
+      // Check independence of d_a and d_a_copy
+      float* h_a_test2;
+      h_a_test2 = (float*)malloc(L * sizeof(float));
+      d_a_test.get(h_a_test2);
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_a_test2[i] << ' '; // should be sin^2
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_a_test2[i] << ' '; // should be sin^2
+      }
+
+      free(h_a_test);
+      free(h_a_test2);
+    }    
+
+    // ArrayMoves.
+    std::cout << "\n ArrayMoves \n";
+    {
+      // ArrayMoveConstructs.
+      TestArray<float, L> d_b_copy {h_b};
+      std::cout << "\nMove Constructing d_b_moved\n";
+      TestArray<float, L> d_b_moved {std::move(d_b_copy)};
+
+      float* h_b_test;
+      h_b_test = (float*)malloc(L * sizeof(float));
+      d_b_moved.get(h_b_test);
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_b_test[i] << ' '; // should be cos^2
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_b_test[i] << ' '; // should be cos^2
+      }
+
+      // MovedArraySetTonullptr
+      std::cout << std::boolalpha << (d_b_copy.data() == nullptr) << '\n'; 
+
+      free(h_b_test);
+    }
+
+    {
+      // ArrayMoveAssigns.
+      TestArray<float, L> d_b_copy {h_b};
+      TestArray<float, L> d_b_moved; 
+      d_b_moved = std::move(d_b_copy);
+
+      float* h_b_test;
+      h_b_test = (float*)malloc(L * sizeof(float));
+      d_b_moved.get(h_b_test);
+      for (int i {0}; i < 5; i++)
+      {
+        std::cout << h_b_test[i] << ' '; // should be cos^2
+      }
+      std::cout << std::endl;
+      for (int i {L-5}; i < L; i++)
+      {
+        std::cout << h_b_test[i] << ' '; // should be cos^2
+      }
+
+      // MovedArraySetTonullptr
+      std::cout << std::boolalpha << (d_b_copy.data() == nullptr) << '\n'; 
+
+      free(h_b_test);
+    }
+
+    free(h_a);
+    free(h_b);
+    free(h_c);
+  } // ArrayFollowsRuleOf5
+
 }
 

@@ -277,6 +277,19 @@ When you write a move operation, you should leave source object in a valid but u
 Als, standard-library algorithms rely on being able to assign to (using move or copy) a moved-from object.
 So, design your moves not to throw, and leave their source object in state that allows destruction and assignment.
 
+e.g. 
+
+```
+template<class T>
+Matrix<T>::Matrix(const Matrix& m):	// copy constructor
+	dim_{m.dim()},
+	elements_{new T[m.size()]}
+{
+	std::uninitialized_copy(m.elements_, m.elements_ + m.size(), elements_);
+}
+``` 
+cf. `./Matrix/Matrix.h`
+
 cf. pp. 509 17.5.1.1 Beware of Default Constructors. Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
 
 When writing a copy operation, be sure to copy every base and member. For larger classes, chances of forgetting go up; worse when someone long after the initial design adds a member to a class, it's easy to forget to add it to the list of members to be copied. This is 1 reason to prefer the default (compiler-generated) copy operations (Sec. 17.6).
@@ -387,6 +400,161 @@ For every class, we should ask:
 2. Is dtor needed (e.g. because some resource needs to be released)?
 3. Are copy operations needed (because default copy semantics is not adequate, e.g. because class ismeant to be a base class or because it contains pointers to objects that must be deleted by the class)?
 4. Are move operations needed (because default semantics is not adequate, e.g. because an empty object doesn't make sense)?
+
+cf. https://docs.microsoft.com/en-us/cpp/cpp/move-constructors-and-move-assignment-operators-cpp?view=vs-2017
+
+This topic builds upon the following C++ class, MemoryBlock, which manages a memory buffer.
+C++
+
+```
+// MemoryBlock.h
+#pragma once
+#include <iostream>
+#include <algorithm>
+
+class MemoryBlock
+{
+public:
+
+   // Simple constructor that initializes the resource.
+   explicit MemoryBlock(size_t length)
+      : _length(length)
+      , _data(new int[length])
+   {
+      std::cout << "In MemoryBlock(size_t). length = "
+                << _length << "." << std::endl;
+   }
+
+   // Destructor.
+   ~MemoryBlock()
+   {
+      std::cout << "In ~MemoryBlock(). length = "
+                << _length << ".";
+
+      if (_data != nullptr)
+      {
+         std::cout << " Deleting resource.";
+         // Delete the resource.
+         delete[] _data;
+      }
+
+      std::cout << std::endl;
+   }
+
+   // Copy constructor.
+   MemoryBlock(const MemoryBlock& other)
+      : _length(other._length)
+      , _data(new int[other._length])
+   {
+      std::cout << "In MemoryBlock(const MemoryBlock&). length = "
+                << other._length << ". Copying resource." << std::endl;
+
+      std::copy(other._data, other._data + _length, _data);
+   }
+
+   // Copy assignment operator.
+   MemoryBlock& operator=(const MemoryBlock& other)
+   {
+      std::cout << "In operator=(const MemoryBlock&). length = "
+                << other._length << ". Copying resource." << std::endl;
+
+      if (this != &other)
+      {
+         // Free the existing resource.
+         delete[] _data;
+
+         _length = other._length;
+         _data = new int[_length];
+         std::copy(other._data, other._data + _length, _data);
+      }
+      return *this;
+   }
+
+   // Retrieves the length of the data resource.
+   size_t Length() const
+   {
+      return _length;
+   }
+
+private:
+   size_t _length; // The length of the resource.
+   int* _data; // The resource.
+};
+```
+
+The following procedures describe how to write a move constructor and a move assignment operator for the example C++ class.
+
+To create a move constructor for a C++ class
+
+    Define an empty constructor method that takes an rvalue reference to the class type as its parameter, as demonstrated in the following example:
+    C++ 
+```
+MemoryBlock(MemoryBlock&& other)
+   : _data(nullptr)
+   , _length(0)
+{
+}
+```
+In the move constructor, assign the class data members from the source object to the object that is being constructed:
+C++
+```
+_data = other._data;
+_length = other._length;
+```
+Assign the data members of the source object to default values. This prevents the destructor from freeing resources (such as memory) multiple times:
+C++
+```
+    other._data = nullptr;
+    other._length = 0;
+```
+To create a move assignment operator for a C++ class
+
+    Define an empty assignment operator that takes an rvalue reference to the class type as its parameter and returns a reference to the class type, as demonstrated in the following example:
+    C++ 
+```
+MemoryBlock& operator=(MemoryBlock&& other)
+{
+}
+```
+
+In the move assignment operator, add a conditional statement that performs no operation if you try to assign the object to itself.
+C++
+
+```
+if (this != &other)
+{
+}
+```
+
+In the conditional statement, free any resources (such as memory) from the object that is being assigned to.
+
+The following example frees the _data member from the object that is being assigned to:
+C++
+
+```
+// Free the existing resource.
+delete[] _data;
+```
+
+Follow steps 2 and 3 in the first procedure to transfer the data members from the source object to the object that is being constructed:
+C++
+
+```
+// Copy the data pointer and its length from the
+// source object.
+_data = other._data;
+_length = other._length;
+
+// Release the data pointer from the source object so that
+// the destructor does not free the memory multiple times.
+other._data = nullptr;
+other._length = 0;
+
+Return a reference to the current object, as shown in the following example:
+C++
+
+return *this;
+```
 
 #### `delete`d Functions
 

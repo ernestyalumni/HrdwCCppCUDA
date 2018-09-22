@@ -315,7 +315,15 @@ The best we can do in a `catch`-clause of function `try`-block for constructor o
 There are no such restrictions for `try`-block of ordinary function.
 
 
+cf. [5.3. Error Handling 5. Modules](https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__ERROR.html), CUDA Runtime API, CUDA Toolkit Documentation.
 
+# Error Handling in CUDA
+
+```
+__host__ __device__ const char* cudaGetErrorName(cudaError_t error)
+
+__host__ __device__ const char* cudaGetErrorString(cudaError_t error)
+```
 
 
 

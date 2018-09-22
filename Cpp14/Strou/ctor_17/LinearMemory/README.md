@@ -11,6 +11,8 @@ Linear memory allocated using `cudaMalloc()`, also `cudaMallocPitch()`, `cudaMal
 
 cf. https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html
 
+**`cudaMalloc3D`**
+
 ```
 __host__ cudaError_t cudaMalloc3D(cudaPitchedPtr* pitchedDevPtr, cudaExtent extent)
 ```
@@ -25,6 +27,8 @@ Pitch returned in `pitch` field of `pitchedDevPtr` is width in bytes of allocati
 
 [`cudaMallocManaged`](https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1gd228014f19cc0975ebe3e0dd2af6dd1b)
 
+**`cudaMallocManaged`**
+
 ```
 __host__ cudaError_t cudaMallocManaged(void** devPtr, size_t size, unsigned int flags = cudaMemAttachGlobal)
 ```
@@ -33,3 +37,27 @@ Allocates memory that'll automatically be managed by the Unified Memory system.
 Allocates `size` bytes of managed memory on device and returns in `*devPtr` pointer to allocated memory.
 
 Memory allocated with `cudaMallocManaged` should be released with `cudaFree`.
+
+
+cf. [5.10. Memory Management, 5. Modules](https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html), CUDA Runtime API, CUDA Toolkit Documentation.
+
+**`cudaFree`**
+```
+__host__ __device__ cudaError_t cudaFree(void* devPtr)
+```
+Frees memory on the device.
+
+cf. https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html
+
+**`cudaMemset`**
+```
+__host__ cudaError_t cudaMemset(void* devPtr, int value, size_t count)
+```
+Initializes or sets device memory to a value.
+
+**Parameters**
+`devPtr` - Pointer to device memory.
+`value` - value to set for each byte of specified memory
+`const` - size in bytes to set.
+
+
