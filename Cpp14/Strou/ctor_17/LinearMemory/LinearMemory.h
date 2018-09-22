@@ -89,6 +89,7 @@ class ArrayMalloc
         cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice)
       };
       CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);            
+      return *this;
     }
 
     // Movable.
@@ -230,6 +231,7 @@ class Array
         cudaMemcpy(d_data_, a.d_data_, size_, cudaMemcpyDeviceToDevice)
       };
       CUDA::Utilities::Exceptions::check_cuda_error(cuda_error);            
+      return *this;
     }
 
     // Movable.

@@ -273,7 +273,8 @@ int main()
       // ArrayCopyAssigns.
       const Array<float, L> d_a_test {d_a};
 
-      Array<float, L> d_a_copy = d_a_test; // copy assign.
+      Array<float, L> d_a_copy;
+      d_a_copy = d_a_test; // copy assign.
 
       float* h_a_test;
       h_a_test = (float*)malloc(L * sizeof(float));
