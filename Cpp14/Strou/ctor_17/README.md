@@ -486,8 +486,9 @@ The following procedures describe how to write a move constructor and a move ass
 
 To create a move constructor for a C++ class
 
-    Define an empty constructor method that takes an rvalue reference to the class type as its parameter, as demonstrated in the following example:
-    C++ 
+Define an empty constructor method that takes an rvalue reference to the class type as its parameter, as demonstrated in the following example:
+C++ 
+
 ```
 MemoryBlock(MemoryBlock&& other)
    : _data(nullptr)
@@ -497,20 +498,25 @@ MemoryBlock(MemoryBlock&& other)
 ```
 In the move constructor, assign the class data members from the source object to the object that is being constructed:
 C++
+
 ```
 _data = other._data;
 _length = other._length;
 ```
+
 Assign the data members of the source object to default values. This prevents the destructor from freeing resources (such as memory) multiple times:
 C++
+
 ```
     other._data = nullptr;
     other._length = 0;
 ```
+
 To create a move assignment operator for a C++ class
 
-    Define an empty assignment operator that takes an rvalue reference to the class type as its parameter and returns a reference to the class type, as demonstrated in the following example:
-    C++ 
+Define an empty assignment operator that takes an rvalue reference to the class type as its parameter and returns a reference to the class type, as demonstrated in the following example:
+C++ 
+
 ```
 MemoryBlock& operator=(MemoryBlock&& other)
 {
@@ -528,7 +534,7 @@ if (this != &other)
 
 In the conditional statement, free any resources (such as memory) from the object that is being assigned to.
 
-The following example frees the _data member from the object that is being assigned to:
+The following example frees the `_data` member from the object that is being assigned to:
 C++
 
 ```
@@ -549,10 +555,11 @@ _length = other._length;
 // the destructor does not free the memory multiple times.
 other._data = nullptr;
 other._length = 0;
-
+```
 Return a reference to the current object, as shown in the following example:
 C++
 
+```
 return *this;
 ```
 
