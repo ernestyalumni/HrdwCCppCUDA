@@ -1,5 +1,8 @@
 # Inter-Process Communication (IPC)
 
+* Message queues
+* timers, `timerfd`
+
 ## Message Queue
 
 Message Queues are similar to pipes in that they're opened and closed and have readers and writers.
@@ -253,3 +256,43 @@ https://www.cs.rutgers.edu/%7Epxk/417/notes/content/07-groups-slides.pdf
 Message ordering, around pp. 19
 
 https://www.seas.upenn.edu/~cit595/cit595s10/lectures/ipc1.pdf
+
+# `timerfd`, `#include <sys/timerfd.h>`
+
+
+[`timerfd_create` Linux Programmer's Manual](http://man7.org/linux/man-pages/man2/timerfd_create.2.html)
+
+```
+int timerfd_create(int clockid, int flags);
+
+int timerfd_settime(int fd, int flags,
+  const struct itimerspec *new_value,
+  struct itimerspec *old_value);
+
+int timerfd_gettime(int fd, struct itimerspec *curr_value);  
+```
+
+These system calls create and operate on a timer that delivers timer expiration notifications via a file descriptor. 
+
+
+**`timerfd_settime()`**
+```
+int timerfd_settime(int fd, int flags,
+  const struct itimerspec *new_value,
+  struct itimerspec *old_value);
+```
+
+```
+struct timespec
+{
+  time_t tv_sec;  // Seconds
+  long tv_nsec;   // Nanoseconds
+};
+
+struct itimerspec
+{
+  struct timespec it_interval;  // Interval for periodic timer
+  struct timespec it_value;     // Initial expiration.
+};
+```
+

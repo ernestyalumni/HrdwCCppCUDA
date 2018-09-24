@@ -23,8 +23,8 @@
 /// COMPILATION TIPS:
 ///  g++ -std=c++14 Socket_main.cpp -o Socket_main
 //------------------------------------------------------------------------------
-#ifndef _SOCKET_H_
-#define _SOCKET_H_
+#ifndef _IPC_SOCKET_H_
+#define _IPC_SOCKET_H_
 
 // \ref http://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 // \ref http://pubs.opengroup.org/onlinepubs/7908799/xns/netinetin.h.html
@@ -280,4 +280,4 @@ class Socket
 
 } // namespace IPC
 
-#endif // _SOCKET_H_
+#endif // _IPC_SOCKET_H_
