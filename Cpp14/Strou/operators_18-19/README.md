@@ -178,7 +178,61 @@ Type conversion can be accomplished by
 * ctor taking a single argument (Sec. 16.2.5)
 * conversion operator (Sec. 18.4.1)
 
+In either case, conversion can be 
+* `explicit`, i.e. conversion is only performed in a direct initialization (Sec. 16.2.6), i.e. as an initializer not using a `=`
+* implicit, i.e. applied wherever it can be used unambiguously (Sec. 18.4.3), e.g. as a function argument.
 
+### Conversion operators
+
+cf. pp. 543 18.4.1 Conversion Operators. Ch. 18 *Operator Overloading*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.   
+
+Using a ctor taking a single argument to specify type conversion is convenient, but a ctor can't specify 
+1. an implicit conversion from a user-defined type to a built-in type (because built-in types aren't classes), or 
+2. conversion from new class to previously defined class (without modifying declaration for the old class)
+
+These problems can be handled by defining a 
+*conversion operator* - a member function 
+
+```
+X::operator T()
+```
+where `T` is a type name, defines conversion from `X` to `T`. 
+
+implicit conversion from `X` to `T`; note that type being converted to is part of the name of the operator and can't be repeated as the return value of the conversion function:
+
+```
+X::operator T() const { return v; } // right
+T X::operator T() const { return v; } // error
+```
+in this respect, a conversion operator resembles a ctor.
+
+Whenever a `X` appears where a `T` is needed, appropriate `T` is used.
+
+Conversion functions appear to be useful for handling data structures when reading (implemented by a conversion operator) is trivial.
+
+`istream` and `ostream` types rely on a conversion function to enable statements such as:
+```
+while (cin >> x)
+  cout << x;
+```
+
+However, it's typically *not* a good idea to define implicit conversion from 1 type to another such that information is lost in conversion.
+
+In general, it's wise to be sparing in the introduction of conversion operators.
+
+Probably the best idea is initially to do conversions by named functions, such as `X::make_int()`. 
+
+### `explicit` Conversion Operators
+
+Conversion operators tend to be defined so that they can be used everywhere; however, it's possible to declare a conversion operator `explicit`, and have it apply only for direct initialization (Sec. 16.2.6), where an equivalent `explicit` ctor would've been used, e.g.
+
+```
+explicit operator bool() const noexcept;
+```
+Reason to declare conversion operator `explicit` is to avoid its use in surprising contexts.
+
+Only 1 levle of user-defined implicit conversion is legal.
+In some cases, a value of desired type can be constructed in more than 1 way; such cases are illegal.
 
 
 
