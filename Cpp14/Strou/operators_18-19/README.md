@@ -231,8 +231,176 @@ explicit operator bool() const noexcept;
 ```
 Reason to declare conversion operator `explicit` is to avoid its use in surprising contexts.
 
-Only 1 levle of user-defined implicit conversion is legal.
+Only 1 level of user-defined implicit conversion is legal.
 In some cases, a value of desired type can be constructed in more than 1 way; such cases are illegal.
+
+# Special Operators
+
+cf. pp. 549 Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+## Subscripting, `operator[]`
+
+cf. pp. 550 Sec. 19.2.1 Subscripting. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+`map`, `unordered_map`
+
+## Function Call
+
+cf. pp. 550 Sec. 19.2.2 Function Call. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+Function call, that is, notation *expression(expression-list)* can be interpreted as a binary operation, with *expression* as left-hand operand, and *expression-list* as right-hand operand. 
+The call operator `()` can be overloaded in the same way as other operators can.
+e.g.
+
+```
+struct Action
+{
+  int operator()(int);
+  pair<int, int> operator()(int, int);
+  double operator()(double);
+};
+```
+Argument list for `operator()()` is evaluated and checked according to usual argument-passing rules. 
+Overloading function call operator seems to be useful primarily for defining types that have only a single operation and for types for which 1 operation is predominant.
+
+The most obvious and most important use of `()` operator is to provide usual function call syntax for objects that in some way behave like functions.
+Such function objects allow us to write code that takes nontrivial operations as parameters. 
+
+In many cases, it's essential function objects can hold data needed to perform their operation. e.g. define a class with an `operator()()` that adds stored value to its argument:
+
+(EY: functor?)
+```
+class Add
+{
+  public:
+    Add(complex c):
+      val_{c} // save a value
+    {}
+
+    Add(double r, double i):
+      val_{{r, i}} 
+    {}
+
+    void operator()(complex& c) cosnst
+    {
+      c+= val; // add a value to argument
+    }
+
+  private:
+    complex val_;
+}
+```
+An object of class `Add` is initialized with a complex number, and when invoked using `()`, it adds that number to its argument. e.g.
+
+
+```
+void h(vector<complex>& vec, list<complex>& lst, complex z)
+{
+  for_each(vec.begin(), vec.end(), Add{2, 3});
+  for_each(lst.begin(), lst.end(), Add{z});
+}
+```
+This all works because `for_each` is a template that applies `()` to its third argument without caring exactly what that 3rd argument really is: cf. Sec. 3.4.3, Sec. 33.4
+
+Note that lambda expression (Sec. 3.4.3, Sec. 11.4) is basically a syntax for defining a function object. e.g.
+
+```
+void h2(vector<complex>& vec, list<complex>& lst, complex z)
+{
+  for_each(vec.begin(), vec.end(), [](complex& a) { a+= {2, 3}; });
+  for_each(lst.begin(), lst.end(), [](complex& a) { a += z});
+}
+```
+In this case, each of the lambda expressions generates the equivalent of the function object `Add`.
+
+Other popular uses of `operator()()` are as a substring operator and as subscripting operator for multidimensional arrays (Sec. 29.2.2, Sec. 40.5.2)
+
+`operator()()` must be a non-`static` member function.
+
+Function call operators are often templates (Sec. 29.2.2, Sec. 33.5.3)
+
+## Dereferencing `X* operator->()`
+
+dereferencing operator `->` (also known as the *arrow* operator) is a unary postfix operator, `operator->()` doesn't depend on the member `m` pointer to. However, there's no new syntax introduced, so a member name is still required after the `->`, e.g. `X* q2 = p.operator->();`.
+
+For ordinary ptrs, use of `->` is synonymous with some uses of unary `*` and `[]`.
+
+```
+template <typename T>
+class Ptr
+{
+  public:
+    Y* operator->() { return p; } // dereference to access member
+    Y& operator*() { return *p; } // dereference to access whole object
+    Y& operator[](int i) { return p[i]; } // dereference to access element
+};
+```
+If you provide more than one of these operators, it might be wise to provide equivalence.
+
+Overloading `->` is important to representing *indirection*. e.g. Iterators (Ch. 33)
+
+There's no way of overloading operator `.` (dot).
+
+## Increment and Decrement.
+
+```
+Ptr& operator++(); // prefix
+Ptr operator++(int); // postfix
+```
+
+## Allocation and Deallocation, `operator new()` `operator delete()`
+
+when `new` needs memory on free store for an object of type `X`, 
+
+```
+void operator new(sizeof(X));
+```
+When `new` needs memory on free store for an array of `N` objects of type `X`, 
+```
+void operator new[](N * sizeof(X));
+```
+Replacing global `operator new()` and `operator delete()` is not for fainthearted and not recommended.
+
+Better approach is to supply these operations for a specific class. This class might be the base for many derived classes.
+
+Member `operator new()`, `operator delete()` are implicitly `static` members.
+
+## User-defined Literals, `operator""`
+
+e.g. 
+```
+constexpr complex<double> operator"" i(long double d) // imaginary literal
+{
+  return {0, d}; // complex is a literal type
+}
+```
+
+compiler always checks for a suffix
+
+4 kinds of literals that can be suffixed to make a user-defined literal (iso.2.14.8)
+
+* integer literal (Sec. 6.2.4.1)
+* floating-point literal (Sec. 6.2.5.1)
+* string literal (Sec. 7.3.2)
+* character literal (Sec. 6.2.3.2)
+
+To get a C-style string from the program source text into a literal operator, we request both string and its number of characters. e.g.
+```
+string operator""s(const char* p, size_t n);
+
+string s12 = "one two"s; // calls operator""("one two", 7)
+string sxx = R"(two\ntwo)"s; // calls operator ""("two\\ntwo", 8)
+```
+
+A literal operator converting numerical values to strings could be quite confusing.
+
+*template literal operator* is literal operator that takes its argument as a template parameter pack, rather than as a function argument. e.g.
+```
+template<char ...>
+constexpr int operator""_b3(); // base 3, i.e. ternary
+```
+
+Variadic template techniques (Sec. 28.6) can be disconcerting, but it's the only way of assigning nonstandard meanings to digits at compile time.
 
 
 
