@@ -402,6 +402,85 @@ constexpr int operator""_b3(); // base 3, i.e. ternary
 
 Variadic template techniques (Sec. 28.6) can be disconcerting, but it's the only way of assigning nonstandard meanings to digits at compile time.
 
+## Example: A String Class.
+
+cf. pp. 562 Sec. 19.3.1 Essential Operations. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+`String` has value semantics, i.e. after an assignment `s1 == s2`, the 2 strings `s1` and `s2` are fully distinct, and subsequent changes to one have no effect on the other. 
+Alternative would be to give `String` pointer semantics. That would let changes to `s2` after `s1 = s2` also affect the value of `s1`.
+
+Where it makes sense, prefer value semantics, e.g. `complex`, `vector`, `Matrix` and `string`; however, for value semantics to be affordable, we need to pass `String`s by reference when we don't need copies and to implement move semantics (Sec. 3.3.2, Sec. 17.5.2) to optimize `return`s.
+
+# Union declaration
+
+cf. https://en.cppreference.com/w/cpp/language/union
+
+A union is a special class type that can hold only one of its non-static data members at a time. 
+
+A union can have member functions (including ctors, dtors), but not virtual functions.
+
+A union can't have base classes, can't be used as a base.
+
+A union can't have data members of reference types.
+
+Since C++11,
+If a union contains a non-static data member with non-trivial data member with non-trivial special member function (copy/move ctor, etc.), that function is deleted by default in the union and needs to be defined explicitly by programmer.
+Since C++11,
+If union contains non-static data member with non-trivial default ctor, default ctor of union deleted by default, unless variant member of union has a default member initializer.
+
+The union is **only as big as necessary to hold its largest data member.**  
+It's undefined behavior to read from member of union that wasn't most recently written.
+```
+union S
+{
+  std::int32_t n; // occupies 4 bytes
+  std::uint16_t s[2]; // occupies 4 bytes
+  std::uint8_t c; // occupies 1 byte
+}; // the whole union occupies 4 bytes
+```
+
+# `std::strcpy` 
+
+
+`<cstring>`
+```
+char* strcpy(char* dest, const char* src);
+```
+
+Copies character string pointed to by `src`, including the null terminator, to the character array whose first element is pointed to by `dest`.
+
+Behavior is undefined if the `dest` array is not large enough.
+Behavior is undefined if strings overlap.
+
+# `std::memcpy`
+`<cstring>`
+```
+void* memcpy(void* dest, const void* src, std::size_t count);
+```
+Copies count bytes from the object pointed to by `src` to the object pointed to by `dest`. Both objects are reinterpreted as arrays of `unsigned char`.
+
+If the objects overlap, the behavior is undefined.
+If either `dest` or `src` is a null pointer, the behavior is undefined, even it count is zero.
+If objects are not "TriviallyCopyable", behavior of `memcpy` is not specified and may be undefined.
+
+# `std::strlen`
+
+`<cstring>`
+```
+std::size_t strlen(const char* str);
+```
+Returns length of the given byte string,
+i.e. number of characters in a character array whose 1st element is pointed to by `str` up to and not including the first null character.
+
+- behavior is undefined if there is no null character in the character array pointed to by `str`
+
+cf. Sec. 43.5 has standard-library `memcpy()` to copy the bytes of the source into the target. That's a low-level and sometimes pretty nasty function. It should be used only where there are no objects with ctors or dtors in the copied memory because `memcpy()` knows nothing about types.
+
+cf. pp. 568 Sec. 19.3.4 Member Functions. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+
+strong exception guarantee (Sec. 13.2)
+
 
 
 
