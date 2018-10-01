@@ -154,7 +154,7 @@ class String
 
     static const int short_max = 15;
 
-    int sz_; // number of characters
+    std::size_t sz_; // number of characters
     char* ptr_;
 
     // a form of union called an anonymous union (Sec. 8.3.2, Stroustrup),
@@ -277,8 +277,41 @@ String& String::operator=(String&& x)
   {
     delete[] ptr_;  // delete target
   }
-  move_from(x);
+  move_from(x); // does not throw
   return *this;
+}
+
+// Adds a character to the end of the string, increasing its size by one.
+String& String::operator+=(char c)
+{
+  if (sz_ == short_max) // expand to long string
+  {
+    int n = sz_ + sz_ + 2; // double the allocation (+2 because of the
+      // terminating 0)
+
+    ptr_ = expand(ptr_, n);
+    space_ = n - sz_ - 2;
+  }
+  else if (short_max < sz_)
+  {
+    if (space_ == 0) // expand in free store
+    {
+      int n = sz_ + sz_ + 2; // double the allocation (+2 because of the
+        // terminating 0)
+      char* p = expand(ptr_, n);
+      delete[] ptr_;
+      ptr_ = p;
+      space_ = n - sz_ - 2;
+    }
+    else
+    {
+      --space_;
+    }
+    ptr_[sz_] = c; // add c at end
+    ptr_[++sz_] = 0; // increase size and set terminator
+
+    return *this;
+  }
 }
 
 
