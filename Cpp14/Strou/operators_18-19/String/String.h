@@ -78,6 +78,9 @@ class String
     String(String&& x);               // move constructor
     String& operator=(String&& x);    // move assignment
 
+    // EY
+    String& operator=(const char*);
+
     ~String()   // destructor
     {
       if (short_max < sz_)
@@ -120,6 +123,14 @@ class String
       return ptr_;
     }
 
+    // cannot be overloaded
+    #if 0
+    char* c_str() // C-style string access
+    {
+      return ptr_;
+    }
+    #endif 
+    
     const char* c_str() const // C-style string access
     {
       return ptr_;
@@ -265,6 +276,14 @@ String& String::operator=(const String& x)
   return *this;
 }
 
+// EY
+String& String::operator=(const char* p)
+{
+  *this = String{p};
+  return *this;
+}
+
+
 // move assignment deletes its target's free store (if there is any and then
 // moves)
 String& String::operator=(String&& x)
@@ -299,6 +318,9 @@ String& String::operator+=(char c)
       int n = sz_ + sz_ + 2; // double the allocation (+2 because of the
         // terminating 0)
       char* p = expand(ptr_, n);
+
+      // If there was an old allocation that needs deleting, it's returned, so
+      // that += can delete it.
       delete[] ptr_;
       ptr_ = p;
       space_ = n - sz_ - 2;
@@ -314,6 +336,97 @@ String& String::operator+=(char c)
   }
 }
 
+// Helper functions
+// \ref 19.3.5. Helper Functions. pp. 568
+std::ostream& operator<<(std::ostream& os, const String& s)
+{
+  return os << s.c_str(); // Sec. 36.3.3
+}
+#if 0
+
+std::istream& operator>>(std::istream& is, String& s)
+{
+  s = ""; // clear the target string
+//  is >> ws; // skip whitespace (Sec. 38.4.5.1)
+  char ch = "";
+  while (is.get(ch) && !std::isspace(ch))
+  {
+    s += ch;
+  }
+  return is;
+}
+#endif 
+
+// for comparison
+bool operator==(const String& a, const String& b)
+{
+  if (a.size() != b.size())
+  {
+    return false;
+  }
+  for (int i {0}; i != a.size(); ++i)
+  {
+    if (a[i] != b[i])
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool operator!=(const String& a, const String& b)
+{
+  return !(a==b);
+}
+
+// To support the range-for loop, we need begin(), end() (Sec. 9.5.1)
+// Provide those as freestanding (nonmember) functions without direct access to
+// the String implementation:
+#if 0
+char* begin(String& x) // C-string style access
+{
+  return x.c_str();
+}
+
+char* end(String& x)
+{
+  return x.c_str() + x.size();
+}
+#endif 
+
+const char* begin(const String& x)
+{
+  return x.c_str();
+}
+
+const char* end(const String& x)
+{
+  return x.c_str() + x.size();
+}
+
+// Given member function += that adds a character at the end, concatenation
+// operators are easily provided as nonmember functions:
+String& operator+=(String& a, const String& b) // concatenation
+{
+  for (auto x : b)
+  {
+    a += x;
+  }
+  return a;
+}
+
+String operator+(const String& a, const String& b) // concatenation
+{
+  String res {a};
+  res += b;
+  return res;
+}
+
+// Adding _s as a string literal suffix meaning String
+String operator"" _s(const char* p, size_t)
+{
+  return String{p};
+}
 
 namespace Strings
 {

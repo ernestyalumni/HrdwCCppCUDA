@@ -24,11 +24,12 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  nvcc -std=c++14 Array_main.cpp -o Array_main
+///  g++ -std=c++14 String_main.cpp -o String_main
 //------------------------------------------------------------------------------
 #include "String.h"
 
 #include <cstring> // std::strcpy 
+#include <iostream>
 
 using Utilities::String;
 
@@ -37,6 +38,21 @@ int main()
   // std::strcpyWorks
   {
     
+
+  }
+
+  // \ref 19.3.6 Using Our String
+  {
+    String s {"abcdefghij"};
+    std::cout << s << '\n';
+    s += 'k';
+    s += 'l';
+    s += 'm';
+    s += 'n';
+    std::cout << s << '\n';
+    String s2 {"Hell"};
+//    s2 += " and high water";
+//    std::cout << s2 << '\n';
 
   }
 
