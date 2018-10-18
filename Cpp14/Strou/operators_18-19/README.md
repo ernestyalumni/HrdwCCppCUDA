@@ -363,7 +363,22 @@ Replacing global `operator new()` and `operator delete()` is not for fainthearte
 
 Better approach is to supply these operations for a specific class. This class might be the base for many derived classes.
 
-Member `operator new()`, `operator delete()` are implicitly `static` members.
+e.g. class that provides specialized allocator and deallocator for itself and all of its derived classes:
+```
+class Employee
+{
+  public:
+
+    void* operator new(size_t);
+    void operator delete(void*, size_t);
+
+    void* operator new[](size_t);
+    void operator delete[](void*, size_t);
+};
+```
+
+Member `operator new()`, `operator delete()` are implicitly `static` members. 
+Thus, they don't have a `this` pointer, and don't modify an object. They provide storage that a ctor can initialize and a destructor can clean up.
 
 ## User-defined Literals, `operator""`
 
@@ -481,9 +496,55 @@ cf. pp. 568 Sec. 19.3.4 Member Functions. Ch. 19 *Special Operators*; Bjarne Str
 
 strong exception guarantee (Sec. 13.2)
 
+# Friends; `friend` 
 
+cf. pp. 571 Sec. 19.4 Friends. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
 
+An ordinary member function declaration specifies 3 logically distinct things:
 
+1. function *can access the private part* of the class declaration.
+2. function is in scope of the class
+3. function must be invoked on an object (has a `this` pointer)
 
+`static` *can only give 1st. 2 properties*.
+`friend` give it *1st property only*.
+
+So `friend` member function granted access to implementation of class, but is otherwise independent of that class.
+
+pp. 571-572 example of `Matrix` on `Vector` multiplication (EY: 20181018); **implement this**
+
+```
+class Matrix;
+
+class Vector {
+  // ...
+  friend Vector operator*(const Matrix&, const Vector&);
+};
+
+class Matrix
+{
+  friend Vector operator*(const Matrix&, const Vector&);
+};
+```
+`friend` declaration can be placed in either private or public part of class declaration; doesn't matter where. 
+  - Like a member function, a friend function is explicitly declared in declaration of the class of which it's a friend; it's therefore as much a part of that interface as is a member function.
+
+- *member function of 1 class* can be the friend *of another*
+
+```
+class ListIterator { int* next(); };
+
+class List
+{
+  friend int* ListIterator::next();
+}
+```
+There's a shorthand for making *all functions of 1 class friends of another*:
+```
+class List
+{
+  friend class ListIterator;
+};
+```
 
 
