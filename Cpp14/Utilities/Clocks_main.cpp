@@ -90,7 +90,7 @@ int main()
 
   // GetClockResolutionRetrievesResolutionForClocks
   {
-    std::cout << "\nGetClockREsolutionRetrievesResolutionForClocks\n";
+    std::cout << "\nGetClockResolutionRetrievesResolutionForClocks\n";
     TimeSpecification time_specification;
     get_clock_resolution(time_specification);
     std::cout << " time_specification : " << time_specification << '\n';    
