@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 -lrt ../MessageQueue_main.cpp -o ../MessageQueue_main
+///  g++ -std=c++14 Clocks_main.cpp -o Clocks_main
 //------------------------------------------------------------------------------
 #ifndef _UTILITIES_CLOCK_H_
 #define _UTILITIES_CLOCK_H_
@@ -90,6 +90,11 @@ struct TimeSpecification : public ::timespec
 
     tv_sec = duration_secs.count();
     tv_nsec = duration_nanosecs.count();
+  }
+
+  const ::timespec* to_timespec() const
+  {
+    reinterpret_cast<const ::timespec*>(this);
   }
 
   ::timespec* to_timespec()

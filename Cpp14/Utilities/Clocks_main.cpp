@@ -38,6 +38,25 @@ using namespace Utilities::Literals;
 
 int main()
 {
+  // ClockIDs
+  {
+    std::cout << "\n ClockIDs \n";  
+    std::cout << " ClockIDs::real_time : " << 
+      static_cast<int>(ClockIDs::real_time) << '\n'; // 0
+    std::cout << " ClockIDs::monotonic : " << 
+      static_cast<int>(ClockIDs::monotonic) << '\n'; // 1
+    std::cout << " ClockIDs::process_cpu_time : " << 
+      static_cast<int>(ClockIDs::process_cpu_time) << '\n'; // 2
+    std::cout << " ClockIDs::thread_cpu_time : " << 
+      static_cast<int>(ClockIDs::thread_cpu_time) << '\n'; // 3
+    std::cout << " ClockIDs::boot_time : " << 
+      static_cast<int>(ClockIDs::boot_time) << '\n'; // 7 
+    std::cout << " ClockIDs::real_time_alarm : " << 
+      static_cast<int>(ClockIDs::real_time_alarm) << '\n'; // 8
+    std::cout << " ClockIDs::boot_time_alarm : " << 
+      static_cast<int>(ClockIDs::boot_time_alarm) << '\n'; // 9 
+  }
+
   // TimeSpecificationConstructs
   {
     std::cout << "\n TimeSpecificationConstructs \n";

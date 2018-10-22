@@ -21,13 +21,16 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 timerfd_main.cpp -o timerfd_main
+///  g++ -std=c++14 TimerFd_main.cpp -o TimerFd_main
 //------------------------------------------------------------------------------
 #include "TimerFd.h"
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 using IPC::Time::ClockIDs;
+using IPC::Time::ClockFlags;
 using IPC::Time::IntervalTimerSpecification;
 using IPC::Time::TimerFd;
 
@@ -41,7 +44,21 @@ int main()
   std::cout << " ClockIDs::monotonic : " << 
     static_cast<int>(ClockIDs::monotonic) << '\n'; // 1
   std::cout << " ClockIDs::boot_time : " << 
-    static_cast<int>(ClockIDs::real_time_alarm) << '\n'; // 2 
+    static_cast<int>(ClockIDs::boot_time) << '\n'; // 7 
+  std::cout << " ClockIDs::real_time_alarm : " << 
+    static_cast<int>(ClockIDs::real_time_alarm) << '\n'; // 8
+  std::cout << " ClockIDs::boot_time_alarm : " << 
+    static_cast<int>(ClockIDs::boot_time_alarm) << '\n'; // 9 
+
+
+  // ClockFlagsHasAllClockFlagsToChangeBehaviorOftimerfd_create
+  {
+    std::cout << "\n ClockFlags \n";  
+    std::cout << " ClockFlags::non_blocking : " << 
+      static_cast<int>(ClockFlags::non_blocking) << '\n'; // 0
+    std::cout << " ClockFlags::close_on_execute : " << 
+      static_cast<int>(ClockFlags::close_on_execute) << '\n'; // 1
+  }
 
   // IntervalTimerSpecificationConstructsWithExplicitInputValues
   {
@@ -73,7 +90,8 @@ int main()
       std::cout << current_time << '\n';
       tfd.get_time(current_time);
       std::cout << current_time << '\n';
-      std::cout << "  number of expirations : " << tfd.read() << '\n';
+      tfd.read();
+      std::cout << "  number of expirations : " << tfd.expirations() << '\n';
     }
 
     //TimerFdSetsTimesWithRelativeTime
@@ -105,7 +123,22 @@ int main()
     TimerFd<> tfd {IntervalTimerSpecification{10, 0, 5, 0}};
     std::cout << tfd << '\n';
     tfd.set_time<>();
-    std::cout << "  number of expirations : " << tfd.read() << '\n';
+    tfd.read();
+    std::cout << "  number of expirations : " << tfd.expirations() << '\n';
+  }
+
+  //ReadYieldsCorrectExpirations
+  {
+    std::cout << "\n ReadYieldsCorrectExpirations\n";
+//    std::this_thread::sleep_for
+
+    TimerFd<> tfd {IntervalTimerSpecification{5, 0, 5, 0}};
+    std::cout << tfd << '\n';
+    for (int tau {1}; tau < 12; ++tau)
+    {
+
+
+    }
 
   }
   

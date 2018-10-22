@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <thread>
+#include <type_traits>
 
 using Utilities::ElapsedTime;
 using Utilities::HighResolutionClock;
@@ -121,6 +122,67 @@ int main()
     std::cout << "\n ChronoLiteralsConstructDurationHelperTypes \n";
     const Nanoseconds nanosecs {42ns};
     std::cout << " nanosecs.count() : " << nanosecs.count() << '\n';
+  }
+
+  // DurationHelperTypesHasTypeProperties
+  {
+    std::cout << "\nDurationHelperTypesHasTypePropertes\n";
+
+    std::cout << " is_integral : " << std::is_integral<long>::value <<
+      '\n'; // 1
+    std::cout << " is_integral : " << std::is_integral<const long>::value <<
+      '\n'; // 1
+
+    std::cout << " is_integral : " << std::is_integral<Nanoseconds>::value <<
+      '\n'; // 0
+    std::cout << " is_integral : " << std::is_integral<Microseconds>::value <<
+      '\n'; // 0
+    std::cout << " is_integral : " << std::is_integral<Milliseconds>::value <<
+      '\n'; // 0
+    std::cout << " is_integral : " << std::is_integral<Seconds>::value <<
+      '\n'; // 0
+
+    std::cout << " is_floating_point : " <<
+      std::is_floating_point<long>::value << '\n'; // 0
+    std::cout << " is_floating_point : " <<
+      std::is_floating_point<const long>::value << '\n'; // 0
+
+    std::cout << " is_floating_point : " <<
+      std::is_floating_point<Nanoseconds>::value << '\n'; // 0
+    std::cout << " is_floating_point : " <<
+      std::is_floating_point<Microseconds>::value << '\n'; // 0
+    std::cout << " is_floating_point : " <<
+      std::is_floating_point<Milliseconds>::value << '\n'; // 0
+    std::cout << " is_floating_point : " <<
+      std::is_floating_point<Seconds>::value << '\n'; // 0
+
+    std::cout << " is_class : " << std::is_class<long>::value << '\n'; // 0
+    std::cout << " is_class : " << std::is_class<const long>::value << '\n'; // 0
+
+    std::cout << " is_class : " << std::is_class<Nanoseconds>::value << '\n';
+      // 0
+    std::cout << " is_class : " << std::is_class<Microseconds>::value << '\n';
+      // 0
+    std::cout << " is_class : " << std::is_class<Milliseconds>::value << '\n';
+      // 0
+    std::cout << " is_class : " << std::is_class<Seconds>::value << '\n'; // 0
+
+    std::cout << " is_compound : " << std::is_compound<long>::value << '\n';
+      // 0
+    std::cout << " is_compound : " << std::is_compound<const long>::value <<
+      '\n'; // 0
+
+    std::cout << " is_compound : " << std::is_compound<Nanoseconds>::value <<
+      '\n'; // 0
+    std::cout << " is_compound : " << std::is_compound<Microseconds>::value <<
+      '\n'; // 0
+    std::cout << " is_compound : " << std::is_compound<Milliseconds>::value <<
+      '\n'; // 0
+    std::cout << " is_compound : " << std::is_compound<Seconds>::value <<
+      '\n'; // 0
+
+
+
   }
 
 }
