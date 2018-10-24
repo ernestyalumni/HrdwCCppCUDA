@@ -29,8 +29,6 @@
 #include <iostream>
 #include <thread> // std::this_thread
 
-#include <unistd.h>
-#include <fcntl.h> // fcntl
 
 using Utilities::IntervalTimerSpecification;
 using Utilities::Microseconds;
