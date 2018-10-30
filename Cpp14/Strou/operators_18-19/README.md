@@ -563,3 +563,101 @@ class X
   // ...
 };
 ```
+
+Often, there's a choice between making a class
+- a member (a nested class), or,
+- nonmember friend (Sec. 18.3.1)
+
+## Finding Friends
+
+cf. pp. 573 Sec. 19.4.1 Finding Friends. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+friend must be 
+- previously declared in an enclosing scope or 
+- defined in non-class scope immediately enclosing class, that's declared it to be a `friend`
+
+```
+class C1 {}; // will become friend of N::C
+void f1(); // friend of N::C
+
+namespace N
+{
+
+class C2 {}; // friend of C
+void f2() {} // friend of C
+
+class C
+{
+  public:
+    friend class C1; // OK (previously defined)
+    friend void f1();
+
+    friend class C3; // OK (defined in enclosing namespace)
+    friend void f3(); 
+    friend class C4; // First declared in N and assumed to be in N
+
+};
+
+class C3 {}; // friend of C
+void f3() { C x; x.x = 1;} // OK; friend of C
+
+} // namespace N
+
+class C4 {}; // not friend of N::C
+
+```
+
+
+Thus, a friend function should be explicitly declared in an enclosing scope, or take an argument of its class or a class derived from that.
+
+```
+class X
+{
+  friend void h(const X&); // can be found through its argument
+};
+
+void g(const X& x)
+{
+  h(x); // X's friend h()
+}
+
+```
+
+## Friends and Members
+
+cf. pp. 574 Sec. 19.4.2 Friends and Members. Ch. 19 *Special Operators*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
+
+First question is "Does it really need access?"
+
+Typically, set of functions that need access is smaller than we're willing to believe at first.
+
+An operation modifying state of a class object should therefore be a member or function taking a non-`const` reference argument (or non-`const` pointer argument)
+
+Operators that modify an operand (e.g. **`=`, `*=`, `++`**) are most naturally defined as members for user-defined types.
+
+Conversely, if implicit type conversion desired for all operands of an operation, function implementing it must be a nonmember function take a `const` reference argument or non-reference argument.
+  - case for functions implementing operators that don't require lvalue operands when applied to fundamental types (e.g. **`+`, `-`, `||`**)
+
+However, such operators often need access to representations of their operand class
+  - Consequently, **binary operators** are most common source of **`friend`** functions.
+
+Unless type conversions are defined, no compelling reason to choose member over friend, taking a reference argument.
+  - on the other hand, if `inverse()` inverts `m` itself, rather than produce a new `Matrix` that's an inverse of `m`, it should be a member.
+
+Implement operations that need direct access to representation as member functions:
+- It's not possible to know if someone someday will define a conversion operator
+- member function call syntax makes it clear to user that object may be modified; reference argument is far less obvious.
+- expressions in body of member can be noticeably shorter than equivalent expressions in global function; 
+  * nonmember function must use an explicit argument, whereas member can use `this` implicitly.
+- member names are local to class, so they tend to be shorter
+
+Conversely, operations that don't need direct access to representation often best represented as nonmember functions, possibly in namespace that makes their relationship with class explicit (Sec. 18.3.6)
+
+Advice [10] Use friend function if you need a nonmember function to have access to representation of a class (e.g. to access representation of 2 classes) Sec. 19.4
+
+Advice [11] - prefer member functions for granting access to implementation of class (Sec. 19.4.2)
+
+
+
+
+

@@ -2,6 +2,22 @@
 
 cf. pp. 577, Ch. 20 **Derived Classes** by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*. 
 
+*object-oriented programming* - its basis is the simple idea of hierarchical relationships, i.e. to express commonality between classes; *base* class or *superclass* is the common class, classes derived from that are *derived* classes or *subclasses*.
+
+C++ language features support building new classes from existing ones:
+- *implementation inheritance* to save implementation effort by sharing facilities provided by base class
+- *interface inheritance* - allow different derived classes to be used interchangeably through interface provided by common base class
+
+Interface inheritance often referred to as *run-time polymorphism* (or *dynamic polymorphism*).
+  - In contrast, uniform use of classes not relate by inheritance provided by **templates** (Sec. 3.4, Ch. 23) is referred to as *compile-time polymorphism* (or *static polymorphism*)
+
+Derived class is typically larger (and never smaller) than base class in sense it holds more data and provides more functions.
+
+
+
+
+
+
 cf. pp. 245, Exploration 37 *Inheritance*, by Ray Lischner. **Exploring C++11 (Expert's Voice in C++)**.  *2nd. ed.* Apress (2013).    
 
 ### Inheriting Constructors 
