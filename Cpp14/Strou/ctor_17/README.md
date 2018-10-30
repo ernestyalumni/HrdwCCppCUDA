@@ -318,7 +318,7 @@ Shallow copy leaves 2 objects with a *shared state*.
 
 *deep copy* - copying complete state of an object
 
-Often, better alternative to deep copy is not a shallow copy, but a move operation, which minimizes copying without adding complexity (Sec. 3.3.2, Sec. 17.5.2)
+Often, better alternative to deep copy is not a shallow copy, but a move operation, which *minimizes copying without adding complexity* (Sec. 3.3.2, Sec. 17.5.2)
 
 
 cf. pp. 512 17.5.1.3 Ch. 17 *Construction, Cleanup, Copy, and Move*; Bjarne Stroustrup, **The C++ Programming Language**, 4th Ed.
@@ -366,7 +366,7 @@ How does compiler know when it can use a move operation rather than a copy opera
 In a few cases, such as for return value, language rules say it can (because next action is defined to destroy the element)
 In general, we have to tell it by giving an rvalue reference argument. 
 
-`std::move` is a standard-library function return an rvalue reference to its argument (Sec. 35.5.1): `std::move(x)` means "give me an rvalue reference to `x`". 
+`std::move` is a standard-library function return an rvalue reference to its argument (Sec. 35.5.1): `std::move(x)` means **"give me an rvalue reference to `x`"**. 
 
 #### Default operations; Generating default operations.
 

@@ -13,8 +13,10 @@
  * Segmentation fault (core dumped)
  * 
  * */
+#include <stdio.h>
+
 int main() {
-	float *fptr = 0; // doesn't "initialize" *fptr to 0, instead, C reads it as it does NULL; // this line alone still compiles	
+	float *fptr = NULL; // doesn't "initialize" *fptr to 0, instead, C reads it as it does NULL; // this line alone still compiles	
 	// *fptr; // this line also DOES NOT trigger a Segmentation Fault 
 	*fptr = 10.f;  // results in Segmentation Fault  
 //	float fout = *fptr;  // results in Segmentation Fault 

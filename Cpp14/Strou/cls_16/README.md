@@ -203,20 +203,3 @@ Set of operations is fairly typical for a user-defined type:
 5. A class, `Bad_date`, used for reporting errors as exceptions.
 6. Set of useful helper functions. Helper functions aren't members and have no direct access to the representation of a `Date`, but they're identified as related by use of the namespace `Chrono`.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

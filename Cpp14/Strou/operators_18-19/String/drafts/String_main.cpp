@@ -217,5 +217,22 @@ int main()
     std::cout << " s1 != s2 : " << (s1 != s2) << '\n';
   }
 
-  
+  // \ref 19.3.6 Using Our String
+  {
+    String s {"abcdefghij"};
+    std::cout << s << '\n';
+    s += 'k';
+    s += 'l';
+    s += 'm';
+    s += 'n';
+    std::cout << s << '\n';
+
+    String s2 {"Hell"};
+//    s2 += " and high water";
+//    std::cout << s2 << '\n';
+
+//    String s3 = "qwerty";
+  //  s3 = s3;
+
+  }
 }

@@ -546,5 +546,20 @@ class List
   friend class ListIterator;
 };
 ```
+This `friend` declaration makes all of `List_iterator`'s member functions friends of `List`. 
 
+Declaring class a `friend` grants access to every function of that class. That implies we can't know the set of functions that can access granting class's representation just by looking at the class itself. 
+  - in this, friend class declaration differs from declaration of a member function and friend function. 
+  - Clearly, friend classes should be used with caution and only to express closely connected concepts.
 
+Make a *template argument* a `friend`:
+
+```
+template <typename T>
+class X
+{
+  friend T;
+  friend class T; // redundant "class"
+  // ...
+};
+```
