@@ -77,6 +77,132 @@ Independently of which base class (interface) is used to access an object, we al
 
 **polymorphism** - getting "the right" behavior from `Employee`'s functions independently of exactly what kind of `Employee` is actually used is called *polymorphism*.
 - A type with virtual functions is called a *polymorphic type* or (more precisely) a *run-time polymorphic type*.
+To get runtime polymorphic behavior in C++, member functions called must be `virtual` and objects must be manipulated through ptrs or references. 
+  - When manipulating an object *directly* (rather than through a ptr or reference), its exact type is known by the compiler so that run-time polymorphism isn't needed.
+
+`std::is_polymorphic` means non-union class that declares or inherits at least 1 virtual function. 
+
+Indeed, by default, a function that overrides a virtual funciton itself becomes `virtual`. We can, but don't have to repeat `virtual` in derived class; Stroustrup doesn't recommend repeating `virtual`; for explicit, use `override`.
+
+### vtables, vptrs
+
+Clearly, to implement polymorphism compiler must store some kind of type information in each object of class `Employee` and use it to call right version of virtual function `print()`.
+
+In a typical implementation, space taken is just enough to hold a ptr (Sec. 3.2.3).
+  - size of a ptr is dependent on platform. 64-bit = 8 bytes = size of ptr.
+
+Usual implementation is for compiler to convert name of vritual function into index into a table of pointers to functions.  That table is called *virtual function table* or **`vtbl`**.
+
+Each class with virtual functions has its own `vtbl` (I'll call it vtable) identifying its virtual functions.
+
+For base class `A`, derived class `B`
+
+```
+class A
+{
+  public:
+    virtual bool is_A() { return true; }
+
+  private:
+    double a_;
+};
+
+class B : public A
+{
+  public:
+    bool is_A() { return false; }
+
+  private:
+    double b_;
+}
+```
+
+A
+######
+vptr 8 bytes -----------> A vtable ------------>  A::is_A()
+a_   8 bytes
+######
+
+B
+######
+vptr 8 bytes -----------> B vtable ------------> B::is_B()
+b_   8 bytes
+######
+
+virtual call mechanism can be made almost as efficient as "normal function call" mechanism (within 25%), so efficiency concerns shouldn't deter anyone from using a virtual function.
+
+Space overhead is 1 ptr in each object of a class with virtual functions, plus 1 vtable for each such class; you pay this overhead only for objects of a class with a virtual function.
+
+Virtual function invoked from ctor or dtor reflects that object is partially constructed or partially destroyed (Sec. 22.4). It's therefore *typically bad idea to call virtual function from ctor or dtor.*
+
+## Explicit Qualification, `::`, `A::`
+
+cf. 20.3.3 Explicit Qualification, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+Calling a function using scope resolution operator, `::`, as is done in `Manager::print()` ensures `virtual` mechanism is *not used*:
+
+```
+void Manager::print() const
+{
+  Employee::print(); // not a virtual call
+  std::cout << "\t level " << level << '\n';
+  //...
+}
+```
+
+Otherwise, `Manager::print()` would suffer *infinite recursion*.
+
+Use of a qualified name also has desirable effect that, if virtual function is also `inline` (not uncommon), then inline substitution can be used for calls specified using `::`.
+  - provides efficient way to handle some important special cases in which 1 virtual function calls another for same object. 
+  - because type of object is determined in call of `Manager::print()`, it need not be dynmaically determined again for resulting call of `Employee::print()`
+
+## Override Control
+
+cf. 20.3.4 Override Control, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+If you declare a function in a derived class that has *exactly same name and type as a virtual function in a base class*, then function in derived class *overrides the one in base class*.
+  - simple rule
+
+For larger class hierarchies, can be difficult to be sure you actually override.
+
+Stroustrup don't (redundantly) use `virtual` for function that's meant to override.
+
+For larger hierarchies, 
+  * `virtual` - function may be override (Sec. 20.3.2)
+  * `= 0` function must be `virtual` and must be overridden (Sec. 20.4)
+  * `override` function meant to override virtual function in a base class (Sec. 20.3.4.1)
+  * `final` function not meant to be overridden (Sec. 20.3.4.2)
+
+### `override`
+
+cf. 20.3.4.1 `override`, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+
+In large or complicated class hierarchy with many virtual functions, it's best to use `virtual` only to introduce a new virtual function, and to use `override` on all functions intended as overriders.
+  - Using `override` is a bit verbose, but clarifies programmer's intent.
+
+`override` specifier can't be repeated in an out-of-class definition.
+
+`override` isn't a keyword, it's a *contextual keyword*
+
+### `final`; when to use `virtual`
+
+cf. 20.3.4.2 `final`, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+Use `virtual` for functions we want writers of derived classes to be able to define or redefine.
+* can we imagine need for further derived classes?
+* Does designer of derived class need to redefine function to achieve plausible aim?
+* is overriding function error-prone (i.e. is it hard for overriding function to provide expected semantics of a virtual function?)
+
+If answer is "no" to *all 3 questions*, leave function *non-`virtual`*.
+
+Far more rarely, we have a class hierarchy that starts out with virtual functions, but after definition of a set of derived classes, 1 of the answers become "no".
+Prevent users from overriding virtual functions. After using `final` for a member function, it can no longer be overridden and attempts to do so is error.
+  - It also **prevents further derivation from a class**.
+  - Don't blindly use `final` as optimization (non-`virtual` function is faster than `virtual` one); it affects class hierarchy design (often negatively), and performance improvements are rarely significant. Do some serious measurements before claiming efficiency improvements.
+  - Use `final` where it clearly reflects class hierarchy design, i.e. reflect semantic need.
+
+A `final` specifier isn't part of the type of a function and cannot be repeated in an out-of-class definition.
 
 
 

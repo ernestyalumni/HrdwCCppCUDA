@@ -28,6 +28,10 @@
 #ifndef _INHERITANCE_H_
 #define _INHERITANCE_H_
 
+#include <iostream>
+#include <list>
+#include <string>
+
 namespace Inheritance
 {
 
@@ -77,7 +81,7 @@ class ImaginaryNumber : public Number
     // \details Implementations of the 2 pure virtual methods declared in the
     // base class Number
 
-    virtual bool isImaginaryNumberNumber() const noexcept
+    virtual bool isImaginaryNumber() const noexcept
     {
       return true;
     }
@@ -144,6 +148,142 @@ class B1 : public AAbstract
     double b1_;
     double b2_;
 };
+
+
+class Employee
+{
+  public:
+
+    Employee(const std::string& name, int dept):
+      first_name_{name},
+      family_name_{name},
+      department_{dept}
+    {}
+
+    virtual void print() const;
+
+  private:
+
+    std::string first_name_, family_name_;
+//    short department_;
+    int department_;
+};
+
+class Manager : public Employee
+{
+  public:
+
+    Manager(const std::string& name, int dept, int lvl):
+      Employee{name, dept},
+      level_{lvl}
+    {}
+
+    // When deriving a class, simply provide an appropriate function if it is
+    // needed.
+    void print() const;
+
+  private:
+
+    std::list<Employee*> group_;
+//    short level_;
+    int level_;
+};
+
+
+// Virtual function must be defined for the class in which it's first declared
+// (unless it's declared to be a pure virtual function)
+void Employee::print() const
+{
+  std::cout << family_name_ << '\t' << department_ << '\n';
+}
+
+void Manager::print() const
+{
+  Employee::print(); // not a virtual call
+
+  std::cout << "\t level " << level_ << '\n';
+}
+
+void print_list(const std::list<Employee*>& s)
+{
+  for (auto x : s)
+  {
+    x->print();
+  }
+}
+
+class A1
+{
+  public:
+
+    A1() = default;
+
+    A1(const std::string& name, int a):
+      name_{name},
+      a_{a}
+    {}
+
+    virtual void print() const;
+
+    virtual bool is_A1() const
+    {
+      return true;
+    }
+
+  private:
+
+    std::string name_;
+    int a_;
+};
+
+void A1::print() const
+{
+  std::cout << " name : " << name_ << " a : " << a_ << '\n';
+}
+
+class BA1 : public A1
+{
+  public:
+
+    BA1(const std::string& name, int a, int b) :
+      A1{name, a},
+      b_{b}
+    {}
+
+    void print() const;
+
+    // override specifier specifies virtual function overrides another virtual function
+    bool is_A1() const override
+    {
+      return false;
+    }
+
+  private:
+
+    int b_;
+};
+
+class BA2 : public A1
+{
+  public:
+
+    // Use A1 ctors
+    using A1::A1;
+
+    using A1::print;
+
+    bool is_A1() const
+    {
+      return false;
+    }
+};
+
+void BA1::print() const
+{
+  A1::print(); // not a virtual call, because of `::` syntax
+
+  std::cout << "\t b : " << b_ << '\n';
+}
 
 } // namespace Inheritance
 
