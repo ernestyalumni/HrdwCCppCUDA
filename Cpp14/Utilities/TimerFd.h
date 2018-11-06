@@ -378,7 +378,6 @@ class TimerFd
     uint64_t expirations_buffer_;
 };
 
-
 template <ClockIDs a_clock_id, ClockFlags some_clock_flags>
 std::ostream& operator<<(std::ostream& os,
   const TimerFd<a_clock_id, some_clock_flags>& tfd)
