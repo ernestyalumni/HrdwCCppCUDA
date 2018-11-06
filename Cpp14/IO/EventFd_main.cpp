@@ -25,9 +25,15 @@
 //------------------------------------------------------------------------------
 #include "EventFd.h"
 
+#include "../Utilities/Chrono.h"
+
 #include <iostream>
+#include <thread>
 
 using IO::EventFdFlags;
+using IO::EventFd;
+
+using namespace Utilities::Literals;
 
 int main()
 {
@@ -44,6 +50,27 @@ int main()
       static_cast<int>(EventFdFlags::semaphore) << '\n'; // 1
   }
 
+  // Sample Program
+  // \ref https://linux.die.net/man/2/eventfd
+  {
+    std::cout << "\n Sample program : " << '\n';
 
+    EventFd<> event_fd {0};
+
+    event_fd.set_buffer(1);
+    event_fd.write();
+    event_fd.set_buffer(2);
+    event_fd.write();
+    event_fd.set_buffer(4);
+    event_fd.write();
+    event_fd.set_buffer(7);
+    event_fd.write();
+
+    std::this_thread::sleep_for(2s);
+
+    event_fd.read();
+    std::cout << " eventfd.buffer() : " << event_fd.buffer() << '\n';
+
+  }
 
 }

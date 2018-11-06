@@ -31,10 +31,13 @@
 #include <type_traits>
 
 using Inheritance::A1;
+using Inheritance::A;
 using Inheritance::AAbstract;
 using Inheritance::B1;
+using Inheritance::B;
 using Inheritance::BA1;
 using Inheritance::BA2;
+using Inheritance::Base;
 using Inheritance::Employee;
 using Inheritance::ImaginaryNumber;
 using Inheritance::Manager;
@@ -246,5 +249,12 @@ int main()
     a1_ptr->print();
     std::cout << " a1_ptr->is_A1() : " << a1_ptr->is_A1() << '\n'; // 0
 
+  }
+
+  // final specifier
+  {
+    Base base;
+    A a;
+    B b;
   }
 }

@@ -207,6 +207,8 @@ A `final` specifier isn't part of the type of a function and cannot be repeated 
 
 
 
+
+
 ### Inheriting Constructors 
 
 cf. 20.3.5.1 Inheriting Constructors, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  

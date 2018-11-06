@@ -23,7 +23,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 virtual_dtors_main.cpp -o virtual_dtors_main
+///  g++ -std=c++14 inheritance_main.cpp -o inheritance_main
 //------------------------------------------------------------------------------
 #ifndef _INHERITANCE_H_
 #define _INHERITANCE_H_
@@ -284,6 +284,28 @@ void BA1::print() const
 
   std::cout << "\t b : " << b_ << '\n';
 }
+
+// \ref https://en.cppreference.com/w/cpp/language/final
+// \details Specifies that virtual function can't be overridden in derived
+// or that class can't be inherited from.
+struct Base
+{
+  virtual void foo() {};
+};
+
+struct A : Base
+{
+  void foo() final {}; // A::foo is overridden and it is the final override
+  // void bar() final; // Error: non-virtual function can't be overridden or
+  // or be final
+};
+
+struct B final : A // struct B is final
+{
+  // void foo() override; // Error: foo can't be overridden as it's final in A
+};
+
+// struct C : B // Error: B is final {}
 
 } // namespace Inheritance
 

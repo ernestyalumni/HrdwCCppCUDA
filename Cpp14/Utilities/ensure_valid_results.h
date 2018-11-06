@@ -28,6 +28,7 @@
 
 #include <cstring> // strerror
 #include <iostream>
+#include <stdexcept> // std::runtime_error
 #include <string>
 #include <system_error> 
 
@@ -55,6 +56,61 @@ int check_valid_fd(int e, const std::string& custom_error_string)
   }
   return errno;
 }
+
+//------------------------------------------------------------------------------
+// \ref https://linux.die.net/man/2/read
+// \details On error, -1 is returned, and errno is set appropriately. In this
+// case it's left unspecified whether file position (if any) changes.
+// It's not an error if number of bytes read is smaller than number of bytes
+// requested; this may happen for example because fewer bytes are actually
+// available right now (maybe because we were close to end-of-file, or because
+// we're reading from a pipe, or terminal.)
+//------------------------------------------------------------------------------
+template <typename T>
+void check_read(const ssize_t number_of_bytes)
+{
+  if (number_of_bytes < 0)
+  {
+    std::cout << " errno : " << std::strerror(errno) << '\n';
+    throw std::system_error(
+      errno,
+      std::generic_category(),
+      "Failed to read (::read)\n");
+  }
+  else if (number_of_bytes != sizeof(T))
+  {
+    throw std::runtime_error(
+      "number of bytes read is smaller than number of bytes requested.");
+  }
+}
+
+//------------------------------------------------------------------------------
+// \ref https://linux.die.net/man/2/write
+// \details On error, -1 is returned, and errno is set appropriately.
+// 0 indicates nothing was written.
+// On success, number of bytes written is returned.
+//------------------------------------------------------------------------------
+template <ssize_t ExpectedNumberOfBytes>
+void check_write(const ssize_t number_of_bytes)
+{
+  if (number_of_bytes < 0)
+  {
+    std::cout << " errno : " << std::strerror(errno) << '\n';
+    throw std::system_error(
+      errno,
+      std::generic_category(),
+      "Failed to write (::write)\n");
+  }
+  else if (number_of_bytes == 0)
+  {
+    throw std::runtime_error("Nothing was written.");
+  }
+  else if (number_of_bytes != ExpectedNumberOfBytes)
+  {
+    throw std::runtime_error("Number of bytes written was not expected.");
+  }
+}
+
 
 } // namespace Utilities
 
