@@ -27,10 +27,9 @@
 #define _UTILITIES_CLOCK_H_
 
 #include "Chrono.h"
+#include "ensure_valid_results.h" // check_valid_fd
 
-#include <cstring> // strerror
 #include <iostream>
-#include <system_error> 
 #include <time.h> // ::clock_gettime, ::timespec
 
 namespace Utilities
@@ -112,32 +111,10 @@ std::ostream& operator<<(std::ostream& os,
   os << time_specification.tv_sec << ' ' << time_specification.tv_nsec << '\n';
 }
 
-//------------------------------------------------------------------------------
-// \details Specified by Linux manual page, in that system calls that include
-// - ::clock_gettime
-// - ::clock_settime
-// - ::clock_getres
-// are documented to return 0 for success, or -1 for failure (in which case
-// errno is set appropriately), and that errno will be returned by this
-// function.
-//------------------------------------------------------------------------------
-int check_result(int e, const std::string& custom_error_string)
-{
-  if (e < 0)
-  {
-    std::cout << " errno : " << std::strerror(errno) << '\n';
-    throw std::system_error(
-      errno,
-      std::generic_category(),
-      "Failed to " + custom_error_string + "\n");
-  }
-  return errno;
-}
-
 template <ClockIDs clock_id = ClockIDs::monotonic>
 void get_clock_resolution(TimeSpecification& time_specification)
 {
-  check_result(
+  check_valid_fd(
     ::clock_getres(
     static_cast<int>(clock_id),
     time_specification.to_timespec()),
@@ -147,7 +124,7 @@ void get_clock_resolution(TimeSpecification& time_specification)
 template <ClockIDs clock_id = ClockIDs::monotonic>
 void get_clock_time(TimeSpecification& time_specification)
 {
-  check_result(
+  check_valid_fd(
     ::clock_gettime(
     static_cast<int>(clock_id),
     time_specification.to_timespec()),
@@ -157,7 +134,7 @@ void get_clock_time(TimeSpecification& time_specification)
 template <ClockIDs clock_id = ClockIDs::monotonic>
 void set_clock_time(TimeSpecification& time_specification)
 {
-  check_result(
+  check_valid_fd(
     ::clock_settime(
     static_cast<int>(clock_id),
     time_specification.to_timespec()),

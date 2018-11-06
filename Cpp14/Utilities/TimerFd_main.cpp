@@ -29,6 +29,8 @@
 #include <iostream>
 #include <thread> // std::this_thread
 
+#include <unistd.h>
+#include <fcntl.h> // fcntl
 
 using Utilities::IntervalTimerSpecification;
 using Utilities::Microseconds;
@@ -71,6 +73,22 @@ int main()
     std::cout << " interval_timer_specification4 : " <<
       interval_timer_specification4 << '\n';
     
+  }
+
+  // IntervalTimerSpecificationAccessesDataMembers
+  {
+    std::cout << "\n IntervalTimerSpecificationAccessesDataMembers\n";
+
+    const IntervalTimerSpecification interval_timer_specification {
+      10, 13, 42, 69};
+    std::cout << " interval_timer_specification : " <<
+      interval_timer_specification << '\n';
+
+    std::cout << interval_timer_specification.it_interval.tv_sec << '\n';
+    std::cout << interval_timer_specification.it_interval.tv_nsec << '\n';
+    std::cout << interval_timer_specification.it_value.tv_sec << '\n';
+    std::cout << interval_timer_specification.it_value.tv_nsec << '\n';
+
   }
 
   // TimerFdConstructsWithExplicitInputValues
@@ -121,8 +139,9 @@ int main()
     TimerFd<> tfd {5s, 5s};
     std::cout << tfd << '\n';
     tfd.set_time();
-  
-    for (int delta_t {0}; delta_t < 11; ++delta_t)
+
+//    for (int delta_t {0}; delta_t < 11; ++delta_t)
+    for (int delta_t {0}; delta_t < 2; ++delta_t)
     {
       std::cout << " delta_t : " << delta_t << '\n';
 //      std::cout << tfd.get_time() << '\n';
@@ -130,7 +149,64 @@ int main()
       tfd.read();
 //      std::cout << tfd.get_time() << '\n';
       std::cout << "expirations() : " << tfd.expirations() << '\n';
-    }    
+    }
 
+    TimerFd<> tfd1 {250ms, 250ms};
+    std::cout << tfd1 << '\n';
+    tfd1.set_time();
+  
+    for (int delta_t {0}; delta_t < 8; ++delta_t)
+    {
+      std::cout << " delta_t : " << delta_t << '\n';
+      std::this_thread::sleep_for(Milliseconds{125 * delta_t});
+      tfd1.read();
+      std::cout << "expirations() : " << tfd1.expirations() << '\n';
+    }    
+  }
+
+  // TimerFdGetsTimeBeforeExpirationAndAfter
+  {
+    std::cout << "\n TimerFdGetsTimeBeforeExpirationAndAfter\n";
+    TimerFd<> tfd {50ms, 50ms};
+    std::cout << tfd.get_time() << '\n';
+
+    std::cout << tfd << '\n';
+    tfd.set_time();
+
+    for (int delta_t {0}; delta_t < 17; ++delta_t)
+    {
+      std::cout << " delta_t : " << delta_t << '\n';
+      std::cout << tfd.get_time() << '\n';
+      std::this_thread::sleep_for(Milliseconds{10 * delta_t});
+      std::cout << tfd.get_time() << '\n';
+      tfd.read();
+      std::cout << "expirations() : " << tfd.expirations() << '\n';
+      std::cout << tfd.get_time() << '\n';
+    }
+  }
+
+  // TimerFdCanExpireOnceAndGetsTimeGetsZero
+  {
+    std::cout << "\n TimerFdCanExpireOnceAndGetsTimeGetsZero\n";
+    TimerFd<> tfd {250ms};
+    std::cout << tfd.get_time() << '\n';
+    std::cout << tfd << '\n';
+    tfd.set_time();
+
+    for (int delta_t {0}; delta_t < 7; ++delta_t)
+    {
+      TimerFd<> tfd {50ms};
+      std::cout << tfd.get_time() << '\n';
+      std::cout << tfd << '\n';
+      tfd.set_time();
+
+      std::cout << " delta_t : " << delta_t << '\n';
+      std::cout << tfd.get_time() << '\n';
+      std::this_thread::sleep_for(Milliseconds{10 * delta_t});
+      std::cout << tfd.get_time() << '\n';
+      tfd.read();
+      std::cout << "expirations() : " << tfd.expirations() << '\n';
+      std::cout << tfd.get_time() << '\n';
+    }
   }
 }
