@@ -90,7 +90,6 @@ enum class EventTypes : uint32_t
 
 //------------------------------------------------------------------------------
 /// \brief Derived class for ::epoll_event
-///
 /// \details struct epoll_event is defined as 
 /// 
 /// typedef union epoll_data {

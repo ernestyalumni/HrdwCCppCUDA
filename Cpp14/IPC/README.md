@@ -5,6 +5,28 @@
 
 ## Message Queue
 
+### `MQ_OVERVIEW`
+
+cf. [`MQ_OVERVIEW`, Linux Programmer's Manual](http://man7.org/linux/man-pages/man7/mq_overview.7.html)
+
+POSIX message queues allow processes to exchange data in the form of messages.
+
+Message queues are created and opened using `mq_open`;
+  - this function returns a *message queue descriptor* (`mqd_t`), used to refer to the open message queue in later calls.
+    * Each message queue is identified by a name of form `/somename`; that is,
+      - null-terminated string of up to `NAME_MAX` (i.e. 255) characters, consisting of an initial slash, followed by 1 or more characters, none of which are slashes.
+    * 2 processes can operate on same queue by passing same name to `mq_open`
+
+- Messages are transferred to and from a queue using `mq_send` and `mq_receive`.
+- When process has finished using queue, it closes it using `mq_close`.
+- When queue is no longer required, it can be deleted using `mq_unlink`.
+- Queue attributes can be retrieved and (int some cases) modified using `mq_getattr` and `mq_setattr`
+- Process can request asynchronous notification of arrival of a message on a previously empty queue using `mq_notify`
+
+Message queue descriptor is a reference to an *open message queue description* (see `open`).
+- After a `fork`, child inherits copies of its parent's message queue descriptors, and these descriptors refer to same open message queue descriptions as corresponding message queue descriptors in parent.
+- Corresponding message queue descriptors in the 2 processes share the flags (`mq_flags`) that are associated with the open message queue description.
+
 Message Queues are similar to pipes in that they're opened and closed and have readers and writers.
 
 ### `mqueue.h`, `mqd_t`
@@ -90,7 +112,7 @@ mqd_t mq_open(const char* name, int oflag, mode_t mode,
 
 queue is identified by *name*. 
 
-**`oflag`** - operation flags - specifies flags that control operation of call (definitions of flags values obtained by including `<fcntl.h>`). Exactly 1 of following must be specified in `oflag`: 
+**`oflag`** - operation flags - specifies flags that control operation of call (definitions of flags values obtained by including `<fcntl.h>`). **Exactly 1** of following must be specified in `oflag`: 
 
 * `O_RDONLY`
 * `O_WRONLY`
@@ -110,6 +132,15 @@ queue is identified by *name*.
 - used to set rwx permissions.
 
 `mq_open()` **returns** message queue descriptor for use by other message queue functions; on error `mq_open()` returns `(mqd_t) -1`, with `errno` set to indicate error.
+
+#### Errors of `::mq_open()`, `errno`s of `::mq_open`
+
+- `EACCESS` - queue exists, but caller doesn't have permission to open it in specified mode.
+- `EACCESS` - `name` contained more than 1 slash
+- `EEXIST` - both `O_CREAT`, `O_EXCL` specified in `oflag`, but queue with this `name` already exists.
+- `EINVAL` - `name` doesn't follow format in `mq_overview`
+- `EINVAL` - `O_CREAT` specified in `oflag` and `attr` wasn't NULL, but `attr->mq_maxmsg` or `attr->mq_msgsize` was invalid.
+
 
 ### Functions for sending and receiving for Message Queues
 

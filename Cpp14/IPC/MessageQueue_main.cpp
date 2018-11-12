@@ -23,20 +23,30 @@
 /// COMPILATION TIPS:
 ///  g++ -std=c++14 -lrt MessageQueue_main.cpp -o MessageQueue_main
 //------------------------------------------------------------------------------
-#include "MessageQueue/MessageQueue.h"
+//#include "MessageQueue/MessageQueue.h"
+#include "MessageQueue.h"
+
+#include "../Utilities/casts.h" // get_underlying_value
 
 #include <iostream>
 #include <mqueue.h>
 
-using IPC::AllFlags;
-using IPC::AllModes;
-using IPC::MessageAttributes;
-using IPC::MessageQueue;
-using IPC::maximum_message_size;
-using IPC::maximum_number_of_messages;
+//using IPC::AllFlags;
+//using IPC::AllModes;
+//using IPC::MessageAttributes;
+//using IPC::MessageQueue;
+//using IPC::maximum_message_size;
+//using IPC::maximum_number_of_messages;
+
+using IPC::MQ::AdditionalOperationFlags;
+using IPC::MQ::Attributes;
+using IPC::MQ::OperationFlags;
+using Utilities::get_underlying_value;
 
 int main()
 {
+
+  #if 0
   // AllFlagsRepresentsAllFlags
   std::cout << "\n AllFlagsRepresentsAllFlags \n";  
   std::cout << " AllFlags::receive_only : " << 
@@ -155,6 +165,7 @@ int main()
     std::cout << attributes.mq_flags << ' ' <<
       attributes.mq_maxmsg << ' ' << attributes.mq_msgsize <<
       ' ' << attributes.mq_curmsgs << '\n';
+#endif 
 
 #if 0
     const int mq_open_result {
@@ -176,9 +187,46 @@ int main()
         static_cast<long>(AllFlags::exclusive_existence),
       static_cast<mode_t>(AllModes::owner_read_write_execute),
       attributes1};
+  }
 #endif 
 
+  // OperationFlags
+  {
+    std::cout << "\n OperationFlags \n";
+
+    std::cout << " OperationsFlags::receive_only : " <<
+      get_underlying_value<OperationFlags>(OperationFlags::receive_only) <<
+      '\n'; // 0
+    std::cout << " OperationsFlags::send_only : " <<
+      get_underlying_value<OperationFlags>(OperationFlags::send_only) << '\n';
+        // 1
+    std::cout << " OperationsFlags::send_and_receive : " <<
+      get_underlying_value<OperationFlags>(OperationFlags::send_and_receive) <<
+      '\n'; // 2
+    std::cout << " AdditionalOperationsFlags::close_on_execution : " <<
+      get_underlying_value<AdditionalOperationFlags>(
+        AdditionalOperationFlags::close_on_execution)
+        << '\n'; // 524288
+    std::cout << " AdditionalOperationsFlags::create : " <<
+      get_underlying_value<AdditionalOperationFlags>(
+        AdditionalOperationFlags::create) << '\n';
+        // 64
+    std::cout << " AdditionalOperationsFlags::exclusive_existence : " <<
+      get_underlying_value<AdditionalOperationFlags>(
+        AdditionalOperationFlags::exclusive_existence)
+        << '\n'; // 128
+    std::cout << " AdditionalOperationsFlags::nonblocking : " <<
+      get_underlying_value<AdditionalOperationFlags>(
+        AdditionalOperationFlags::nonblocking) << '\n';
+        // 2048
   }
 
+  // AttributesConstructsCorrectly
+  {
+    std::cout << " \n AttributesConstructsCorrectly \n";
+
+    const Attributes attributes {5, 8};
+    std::cout << attributes << '\n';
+  }
 }
 

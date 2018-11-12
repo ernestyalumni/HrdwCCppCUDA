@@ -71,6 +71,29 @@ class CheckReturn
 };
 
 //------------------------------------------------------------------------------
+// \ref http://man7.org/linux/man-pages/man2/open.2.html
+// \details On error, -1 is returned, and errno is set appropriately.
+// Otherwise, return new fd.
+//------------------------------------------------------------------------------
+class CheckOpen : public CheckReturn
+{
+  public:
+
+    CheckOpen() = default;
+
+    int operator()(int result)
+    {
+      return this->operator()(
+        result,
+        "Failed to open fd (::open())");
+    }
+
+  private:
+
+    using Utilities::CheckReturn::operator();
+};
+
+//------------------------------------------------------------------------------
 // \ref http://man7.org/linux/man-pages/man2/close.2.html
 // \details On error, -1 is returned, and errno is set appropriately.
 // 0 indicates success.
