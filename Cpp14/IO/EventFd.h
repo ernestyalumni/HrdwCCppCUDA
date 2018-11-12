@@ -26,8 +26,9 @@
 #ifndef _IO_EVENT_FD_H_
 #define _IO_EVENT_FD_H_
 
-#include "../Utilities/ensure_valid_results.h" // check_valid_fd, check_read
+#include "../Utilities/CheckReturn.h" // CheckReturn, check_valid_fd, check_read
 // check_write
+#include "../Utilities/casts.h" // get_underlying value
 
 #include <iostream>
 #include <stdexcept> // std::runtime_error
@@ -59,6 +60,8 @@ template <EventFdFlags flags = EventFdFlags::default_value>
 class EventFd
 {
   public:
+
+    using CheckReturn = Utilities::CheckReturn;
 
     explicit EventFd(const int initval = 0):
       fd_{::eventfd(initval, static_cast<int>(flags))}
