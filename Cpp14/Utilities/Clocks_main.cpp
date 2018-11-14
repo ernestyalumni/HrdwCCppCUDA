@@ -23,12 +23,20 @@
 /// COMPILATION TIPS:
 ///  g++ -std=c++14 Clocks_main.cpp -o Clocks_main
 //------------------------------------------------------------------------------
+#include "../Std/TypeTraitsProperties.h"
 #include "Chrono.h"
 #include "Clocks.h"
+#include "casts.h" // get_underlying_value
 
+#include <ctime> // clock_t
 #include <iostream>
+#include <thread> // std::this_thread
+#include <type_traits>
 
+using Std::CompositeTypeTraits;
+using Std::PrimaryTypeTraits;
 using Utilities::ClockIDs;
+using Utilities::ProcessorTimeClock;
 using Utilities::TimeSpecification;
 using Utilities::get_clock_resolution;
 using Utilities::get_clock_time;
@@ -69,7 +77,6 @@ int main()
     std::cout << "\n TimeSpecificationDefaultConstructsTo0 \n";
     const TimeSpecification time_specification;
     std::cout << " time_specification : " << time_specification << '\n';
-
   }
 
   // GetClockTimeRetrievesTimesForClocks
@@ -127,4 +134,28 @@ int main()
       time_specification << '\n';
   }
 
+  // clock_tTypeTraitProperties
+  {
+    std::cout << "\n clock_tTypeTraitProperties \n";
+
+    PrimaryTypeTraits<clock_t> clock_t_primary_type_traits;
+
+    std::cout << clock_t_primary_type_traits << '\n';
+
+    CompositeTypeTraits<clock_t> clock_t_composite_type_traits;
+
+    std::cout << clock_t_composite_type_traits << '\n';
+
+  }
+
+  // ProcessorTimeClockDefaultConstructs
+  {
+    std::cout << "\n ProcessorTimeClockDefaultConstructs \n";
+    ProcessorTimeClock processor_time_clock;
+    std::cout << processor_time_clock.last_processor_time_obtained() << '\n';
+
+    std::this_thread::sleep_for(250ms);
+
+    std::cout << processor_time_clock.elapsed_time() << '\n';
+  }
 }

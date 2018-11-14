@@ -27,10 +27,12 @@
 #define _UTILITIES_CLOCK_H_
 
 #include "Chrono.h"
-#include "ensure_valid_results.h" // check_valid_fd
+#include "CheckReturn.h" // CheckReturn
+#include "casts.h" // get_underlying_value
 
+#include <ctime>
 #include <iostream>
-#include <time.h> // ::clock_gettime, ::timespec
+//#include <time.h> // ::clock_gettime, ::timespec
 
 namespace Utilities
 {
@@ -111,35 +113,97 @@ std::ostream& operator<<(std::ostream& os,
   os << time_specification.tv_sec << ' ' << time_specification.tv_nsec << '\n';
 }
 
-template <ClockIDs clock_id = ClockIDs::monotonic>
+template <ClockIDs ClockId = ClockIDs::monotonic>
 void get_clock_resolution(TimeSpecification& time_specification)
 {
-  check_valid_fd(
+  CheckReturn()(
     ::clock_getres(
-    static_cast<int>(clock_id),
+    get_underlying_value<ClockIDs>(ClockId),
     time_specification.to_timespec()),
     "Retrieve resolution from clock failed (::clock_getres");
 }
 
-template <ClockIDs clock_id = ClockIDs::monotonic>
+template <ClockIDs ClockId = ClockIDs::monotonic>
 void get_clock_time(TimeSpecification& time_specification)
 {
-  check_valid_fd(
+  CheckReturn()(
     ::clock_gettime(
-    static_cast<int>(clock_id),
+    get_underlying_value<ClockIDs>(ClockId),
     time_specification.to_timespec()),
     "Retrieve time from clock failed (::clock_gettime");
 }
 
-template <ClockIDs clock_id = ClockIDs::monotonic>
+template <ClockIDs ClockId = ClockIDs::monotonic>
 void set_clock_time(TimeSpecification& time_specification)
 {
-  check_valid_fd(
+  CheckReturn()(
     ::clock_settime(
-    static_cast<int>(clock_id),
+    get_underlying_value<ClockIDs>(ClockId),
     time_specification.to_timespec()),
     "set time from clock failed (::clock_settime");
 }
+
+//------------------------------------------------------------------------------
+/// \brief Thin wrapper class for ::clock, to determine processor time.
+/// \details clock() function returns approximation of processor time used by
+/// program.
+/// \ref http://man7.org/linux/man-pages/man3/clock.3.html
+//------------------------------------------------------------------------------
+class ProcessorTimeClock
+{
+  public:
+
+    ProcessorTimeClock():
+      last_processor_time_obtained_{get_processor_time()}
+    {}
+
+    auto clock_ticks_per_second() const
+    {
+      return clock_ticks_per_second_;
+    }
+
+    clock_t operator()()
+    {
+      last_processor_time_obtained_ = get_processor_time();
+      return last_processor_time_obtained_;
+    }
+
+    clock_t last_processor_time_obtained() const
+    {
+      return last_processor_time_obtained_;
+    }
+
+    //--------------------------------------------------------------------------
+    /// \ref https://en.cppreference.com/w/c/chrono/clock_t
+    //--------------------------------------------------------------------------
+    clock_t elapsed_time()
+    {
+      const clock_t present_time {get_processor_time()};
+      const clock_t cpu_time_used {present_time - last_processor_time_obtained()};
+
+      this->operator()();
+
+      return cpu_time_used;
+    }
+
+  protected:
+
+    void set_last_processor_time_obtained(const clock_t& t)
+    {
+      last_processor_time_obtained_ = t;
+    }
+
+  private:
+
+    clock_t get_processor_time()
+    {
+      return ::clock();
+    }
+
+    static constexpr auto clock_ticks_per_second_ = CLOCKS_PER_SEC;
+
+    clock_t last_processor_time_obtained_;
+};
 
 } // namespace Utilities
 

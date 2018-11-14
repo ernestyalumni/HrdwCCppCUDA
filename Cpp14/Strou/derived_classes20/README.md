@@ -203,10 +203,53 @@ Prevent users from overriding virtual functions. After using `final` for a membe
   - Use `final` where it clearly reflects class hierarchy design, i.e. reflect semantic need.
 
 A `final` specifier isn't part of the type of a function and cannot be repeated in an out-of-class definition.
+e.g.
+```
+class Derived : public Base
+{
+  void f() final; // OK if Base has a virtual f()
+  void g() final; // OK if Base has a virtual g()
+  // ...
+};
 
+void Derived::f() final // error: final out of class
+{
+  // ...
+}
 
+void g() final // OK
+{
+  // ...
+}
+```
 
+### `using` Base Members, inheriting ctors
 
+cf. 20.3.5 `using` Base Members. Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
+
+Functions don't overload across scopes (Sec. 12.3.3); e.g.
+
+```
+struct Base
+{
+  void f(int);
+};
+
+struct Derived : Base
+{
+  void f(double);
+};
+
+void use(Derived d)
+{
+  d.f(1); // call Derived::f(double)
+  Base& br = d;
+  br.f(1); // call Base::f(int)
+}
+```
+This could surprise people. 
+Sometimes we want overloading to ensure that best matching member function is used.
+  - `using`- declarations can be used to add a function to a scope
 
 
 ### Inheriting Constructors 
