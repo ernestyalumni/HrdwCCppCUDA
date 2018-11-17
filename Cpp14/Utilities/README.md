@@ -1,5 +1,28 @@
 [Date and time utilities](https://en.cppreference.com/w/cpp/chrono)
 
+* **Duration** - a duration consists of a span of time, defined as some number of ticks of some time unit; e.g. "42 seconds" could be represented by duration consisting 42 ticks of a 1-sec. time unit. class template `duration`, in `<chrono>`, `std::chrono` namespace.
+
+cf. [`std::chrono::duration`](https://en.cppreference.com/w/cpp/chrono/duration)
+```
+<chrono>  
+
+template <
+  class Rep,
+  class Period = std::ratio<1>
+> class duration;
+```
+Consists of count of ticks of type `Rep` and tick period, where tick period is a compile-time rational constant representing number of seconds from one tick to the next.
+
+Only data stored in `duration` is a tick count of type `Rep`. If `Rep` is floating point, then `duration` can represent fractions of ticks. `Period` included as part of duration's type, and is only used when converting between different durations.
+
+## `std::chrono::duration` Member types
+
+| **Member type** | **Definition** |
+| :-------------- | :------------- | 
+| `rep`           | Rep, an arithmetic type representing the number of ticks | 
+| `period` | `Period` a `std::ratio` representing tick period (i.e. number of seconds per tick) |
+
+
 # `::close`
 
 cf. [`close(2)` Linux Programmer's Manual](http://man7.org/linux/man-pages/man2/close.2.html)

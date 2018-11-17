@@ -30,8 +30,10 @@
 #include "CheckReturn.h" // CheckReturn
 #include "casts.h" // get_underlying_value
 
-#include <ctime>
+#include <ctime> // ::timespec
 #include <iostream>
+#include <stdexcept> // std::runtime_error
+#include <type_traits>
 //#include <time.h> // ::clock_gettime, ::timespec
 
 namespace Utilities
@@ -61,6 +63,33 @@ enum class ClockIDs : int
 };
 
 //------------------------------------------------------------------------------
+/// \name carry_nanoseconds_to_seconds
+/// \brief Carry over seconds from tv_nsec field in ::timespec struct into
+/// tv_sec field.
+/// \details Works for even negative nanoseconds.
+//------------------------------------------------------------------------------
+::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec)
+{
+  Seconds seconds {time_spec.tv_sec};
+  Nanoseconds nanoseconds {time_spec.tv_nsec};
+
+  const Seconds carry_over_seconds {duration_cast<Seconds>(nanoseconds)};
+
+  seconds += carry_over_seconds;
+  nanoseconds -= duration_cast<Nanoseconds>(carry_over_seconds);
+
+  if (nanoseconds < Nanoseconds{0})
+  {
+    // "borrow" or subtract 1 second from seconds.
+    seconds -= Seconds{1};
+    nanoseconds += duration_cast<Nanoseconds>(Seconds{1});
+  } 
+
+  return ::timespec {seconds.count(), nanoseconds.count()};
+}
+
+//------------------------------------------------------------------------------
+/// \brief ::timespec struct wrapper using inheritance.
 /// struct timespec
 /// {
 ///   time_t tv_sec; // Seconds
@@ -113,6 +142,94 @@ std::ostream& operator<<(std::ostream& os,
   os << time_specification.tv_sec << ' ' << time_specification.tv_nsec << '\n';
 }
 
+//------------------------------------------------------------------------------
+/// \brief ::timespec struct wrapper using composition. Ensures a TimeSpec is
+/// positive.
+/// struct timespec
+/// {
+///   time_t tv_sec; // Seconds
+///   long tv_nsec; // Nanoseconds
+/// };
+//------------------------------------------------------------------------------
+class TimeSpec
+{
+  public:
+
+    template <
+      class Duration,
+      typename = std::enable_if_t<
+        std::is_compound<Duration>::value && std::is_pod<Duration>::value>
+    >
+    explicit TimeSpec(const Duration& duration)
+    {
+      if (duration < Duration{0})
+      {
+        throw std::invalid_argument("duration input argument must be non-negative");
+      }
+
+      const Seconds duration_secs {Utilities::duration_cast<Seconds>(duration)};
+      const Nanoseconds duration_nanosecs {
+        Utilities::duration_cast<Nanoseconds>(duration - duration_secs)};
+
+      timespec_.tv_sec = duration_secs.count();
+      timespec_.tv_nsec = duration_nanosecs.count();      
+    }
+
+    //--------------------------------------------------------------------------
+    /// \brief Constructor that normalizes input ::timespec argument to be
+    /// positive.
+    //--------------------------------------------------------------------------    
+    explicit TimeSpec(const ::timespec& timespec):
+      timespec_{carry_nanoseconds_to_seconds(timespec)}
+    {
+      if (timespec_.tv_sec < 0)
+      {
+        throw std::invalid_argument(
+          "seconds field of input argument must be non-negative");
+      }
+      else if (timespec_.tv_sec == 0)
+      {
+        if (timespec_.tv_nsec < 0)
+        {
+          throw std::invalid_argument(
+            "nanoseconds field of input argument must be non-negative");
+        }
+      }
+    }
+
+    ::timespec get_timespec() const
+    {
+      return timespec_;
+    }
+
+    /// Accessors for Linux system call.
+
+    const ::timespec* to_timespec() const
+    {
+      return &timespec_;
+    }
+
+    ::timespec* to_timespec()
+    {
+      reinterpret_cast<::timespec*>(this);
+    }
+
+    friend std::ostream& operator<<(std::ostream& os,
+      const TimeSpec& time_specification);
+
+  private:
+
+    ::timespec timespec_;
+};
+
+std::ostream& operator<<(std::ostream& os,
+  const TimeSpec& time_spec)
+{
+  os << time_spec.timespec_.tv_sec << ' ' <<
+    time_spec.timespec_.tv_nsec << '\n';
+}
+
+
 template <ClockIDs ClockId = ClockIDs::monotonic>
 void get_clock_resolution(TimeSpecification& time_specification)
 {
@@ -132,6 +249,17 @@ void get_clock_time(TimeSpecification& time_specification)
     time_specification.to_timespec()),
     "Retrieve time from clock failed (::clock_gettime");
 }
+
+template <ClockIDs ClockId = ClockIDs::monotonic>
+void get_clock_time(TimeSpec& time_spec)
+{
+  CheckReturn()(
+    ::clock_gettime(
+    get_underlying_value<ClockIDs>(ClockId),
+    time_spec.to_timespec()),
+    "Retrieve time from clock failed (::clock_gettime");
+}
+
 
 template <ClockIDs ClockId = ClockIDs::monotonic>
 void set_clock_time(TimeSpecification& time_specification)

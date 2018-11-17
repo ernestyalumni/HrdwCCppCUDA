@@ -37,7 +37,9 @@ using Std::CompositeTypeTraits;
 using Std::PrimaryTypeTraits;
 using Utilities::ClockIDs;
 using Utilities::ProcessorTimeClock;
+using Utilities::TimeSpec;
 using Utilities::TimeSpecification;
+using Utilities::carry_nanoseconds_to_seconds;
 using Utilities::get_clock_resolution;
 using Utilities::get_clock_time;
 using Utilities::set_clock_time;
@@ -65,6 +67,48 @@ int main()
       static_cast<int>(ClockIDs::boot_time_alarm) << '\n'; // 9 
   }
 
+  // CarryNanosecondsToSecondsWorks
+  {
+    std::cout << "\n CarryNanosecondsToSecondsWorks \n";
+
+    ::timespec timespec {0, 1000000000};
+    ::timespec result_timespec {carry_nanoseconds_to_seconds(timespec)};
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 1 0
+
+    timespec = ::timespec{1, 2000000001};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 3 1
+
+    timespec = ::timespec{1, -1000000000};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 0 0
+
+    timespec = ::timespec{-1, -1000000000};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // -2 0
+
+    timespec = ::timespec{1, -999999999};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 0 1
+
+    timespec = ::timespec{-1, -1};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n';
+      // -2 999999999
+
+    timespec = ::timespec{5, -2444444444};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n';
+    // 2 555555556
+  } 
+
   // TimeSpecificationConstructs
   {
     std::cout << "\n TimeSpecificationConstructs \n";
@@ -77,6 +121,17 @@ int main()
     std::cout << "\n TimeSpecificationDefaultConstructsTo0 \n";
     const TimeSpecification time_specification;
     std::cout << " time_specification : " << time_specification << '\n';
+  }
+
+  // TimeSpecConstructsForPositiveDuration
+  {
+    std::cout << "\n TimeSpecConstructsForPositiveDuration \n";
+    TimeSpec timespec {10s};
+    std::cout << timespec << '\n';
+
+    std::cout << TimeSpec{250ms} << '\n';
+    std::cout << TimeSpec{42123456789123us} << '\n';
+    std::cout << TimeSpec{0ns} << '\n';
   }
 
   // GetClockTimeRetrievesTimesForClocks
@@ -113,6 +168,24 @@ int main()
     std::cout << " time_specification (CPU time for a thread): " <<
       time_specification << '\n';    
   }
+
+  // GetClockTimeRetrievesTimesWithTimeSpec
+  {
+    std::cout << "\n GetClockTimeRetrievesTimesWithTimeSpec \n";
+    TimeSpec timespec {42123456789123us};
+    std::cout << timespec << '\n';
+    get_clock_time(timespec);
+
+    std::cout << " timespec : " << timespec << '\n';    
+
+    get_clock_time<ClockIDs::real_time>(timespec);
+    std::cout << " timespec (real time): " << timespec << '\n';
+
+    get_clock_time<ClockIDs::process_cpu_time>(timespec);
+    std::cout << " timespec (CPU time for a thread): " << timespec << '\n';
+
+  }
+
 
   // GetClockResolutionRetrievesResolutionForClocks
   {

@@ -25,10 +25,15 @@
 //------------------------------------------------------------------------------
 #include "Chrono.h"
 
+#include "../Std/TypeTraitsProperties.h"
+
 #include <iostream>
 #include <thread>
 #include <type_traits>
 
+using Std::CompositeTypeTraits;
+using Std::PrimaryTypeTraits;
+using Std::TypeProperties;
 using Utilities::ElapsedTime;
 using Utilities::HighResolutionClock;
 using Utilities::Microseconds;
@@ -160,11 +165,11 @@ int main()
     std::cout << " is_class : " << std::is_class<const long>::value << '\n'; // 0
 
     std::cout << " is_class : " << std::is_class<Nanoseconds>::value << '\n';
-      // 0
+      // 1
     std::cout << " is_class : " << std::is_class<Microseconds>::value << '\n';
-      // 0
+      // 1
     std::cout << " is_class : " << std::is_class<Milliseconds>::value << '\n';
-      // 0
+      // 1
     std::cout << " is_class : " << std::is_class<Seconds>::value << '\n'; // 0
 
     std::cout << " is_compound : " << std::is_compound<long>::value << '\n';
@@ -173,16 +178,34 @@ int main()
       '\n'; // 0
 
     std::cout << " is_compound : " << std::is_compound<Nanoseconds>::value <<
-      '\n'; // 0
+      '\n'; // 1
     std::cout << " is_compound : " << std::is_compound<Microseconds>::value <<
-      '\n'; // 0
+      '\n'; // 1
     std::cout << " is_compound : " << std::is_compound<Milliseconds>::value <<
-      '\n'; // 0
+      '\n'; // 1
     std::cout << " is_compound : " << std::is_compound<Seconds>::value <<
-      '\n'; // 0
+      '\n'; // 1
+  }
 
+  // PrimaryTypeTraits
+  {
+    std::cout << "\n PrimaryTypeTraits \n";
 
+    std::cout << PrimaryTypeTraits<Nanoseconds>{} << '\n';
+  }
 
+  // CompositeTypeTraits
+  {
+    std::cout << "\n CompositeTypeTraits \n";
+
+    std::cout << CompositeTypeTraits<Nanoseconds>{} << '\n';
+  }
+
+  // TypeProperties
+  {
+    std::cout << "\n TypeProperties \n";
+
+    std::cout << TypeProperties<Nanoseconds>{} << '\n';
   }
 
 }

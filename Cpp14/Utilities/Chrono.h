@@ -125,6 +125,7 @@ class ElapsedTime
     std::chrono::time_point<Clock, Duration> t_i_;
 };
 
+
 } // namespace Utilities
 
 #endif // _UTILITIES_CHRONO_H_
