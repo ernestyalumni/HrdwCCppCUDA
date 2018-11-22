@@ -306,5 +306,21 @@ Consider class `D` derived from base class `B`:
 cf. pp. 606 Sec. 20.5.3 `using`-Declarations and Access Control, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*.  
 
 `using`-declaration can't be used to gain access to additional information; it's simply a mechanism for making accessible information more convenient to use.  On the other hand, once access is available, it can be granted to other users.  
+* When `using`-declaration combined with private or protected derivation, it can be used to specify interfaces to some, but not all, of the facilities usually offered by a class; e.g.
+```
+class BB : private B // give access to B::b and B::c, but not B::a
+{
+  public:
+
+    using B::b;
+    using B::c;
+};
+```
+
+## Pointers to Members; Pointers to Function Members
+
+cf. pp. 607 Sec. 20.6 Pointers to Members, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*
+
+ 
 
 
