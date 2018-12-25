@@ -317,9 +317,190 @@ class BB : private B // give access to B::b and B::c, but not B::a
 };
 ```
 
-## Pointers to Members; Pointers to Function Members
+
+## Pointers to Members; Pointers to Function Members, Pointers to Data Members
 
 cf. pp. 607 Sec. 20.6 Pointers to Members, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*
+
+Pointer to member is offset-like construct that allows programmer to indirectly refer to member of a class. 
+Operators `->*`, `.*` are arguably most specialized and least used C++ operators.
+- `->`, we can access member of class, `m` by naming it: `p->m`
+- `->*`, we can access member that (conceptually) has its name stored in a pointer to mmeber, `ptom: p->*ptom`
+This allows us to access members with their names passed as arguments.
+In both cases, `p` must be a pointer to an object of an appropriate class.
+
+Pointer to member can't be assigned to `void*` or any other ordinary pointer.
+Null pointer (`nullptr`) can be assigned to pointer to member, and then represents "no member."
+
+We can use a pointer to member to indirectly refer to member of a class.
+
+```
+class StdInterface 
+{
+  public:
+    virtual void start() = 0;
+    virtual void suspend() = 0;
+    virtual void resume() = 0;
+    virtual void quit() = 0;
+    virtual void full_size() = 0;
+    virtual void small() = 0;
+
+    virtual ~StdInterface() {}
+};
+``` 
+
+I need a pointer to member referring to `StdInterface::suspend()`, and 
+pointer or reference to object I need to suspend.
+
+```
+using Pstd_mem s = &StdInterface::suspend; // pointer to suspend()
+
+void f(StdInterface* p)
+{
+  PstdMem s = &StdInterface::suspend; // pointer to suspend()
+  p->suspend(); // direct call
+  p->*s(); // call through pointer to member
+}
+```
+*Pointer to member* can be obtained by applying address-of operator `&` to fully qualified class member name, e.g. `&StdInterface::suspend`. 
+A variable of type "pointer to member of class `X`" declared using declarator of form `X::*`.
+
+Pointer to member `m` can be used in combination with object.
+Operators `->*`, `.*` allow programmer to express such combinations:
+e.g. `p->*m` binds `m` to object pointer to by `p`, and `obj.*m` binds `m` to object `obj`. 
+Result can be used in accordance with `m`'s type. 
+  - It's not possible to store result of `->*` or `.*` operation for later use.
+
+A pointer to member isn't a pointer to piece of memory, the way pointer to variable or pointer to function is.
+It's more like an offset into structure or index into an array.
+
+Becuase pointer to virtual member is a kind of offset, it doesn't depend on object's location in memory; pointer to virtual member can therefore be passed between different address spaces as long as same object layout is used in both.
+Like pointer to ordinary functions, pointers to non-virtual member functions can't be exchanged between address spaces.
+
+Note that function invoked through pointer to function can be `virtual`. 
+e.g. when we call `suspend()` through pointer to function, we get the right `suspend()` for object to which pointer to function is applied; this is an essential aspect of pointers to functions.
+
+When writing an interpreter, we might use pointers to members to invoke functions presents as strings:
+```
+map<string, StdInterface*> variable;
+map<string, Pstd_mem> operation;
+
+void call_member(string var, string oper)
+{
+  (variable[var]->*operation[oper])(); // var.oper()
+}
+```
+
+`static` member isn't associated with a particular object, so a pointer to a `static` member is simply an ordinary pointer; e.g.
+
+```
+class Task
+{
+  // ...
+  static void schedule();
+};
+
+void (*p)() = &Task::schedule; // OK
+void (Task::* pm)() = &Task::schedule; // error: ordinary pointer assigned
+  // to pointer to member.
+```
+
+#### Pointers to Data Members, to member functions with arguments and return types
+
+cf. pp. 609 Sec. 20.6.2 Pointers to Data Members, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*
+
+e.g. 
+
+```
+struct C
+{
+  const char* val; // data member
+  int i; // data member 
+
+  // member functions
+
+  void print(int x)
+  {
+    std::cout << val << x << '\n';
+  }
+
+  int f1(int);
+  void f2();
+  C(const char* v)
+  {
+    val = v;
+  }
+};
+
+using Pmfi = void (C::*)(int); // pointer to member function of C taking an int
+using Pm = const char* C::*; // pointer to char* data member of C
+```
+
+```
+void f(C& z1, C& z2)
+{
+  C* p = &z2;
+  Pmfi pf = &C::print;
+  Pm pm = &C::val; // pointer to char* data member 
+
+  z1.print(1);
+  (z1.*pf)(2);
+
+  z1.*pm = "nv1 ";
+  p->*pm = "nv2 ";
+
+  z2.print(3);
+  (p->*pf)(4);
+
+  pf = &C::f1; // error: return type mismatch
+  pf = &C::f2; // error: argument type mismatch
+  pm = &C::i; // error: type mismatch
+  pm = pf; // error: type mismatch
+};
+```
+
+#### Pointers to Base and Derived Members
+
+cf. pp. 610 Sec. 20.6.3 Base and Derived Members, Ch. 20 *Derived Classes* by Bjarne Stroustrup, **The C++ Programming Language**, *4th Ed.*
+
+A derived class has at least the members that it inherits from its base classes.
+Often it has more.
+
+This implies that we can safely assign a pointer to a member of a base class to a pointer to a member of a derived class.
+But not the other way around (assign a pointer to a member of a derived class to a pointer to a member of a base class).
+Called *contravariance*.
+
+e.g. 
+
+```
+class Text : public StdInterface
+{
+  public:
+
+    void start();
+    void suspend();
+
+    // ...
+
+    virtual void print();
+
+  private:
+
+    vector s;
+};
+```
+
+```
+void (StdInterface::*pml)() = &Text::print; // error
+void (Text::*pmt)() = &StdInterface::start; // OK
+```
+
+*Contravariance rule* appears opposite of rule that says, 
+  - we can assign pointer to a derived class to pointer to its base class
+
+Both rules exist to preserve fundamental guarantee that pointer may never point to an object that doesn't at least have properties that pointer promises.
+  - In this case, `StdInterface::*` can be applied to any `StdInterface` and most such objects presumably aren't of type `Text` 
+  - consequently, they don't have member `Text::print`, which we tried to initialize with `pml`
 
  
 
