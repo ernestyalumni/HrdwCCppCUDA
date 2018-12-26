@@ -5,12 +5,12 @@
 /// \brief  Main driver file for eventfd, for event notification.
 /// \ref http://man7.org/linux/man-pages/man2/eventfd.2.html  
 /// \details 
-/// \copyright If you find this code useful, feel free to donate directly and
-/// easily at this direct PayPal link: 
+/// \copyright If you find this code useful, feel free to donate directly via
+/// PayPal (username ernestyalumni or email address above); my PayPal profile:
 ///
-/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
+/// paypal.me/ernestyalumni
 /// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
 /// I know what it's like to not have money as a student, but love physics (or 
@@ -27,15 +27,20 @@
 
 #include "../Utilities/Chrono.h"
 
+#include <cstdlib> // std::strtoull 
 #include <iostream>
 #include <thread>
+#include <unistd.h> // fork
 
 using IO::EventFdFlags;
 using IO::EventFd;
 
 using namespace Utilities::Literals;
 
-int main()
+// \url https://docs.microsoft.com/en-us/cpp/cpp/parsing-cpp-command-line-arguments?view=vs-2017
+int main(
+  int argc, // Number of strings in array argv
+  char* argv[]) // Array of command-line argument strings
 {
   // EventFdFlagsIsAnEnumClass
   {
@@ -71,6 +76,56 @@ int main()
     event_fd.read();
     std::cout << " eventfd.buffer() : " << event_fd.buffer() << '\n';
 
+  }
+
+  // Sample Program
+  // \url http://man7.org/linux/man-pages/man2/eventfd.2.html
+  {
+    if (argc < 2)
+    {
+      std::cerr << "Usage: " << argv[0] << " <num>...\n";
+      exit(EXIT_FAILURE);
+    }
+
+    EventFd<> event_fd {0};
+
+    // \url http://man7.org/linux/man-pages/man2/fork.2.html
+    // \details fork() creates a new process by duplicating the calling
+    // process. The new process is referred to as child process.
+    // On success, pid of child process is returned in parent,
+    // 0 is returned in the child.
+    switch (fork())
+    {
+      case 0:
+
+        for (int j {1}; j < argc; j++)
+        {
+          std::cout << "Child writing " << argv[j] << " to efd \n";
+
+          // Interprets unsigned integer value in a byte string pointed to by
+          // str
+          uint64_t u = std::strtoull(argv[j], nullptr, 0); // std::strtoull()
+          // allows various bases
+          event_fd.set_buffer(u);
+          event_fd.write();
+        }
+
+        std::cout << "Child completed write loop\n";
+
+        exit(EXIT_SUCCESS);
+
+      default:
+
+        std::this_thread::sleep_for(2s);
+
+        std::cout << "Parent about to read\n";
+
+        event_fd.read();
+
+        std::cout << " Parent read " << event_fd.buffer() << '\n';
+
+        exit(EXIT_SUCCESS);
+    }
   }
 
 }

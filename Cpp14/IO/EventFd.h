@@ -5,12 +5,12 @@
 /// \brief  A file descriptor (fd) for event notification.
 /// \ref http://man7.org/linux/man-pages/man2/eventfd.2.html  
 /// \details 
-/// \copyright If you find this code useful, feel free to donate directly and
-/// easily at this direct PayPal link: 
+/// \copyright If you find this code useful, feel free to donate directly via
+/// PayPal (username ernestyalumni or email address above); my PayPal profile:
 ///
-/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
+/// paypal.me/ernestyalumni
 /// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
 /// I know what it's like to not have money as a student, but love physics (or 
