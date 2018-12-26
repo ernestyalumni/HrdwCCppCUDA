@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 EventFd_main.cpp -o EventFd_main
+///  g++ -std=c++14 EventFd_main.cpp ../Utilities/ErrorHandling.cpp -o EventFd_main
 //------------------------------------------------------------------------------
 #include "EventFd.h"
 

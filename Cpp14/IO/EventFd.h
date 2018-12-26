@@ -28,6 +28,8 @@
 
 #include "../Utilities/CheckReturn.h" // CheckReturn, check_valid_fd, check_read
 // check_write
+
+#include "../Utilities/ErrorHandling.h" // HandleReturnValue
 #include "../Utilities/casts.h" // get_underlying value
 
 #include <iostream>
@@ -61,12 +63,15 @@ class EventFd
 {
   public:
 
+    using HandleReturnValue = Utilities::ErrorHandling::HandleReturnValue;
+
     using CheckReturn = Utilities::CheckReturn;
 
     explicit EventFd(const int initval = 0):
       fd_{::eventfd(initval, static_cast<int>(flags))}
     {
-      Utilities::check_valid_fd(fd_, "create file descriptor (::eventfd)");
+      HandleReturnValue()(fd_, "create file descriptor (::eventfd)");
+//      Utilities::check_valid_fd(fd_, "create file descriptor (::eventfd)");
     }
 
     // Not copyable, movable.

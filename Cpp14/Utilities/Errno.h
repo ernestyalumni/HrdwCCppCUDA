@@ -12,8 +12,7 @@
 ///
 /// paypal.me/ernestyalumni
 /// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter,
-/// patreon (which had gotten hacked bad in its history).
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
 /// I know what it's like to not have money as a student, but love physics (or
@@ -26,7 +25,11 @@
 /// COMPILATION TIPS:
 ///   g++ --std=c++17 StdErrc_main.cpp -o StdErrc_main
 //------------------------------------------------------------------------------
+#ifndef _UTILITIES_ERROR_HANDLING_ERRNO_H_
+#define _UTILITIES_ERROR_HANDLING_ERRNO_H_
+
 #include <cerrno>
+#include <cstring>
 #include <string>
 #include <system_error> // std::errc
 
@@ -141,7 +144,6 @@ class ErrorNumber
       error_condition_{static_cast<std::errc>(errno)}
     {}
 
-
     std::string as_string()
     {
       return std::string{std::strerror(error_number_)};
@@ -165,3 +167,5 @@ class ErrorNumber
 
 } // namespace ErrorHandling
 } // namespace Utilities
+
+#endif // _UTILITIES_ERROR_HANDLING_ERRNO_H_

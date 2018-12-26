@@ -64,6 +64,13 @@ int main()
 
     std::cout << std::strerror(
       static_cast<int>(std::errc::address_not_available)) << '\n';
+
+    // EDOM
+    std::cout << " argument_out_of_domain : " << 
+      static_cast<int>(std::errc::argument_out_of_domain) << '\n';
+
+    std::cout << std::strerror(
+      static_cast<int>(std::errc::argument_out_of_domain)) << '\n';
   }
 
   // ErrorNumbers
@@ -75,6 +82,8 @@ int main()
       static_cast<int>(ErrorNumbers::eaddrinuse) << '\n';
     std::cout << " EADDRNOTAVAIL : " <<
       static_cast<int>(ErrorNumbers::eaddrnotavail) << '\n';
+    std::cout << " EDOM : " <<
+      static_cast<int>(ErrorNumbers::edom) << '\n';
   }
 
   // \ref https://en.cppreference.com/w/cpp/string/byte/strerror
@@ -91,4 +100,38 @@ int main()
       std::cout << "\n log(-1) failed: " << error_number.as_string() << '\n';
     }
   } 
+
+  // ErrorNumberDefaultConstructs:
+  {
+    std::cout << " \n ErrorNumberDefaultConstructs : " << '\n';
+    std::cout << std::is_default_constructible<ErrorNumber>::value << '\n';
+
+    ErrorNumber error_number;
+    ErrorNumber error_number1 {};
+  }
+
+  // \ref https://en.cppreference.com/w/cpp/error/errc
+  {
+    try
+    {
+      std::thread().detach(); // detaching a not-a-thread
+    }
+    catch (const std::system_error& e) 
+    {
+      std::cout << "Caught a system_error\n";
+
+      std::cout << " what : " << e.what() << '\n';
+      std::cout << " code value : " << e.code().value() << '\n';
+
+      std::cout << "Caught system_error with code " << e.code() <<
+        " meaning " << e.what() << '\n';
+
+      ErrorNumber error_number;
+
+      std::cout << error_number.error_number() << '\n';
+      std::cout << error_number.as_string() << '\n';      
+
+    }
+  }
+
 }
