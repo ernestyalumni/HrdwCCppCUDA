@@ -161,6 +161,45 @@ cf. [`eventfd(2)`, Linux Programmer's Manual](http://man7.org/linux/man-pages/ma
 int eventfd(unsigned int initval, int flags);
 ```
 
-`eventfd()` creates 
+`eventfd()` creates fd for event notification.
 
+`eventfd()` creates "eventfd object", that can be used as an event wait/notify mechanism by user-space applications, and by kernel to notify user-space applications of events.
+Object contains `uint64_t` counter that's maintained by kernel.
+Counter initialized with value specified in argument `initval`.
 
+Following values may be bitwise ORed in `flags` to change behavior of `eventfd()`:
+
+`EFD_CLOEXEC` - set close-on-exec (`FD_CLOEXEC`) flag on new fd. 
+
+`EFD_NONBLOCK` - set `O_NONBLOCK` on new open fd
+
+`EFD_SEMAPHORE` - provide semaphore-like semantics for reads from new fd
+
+`read` - returns 8-byte int, fails with error `EINVAL` if size of supplied buffer is less than 8-bytes.
+Value returned by `read` is in host byte order, i.e. native byte order for integers on host machine.
+
+Semantics of `read` depend on whether eventfd counter currently has a nonzero value, and whether `EFD_SEMAPHORE` flag specified.
+
+If `EFD_SEMAPHORE` flag not specified, eventfd counter nonzero, then `read` returns 8 bytes containing that value, and counter's value reset to 0.
+
+If `EFD_SEMAPHORE` specified, eventfd counter nonzero, then `read` returns 8 bytes containing value 1, and counter's value decremented by 1.
+
+If eventfd counter 0 at time of call to `read`, call either blocks until counter becomes nonzero (at which `read` proceeds as above), or fails with error `EAGAIN` if fd made nonblocking.
+
+`write` - (from buffer to file of fd) adds 8-byte integer value supplied in its buffer to counter. 
+  * max. value of counter is largest uint64_t - 1 (i.e. 0xfffffffffffffffe).
+  * if addition would cause counter's value to exceed max, then `write` either blocks until `read` performed on fd, or fails with error `EAGAIN`, if fd has been made nonblocking.
+
+`write` fails with error `EINVAL` if size of supplied buffer less than 8 bytes, or if attempt made to write value `0xffffffffffffffff`
+
+`poll`, `select` - fd is readable (`select` *readfds* arguments, `poll` `POLLIN` flag), if counter has value greater than 0.
+
+fd writable (`select` *writefds* argument, `poll` `POLLOUT` flag), if it's possible to write value of at least "1" without blocking.
+
+If overflow of counter value detected, then `select` indicates fd as being both readable and writable, and `poll` returns `POLLERR` event.
+
+As noted above, `write` can never overflow counter; 
+however, overflow can occur if 2^64 eventfd "signal posts" were performed by KAIO subsystem (theoretically possible, but practically unlikely)
+If overflow occurred, then `read` will return max *uint64_t* value (i.e. 0x0xffffffffffffffff)
+
+`close` - when all fds associated with same eventfd object have been closed, resource of object freed by kernel.

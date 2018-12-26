@@ -22,6 +22,22 @@ Only data stored in `duration` is a tick count of type `Rep`. If `Rep` is floati
 | `rep`           | Rep, an arithmetic type representing the number of ticks | 
 | `period` | `Period` a `std::ratio` representing tick period (i.e. number of seconds per tick) |
 
+# Error handling via C++; Error codes
+
+cf. [Error numbers in Error handling](https://en.cppreference.com/w/cpp/error/errno_macros)
+
+cf. [`std::errc` in cppreference](https://en.cppreference.com/w/cpp/error/errc)
+
+
+
+
+`errno` is defined by ISO C standard to be modifiable lvalue of type `int`, and mustn't be explicitly declared; `errno` may be a macro.
+
+cf. [ERRNO(3), Linux Programmer's Manual, man](http://man7.org/linux/man-pages/man3/errno.3.html)
+
+
+cf. []()
+
 
 # `::close`
 
