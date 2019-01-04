@@ -4,7 +4,7 @@
 
 cf. [`std::chrono::duration`](https://en.cppreference.com/w/cpp/chrono/duration)
 ```
-<chrono>  
+<chrono>
 
 template <
   class Rep,
@@ -18,8 +18,8 @@ Only data stored in `duration` is a tick count of type `Rep`. If `Rep` is floati
 ## `std::chrono::duration` Member types
 
 | **Member type** | **Definition** |
-| :-------------- | :------------- | 
-| `rep`           | Rep, an arithmetic type representing the number of ticks | 
+| :-------------- | :------------- |
+| `rep`           | Rep, an arithmetic type representing the number of ticks |
 | `period` | `Period` a `std::ratio` representing tick period (i.e. number of seconds per tick) |
 
 # Error handling via C++; Error codes
@@ -56,9 +56,9 @@ int close(int fd);
 `EBADF` - `fd` isn't a valid open fd
 `EINTR` - `close()` call interrupted by signal. see `signal`
 `EIO` - I/O error occurred.
-`ENOSPEC`, `EDQUOT`  
+`ENOSPEC`, `EDQUOT`
 
-# `clock` 
+# `clock`
 
 [`clock`, Linux Programmer's Manual](http://man7.org/linux/man-pages/man3/clock.3.html)
 
@@ -82,5 +82,9 @@ If processor time used isn't available or its value can't be represented, functi
 | Interface | Attribute | Value |
 | :-------- | --------- | ----- |
 | `clock()` | Thread safety | MT-Safe |
+
+# Type support
+
+## Numeric limits; `std::numeric_limits`, `<limits>`
 
 
