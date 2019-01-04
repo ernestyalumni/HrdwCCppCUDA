@@ -3,21 +3,21 @@
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
 /// \brief  A POSIX clock(s).
-/// \ref https://linux.die.net/man/3/clock_gettime     
-/// \details 
-/// \copyright If you find this code useful, feel free to donate directly and
-/// easily at this direct PayPal link: 
+/// \ref https://linux.die.net/man/3/clock_gettime
+/// \details
+/// \copyright If you find this code useful, feel free to donate directly
+/// (username ernestyalumni or email address above), going directly to:
 ///
-/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
-/// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// paypal.me/ernestyalumni
+///
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
-/// I know what it's like to not have money as a student, but love physics (or 
-/// math, sciences, etc.), so I am committed to keeping all my material 
-/// open-source and free, whether or not sufficiently crowdfunded, under the 
+/// I know what it's like to not have money as a student, but love physics (or
+/// math, sciences, etc.), so I am committed to keeping all my material
+/// open-source and free, whether or not sufficiently crowdfunded, under the
 /// open-source MIT license: feel free to copy, edit, paste, make your own
-/// versions, share, use as you wish.    
+/// versions, share, use as you wish.
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
@@ -83,7 +83,7 @@ enum class ClockIDs : int
     // "borrow" or subtract 1 second from seconds.
     seconds -= Seconds{1};
     nanoseconds += duration_cast<Nanoseconds>(Seconds{1});
-  } 
+  }
 
   return ::timespec {seconds.count(), nanoseconds.count()};
 }
@@ -96,7 +96,7 @@ enum class ClockIDs : int
 ///   long tv_nsec; // Nanoseconds
 /// };
 //------------------------------------------------------------------------------
-struct TimeSpecification : public ::timespec 
+struct TimeSpecification : public ::timespec
 {
   using Nanoseconds = Utilities::Nanoseconds;
   using Seconds = Utilities::Nanoseconds;
@@ -104,7 +104,7 @@ struct TimeSpecification : public ::timespec
   explicit TimeSpecification(
     const long time_value_sec,
     const long time_value_nsec = 0):
-    ::timespec{time_value_sec, time_value_nsec}  
+    ::timespec{time_value_sec, time_value_nsec}
   {}
 
   TimeSpecification():
@@ -172,13 +172,13 @@ class TimeSpec
         Utilities::duration_cast<Nanoseconds>(duration - duration_secs)};
 
       timespec_.tv_sec = duration_secs.count();
-      timespec_.tv_nsec = duration_nanosecs.count();      
+      timespec_.tv_nsec = duration_nanosecs.count();
     }
 
     //--------------------------------------------------------------------------
     /// \brief Constructor that normalizes input ::timespec argument to be
     /// positive.
-    //--------------------------------------------------------------------------    
+    //--------------------------------------------------------------------------
     explicit TimeSpec(const ::timespec& timespec):
       timespec_{carry_nanoseconds_to_seconds(timespec)}
     {

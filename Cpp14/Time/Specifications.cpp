@@ -1,10 +1,11 @@
 //------------------------------------------------------------------------------
-/// \file CheckReturn_main.cpp
+/// \file Specifications.cpp
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
-/// \brief  Main driver file for helper functions that check system calls.
-/// \ref
-/// \details C++ Functors
+/// \brief  A POSIX time specifications source file.
+/// \ref https://linux.die.net/man/3/clock_gettime
+/// http://pubs.opengroup.org/onlinepubs/7908799/xsh/time.h.html
+/// \details
 /// \copyright If you find this code useful, feel free to donate directly
 /// (username ernestyalumni or email address above), going directly to:
 ///
@@ -21,29 +22,20 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 CheckReturn_main.cpp -o CheckReturn_main
+///  g++ -std=c++17 -I ../ Specifications_main.cpp -o Specifications_main
 //------------------------------------------------------------------------------
-#include "CheckReturn.h"
+#include "Specifications.h"
 
-#include <iostream>
+#include <ostream>
 
-using Utilities::CheckClose;
-using Utilities::CheckReturn;
-
-int main()
+namespace Time
 {
-  // CheckReturnFunctionCallReturnsNonNegativeValues
-  {
-    std::cout << " \n CheckReturnFunctionCallReturnsNonNegativeValues \n";
 
-    std::cout << CheckReturn()(5, "input argument e was not 0 or positive") <<
-      '\n';
-  }
-
-  // CheckCloseFunctionCallReturnsNonNegativeValues
-  {
-    std::cout << " \n CheckCloseFunctionCallReturnsNonNegativeValues \n";
-
-    std::cout << CheckClose()(4) << '\n';
-  }
+std::ostream& operator<<(std::ostream& os,
+  const TimeSpecification& time_specification)
+{
+  os << time_specification().tv_sec << ' ' <<
+    time_specification().tv_nsec << '\n';
 }
+
+} // namespace Time
