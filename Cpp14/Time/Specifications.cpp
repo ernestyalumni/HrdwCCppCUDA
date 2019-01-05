@@ -22,7 +22,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Specifications_main.cpp -o Specifications_main
+///  g++ -std=c++17 -I ../ Specifications_main.cpp Specifications.cpp -o Specifications_main
 //------------------------------------------------------------------------------
 #include "Specifications.h"
 
@@ -34,8 +34,37 @@ namespace Time
 std::ostream& operator<<(std::ostream& os,
   const TimeSpecification& time_specification)
 {
-  os << time_specification().tv_sec << ' ' <<
-    time_specification().tv_nsec << '\n';
+  os << time_specification.timespec_.tv_sec << ' ' <<
+    time_specification.timespec_.tv_nsec << '\n';
+  return os;
 }
+
+IntervalTimerSpecification::IntervalTimerSpecification(
+  const TimeSpecification& interval_time_specification,
+  const TimeSpecification& initial_expiration_time_specification
+  ):
+  itimerspec_{
+    ::timespec(interval_time_specification),
+    ::timespec(initial_expiration_time_specification)}
+{}
+
+IntervalTimerSpecification::IntervalTimerSpecification(
+  const TimeSpecification& time_specification):
+  IntervalTimerSpecification{time_specification, time_specification}
+{}
+
+std::ostream& operator<<(std::ostream& os,
+  const IntervalTimerSpecification& interval_timer_specification)
+{
+  os <<
+    TimeSpecification{interval_timer_specification.itimerspec_.it_interval} <<
+    ' ' <<
+    TimeSpecification{interval_timer_specification.itimerspec_.it_value} <<
+    '\n';
+
+  return os;
+}
+
+
 
 } // namespace Time

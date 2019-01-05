@@ -22,16 +22,19 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Specifications_main.cpp -o Specifications_main
+///  g++ -std=c++17 -I ../ Specifications_main.cpp Specifications.cpp -o Specifications_main
 //------------------------------------------------------------------------------
 #include "Specifications.h"
 
 #include "Utilities/Chrono.h"
 
+#include <ctime>
 #include <iostream>
 
 using Time::TimeSpecification;
+using Time::IntervalTimerSpecification;
 using Utilities::Milliseconds;
+using Utilities::Nanoseconds;
 
 int main()
 {
@@ -41,6 +44,21 @@ int main()
 
     const TimeSpecification time_specification_0 {Milliseconds{0}};
 
+//    const ::timespec time_spec_0 {time_specification_0};
+    std::cout << time_specification_0 << '\n';
+
+    const TimeSpecification time_specification_1 {Milliseconds{32250}};
+
+    std::cout << time_specification_1 << '\n';
   }
 
+  // IntervalTimerSpecificationConstructsFromDuration
+  {
+    std::cout << "\n IntervalTimerSpecificationConstructsFromDuration \n";
+
+    const IntervalTimerSpecification interval_timer_specification {
+      Nanoseconds{123456789123}};
+
+    std::cout << interval_timer_specification << '\n';
+  }
 }
