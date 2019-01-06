@@ -21,45 +21,45 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Clocks_main.cpp -o Clocks_main
+///  g++ -std=c++17 -I ../ Clocks_main.cpp Clocks_.cpp -o Clocks_main
 //------------------------------------------------------------------------------
 #include "Clocks.h"
 
 #include <ctime>
 #include <iostream>
 
-using Time::ClockIDs;
+using Time::ClockIds;
 using Time::carry_nanoseconds_to_seconds;
 
 int main()
 {
-  // ClockIDs
+  // ClockIds
   {
-    std::cout << "\n ClockIDs \n";
-    std::cout << " ClockIDs::real_time : " <<
-      static_cast<int>(ClockIDs::real_time) << '\n'; // 0
-    std::cout << " ClockIDs::monotonic : " <<
-      static_cast<int>(ClockIDs::monotonic) << '\n'; // 1
+    std::cout << "\n ClockIds \n";
+    std::cout << " ClockIds::real_time : " <<
+      static_cast<int>(ClockIds::real_time) << '\n'; // 0
+    std::cout << " ClockIds::monotonic : " <<
+      static_cast<int>(ClockIds::monotonic) << '\n'; // 1
 
-    std::cout << " ClockIDs::process_cpu_time : " <<
-      static_cast<int>(ClockIDs::process_cpu_time) << '\n'; // 2
-    std::cout << " ClockIDs::thread_cpu_time : " <<
-      static_cast<int>(ClockIDs::thread_cpu_time) << '\n'; // 3
+    std::cout << " ClockIds::process_cpu_time : " <<
+      static_cast<int>(ClockIds::process_cpu_time) << '\n'; // 2
+    std::cout << " ClockIds::thread_cpu_time : " <<
+      static_cast<int>(ClockIds::thread_cpu_time) << '\n'; // 3
 
-    std::cout << " ClockIDs::monotonic_raw : " <<
-      static_cast<int>(ClockIDs::monotonic_raw) << '\n'; // 4
+    std::cout << " ClockIds::monotonic_raw : " <<
+      static_cast<int>(ClockIds::monotonic_raw) << '\n'; // 4
 
-    std::cout << " ClockIDs::real_time_coarse : " <<
-      static_cast<int>(ClockIDs::real_time_coarse) << '\n'; // 5
-    std::cout << " ClockIDs::monotonic_coarse : " <<
-      static_cast<int>(ClockIDs::monotonic_coarse) << '\n'; // 6
+    std::cout << " ClockIds::real_time_coarse : " <<
+      static_cast<int>(ClockIds::real_time_coarse) << '\n'; // 5
+    std::cout << " ClockIds::monotonic_coarse : " <<
+      static_cast<int>(ClockIds::monotonic_coarse) << '\n'; // 6
 
-    std::cout << " ClockIDs::boot_time : " <<
-      static_cast<int>(ClockIDs::boot_time) << '\n'; // 7
-    std::cout << " ClockIDs::real_time_alarm : " <<
-      static_cast<int>(ClockIDs::real_time_alarm) << '\n'; // 8
-    std::cout << " ClockIDs::boot_time_alarm : " <<
-      static_cast<int>(ClockIDs::boot_time_alarm) << '\n'; // 9
+    std::cout << " ClockIds::boot_time : " <<
+      static_cast<int>(ClockIds::boot_time) << '\n'; // 7
+    std::cout << " ClockIds::real_time_alarm : " <<
+      static_cast<int>(ClockIds::real_time_alarm) << '\n'; // 8
+    std::cout << " ClockIds::boot_time_alarm : " <<
+      static_cast<int>(ClockIds::boot_time_alarm) << '\n'; // 9
   }
 
   // CarryNanosecondsToSecondsWorks

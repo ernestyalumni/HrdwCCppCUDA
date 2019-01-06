@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Clocks_main.cpp -o Clocks_main
+///  g++ -std=c++17 -I ../ Clocks_main.cpp Clocks.cpp -o Clocks_main
 //------------------------------------------------------------------------------
 #ifndef _TIME_CLOCKS_H_
 #define _TIME_CLOCKS_H_
@@ -38,13 +38,10 @@
 //#include <time.h> // ::clock_gettime, ::timespec
 #endif
 
-#include "Utilities/Chrono.h" // Seconds, Nanoseconds, duration_cast
-
 #include <ctime> // CLOCK_REALTIME, CLOCK_MONOTONIC, ..., ::timespec
 
 namespace Time
 {
-
 
 //------------------------------------------------------------------------------
 /// \brief enum class for all clock id's, type of clock.
@@ -54,7 +51,7 @@ namespace Time
 /// http://man7.org/linux/man-pages/man2/timerfd_create.2.html
 /// https://linux.die.net/man/3/clock_gettime
 //------------------------------------------------------------------------------
-enum class ClockIDs : int
+enum class ClockIds : int
 {
   // Used by both ::clock_gettime and ::timerfd_create
   real_time = CLOCK_REALTIME,
@@ -81,30 +78,7 @@ enum class ClockIDs : int
 /// field.
 /// \details Works for even negative nanoseconds.
 //------------------------------------------------------------------------------
-::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec)
-{
-  using Utilities::Nanoseconds;
-  using Utilities::Seconds;
-  using Utilities::duration_cast;
-
-  Seconds seconds {time_spec.tv_sec};
-  Nanoseconds nanoseconds {time_spec.tv_nsec};
-
-  const Seconds carry_from_nanoseconds {duration_cast<Seconds>(nanoseconds)};
-
-  seconds += carry_from_nanoseconds;
-  nanoseconds -= duration_cast<Nanoseconds>(carry_from_nanoseconds);
-
-  if (nanoseconds < Nanoseconds{0})
-  {
-    // "borrow" or subtract 1 second from seconds.
-    seconds -= Seconds{1};
-    nanoseconds += duration_cast<Nanoseconds>(Seconds{1});
-  }
-
-  return ::timespec {seconds.count(), nanoseconds.count()};
-}
-
+::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec);
 
 } // namespace Time
 
