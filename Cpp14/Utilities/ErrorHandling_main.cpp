@@ -42,26 +42,49 @@ int main()
 
     std::cout << HandleReturnValue()(5,
       "input argument e was not 0 or positive") << '\n';
+
+    {
+      std::cout << HandleReturnValue{errno}(5,
+        "input argument e was not 0 or positive") << '\n';
+    }
   }
 
  // HandleReturnValueFunctionCallThrowsForNegativeValues
   {
     std::cout << " \n HandleReturnValueFunctionCallThrowsForNegativeValues\n";
 
-    try
     {
-      HandleReturnValue()(-3, "input argument e was not 0 or positive");
+      try
+      {
+        HandleReturnValue()(-3, "input argument e was not 0 or positive");
+      }
+      catch (const std::system_error& e)
+      {
+        std::cout << " e.code() : " << e.code() << '\n';
+        std::cout << " e.what() : " << e.what() << '\n';
+
+        const ErrorNumber error_number {e.code()};
+
+        std::cout << error_number.error_code() << '\n';
+        std::cout << error_number.error_code().message() << '\n';
+      }
     }
-    catch (const std::system_error& e)
+
     {
-      std::cout << " e.code() : " << e.code() << '\n';
-      std::cout << " e.what() : " << e.what() << '\n';
+      try
+      {
+        HandleReturnValue{errno}(-3, "input argument e was not 0 or positive");
+      }
+      catch (const std::system_error& e)
+      {
+        std::cout << " e.code() : " << e.code() << '\n';
+        std::cout << " e.what() : " << e.what() << '\n';
 
-      const ErrorNumber error_number {e.code()};
+        const ErrorNumber error_number {e.code()};
 
-      std::cout << error_number.error_code() << '\n';
-      std::cout << error_number.error_code().message() << '\n';
+        std::cout << error_number.error_code() << '\n';
+        std::cout << error_number.error_code().message() << '\n';
+      }
     }
   }
-
 }
