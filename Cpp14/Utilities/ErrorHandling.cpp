@@ -43,8 +43,8 @@ HandleReturnValue::HandleReturnValue(const int error_number) :
   error_number_{error_number}
 {}
 
-int HandleReturnValue::operator()(
-  int result,
+void HandleReturnValue::operator()(
+  const int result,
   const std::string& custom_error_string)
 {
   if (result < 0)
@@ -56,26 +56,20 @@ int HandleReturnValue::operator()(
       std::system_category(),
       "Failed to " + custom_error_string + " with errno : " +
         error_number_.as_string() + "\n");
-
-    return errno;
-  }
-  else
-  {
-    return result;
   }
 }
 
-int HandleReturnValue::operator()(const int result)
+void HandleReturnValue::operator()(const int result)
 {
-  return this->operator()(
+  this->operator()(
     result,
     "Integer return value to check was less than 0, and so,");
 }
 
 
-int HandleClose::operator()(const int result);
+void HandleClose::operator()(const int result)
 {
-  return this->operator()(result, "Failed to close fd (::close())");
+  this->operator()(result, "Failed to close fd (::close())");
 }
 
 

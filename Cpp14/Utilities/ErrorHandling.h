@@ -49,13 +49,20 @@ class HandleReturnValue
 
     HandleReturnValue(const int error_number);
 
-    virtual int operator()(int result, const std::string& custom_error_string);
+    virtual void operator()(
+      const int result,
+      const std::string& custom_error_string);
 
-    virtual int operator()(int result);
+    virtual void operator()(const int result);
 
     void get_error_number()
     {
       error_number_ = ErrorNumber{};
+    }
+
+    ErrorNumber error_number() const
+    {
+      return error_number_;
     }
 
   private:
@@ -74,7 +81,7 @@ class HandleClose : public HandleReturnValue
 
     HandleClose() = default;
 
-    int operator()(const int result);
+    void operator()(const int result);
 
   private:
 

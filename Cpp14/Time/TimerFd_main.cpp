@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Errno.cpp ErrorHandling.cpp Specifications.cpp Clocks.cpp TimerFd_main.cpp -o TimerFd_main
+///  g++ -std=c++17 -I ../ ../Utilities/Errno.cpp ../Utilities/ErrorHandling.cpp Specifications.cpp Clocks.cpp TimerFd_main.cpp -o TimerFd_main
 //------------------------------------------------------------------------------
 #include "TimerFd.h"
 

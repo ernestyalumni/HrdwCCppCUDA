@@ -21,8 +21,9 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Errno.cpp ErrorHandling.cpp Specifications.cpp \
-/// Clocks.cpp TimerFd_main.cpp -o TimerFd_main
+///  g++ -std=c++17 -I ../ ../Utilities/Errno.cpp \
+///   ../Utilities/ErrorHandling.cpp Specifications.cpp Clocks.cpp \
+///     TimerFd_main.cpp -o TimerFd_main
 //------------------------------------------------------------------------------
 #ifndef _TIME_TIMER_FD_H_
 #define _TIME_TIMER_FD_H_
@@ -31,6 +32,10 @@
 #include "Specifications.h" // IntervalTimerSpecification
 #include "Utilities/ErrorHandling.h"
 #include "Utilities/casts.h" // get_underlying_value
+
+#include <sys/timerfd.h>
+#include <type_traits>
+#include <unistd.h>
 
 namespace Time
 {
@@ -49,7 +54,7 @@ enum class ClockFlags : int
 template <
   ClockIds ClockId = ClockIds::monotonic,
   int clock_flags =
-    static_cast<Utilities::get_underlying_value<ClockFlags>>(
+    static_cast<std::underlying_type_t<ClockFlags>>(
       ClockFlags::default_value)
   >
 class TimerFd
@@ -58,23 +63,20 @@ class TimerFd
 
     TimerFd():
       fd_{::timerfd_create(
-        static_cast<Utilities::get_underlying_value<ClockIds>>(ClockId),
+        static_cast<std::underlying_type_t<ClockIds>>(ClockId),
         clock_flags)}
     {
-      HandleReturnValue{errno}(
+      Utilities::ErrorHandling::HandleReturnValue{errno}(
         fd_,
         "create file descriptor (::timerfd_create)");
     }
 
     ~TimerFd()
     {
-      HandleClose{}(::close(fd_));
+      Utilities::ErrorHandling::HandleClose{}(::close(fd_));
     }
 
   private:
-
-    using Utilities::ErrorHandling::HandleClose;
-    using Utilities::ErrorHandling::HandleReturnValue;
 
     int fd_;
 };

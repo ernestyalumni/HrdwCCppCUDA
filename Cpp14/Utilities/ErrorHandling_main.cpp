@@ -36,16 +36,16 @@ using Utilities::ErrorHandling::HandleReturnValue;
 int main()
 {
 
-  // HandleReturnValueFunctionCallReturnsNonNegativeValues
+  // HandleReturnValueFunctionCallDoesNothingForNonNegativeValues
   {
-    std::cout << " \n HandleReturnValueFunctionCallReturnsNonNegativeValues\n";
+    std::cout <<
+      " \n HandleReturnValueFunctionCallDoesNothingForNonNegativeValues\n";
 
-    std::cout << HandleReturnValue()(5,
-      "input argument e was not 0 or positive") << '\n';
+    HandleReturnValue()(5, "input argument e was not 0 or positive");
 
     {
-      std::cout << HandleReturnValue{errno}(5,
-        "input argument e was not 0 or positive") << '\n';
+      HandleReturnValue{errno}(5,
+        "input argument e was not 0 or positive");
     }
   }
 
