@@ -2,22 +2,22 @@
 /// \file TimerFd_main.cpp
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
-/// \brief  A timerfd as RAII 
-/// \ref      
-/// \details Using RAII for timerfd. 
-/// \copyright If you find this code useful, feel free to donate directly and easily at 
-/// this direct PayPal link: 
+/// \brief  A timerfd as RAII
+/// \ref
+/// \details Using RAII for timerfd.
+/// \copyright If you find this code useful, feel free to donate directly
+/// (username ernestyalumni or email address above), going directly to:
 ///
-/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
-/// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// paypal.me/ernestyalumni
+///
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
-/// I know what it's like to not have money as a student, but love physics (or 
-/// math, sciences, etc.), so I am committed to keeping all my material 
-/// open-source and free, whether or not sufficiently crowdfunded, under the 
+/// I know what it's like to not have money as a student, but love physics (or
+/// math, sciences, etc.), so I am committed to keeping all my material
+/// open-source and free, whether or not sufficiently crowdfunded, under the
 /// open-source MIT license: feel free to copy, edit, paste, make your own
-/// versions, share, use as you wish.    
+/// versions, share, use as you wish.
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
@@ -58,7 +58,7 @@ int main()
     std::cout << " interval_timer_specification1 : " <<
       interval_timer_specification1 << '\n';
 
-    
+
     const IntervalTimerSpecification interval_timer_specification2;
     std::cout << " interval_timer_specification2 : " <<
       interval_timer_specification2 << '\n';
@@ -72,7 +72,7 @@ int main()
       210112345678us};
     std::cout << " interval_timer_specification4 : " <<
       interval_timer_specification4 << '\n';
-    
+
   }
 
   // IntervalTimerSpecificationAccessesDataMembers
@@ -106,7 +106,7 @@ int main()
     std::cout << "\n TimerFdSetTimeWorks\n";
     TimerFd<> tfd {10us, 15us};
     tfd.set_time();
-    std::cout << tfd << '\n'; // 0 15000 0 10000 0 0 0 0 
+    std::cout << tfd << '\n'; // 0 15000 0 10000 0 0 0 0
 
     tfd.new_value(IntervalTimerSpecification{5s, 8s});
     tfd.set_time<SetTimeFlags::absolute_time, false>();
@@ -154,14 +154,14 @@ int main()
     TimerFd<> tfd1 {250ms, 250ms};
     std::cout << tfd1 << '\n';
     tfd1.set_time();
-  
+
     for (int delta_t {0}; delta_t < 8; ++delta_t)
     {
       std::cout << " delta_t : " << delta_t << '\n';
       std::this_thread::sleep_for(Milliseconds{125 * delta_t});
       tfd1.read();
       std::cout << "expirations() : " << tfd1.expirations() << '\n';
-    }    
+    }
   }
 
   // TimerFdGetsTimeBeforeExpirationAndAfter

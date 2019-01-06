@@ -74,12 +74,7 @@ class HandleClose : public HandleReturnValue
 
     HandleClose() = default;
 
-    int operator()(int result)
-    {
-      return this->operator()(
-        result,
-        "Failed to close fd (::close())");
-    }
+    int operator()(const int result);
 
   private:
 

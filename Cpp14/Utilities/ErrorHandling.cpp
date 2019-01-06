@@ -65,12 +65,19 @@ int HandleReturnValue::operator()(
   }
 }
 
-int HandleReturnValue::operator()(int result)
+int HandleReturnValue::operator()(const int result)
 {
   return this->operator()(
     result,
     "Integer return value to check was less than 0, and so,");
 }
+
+
+int HandleClose::operator()(const int result);
+{
+  return this->operator()(result, "Failed to close fd (::close())");
+}
+
 
 } // namespace ErrorHandling
 } // namespace Utilities
