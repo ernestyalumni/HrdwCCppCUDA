@@ -3,25 +3,25 @@
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
 /// \brief  Date and time utilities main driver file.
-/// \ref      
-/// \details 
-/// \copyright If you find this code useful, feel free to donate directly and easily at 
-/// this direct PayPal link: 
+/// \ref
+/// \details
+/// \copyright If you find this code useful, feel free to donate directly
+/// (username ernestyalumni or email address above), going directly to:
 ///
-/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
-/// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// paypal.me/ernestyalumni
+///
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
-/// I know what it's like to not have money as a student, but love physics (or 
-/// math, sciences, etc.), so I am committed to keeping all my material 
-/// open-source and free, whether or not sufficiently crowdfunded, under the 
+/// I know what it's like to not have money as a student, but love physics (or
+/// math, sciences, etc.), so I am committed to keeping all my material
+/// open-source and free, whether or not sufficiently crowdfunded, under the
 /// open-source MIT license: feel free to copy, edit, paste, make your own
-/// versions, share, use as you wish.    
+/// versions, share, use as you wish.
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 Chrono_main.cpp -o Chrono_main
+///  g++ -std=c++17 Chrono_main.cpp -o Chrono_main
 //------------------------------------------------------------------------------
 #include "Chrono.h"
 
@@ -105,6 +105,27 @@ int main()
     // Integral duration; requires duration_cast
     const auto int_ms = duration_cast<Milliseconds>(t2 - t1); // 1000
     std::cout << " int_ms.count() : " << int_ms.count() << '\n';
+  }
+
+  // DurationCastRoundsToZero
+  {
+    std::cout << "\n DurationCastRoundsToZero \n";
+
+    {
+      const Microseconds t_0_us {123456789};
+      const Seconds t_0_s {duration_cast<Seconds>(t_0_us)};
+
+      std::cout << " t_0_ms.count() : " << t_0_us.count() << '\n';
+      std::cout << " t_0_s.count() : " << t_0_s.count() << '\n';
+    }
+
+    {
+      const Milliseconds t_0_ms {-123456};
+      const Seconds t_0_s {duration_cast<Seconds>(t_0_ms)};
+
+      std::cout << " t_0_ms.count() : " << t_0_ms.count() << '\n';
+      std::cout << " t_0_s.count() : " << t_0_s.count() << '\n';
+    }
   }
 
   // ElapsedTimeConstructs

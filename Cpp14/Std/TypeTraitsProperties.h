@@ -4,22 +4,22 @@
 /// \email  ernestyalumni@gmail.com
 /// \brief  Print out all type_traits properties of a template parameter T.
 /// \ref https://en.cppreference.com/w/cpp/header/type_traits
-/// \copyright If you find this code useful, feel free to donate directly and
-/// easily at this direct PayPal link: 
+/// \copyright If you find this code useful, feel free to donate directly
+/// (username ernestyalumni or email address above), going directly to:
 ///
-/// https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ernestsaveschristmas%2bpaypal%40gmail%2ecom&lc=US&item_name=ernestyalumni&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted 
-/// 
-/// which won't go through a 3rd. party such as indiegogo, kickstarter, patreon.  
+/// paypal.me/ernestyalumni
+///
+/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
-/// I know what it's like to not have money as a student, but love physics (or 
-/// math, sciences, etc.), so I am committed to keeping all my material 
-/// open-source and free, whether or not sufficiently crowdfunded, under the 
+/// I know what it's like to not have money as a student, but love physics (or
+/// math, sciences, etc.), so I am committed to keeping all my material
+/// open-source and free, whether or not sufficiently crowdfunded, under the
 /// open-source MIT license: feel free to copy, edit, paste, make your own
-/// versions, share, use as you wish.    
+/// versions, share, use as you wish.
 /// Peace out, never give up! -EY
 ///
-/// \details 
+/// \details
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
 ///  g++ -std=c++14 List_main.cpp -o List_main
@@ -77,7 +77,7 @@ class PrimaryTypeTraits
     friend std::ostream& operator<<(std::ostream& os,
       const PrimaryTypeTraits<U>&);
 
-  private: 
+  private:
 
     const bool is_void_;
     const bool is_null_pointer_;
@@ -113,6 +113,8 @@ std::ostream& operator<<(std::ostream& os, const PrimaryTypeTraits<T>& traits)
     " is_member_object_pointer : " << traits.is_member_object_pointer() <<
     " is_member_function_pointer : " << traits.is_member_function_pointer() <<
       '\n';
+
+  return os;
 }
 
 template <typename T>
@@ -142,7 +144,7 @@ class CompositeTypeTraits
     friend std::ostream& operator<<(std::ostream& os,
       const CompositeTypeTraits<U>&);
 
-  private: 
+  private:
 
     const bool is_fundamental_;
     const bool is_arithmetic_;
@@ -163,6 +165,8 @@ std::ostream& operator<<(std::ostream& os, const CompositeTypeTraits<T>& traits)
     " is_compound : " << traits.is_compound() <<
     " is_reference : " << traits.is_reference() <<
     " is_member_pointer : " << traits.is_member_pointer() << '\n';
+
+  return os;
 }
 
 template <typename T>
@@ -212,7 +216,7 @@ class TypeProperties
     friend std::ostream& operator<<(std::ostream& os,
       const TypeProperties<U>&);
 
-  private: 
+  private:
 
     const bool is_const_;
     const bool is_volatile_;
@@ -240,7 +244,7 @@ std::ostream& operator<<(std::ostream& os, const TypeProperties<T>& traits)
     " is_trivially_copyable : " << traits.is_trivially_copyable() <<
     " is_standard_layout : " << traits.is_standard_layout() <<
     " is_pod : " << traits.is_pod() <<
-    " is_literal_type : " << traits.is_literal_type() << 
+    " is_literal_type : " << traits.is_literal_type() <<
 //    " has_unique_object_representations : " << // C++17
 //      traits.has_unique_object_representations() << // C++17
     " is_empty : " << traits.is_empty() <<
@@ -250,6 +254,8 @@ std::ostream& operator<<(std::ostream& os, const TypeProperties<T>& traits)
 //    " is_aggregate : " << traits.is_aggregate() << // C++17
     " is_signed : " << traits.is_signed() <<
     " is_unsigned : " << traits.is_unsigned() << '\n';
+
+  return os;
 }
 
 } // namespace Std
