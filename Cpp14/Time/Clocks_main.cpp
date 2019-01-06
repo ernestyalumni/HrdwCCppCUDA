@@ -21,13 +21,15 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 Clocks_main.cpp -o Clocks_main
+///  g++ -std=c++17 -I ../ Clocks_main.cpp -o Clocks_main
 //------------------------------------------------------------------------------
 #include "Clocks.h"
 
+#include <ctime>
 #include <iostream>
 
 using Time::ClockIDs;
+using Time::carry_nanoseconds_to_seconds;
 
 int main()
 {
@@ -59,5 +61,48 @@ int main()
     std::cout << " ClockIDs::boot_time_alarm : " <<
       static_cast<int>(ClockIDs::boot_time_alarm) << '\n'; // 9
   }
+
+  // CarryNanosecondsToSecondsWorks
+  {
+    std::cout << "\n CarryNanosecondsToSecondsWorks \n";
+
+    ::timespec timespec {0, 1000000000};
+    ::timespec result_timespec {carry_nanoseconds_to_seconds(timespec)};
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 1 0
+
+    timespec = ::timespec{1, 2000000001};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 3 1
+
+    timespec = ::timespec{1, -1000000000};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 0 0
+
+    timespec = ::timespec{-1, -1000000000};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // -2 0
+
+    timespec = ::timespec{1, -999999999};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n'; // 0 1
+
+    timespec = ::timespec{-1, -1};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n';
+      // -2 999999999
+
+    timespec = ::timespec{5, -2444444444};
+    result_timespec = carry_nanoseconds_to_seconds(timespec);
+    std::cout << " result_timespec.tv_sec : " << result_timespec.tv_sec <<
+      " result_timespec.tv_nsec : " << result_timespec.tv_nsec << '\n';
+    // 2 555555556
+  }
+
 
 }

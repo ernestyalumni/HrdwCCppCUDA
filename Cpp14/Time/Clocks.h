@@ -21,13 +21,12 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 Clocks_main.cpp -o Clocks_main
+///  g++ -std=c++17 -I ../ Clocks_main.cpp -o Clocks_main
 //------------------------------------------------------------------------------
 #ifndef _TIME_CLOCKS_H_
 #define _TIME_CLOCKS_H_
 
 #if 0
-#include "Chrono.h"
 #include "CheckReturn.h" // CheckReturn
 #include "casts.h" // get_underlying_value
 
@@ -39,7 +38,9 @@
 //#include <time.h> // ::clock_gettime, ::timespec
 #endif
 
-#include <ctime> // CLOCK_REALTIME, CLOCK_MONOTONIC, ...
+#include "Utilities/Chrono.h" // Seconds, Nanoseconds, duration_cast
+
+#include <ctime> // CLOCK_REALTIME, CLOCK_MONOTONIC, ..., ::timespec
 
 namespace Time
 {
@@ -73,6 +74,37 @@ enum class ClockIDs : int
   real_time_alarm = CLOCK_REALTIME_ALARM,
   boot_time_alarm = CLOCK_BOOTTIME_ALARM
 };
+
+//------------------------------------------------------------------------------
+/// \name carry_nanoseconds_to_seconds
+/// \brief Carry seconds from tv_nsec field in ::timespec struct into tv_sec
+/// field.
+/// \details Works for even negative nanoseconds.
+//------------------------------------------------------------------------------
+::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec)
+{
+  using Utilities::Nanoseconds;
+  using Utilities::Seconds;
+  using Utilities::duration_cast;
+
+  Seconds seconds {time_spec.tv_sec};
+  Nanoseconds nanoseconds {time_spec.tv_nsec};
+
+  const Seconds carry_from_nanoseconds {duration_cast<Seconds>(nanoseconds)};
+
+  seconds += carry_from_nanoseconds;
+  nanoseconds -= duration_cast<Nanoseconds>(carry_from_nanoseconds);
+
+  if (nanoseconds < Nanoseconds{0})
+  {
+    // "borrow" or subtract 1 second from seconds.
+    seconds -= Seconds{1};
+    nanoseconds += duration_cast<Nanoseconds>(Seconds{1});
+  }
+
+  return ::timespec {seconds.count(), nanoseconds.count()};
+}
+
 
 } // namespace Time
 
