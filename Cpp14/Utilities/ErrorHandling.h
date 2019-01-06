@@ -2,33 +2,35 @@
 /// \file ErrorHandling.h
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
-/// \brief Error handling C++ functors to check POSIX Linux system call reults.
-/// \ref 
-/// \details 
+/// \brief Error handling C++ functors to check POSIX Linux system call
+/// results.
+/// \ref
+/// \details
 /// \copyright If you find this code useful, feel free to donate directly
-/// (username ernestyalumni or email address above), going directly to: 
+/// (username ernestyalumni or email address above), going directly to:
 ///
 /// paypal.me/ernestyalumni
-/// 
+///
 /// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
-/// I know what it's like to not have money as a student, but love physics (or 
-/// math, sciences, etc.), so I am committed to keeping all my material 
-/// open-source and free, whether or not sufficiently crowdfunded, under the 
+/// I know what it's like to not have money as a student, but love physics (or
+/// math, sciences, etc.), so I am committed to keeping all my material
+/// open-source and free, whether or not sufficiently crowdfunded, under the
 /// open-source MIT license: feel free to copy, edit, paste, make your own
-/// versions, share, use as you wish.    
+/// versions, share, use as you wish.
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 CheckReturns_main.cpp -o CheckReturns_main
+///  g++ -std=c++17 Errno.cpp ErrorHandling.cpp ErrorHandling_main.cpp -o \
+///   ErrorHandling_main
 //------------------------------------------------------------------------------
 #ifndef _UTILITIES_ERROR_HANDLING_ERROR_HANDLING_H_
 #define _UTILITIES_ERROR_HANDLING_ERROR_HANDLING_H_
 
-#include "Errno.h"
+#include "Errno.h" // ErrorNumber
 
-#include <string>
+#include <string> // std::string
 
 namespace Utilities
 {
@@ -43,9 +45,9 @@ class HandleReturnValue
 {
   public:
 
-    HandleReturnValue() :
-      error_number_{}
-    {}
+    HandleReturnValue();
+
+    HandleReturnValue(const int error_number);
 
     virtual int operator()(int result, const std::string& custom_error_string);
 

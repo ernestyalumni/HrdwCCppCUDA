@@ -152,7 +152,7 @@ class ErrorNumber
     /// \ref https://stackoverflow.com/questions/44935159/why-must-accessor-functions-be-const-where-is-the-vulnerability
 
     /// \ref https://en.cppreference.com/w/cpp/string/byte/strerror
-    std::string as_string()
+    std::string as_string() const
     {
       return std::string{std::strerror(error_number_)};
     }
