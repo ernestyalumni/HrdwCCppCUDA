@@ -6,6 +6,42 @@
 
 `<time.h>` (`<ctime>`) header declares structure **timespec**, which ahs the following members:
 
+# `clock`
+
+[`clock`, Linux Programmer's Manual](http://man7.org/linux/man-pages/man3/clock.3.html)
+
+clock - determine processor time;
+
+```
+#include <time.h>
+
+clock_t clock(void);
+```
+`clock()` function returns approximation of processor time used by program.
+
+## Return value of `clock`
+
+Value returned is CPU time used so far as a `clock_t`;
+  * to get number of seconds used, divide by `CLOCKS_PER_SEC`.
+If processor time used isn't available or its value can't be represented, function returns value (`clock_t`) -1
+
+## `clock` Attributes
+
+| Interface | Attribute | Value |
+| :-------- | --------- | ----- |
+| `clock()` | Thread safety | MT-Safe |
+
+
+# `clock_gettime`
+
+cf. [clock_gettime(3) - Linux man page](https://linux.die.net/man/3/clock_gettime)
+
+```
+int clock_getres(clockid_t clk_id, struct timespec *res);
+int clock_gettime(clockid_t clk_id, struct timespec *tp);
+```
+
+
 
 # Timer; `timerfd`, `#include <sys/timerfd.h>`
 
