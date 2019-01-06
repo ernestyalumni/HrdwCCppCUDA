@@ -5,13 +5,13 @@
 /// \brief  Wrappers and examples classes for errno and error handling.
 /// \ref https://en.cppreference.com/w/cpp/error/errc
 /// https://en.cppreference.com/w/cpp/error/errno_macros
-/// \details Scoped enumeration (enum class) std::errc defines values of 
+/// \details Scoped enumeration (enum class) std::errc defines values of
 /// portable error conditions corresponding to POSIX error codes.
 /// \copyright If you find this code useful, feel free to donate directly
-/// (username ernestyalumni or email address above), going directly to: 
+/// (username ernestyalumni or email address above), going directly to:
 ///
 /// paypal.me/ernestyalumni
-/// 
+///
 /// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
 /// Otherwise, I receive emails and messages on how all my (free) material on
 /// physics, math, and engineering have helped students with their studies, and
@@ -28,10 +28,10 @@
 #ifndef _UTILITIES_ERROR_HANDLING_ERRNO_H_
 #define _UTILITIES_ERROR_HANDLING_ERRNO_H_
 
-#include <cerrno>
-#include <cstring>
+#include <cerrno> // E2BIG, EACCESS, ...
+#include <cstring> // std::strerror
 #include <string>
-#include <system_error> // std::errc
+#include <system_error> // std::errc, std::make_error_code, std::error_code
 
 namespace Utilities
 {
@@ -127,7 +127,7 @@ enum class ErrorNumbers: int
   etimedout = ETIMEDOUT, // Connection timed out
   etxbsy = ETXTBSY, // Text file busy
   ewouldblock = EWOULDBLOCK, // Operation would block
-  exdev = EXDEV // Cross-device link 
+  exdev = EXDEV // Cross-device link
 };
 
 } // namespace Details
@@ -139,11 +139,19 @@ class ErrorNumber
 {
   public:
 
-    ErrorNumber() :
-      error_number_{errno},
-      error_condition_{static_cast<std::errc>(errno)}
-    {}
+    ErrorNumber();
 
+    explicit ErrorNumber(const int error_number);
+
+    explicit ErrorNumber(const std::error_code& error_code);
+
+    /// \ref https://en.cppreference.com/w/cpp/error/error_code/error_code
+    ErrorNumber(const int error_number, const std::error_category& ecat);
+
+    // Accessors
+    /// \ref https://stackoverflow.com/questions/44935159/why-must-accessor-functions-be-const-where-is-the-vulnerability
+
+    /// \ref https://en.cppreference.com/w/cpp/string/byte/strerror
     std::string as_string()
     {
       return std::string{std::strerror(error_number_)};
@@ -154,7 +162,12 @@ class ErrorNumber
       return error_number_;
     }
 
-    std::errc error_condition() const
+    std::error_code error_code() const
+    {
+      return error_code_;
+    }
+
+    std::error_condition error_condition() const
     {
       return error_condition_;
     }
@@ -162,7 +175,11 @@ class ErrorNumber
   private:
 
     int error_number_;
-    std::errc error_condition_;
+
+    std::error_code error_code_;
+
+    /// \ref https://en.cppreference.com/w/cpp/error/error_condition/error_condition
+    std::error_condition error_condition_;
 };
 
 } // namespace ErrorHandling
