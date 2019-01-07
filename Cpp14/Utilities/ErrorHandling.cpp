@@ -27,6 +27,7 @@
 //------------------------------------------------------------------------------
 #include "ErrorHandling.h"
 
+#include <iostream>
 #include <string>
 #include <system_error> // std::system_error, std::system_category
 
@@ -70,6 +71,24 @@ void HandleReturnValue::operator()(const int result)
 void HandleClose::operator()(const int result)
 {
   this->operator()(result, "Failed to close fd (::close())");
+}
+
+void HandleRead::operator()(const ssize_t number_of_bytes)
+{
+  if (number_of_bytes < 0)
+  {
+    get_error_number();
+
+    throw std::system_error(
+      errno,
+      std::system_category(),
+      "Failed to ::read from fd with errno : " + error_number().as_string() +
+        '\n');
+  }
+  else if (number_of_bytes == 0)
+  {
+    std::cout << "End of file reached for fd\n";
+  }
 }
 
 

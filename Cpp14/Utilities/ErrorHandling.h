@@ -71,9 +71,9 @@ class HandleReturnValue
 };
 
 //------------------------------------------------------------------------------
-// \ref http://man7.org/linux/man-pages/man2/close.2.html
-// \details On error, -1 is returned, and errno is set appropriately.
-// 0 indicates success.
+/// \ref http://man7.org/linux/man-pages/man2/close.2.html
+/// \details On error, -1 is returned, and errno is set appropriately.
+/// 0 indicates success.
 //------------------------------------------------------------------------------
 class HandleClose : public HandleReturnValue
 {
@@ -86,6 +86,29 @@ class HandleClose : public HandleReturnValue
   private:
 
     using HandleReturnValue::operator();
+};
+
+//------------------------------------------------------------------------------
+/// \ref http://man7.org/linux/man-pages/man2/read.2.html
+/// \details On error, -1 is returned, and errno is set appropriately.
+/// In this case, it's left unspecified whether the file position (if any)
+/// changes.
+//------------------------------------------------------------------------------
+class HandleRead : public HandleReturnValue
+{
+  public:
+
+    HandleRead() = default;
+
+    //--------------------------------------------------------------------------
+    /// \ref http://man7.org/linux/man-pages/man2/read.2.html
+    /// \details On success, number of bytes read is returned (0 indicates end
+    /// of file), and file position is advanced by this number. It's not an
+    /// error if this number is smaller than number of bytes requested.
+    /// On error, -1 returned and errno set appropriately. In this case, it's
+    /// left unspecified whether file position (if any) changes.
+    //--------------------------------------------------------------------------
+    void operator()(const ssize_t number_of_bytes);
 };
 
 } // namespace ErrorHandling

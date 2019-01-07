@@ -31,6 +31,7 @@
 #include <system_error>
 
 using Utilities::ErrorHandling::ErrorNumber;
+using Utilities::ErrorHandling::HandleRead;
 using Utilities::ErrorHandling::HandleReturnValue;
 
 int main()
@@ -49,7 +50,7 @@ int main()
     }
   }
 
- // HandleReturnValueFunctionCallThrowsForNegativeValues
+  // HandleReturnValueFunctionCallThrowsForNegativeValues
   {
     std::cout << " \n HandleReturnValueFunctionCallThrowsForNegativeValues\n";
 
@@ -86,5 +87,40 @@ int main()
         std::cout << error_number.error_code().message() << '\n';
       }
     }
+  }
+
+  // intSizeVsssize_tSize
+  {
+    std::cout << "\n intSizeVsssize_tSize \n";
+
+    std::cout << " sizeof(int) : " << (sizeof(int)) << '\n';
+    std::cout << " sizeof(ssize_t) : " << (sizeof(ssize_t)) << '\n';
+    std::cout << (sizeof(int) == sizeof(ssize_t)) << '\n';
+  }
+
+  // HandleReadThrowsForNegativeNumberOfBytes
+  {
+    std::cout << "\n HandleReadThrowsForNegativeNumberOfBytes \n";
+
+      try
+      {
+        const ssize_t number_of_bytes_negative {-3};
+
+        HandleRead()(number_of_bytes_negative);
+      }
+      catch (const std::system_error& e)
+      {
+        std::cout << " e.code() : " << e.code() << '\n';
+        std::cout << " e.what() : " << e.what() << '\n';
+      }
+    }
+
+  // HandleReadPrintsEOFMessageWhenNumberOfBytesIsZero
+  {
+    std::cout << "\n HandleReadThrowsForNegativeNumberOfBytes \n";
+
+    const ssize_t number_of_bytes_zero {0};
+
+    HandleRead()(number_of_bytes_zero);
   }
 }
