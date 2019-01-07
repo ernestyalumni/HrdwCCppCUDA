@@ -108,7 +108,7 @@ class HandleRead : public HandleReturnValue
     /// On error, -1 returned and errno set appropriately. In this case, it's
     /// left unspecified whether file position (if any) changes.
     //--------------------------------------------------------------------------
-    void operator()(const ssize_t number_of_bytes);
+    virtual void operator()(const ssize_t number_of_bytes);
 };
 
 } // namespace ErrorHandling
