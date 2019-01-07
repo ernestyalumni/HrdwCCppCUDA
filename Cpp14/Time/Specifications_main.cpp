@@ -36,6 +36,8 @@ using Time::IntervalTimerSpecification;
 using Utilities::Milliseconds;
 using Utilities::Nanoseconds;
 
+using namespace Utilities::Literals;
+
 int main()
 {
   // ConstructsFromADuration
@@ -61,4 +63,34 @@ int main()
 
     std::cout << interval_timer_specification << '\n';
   }
+
+  // IntervalTimerSpecificationConstructsFromTwoDuration
+  {
+    std::cout << "\n IntervalTimerSpecificationConstructsFromTwoDuration \n";
+
+    const IntervalTimerSpecification interval_timer_specification {10s, 15s};
+
+    std::cout << interval_timer_specification << '\n';
+  }
+
+  // IntervalTimerSpecificationConstructsFromitimerspec
+  {
+    std::cout << "\n IntervalTimerSpecificationConstructsFromitimerspec\n";
+
+    const IntervalTimerSpecification interval_timer_specification {
+      ::itimerspec{10, 13, 42, 69}};
+
+    std::cout << " interval_timer_specification : " <<
+      interval_timer_specification << '\n';
+
+    std::cout <<
+      ::itimerspec(interval_timer_specification).it_interval.tv_sec << '\n';
+    std::cout <<
+      ::itimerspec(interval_timer_specification).it_interval.tv_nsec << '\n';
+    std::cout <<
+      ::itimerspec(interval_timer_specification).it_value.tv_sec << '\n';
+    std::cout <<
+      ::itimerspec(interval_timer_specification).it_value.tv_nsec << '\n';
+  }
+
 }

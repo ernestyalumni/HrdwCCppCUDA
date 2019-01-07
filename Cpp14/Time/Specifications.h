@@ -85,6 +85,16 @@ class TimeSpecification
       return &timespec_;
     }
 
+    ::timespec* to_timespec_pointer()
+    {
+      return &timespec_;
+    }
+
+    const ::timespec* as_timespec_pointer() const
+    {
+      return reinterpret_cast<const ::timespec*>(this);
+    }
+
     ::timespec* as_timespec_pointer()
     {
       return reinterpret_cast<::timespec*>(this);
@@ -174,6 +184,16 @@ class IntervalTimerSpecification
     const ::itimerspec* to_itimerspec_pointer() const
     {
       return &itimerspec_;
+    }
+
+    ::itimerspec* to_itimerspec_pointer()
+    {
+      return &itimerspec_;
+    }
+
+    const ::itimerspec* as_itimerspec_pointer() const
+    {
+      return reinterpret_cast<const ::itimerspec*>(this);
     }
 
     ::itimerspec* as_itimerspec_pointer()
