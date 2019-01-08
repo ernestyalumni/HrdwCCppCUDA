@@ -26,10 +26,42 @@
 //------------------------------------------------------------------------------
 #include "Specifications.h"
 
+#include "Utilities/Chrono.h" // Seconds, Nanoseconds, duration_cast
+
+#include <ctime> // CLOCK_REALTIME, CLOCK_MONOTONIC, ..., ::timespec
 #include <ostream>
+
+using Utilities::Nanoseconds;
+using Utilities::Seconds;
+using Utilities::duration_cast;
 
 namespace Time
 {
+
+::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec)
+{
+  Seconds seconds {time_spec.tv_sec};
+  Nanoseconds nanoseconds {time_spec.tv_nsec};
+
+  const Seconds carry_from_nanoseconds {duration_cast<Seconds>(nanoseconds)};
+
+  seconds += carry_from_nanoseconds;
+  nanoseconds -= duration_cast<Nanoseconds>(carry_from_nanoseconds);
+
+  if (nanoseconds < Nanoseconds{0})
+  {
+    // "borrow" or subtract 1 second from seconds.
+    seconds -= Seconds{1};
+    nanoseconds += duration_cast<Nanoseconds>(Seconds{1});
+  }
+
+  return ::timespec {seconds.count(), nanoseconds.count()};
+}
+
+TimeSpecification::TimeSpecification(const ::timespec& timespec):
+  timespec_{timespec}
+{}
+
 
 std::ostream& operator<<(std::ostream& os,
   const TimeSpecification& time_specification)
@@ -38,6 +70,17 @@ std::ostream& operator<<(std::ostream& os,
     time_specification.timespec_.tv_nsec << '\n';
   return os;
 }
+
+IntervalTimerSpecification::IntervalTimerSpecification():
+  itimerspec_{0, 0, 0, 0}
+{}
+
+IntervalTimerSpecification::IntervalTimerSpecification(
+  const ::itimerspec i_timer_spec
+  ):
+  itimerspec_{i_timer_spec}
+{}
+
 
 IntervalTimerSpecification::IntervalTimerSpecification(
   const TimeSpecification& interval_time_specification,
@@ -64,7 +107,5 @@ std::ostream& operator<<(std::ostream& os,
 
   return os;
 }
-
-
 
 } // namespace Time

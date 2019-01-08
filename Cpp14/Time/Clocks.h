@@ -72,14 +72,6 @@ enum class ClockIds : int
   boot_time_alarm = CLOCK_BOOTTIME_ALARM
 };
 
-//------------------------------------------------------------------------------
-/// \name carry_nanoseconds_to_seconds
-/// \brief Carry seconds from tv_nsec field in ::timespec struct into tv_sec
-/// field.
-/// \details Works for even negative nanoseconds.
-//------------------------------------------------------------------------------
-::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec);
-
 } // namespace Time
 
 #endif // _TIME_CLOCK_H_

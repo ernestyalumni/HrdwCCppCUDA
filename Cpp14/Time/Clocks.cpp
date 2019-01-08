@@ -36,24 +36,5 @@ using Utilities::duration_cast;
 namespace Time
 {
 
-::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec)
-{
-  Seconds seconds {time_spec.tv_sec};
-  Nanoseconds nanoseconds {time_spec.tv_nsec};
-
-  const Seconds carry_from_nanoseconds {duration_cast<Seconds>(nanoseconds)};
-
-  seconds += carry_from_nanoseconds;
-  nanoseconds -= duration_cast<Nanoseconds>(carry_from_nanoseconds);
-
-  if (nanoseconds < Nanoseconds{0})
-  {
-    // "borrow" or subtract 1 second from seconds.
-    seconds -= Seconds{1};
-    nanoseconds += duration_cast<Nanoseconds>(Seconds{1});
-  }
-
-  return ::timespec {seconds.count(), nanoseconds.count()};
-}
 
 } // namespace Time

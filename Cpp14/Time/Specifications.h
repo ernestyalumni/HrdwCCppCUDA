@@ -38,6 +38,14 @@ namespace Time
 {
 
 //------------------------------------------------------------------------------
+/// \name carry_nanoseconds_to_seconds
+/// \brief Carry seconds from tv_nsec field in ::timespec struct into tv_sec
+/// field.
+/// \details Works for even negative nanoseconds.
+//------------------------------------------------------------------------------
+::timespec carry_nanoseconds_to_seconds(const ::timespec& time_spec);
+
+//------------------------------------------------------------------------------
 /// \brief ::timespec struct wrapper using composition.
 /// \details struct timespec
 /// {
@@ -68,9 +76,7 @@ class TimeSpecification
     /// \brief Constructor that checks input ::timespec argument to be
     /// non-negative.
     //--------------------------------------------------------------------------
-    explicit TimeSpecification(const ::timespec& timespec):
-      timespec_{timespec}
-    {}
+    explicit TimeSpecification(const ::timespec& timespec);
 
     // type-conversion operator, defines a conversion to a ::timespec struct.
     operator ::timespec() const
@@ -143,13 +149,9 @@ class IntervalTimerSpecification
 {
   public:
 
-    IntervalTimerSpecification():
-      itimerspec_{0, 0, 0, 0}
-    {}
+    IntervalTimerSpecification();
 
-    explicit IntervalTimerSpecification(const ::itimerspec i_timer_spec):
-      itimerspec_{i_timer_spec}
-    {}
+    explicit IntervalTimerSpecification(const ::itimerspec i_timer_spec);
 
     template <
       class Duration,
