@@ -204,7 +204,6 @@ class TimerFd
     /// was specified when calling timerfd_settime(), then read fails with
     /// error ECANCELED if real-time clock undergoes discontinuous change.
     //--------------------------------------------------------------------------
-
     class HandleReadOnTimerFd : public HandleRead
     {
       public:

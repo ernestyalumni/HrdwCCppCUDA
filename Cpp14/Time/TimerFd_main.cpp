@@ -149,7 +149,6 @@ int main()
     }
   }
 
-
   // TimerFdGetsTimeBeforeExpirationAndAfter
   {
     std::cout << "\n TimerFdGetsTimeBeforeExpirationAndAfter\n";
