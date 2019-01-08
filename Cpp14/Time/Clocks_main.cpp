@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Clocks_main.cpp Clocks_.cpp -o Clocks_main
+///  g++ -std=c++17 -I ../ ../Utilities/Errno.cpp ../Utilities/ErrorHandling.cpp Specifications.cpp Clocks.cpp Clocks_main.cpp -o Clocks_main
 //------------------------------------------------------------------------------
 #include "Clocks.h"
 

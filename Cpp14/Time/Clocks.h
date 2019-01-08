@@ -21,22 +21,16 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++17 -I ../ Clocks_main.cpp Clocks.cpp -o Clocks_main
+///  g++ -std=c++17 -I ../ ../Utilities/Errno.cpp \
+///   ../Utilities/ErrorHandling.cpp Specifications.cpp Clocks.cpp \
+///     Clocks_main.cpp-o Clocks_main
 //------------------------------------------------------------------------------
 #ifndef _TIME_CLOCKS_H_
 #define _TIME_CLOCKS_H_
 
-#if 0
-#include "CheckReturn.h" // CheckReturn
-#include "casts.h" // get_underlying_value
-
 #include "Specifications.h"
-
-#include <iostream>
-#include <stdexcept> // std::runtime_error
-#include <type_traits>
-//#include <time.h> // ::clock_gettime, ::timespec
-#endif
+#include "Utilities/ErrorHandling.h"
+#include "Utilities/casts.h" // get_underlying_value
 
 #include <ctime> // CLOCK_REALTIME, CLOCK_MONOTONIC, ..., ::timespec
 
@@ -70,6 +64,37 @@ enum class ClockIds : int
   boot_time = CLOCK_BOOTTIME,
   real_time_alarm = CLOCK_REALTIME_ALARM,
   boot_time_alarm = CLOCK_BOOTTIME_ALARM
+};
+
+//------------------------------------------------------------------------------
+/// \brief ::clock_gettime wrapper as a C++ functor.
+//------------------------------------------------------------------------------
+template <ClockIds ClockId = ClockIds::monotonic>
+class GetClockTime
+{
+  public:
+
+    GetClockTime():
+      time_specification_{}
+    {}
+
+    void operator()()
+    {
+      Utilities::ErrorHandling::HandleReturnValue()(
+        ::clock_gettime(
+          Utilities::get_underlying_value<ClockIds>(ClockId),
+          time_specification_.to_timespec_pointer()),
+          "Retrieve time from clock failed (::clock_gettime");
+    }
+
+    TimeSpecification time_specification() const
+    {
+      return time_specification_;
+    }
+
+  private:
+
+    TimeSpecification time_specification_;
 };
 
 } // namespace Time

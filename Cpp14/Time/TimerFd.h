@@ -84,7 +84,7 @@ class TimerFd
 
     TimerFd():
       fd_{::timerfd_create(
-        static_cast<std::underlying_type_t<ClockIds>>(ClockId),
+        Utilities::get_underlying_value<ClockIds>(ClockId),
         clock_flags)},
       expirations_buffer_{0},
       new_value_{},
@@ -101,7 +101,7 @@ class TimerFd
     explicit TimerFd(
       const IntervalTimerSpecification& interval_timer_specification):
       fd_{::timerfd_create(
-        static_cast<std::underlying_type_t<ClockIds>>(ClockId),
+        Utilities::get_underlying_value<ClockIds>(ClockId),
         clock_flags)},
       expirations_buffer_{0},
       new_value_{interval_timer_specification},
