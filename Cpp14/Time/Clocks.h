@@ -78,13 +78,15 @@ class GetClockTime
       time_specification_{}
     {}
 
-    void operator()()
+    TimeSpecification operator()()
     {
       Utilities::ErrorHandling::HandleReturnValue()(
         ::clock_gettime(
           Utilities::get_underlying_value<ClockIds>(ClockId),
           time_specification_.to_timespec_pointer()),
           "Retrieve time from clock failed (::clock_gettime");
+
+      return time_specification();
     }
 
     TimeSpecification time_specification() const

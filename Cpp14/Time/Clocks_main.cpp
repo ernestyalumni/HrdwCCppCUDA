@@ -111,43 +111,43 @@ int main()
 
     GetClockTime<> get_clock_time;
 
-    get_clock_time();
+    std::cout << get_clock_time() << '\n';
     std::cout << " time_specification : " <<
       get_clock_time.time_specification() << '\n';
 
     GetClockTime<ClockIds::real_time> get_clock_time_real_time;
 
-    get_clock_time_real_time();
+    std::cout << get_clock_time_real_time() << '\n';
     std::cout << " time_specification (real time): " <<
       get_clock_time_real_time.time_specification() << '\n';
 
     GetClockTime<ClockIds::process_cpu_time> get_clock_time_process_cpu_time;
 
-    get_clock_time_process_cpu_time();
+    std::cout << get_clock_time_process_cpu_time() << '\n';
     std::cout << " time_specification (CPU time for a process): " <<
       get_clock_time_process_cpu_time.time_specification() << '\n';
 
     GetClockTime<ClockIds::thread_cpu_time> get_clock_time_thread_cpu_time;
 
-    get_clock_time_thread_cpu_time();
+    std::cout << get_clock_time_thread_cpu_time() << '\n';
     std::cout << " time_specification (CPU time for a thread): " <<
       get_clock_time_thread_cpu_time.time_specification() << '\n';
 
     // Try it again, see the time elapse.
 
-    get_clock_time();
+    std::cout << get_clock_time() << '\n';
     std::cout << " time_specification : " <<
       get_clock_time.time_specification() << '\n';
 
-    get_clock_time_real_time();
+    std::cout << get_clock_time_real_time() << '\n';
     std::cout << " time_specification (real time): " <<
       get_clock_time_real_time.time_specification() << '\n';
 
-    get_clock_time_process_cpu_time();
+    std::cout << get_clock_time_process_cpu_time() << '\n';
     std::cout << " time_specification (CPU time for a process): " <<
       get_clock_time_process_cpu_time.time_specification() << '\n';
 
-    get_clock_time_thread_cpu_time();
+    std::cout << get_clock_time_thread_cpu_time() << '\n';
     std::cout << " time_specification (CPU time for a thread): " <<
       get_clock_time_thread_cpu_time.time_specification() << '\n';
   }
