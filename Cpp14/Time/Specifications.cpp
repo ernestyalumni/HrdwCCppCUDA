@@ -30,6 +30,7 @@
 
 #include <ctime> // CLOCK_REALTIME, CLOCK_MONOTONIC, ..., ::timespec
 #include <ostream>
+#include <stdexcept> // std::invalid_argument
 
 using Utilities::Nanoseconds;
 using Utilities::Seconds;
@@ -62,6 +63,33 @@ TimeSpecification::TimeSpecification(const ::timespec& timespec):
   timespec_{timespec}
 {}
 
+bool TimeSpecification::operator>=(const TimeSpecification& rhs) const
+{
+  if (timespec_.tv_sec > rhs.timespec_.tv_sec)
+  {
+    return true;
+  }
+  else if (timespec_.tv_sec == rhs.timespec_.tv_sec)
+  {
+    return (timespec_.tv_nsec >= rhs.timespec_.tv_nsec);
+  }
+  return false;
+}
+
+TimeSpecification TimeSpecification::operator-(
+  const TimeSpecification& rhs) const
+{
+  if (!(*this >= rhs))
+  {
+    throw std::invalid_argument("Cannot subtract by a later time.");
+  }
+
+  const time_t sec {timespec_.tv_sec - rhs.timespec_.tv_sec};
+  const long nsec {timespec_.tv_nsec - rhs.timespec_.tv_nsec};
+
+  return TimeSpecification{
+    carry_nanoseconds_to_seconds(::timespec{sec, nsec})};
+}
 
 std::ostream& operator<<(std::ostream& os,
   const TimeSpecification& time_specification)

@@ -93,4 +93,54 @@ int main()
       ::itimerspec(interval_timer_specification).it_value.tv_nsec << '\n';
   }
 
+  // >=OperatorComparesCorrectlyForTimeSpecification
+  {
+    std::cout << "\n >=OperatorComparesCorrectly \n";
+
+    {
+      const TimeSpecification t_1 {250ms};
+      const TimeSpecification t_2 {251ms};
+
+      std::cout << (t_2 >= t_1) << ' ' << (t_1 >= t_2) << ' ' <<
+        (t_2 >= t_2) << ' ' << (t_1 >= t_1) << '\n';
+    }
+    {
+      const TimeSpecification t_1 {2ns};
+      const TimeSpecification t_2 {3ns};
+
+      std::cout << (t_2 >= t_1) << ' ' << (t_1 >= t_2) << ' ' <<
+        (t_2 >= t_2) << ' ' << (t_1 >= t_1) << '\n';
+    }
+    {
+      const TimeSpecification t_1 {2332ms};
+      const TimeSpecification t_2 {123456789us};
+
+      std::cout << (t_2 >= t_1) << ' ' << (t_1 >= t_2) << ' ' <<
+        (t_2 >= t_2) << ' ' << (t_1 >= t_1) << '\n';
+    }
+  }
+
+  // SubtractionWorksForTimeSpecification
+  {
+    std::cout << "\n SubtractionWorksForTimeSpecification \n";
+    {
+      const TimeSpecification t_1 {250ms};
+      const TimeSpecification t_2 {251ms};
+
+      const TimeSpecification delta_t {t_2 - t_1};
+      std::cout << " delta_t : " << delta_t << '\n';
+    }
+    {
+      const TimeSpecification t_1 {56789us};
+      const TimeSpecification t_2 {123456789123ns};
+
+      const TimeSpecification delta_t {t_2 - t_1};
+      std::cout << " delta_t : " << delta_t << '\n';
+
+      const TimeSpecification t_3 {23s};
+      const TimeSpecification delta_t_2 {delta_t - t_3};
+
+      std::cout << " delta_t_2 : " << delta_t_2 << '\n';
+    }
+  }
 }
