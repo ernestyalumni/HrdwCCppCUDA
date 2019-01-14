@@ -56,7 +56,8 @@ class Automaton
 
     // Add virtual destructor to ensure proper cleanup of data that'll be
     // defined in derived class
-    virtual ~Automaton() {};
+    virtual ~Automaton()
+    {}
 
 }; // class Automaton
 

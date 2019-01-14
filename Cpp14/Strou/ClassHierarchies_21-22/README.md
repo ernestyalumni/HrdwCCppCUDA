@@ -129,7 +129,7 @@ Derived class inherits from abstract class that requires it to implement base cl
 * since `Ival_box` provides interface for derived class, it's derived using `public`,
 * since `BBwidget` only implementation aid, it's derived using `protected` (Sec. 20.5.2).
 * Stroustrup used `protected` derivation instead of more restrictive (and usually safer) `private` derivation to make `BBwidget` available to classes derived from `Ival_slider`
-* Stroustrup used explicit `override` because this "widget hierarch" is exactly the kind of large, complicated hierarchy where being explicit can help minimize confusion.
+* Stroustrup used explicit `override` because this "widget hierarchy" is exactly the kind of large, complicated hierarchy where being explicit can help minimize confusion.
 * *multiple inheritance* (Sec. 21.3) - note `Ival_slider` must override functions from both `Ival_box` and `BBwidget`; therefore, it must be derived directly or indirectly from both
 
 * note, making "implementation class" `BBWidget` a member of `Ival_box` is not a solution because a class can't override virtual functions of its members.
