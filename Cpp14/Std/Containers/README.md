@@ -47,7 +47,7 @@ struct allocator
 `std::allocator` class template is default *Allocator* used by all standard library containers. Allocates and deallocates uninitialized storage.
 
 
-`std::map` is a sorted associative container, that contains key-value pairs with unique keys. Keys sorted by using comparison function `Compare`. 
+`std::map` is a sorted associative container, that contains key-value pairs with unique keys. Keys sorted by using comparison function `Compare`.
   - Search, removal, insertion operations have logarithmic complexity.
   - Maps usually implemented as red-black trees.
 
@@ -90,7 +90,7 @@ map(const map& other); // 3
 map(const map& other, const Allocator& alloc); // 3 C++11
 
 map(map&& other); // 4 C++11
-map(map&& other, const Allocator& alloc); // 4 C++11 
+map(map&& other, const Allocator& alloc); // 4 C++11
 ```
 
 ```
@@ -120,8 +120,10 @@ template <
 
 # `std::deque`
 
-`std::deque` (double-ended queue) is an indexed sequence contianer that allows fast insertion and deletion at both its beginning and its end. 
+`std::deque` (double-ended queue) is an indexed sequence contianer that allows fast insertion and deletion at both its beginning and its end.
   - additionally, insertion and deletion at either end of a deque never invalidates pointers or references to the rest of the elements.
 
+# `std::unordered_set`
 
+[`std::unordered_set` cppreference](https://en.cppreference.com/w/cpp/container/unordered_set)
 
