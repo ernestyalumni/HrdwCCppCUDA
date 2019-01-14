@@ -124,7 +124,7 @@ class Ival_slider : public Ival_box, protected BBwidget
 
 ```
 
-Derived class inhertis from abstract class that requires it to implement base class's pure virtual functions.
+Derived class inherits from abstract class that requires it to implement base class's pure virtual functions.
 * can also inherit from (e.g. `protected BBwidget`), providing it means to implement
 * since `Ival_box` provides interface for derived class, it's derived using `public`,
 * since `BBwidget` only implementation aid, it's derived using `protected` (Sec. 20.5.2).
