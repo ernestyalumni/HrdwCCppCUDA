@@ -41,7 +41,7 @@ using Utilities::Milliseconds;
 using Utilities::Nanoseconds;
 using Utilities::Seconds;
 using Utilities::SteadyClock;
-using Utilities::SteadyTime;
+using Utilities::SteadyTimePoint;
 using Utilities::SystemClock;
 using Utilities::SystemTime;
 using Utilities::duration_cast;
@@ -227,6 +227,13 @@ int main()
     std::cout << "\n TypeProperties \n";
 
     std::cout << TypeProperties<Nanoseconds>{} << '\n';
+  }
+
+  // SteadyClockGetsTime
+  {
+    std::cout << "\n SteadyClockGetsTime\n";
+
+    SteadyClock::now();
   }
 
 }

@@ -57,7 +57,7 @@ using SystemTime = std::chrono::time_point<SystemClock, Duration>;
 using SteadyClock = std::chrono::steady_clock;
 
 template <class Duration>
-using SteadyTime = std::chrono::time_point<SteadyClock, Duration>;
+using SteadyTimePoint = std::chrono::time_point<SteadyClock, Duration>;
 
 
 //------------------------------------------------------------------------------

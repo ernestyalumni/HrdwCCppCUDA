@@ -76,6 +76,12 @@ bool TimeSpecification::operator>=(const TimeSpecification& rhs) const
   return false;
 }
 
+bool TimeSpecification::operator==(const TimeSpecification& rhs) const
+{
+  return ((timespec_.tv_sec == rhs.timespec_.tv_sec) &&
+    (timespec_.tv_nsec == rhs.timespec_.tv_nsec));
+}
+
 TimeSpecification TimeSpecification::operator-(
   const TimeSpecification& rhs) const
 {

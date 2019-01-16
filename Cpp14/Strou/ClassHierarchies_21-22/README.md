@@ -198,4 +198,9 @@ Logical conclusion is system **represented to users as hierarchy of abstract cla
   * use abstract classes tosupprt interface inheritance (Sec. 3.2.3, Sec.20.1)
   * use base classeswith implementation of virtual functions to support implementtion inheritance (Sec. 3.2.3, Sec. 20.1)
 
+### Localizing Object Creation (for Interface Inheritance)
+
+Most of an application can be written using the `Ival_box` interface.
+  - Further, shoud derived interfaces evolve to provide more facilities than plain `Ival_box`, then most of an application can be written using the `Ival_box`, `Ival_slider`, etc., interfaces.
+Problem: creation of objects must be done using implementation-specific names such as `CW_ival_dial`, and `BB_flashing_Ival_slider`
 

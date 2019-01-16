@@ -80,6 +80,8 @@ class TimeSpecification
 
     bool operator>=(const TimeSpecification& rhs) const;
 
+    bool operator==(const TimeSpecification& rhs) const;
+
     TimeSpecification operator-(const TimeSpecification& rhs) const;
 
     // type-conversion operator, defines a conversion to a ::timespec struct.
