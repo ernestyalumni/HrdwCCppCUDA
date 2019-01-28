@@ -204,3 +204,255 @@ Most of an application can be written using the `Ival_box` interface.
   - Further, shoud derived interfaces evolve to provide more facilities than plain `Ival_box`, then most of an application can be written using the `Ival_box`, `Ival_slider`, etc., interfaces.
 Problem: creation of objects must be done using implementation-specific names such as `CW_ival_dial`, and `BB_flashing_Ival_slider`
 
+We'd like to minimize number of places where such specific names occur, and object creation is hard to localize unless it's done systematically.
+
+Solution: introduce, as usual, an indirection.
+
+Simple way - introduce abstract class to represent set of creation operations:
+
+```
+class Ival_maker
+{
+  public:
+
+    virtual Ival_dial* dial(int, int) = 0; // make dial
+    virtual Popup_Ival_slider* popup_slider(int, int) = 0; // make popup slider
+    // ...
+};
+```
+
+For each interface from `Ival_box` family of classes that user should know about, class `Ival_maker` provides function that makes an object.
+
+**factory** - e.g. `class Ival_maker`.
+  - its functions are sometimes called *virtual constructors* (Sec. 20.3.6)
+
+Now represent each user-interface system by class **derived** from `Ival_maker`: e.g.
+
+```
+class BB_maker : public Ival_maker // make BB versions
+{
+  public:
+
+    Ival_dial* dial(int, int) override;
+    Popup_Ival_slider* popup_slider(int, int) override;
+    // ...
+};
+...
+
+```
+
+## Multiple Inheritance (redux, revisit)
+
+cf. Sec. 21.3 *Multiple Inheritance*, Stroustrup
+
+* *Shared interfaces* - leads to less replication of code using classes and making such code more uniform; often called *run-time polymorphism* or *interface inheritance*
+* *Shared implementation* - leads to less code and more uniform implementation code; *implementation inheritance*
+
+A class can **combine aspects of these 2 styles**.
+
+### Multiple Interfaces
+
+pp. 624 Sec. 21.3.1 *Multiple Interface*, Stroustrup.
+
+Any class without mutable state can be used as an interface in a multiple-inheritance lattice without significant complications and overhead.
+
+Key observation is that a class without mutable state can be replicated if necessary or shared if that's desired.
+
+Use of multiple abstract classes as interfaces is almost universal in object-oriented designs (in any language with a notion of an interface).
+
+### Multiple Implementation Classes
+
+Consider simulation of bodies orbiting Earth, in which orbiting objects represented as object of class `Satellite`; `Satellite` object would contain orbital, size, shape, density parameters, etc., and provide operations for orbital calculations, etc. Dervied classes would add data members, functions, would override some of `Satellite`'s virtual functions.
+
+Assume, graphics class would provide operations for graphical information, common base class holding graphical information.
+
+```
+class Comm_sat : public Satellite, public Displayed
+{
+  public:
+
+    // ...
+};
+```
+
+In addition to whatever operations defined specifically for `Comm_sat`, union of operations on `Satellite` and `Displayed` can be applied.
+
+Use of multiple inheritance to "glue" 2 otherwise unrelated classes together as part of the implementation of 3rd. class is crude, effective, and relatively important.
+
+"I generally prefer to have a single implementation hierarchy and (where needed) several abstract classes providing interfaces."
+ - pp. 626 Stroustrup.
+
+#### Ambiguity Resolution
+
+pp. 627, Sec. 21.3.3 Ambiguity Resolution. Stroustrup.
+
+Explicit disabmbiguation is messy, so it's usually best to resolve such problems by defining a new function in the derived class.
+
+```
+class Comm_sat : public Satellite, public Displayed
+{
+  public:
+
+    Debug_info get_debug() // override Comm_sat::get_debug() and Displayed::get_debug()
+    {
+      Debug_info di1 = Satellite::get_debug();
+      Debug_info di2 = Displayed::get_debug();
+      return merge_info(di1, di2);
+    }
+
+};
+```
+
+A function declared in a derived class overrides *all* functions of the same name and type in its base classes.
+
+Compiler recursively looks in its base classes.
+  be careful of "infinite" recursive call insider implementation
+
+### Repeated Use of a Base Class
+
+cf. 21.3.4 Repeated Use of a Base Class, Stroustrup
+
+When each class has only 1 direct base class, class hierarchy will be a tree, and a class can only occur once in the tree.
+
+When class can have multiple base classes, class can appear multiple times in resulting hierarchy.
+
+#### Virtual Base Classes
+
+cf. 21.3.5. Virtual Base Classes, Stroustrup
+
+Base class can be safely, conveniently, efficiently replicated if base class is an abstract class providing a pure interface, base class object holds no data of its own.
+  - this simplest case offers best separation of interface and implementation concerns
+
+What if base class hold data, and it was important that it shouldn't be replicated? Given this apparantly minor change to base class, we must change design of derived class; all parts of an object must shared a single copy of base class. Otherwise, we could get 2 parts of something derived from base class multiple times using different objects.
+  - avoid replication by declaring base `virtual`: every `virtual` base of a derived class is represented by same (shared) object.
+
+Why would someone want to use virtual base containing data? 3 ways for 2 classes in a class hierarchy to share data
+1. Make data nonlocal (outside class as a global or namespace variable) // poor choice
+2. put data in a base class
+3. allocate object somewhere and give each of 2 classes a pointer.
+
+1.  nonlocal data, usually a poor choice because we can't control what code accesses data and how, breaks encapsulation and locality
+2. put data in base class, is simplest; however, every member of class hierarchy gets access.
+3. sharing objects accessed through pointers; however ctors needs to set aside memory for that shared object, initialize it, provde pointers to shared object to objects needing access. That's roughly what ctors do to implement virtual base.
+
+If you don't need sharing, you can do without virtual bases, and your code is often better and typically simpler for it.
+
+##### Constructing Virtual Bases
+
+cf. 21.3.5.1 Constructing Virtual Bases, Stroustrup
+
+However complicated, language ensures that ctor of a virtual base is called exactly once.
+
+Furthermore, ctor of a base (whether virtual or not) is called before its derived classes.
+
+ctor of every virtual base is invoked (implicitly or explicitly) from ctor for complete object (ctor for most derived class).
+  In particular, this ensures that virtual base is constructed exactly once even if it's mentioned in many places in the class hierarchy.
+
+Logical problem with ctors doesn't exist for dtors; they're simply invoked in reverse order of ctor (Sec. 20.2.2). In particular, dtor for virtual base invoked exactly once.
+
+cf. 21.3.5.2 Calling a Virtual Class Member Once Only
+
+When defining functions for class with virtual base, programmer in general can't know whether base will be shared with other derived classes.
+  - This can be problem when implementing a service that requires base class function to be called exactly once for each call of a derived function
+  - Where needed, programmer can simulate scheme used for ctors by calling virtual base class function only from most derived class.
+
+e.g.
+
+```
+class Window // base
+{
+  public:
+    // basic stuff
+    virtual void draw();
+};
+
+class Window_with_border : public virtual Window
+{
+  // border stuff
+  protected:
+
+    void own_draw();  // display the border
+
+  public:
+
+    void draw() override;
+};
+
+class Window_with_menu : public virtual Window
+{
+  // menu stuff
+  protected:
+    void own_draw(); // display the menu
+
+  public:
+    void draw() override;
+};
+
+class Clock : public Window_with_border, public Window_with_menu
+{
+  // clock stuff
+  protected:
+
+    void own_draw(); // display the clock face and hands
+
+  public:
+
+    void draw() override;
+};
+
+void Window_with_border::draw()
+{
+  Window::draw();
+  own_draw(); // display the border
+}
+
+void Window_with_menu::draw()
+{
+  Window::draw();
+  own_draw(); // display the menu
+}
+
+void Clock::draw()
+{
+  Window::draw();
+  Window_with_border::own_draw();
+  Window_with_menu::own_draw();
+  own_draw(); // display the clock face and hands
+}
+
+```
+
+cf. 21.3.6 Replicated vs. Virtual Bases, Stroustrup
+
+In Sec. 21.2.2., Stroustrup made `Ival_box` classes abstract to reflect their role as pure interfaces. Doing that allowed Stroustrup to place all implementation details in specific implementation classes.
+
+When using abstract class **(without any shared data)** as interface, we have a choice:
+* replicate interface class (1 object per mention in the clas hierarchy)
+* Make interface class `virtual` to share simple object among all classes in hierarchy that mention it.
+
+`Ival_slider` as virtual base:
+
+```
+class BB_ival_slider : public virtual Ival_slider, protected BBslider
+{
+  /* ... */
+};
+
+class Popup_Ival_slider : public virtual Ival_slider
+{
+  /* ... */
+};
+
+class BB_popup_ival_slider : public virtual Popup_ival_slider, protected BB_ival_slider
+{
+  /* ... */
+};
+```
+
+vs.
+
+replicated `Ival_slider`
+
+Surprisingly there are no fundamental run-time or space advantages to 1 design over the other.
+
+
