@@ -96,7 +96,7 @@ class Ival_box
 ```
 
 *Data is gone, ctor gone since there's no data to initialize.*
-*Added virtual destructor to ensure proper cleanup of data that'll be defined in derived class*
+*Added **virtual destructor to ensure proper cleanup of data** that'll be defined in derived class*
 
 e.g.
 
@@ -140,7 +140,7 @@ Derived class inherits from abstract class that requires it to implement base cl
 
 - **Cleanup**:
   * many classes requires some form of cleanup for an object before it goes away.
-  * since abstract class `Ival_box` can't know if a derived class requires such cleanup, it must assume that it does require some.
+  * since abstract class `Ival_box` **can't know if a derived class requires such cleanup, it must assume that it does require some**.
   * ensure proper cleanup by
     - **defining virtual destructor** `Ival_box::~Ival_box()` **in base** and overriding it suitably in derived classes.
 
@@ -433,17 +433,25 @@ When using abstract class **(without any shared data)** as interface, we have a 
 `Ival_slider` as virtual base:
 
 ```
-class BB_ival_slider : public virtual Ival_slider, protected BBslider
+class Ival_slider;
+
+class Popup_Ival_slider :
+  public virtual Ival_slider
 {
   /* ... */
 };
 
-class Popup_Ival_slider : public virtual Ival_slider
+class BB_ival_slider :
+  public virtual Ival_slider,
+  protected BBslider
 {
   /* ... */
 };
 
-class BB_popup_ival_slider : public virtual Popup_ival_slider, protected BB_ival_slider
+
+class BB_popup_ival_slider :
+  public virtual Popup_Ival_slider,
+  protected BB_ival_slider
 {
   /* ... */
 };
@@ -453,6 +461,147 @@ vs.
 
 replicated `Ival_slider`
 
+```
+class Ival_slider;
+
+class Popup_Ival_slider :
+  public Ival_slider
+{
+  /* ... */
+};
+
+class BB_ival_slider :
+  public Ival_slider,
+  protected BBslider
+{
+  /* ... */
+};
+
+
+class BB_popup_ival_slider :
+  public Popup_Ival_slider,
+  protected BB_ival_slider
+{
+  /* ... */
+};
+```
+
 Surprisingly there are no fundamental run-time or space advantages to 1 design over the other.
+
+There are logical differences, though. In replicated `Ival_slider` design, `BB_popup_ival_slider` can't be implicitly converted to an `Ival_slider` (because that would be ambiguous):
+
+```
+void f(Ival_slider* p);
+
+void g(BB_popup_ival_slider* p)
+{
+  f(p); // error: Popup_ival_slider::Ival_slider or BB_ival_slider::Ival_slider?
+}
+```
+
+On the other hand, it's possible to construct plausible scenarios where sharing implied in virtual base design causes ambiguities for casts *from* the base class (Sec. 22.2). However, such ambiguities are easily dealt with.
+
+How to choose between virtual base classes and replicated base classes for our (EY: pure) interfaces?
+- When we do have a choice, we can take into account that (surprisingly) replicated base solution tends to lead to slightly smaller objects (because there's no need for data structures support sharing), and that we often get our interface objects from "virtual ctors" or "factor functions" (Sec. 21.2.4). e.g.
+
+```
+Popup_ival_slider* popup_slider_factor(args)
+{
+  // ...
+  return new BB_popup_ival_slider(args);
+}
+```
+
+No explicit conversion needed to get from an implementation (here `BB_popup_ival_slider`) to its direct interfaces (here, `Popup_ival_slider`). EY : So, the virtual base, in replicated, may be the problem???
+
+##### Overriding Virtual Base Functions
+
+A derived class can override virtual function of its direct or indirect virtual base class. In particular, 2 different classes might override different virtual functions from virtual base.
+
+```
+class Window
+{
+  // ...
+  virtual void set_color(Color) = 0; // set background color
+  virtual void prompt() = 0;
+};
+
+class Window_with_border : public virtual Window
+{
+  // ...
+  void set_color(Color) override; // control background color
+};
+
+class Window_with_menu : public virtual Window
+{
+  // ...
+  void prompt() override; // control user interactions
+};
+
+class My_window : public Window_with_menu, public Window_with_order
+{
+  // ...
+};
+```
+
+What if different derived classes override the same function? 
+This is allowed if and only if some overriding class is derived from every other class that overrides the function, i.e. one function must override all others.
+
+```
+class My_window: public Window_with_menu, public Window_with_border
+{
+  // ...
+  void prompt() override; // don't leave user interactions to base
+};
+```
+If 2 classes override base class function, but neither overrides other, class hierarchy is an error.
+- reason is that no single function can be used to give a consistent meaning for all calls independently of which class they use as an interface; or no virtual function table can be constructed because a call to that function on the complete object would be ambiguous.
+e.g. had `Radio` in Sec. 21.3.5 not declared `write()`, declarations of `write()` in `Receiver` and Transmitter would have caused an error when defining `Radio`.
+As with `Radio`, such a conflict is resolved by adding an overriding function to most derived class.
+
+###### mixin
+
+**mixin** - a class that provides some - but not all - of the implementation for a virtual base class is often called a *mixin*.
+
+## Advice on class hierarchy
+cf. pp. 640 Class Hierarchies Ch. 21 21.4 Advice
+
+1. Use `unique_ptr` or `shared_ptr` to avoid forgetting to `delete` objects created using `new` Sec. 21.2.1
+4. Give abstract class a virtual destructor to ensure proper cleanup, Sec. 21.2.2.
+6. Use abstract classes to support interface inheritance, Sec. 21.2.2
+7. Use base classes with data members to support implementation inheritance; Sec. 21.2.2
+
+# Run-Time Type Information
+
+cf. Ch. 22 Run-Time Type Information. Stroustrup.
+
+Recovering "lost" type of an object requires us to somehow ask the object to reveal its type.
+- Any operation on an object requires us to have a pointer or reference of a suitable type for the object.
+Consequently, most obvious and useful operation for inspecting type of an object at run time is a type conversion operation that returns a valid pointer if object is of expected type, and null pointer if it isn't. 
+`dynamic_cast` operator does exactly that.
+
+e.g. assume "the system" invokes `my_event_handler()` with a pointer to a `BBwindow`, where an activity has occurred. e.g. then might invoke my application code using `Ival_box`'s `do_something()`:
+
+```
+void my_event_handler(BBwindow* pw)
+{
+  if (auto pb = dynamic_cast<Ival_box*>(pw))  // does pw point to an Ival_box?
+  {
+    // ...
+    int x = pb->get_value(); // use the Ival_box
+    // ...
+  }
+  else
+  {
+    // ... oops! cope with unexpected event
+  }
+}
+```
+One way of explaining what's going on here is `dynamic_cast` translates from implementation-oriented language of user-interface system to language of the application.
+
+It's important to note what's *not* mentioned in this example: the actual type of the object. Object will be a particular kind of `Ival_box`, say, an `Ival_slider`, implemented by a particular kind of `BBwindow`, say `BBslider`.
+
+
+
 
 
