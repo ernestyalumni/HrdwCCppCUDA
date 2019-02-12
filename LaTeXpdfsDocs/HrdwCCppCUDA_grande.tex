@@ -1047,6 +1047,27 @@ If we use \verb|std::shared_ptr|, there'd be no need to declare destructor in \v
 
 Difference stems from differing ways smart pointers support custom deleters.  For \verb|std::unique_ptr|, type of deleter is part of type of smart pointer, and this makes it possible for compilers to generate smaller runtime data structures and faster runtime code.  A consequence of this greater efficiency is that pointed-to types must be complete when compiler-generated special functions (e.g. destructors or move operations) are used.  For \verb|std::shared_ptr|, type of deleter is not part of the type of smart pointer.  This necessitates larger runtime data structures and somewhat slower code, but pointed-to types need not be complete when compiler-generated special functions are employed.  
 
+\part{Integers, numeric encodings, number representation, binary representation, hexidecimal representation}
+
+cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_3-429h.pdf}{Systems 1, Integers lecture at University of Texas, CS429} is a \textbf{very good lecture}; both \emph{mathematically rigorous} and full of useful, \emph{clear} examples.
+
+Consider $\mathbb{Z}^+_{2^w} \to \mathbb{Z}^+$, where $\mathbb{Z}^+_{2^w}$ represent "unsigned" integers. 
+\begin{equation}
+\begin{gathered}
+\mathbb{Z}^+_{2^w} \to \mathbb{Z}^+ \\ 
+(x_0, x_1 , \dots , x_{w-1}) \mapsto \sum_{i=0}^{w-1} x_i \cdot 2^i 
+\end{gathered}
+\end{equation}
+
+For hexidecimal (-based) numbers, observe this relationship: 
+\begin{equation}
+2^w = 16^v = 2^{4v} \text{ so } w =4v
+\end{equation}
+
+
+
+
+
 
 
 
