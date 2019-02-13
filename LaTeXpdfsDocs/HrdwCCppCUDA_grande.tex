@@ -1051,6 +1051,8 @@ Difference stems from differing ways smart pointers support custom deleters.  Fo
 
 cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_3-429h.pdf}{Systems 1, Integers lecture at University of Texas, CS429} is a \textbf{very good lecture}; both \emph{mathematically rigorous} and full of useful, \emph{clear} examples.
 
+\section{Unsigned integers}
+
 Consider $\mathbb{Z}^+_{2^w} \to \mathbb{Z}^+$, where $\mathbb{Z}^+_{2^w}$ represent "unsigned" integers. 
 \begin{equation}
 \begin{gathered}
@@ -1064,11 +1066,125 @@ For hexidecimal (-based) numbers, observe this relationship:
 2^w = 16^v = 2^{4v} \text{ so } w =4v
 \end{equation}
 
+So for a hexidecimal number, $v$ hexidecimal numbers represent $w=4v$ bits. 
 
+Observe that 
+\begin{equation}
+\mathbb{Z}^+_{2^w} = \lbrace 0 , \dots 2^w - 1 \rbrace 
+\end{equation}
 
+Also, \textbf{modular addition} $(\mathbb{Z}^+_{2^w}, +)$ forms an \textbf{abelian group}.
 
+\section{Two's complement}
 
+Denote the notation for so-called "two's complement" numbers as $\mathbb{Z}_{2^w}$, which is a representation for integers in such a manner:
 
+\begin{equation}
+\begin{gathered}
+\mathbb{Z}_{2^w} \to \mathbb{Z} \\
+(x_0, x_1, \dots x_{w-1}) \mapsto -x_{w-1} \cdot 2^{w-1} + \sum_{i=0}^{w-2} x_i \cdot 2^i
+\end{gathered}
+\end{equation}
+with
+\begin{equation}
+\mathbb{Z}_{2^w} = \lbrace - 2^{w-1} \dots 2^{w-1} -1 \rbrace
+\end{equation}
+
+Observe that 
+\begin{equation}
+\begin{gathered}
+\max{ \left( \mathbb{Z}^+_{2^w} \right) } = 2 \max{ \mathbb{Z}_{2^w} } + 1 \\
+| \min{ \mathbb{Z}_{2^w} } | = \max{ \mathbb{Z}_{2^w} } + 1
+\end{gathered}
+\end{equation}
+
+\subsection{Negating with complement}
+
+\begin{equation}
+\begin{gathered}
+\begin{gathered} 
+\sim : \mathbb{Z}_{2^w} \to \mathbb{Z} \text{ s.t. } \\
+\sim x + 1 = -x \quad \, \forall \, x \in \mathbb{Z}_{2^w} \\
+\end{gathered}  \\
+\begin{gathered} 
+\sim : \mathbb{Z}^+_{2^w} \to \mathbb{Z} \text{ s.t. } \\
+\sim x = 2^w- 1 -x 
+\end{gathered}
+\end{gathered}
+\end{equation}
+
+\subsection{Power of 2 Multiply with shift (left shift bitwise operation) }
+
+For both $\mathbb{Z}^+_{2^w}$, $\mathbb{Z}_{2^w}$, 
+
+\begin{equation}
+ u << k = u \cdot 2^k \qquad \, \forall \, u \in \mathbb{Z}^+_{2^w} \text{ or } \mathbb{Z}_{2^w} \text{and } k \in \mathbb{Z}
+\end{equation}
+
+\subsection{Unsigned power-of-2 Divide, with shift (right shift bitwise operator)}
+
+\begin{equation}
+u >> k = \lfloor u / 2^k \rfloor \qquad \, \forall \, u \in \mathbb{Z}^+_{2^w}, \quad \, k \in \mathbb{Z}  
+\end{equation}
+
+\section{Endianness} 
+
+Consider \emph{address} $\in \mathbb{Z}^+_{2^3}$.  Consider a \emph{value} $\in \mathbb{Z}^+_{2^3}$ or $\mathbb{Z}_{2^3}$. 
+
+$\forall \, (x_0, x_1, \dots x_{w-1}) \in \mathbb{Z}^+_{2^3} \text{ or } \mathbb{Z}_{2^3}$
+
+Given address $a$, 
+
+\subsection{Big-endian}
+
+\begin{definition}[Big-endian]
+	Most-significant byte value is at the lowest address, i.e. 
+	\begin{equation}
+	\begin{gathered}
+	a \mapsto x_{w-1} \\
+	a+1 \mapsto x_{w-2} \\ 
+	a+2 \mapsto x_{w-3} \\ 
+	\vdots \\
+	a+w - 1 \mapsto x_0 
+	\end{gathered}
+	\end{equation}
+	\end{definition} 
+
+\subsection{Little-endian}
+
+\begin{definition}[Little-endian]
+Least-significant byte value is at the lowest address, i.e.
+\begin{equation}
+\begin{gathered}
+a \mapsto x_0 \\
+a + 1 \mapsto x_1 \\
+\vdots \\
+a+w - 1 \mapsto x_{w-1}
+\end{gathered}
+\end{equation}
+
+For Little-endian $\to \mathbb{Z}$, \\
+$( \text{ addresses } ) \in \mathbb{Z}^+_{2^3} \mapsto \mathbb{Z}$, \\
+$a \mapsto (x_0, x_1, \dots x_{w-1})$
+
+For $\mathbb{Z} \to $ Big-endian, \\
+$n \mapsto (x_{w-1}, x_{w-2}, \dots x_0)$.
+
+Instead, to tackle the confusing problem of byte ordering, think about the integer as itself first, and then consider \emph{mapping multibyte binary values to memory}.
+
+\begin{equation}
+\begin{gathered}
+\mathbb{Z} \to \left( \mathbb{Z}_{2^w} \longleftarrow \mathbb{Z}_{(2^3)^w} = \textbf{addresses}  \right) \\
+\begin{aligned}
+& \mathbb{Z} \ni (x_{w-1}, x_{w-2}, \dots x_1, x_0) \xmapsto{\text{Little-Endian}}  & \left((x_0, x_1 , \dots x_{w-2}, x_{w-1}) \longleftarrow\!\shortmid \,  (a, a+1, \dots a + w-2, a+w-1)\right) \\
+& \mathbb{Z} \ni (x_{w-1}, x_{w-2}, \dots x_1, x_0) \xmapsto{\text{Big-Endian}}  & \left((x_{w-1}, x_{w-2} , \dots x_{1}, x_{0}) \longleftarrow\!\shortmid \,  (a, a+1, \dots a + w-2, a+w-1)\right) 
+\end{aligned}
+\end{gathered}
+\end{equation}
+
+ 
+	
+\end{definition}
 
 
 \end{multicols*}
