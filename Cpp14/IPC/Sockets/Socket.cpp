@@ -21,16 +21,18 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///   g++ -I ../../ -std=c++14 Socket.cpp Socket_main.cpp ../../Utilities/ErrorHandling.cpp -o Socket_main
+///   g++ -I ../../ -std=c++14 Socket.cpp Socket_main.cpp \
+///     ../../Utilities/ErrorHandling.cpp -o ../../Utilities/Errno.cpp -o 
+///     Socket_main
 //------------------------------------------------------------------------------
 #include "Socket.h"
 
-#include <unistd.h> // ::close
-
 #include "Utilities/ErrorHandling.h" // HandleReturnValue
 
+#include <ostream>
+#include <unistd.h> // ::close
+
 using Utilities::ErrorHandling::HandleClose;
-using Utilities::ErrorHandling::HandleReturnValue;
 
 namespace IPC
 {
@@ -43,7 +45,7 @@ Socket::Socket(const Domains domain, const int type, const int protocol) :
   protocol_{protocol},
   fd_{::socket(static_cast<uint16_t>(domain), type, protocol)}
 {
-  HandleReturnValue()(fd_, "create file descriptor (::eventfd)");
+  HandleSocket()(fd_);
 }
 
 Socket::~Socket()
@@ -52,6 +54,18 @@ Socket::~Socket()
   HandleClose()(result);
 }
 
+void Socket::HandleSocket::operator()(const int result)
+{ 
+  this->operator()(result, "create file descriptor (::eventfd)");
+}
+
+std::ostream& operator<<(std::ostream& os, const Socket& socket)
+{
+  os << socket.domain_as_int() << ' ' << socket.type() << ' ' <<
+    socket.protocol() << ' ' << socket.fd() << '\n';
+
+  return os;
+}
 
 
 } // namespace Sockets

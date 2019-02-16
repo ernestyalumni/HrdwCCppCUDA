@@ -23,7 +23,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///   g++ --std=c++17 StdErrc_main.cpp -o StdErrc_main
+///   g++ -std=c++17 Errno.cpp Errno_main.cpp -o Errno_main
 //------------------------------------------------------------------------------
 #include "Errno.h"
 

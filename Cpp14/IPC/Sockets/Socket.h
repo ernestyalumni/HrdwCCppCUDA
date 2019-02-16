@@ -21,11 +21,17 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///   g++ -I ../../ -std=c++14 Socket.cpp Socket_main.cpp ../../Utilities/ErrorHandling.cpp -o Socket_main
+///   g++ -I ../../ -std=c++14 Socket.cpp Socket_main.cpp \
+///     ../../Utilities/ErrorHandling.cpp ../../Utilities/Errno.cpp -o \
+///     Socket_main
 //------------------------------------------------------------------------------
 #ifndef _IPC_SOCKET_H_
 #define _IPC_SOCKET_H_
 
+#include "Utilities/ErrorHandling.h" // HandleReturnValue
+#include "Utilities/casts.h" // get_underlying_value
+
+#include <ostream>
 #include <sys/socket.h> // AF_INET,AF_UNIX,AF_LOCAL,etc.; communication domains
 
 namespace IPC
@@ -90,7 +96,7 @@ class Socket
 
     int domain_as_int() const
     {
-      return static_cast<int>(domain_);
+      return Utilities::get_underlying_value<Domains>(domain_);
     }
 
     int type() const
@@ -103,7 +109,40 @@ class Socket
       return protocol_;
     }
 
+  friend std::ostream& operator<<(std::ostream& os, const Socket& socket);
+
   protected:
+
+    //--------------------------------------------------------------------------
+    /// \brief Return value of ::socket: on success, a fd for the new socket is
+    /// returned. On error, -1 is returned and errno is set appropriately.
+    /// \details 
+    /// EACCES Permission to create a socket of the specified type and/or
+    /// protocol is defined.
+    /// EAFNOSUPPORT The implementation does not support the specified address
+    /// family.
+    /// EINVAL Unknown protocol, or protocol family not available
+    /// EINVAL INvalid flags in type
+    /// EMFILE The per-process limit on the number of open fds has been reached.
+    /// ENFILE The system-wide limit on total number of open files has been
+    /// reached.
+    /// ENOBUFS or ENOMEM Insufficient memory is available. The socket cannot be
+    /// created until sufficient resources are freed.
+    /// EPROTONOSUPPORT The protocol type or specified protocol isn't supported
+    /// within this domain.
+    //--------------------------------------------------------------------------
+    class HandleSocket : public Utilities::ErrorHandling::HandleReturnValue
+    {
+      public:
+
+        HandleSocket() = default;
+
+        void operator()(const int result);
+
+      private:
+
+        using HandleReturnValue::operator();
+    };
 
     // protected, so one wouldn't be able to do something like ::close(fd)
     const int fd() const
@@ -112,6 +151,7 @@ class Socket
     }
 
   private:
+
 
     Domains domain_;
     int type_;
@@ -124,4 +164,3 @@ class Socket
 } // namespace IPC
 
 #endif // _IPC_SOCKET_H_
-

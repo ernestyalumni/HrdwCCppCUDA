@@ -67,7 +67,6 @@ void HandleReturnValue::operator()(const int result)
     "Integer return value to check was less than 0, and so,");
 }
 
-
 void HandleClose::operator()(const int result)
 {
   this->operator()(result, "Failed to close fd (::close())");
