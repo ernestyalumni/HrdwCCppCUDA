@@ -25,9 +25,10 @@
 ///     ../../Utilities/ErrorHandling.cpp ../../Utilities/Errno.cpp -o \
 ///     Socket_main
 //------------------------------------------------------------------------------
-#ifndef _IPC_SOCKET_H_
-#define _IPC_SOCKET_H_
+#ifndef _IPC_SOCKETS_SOCKET_H_
+#define _IPC_SOCKETS_SOCKET_H_
 
+//#include "Listen.h"
 #include "Utilities/ErrorHandling.h" // HandleReturnValue
 #include "Utilities/casts.h" // get_underlying_value
 
@@ -76,6 +77,15 @@ enum class Types : int
   close_on_exec = SOCK_CLOEXEC
 };
 
+//class Socket;
+
+//class Listen;
+//{
+  //public:
+
+    //void operator()(Socket& socket);
+//};
+
 //------------------------------------------------------------------------------
 /// \brief Creates an endpoint for communication
 //------------------------------------------------------------------------------
@@ -83,6 +93,15 @@ class Socket
 {
   public:
 
+    //--------------------------------------------------------------------------
+    /// \fn Socket
+    /// \brief Constructor matching ::socket function signature.
+    /// \url http://man7.org/linux/man-pages/man2/socket.2.html
+    /// \details The protocol specifies a particular protocol to be used with
+    /// the socket. Normally, only a single protocol exists to support a
+    /// particular socket type within a given protocol family, in which case
+    /// protocol can be specified as 0.
+    //--------------------------------------------------------------------------
     Socket(const Domains domain, const int type, const int protocol = 0);
 
     virtual ~Socket();
@@ -109,7 +128,20 @@ class Socket
       return protocol_;
     }
 
-  friend std::ostream& operator<<(std::ostream& os, const Socket& socket);
+    friend std::ostream& operator<<(std::ostream& os, const Socket& socket);
+
+//  template <typename implementation>
+//  friend Bind<Implementation>::operator()(Socket& socket);
+
+//    friend void Listen::operator()(Socket& socket);
+
+    // protected, so one wouldn't be able to do something like ::close(fd)
+    // But needed elsewhere
+    const int fd() const
+    {
+      return fd_;
+    }
+
 
   protected:
 
@@ -135,7 +167,7 @@ class Socket
     {
       public:
 
-        HandleSocket() = default;
+        HandleSocket();
 
         void operator()(const int result);
 
@@ -144,14 +176,8 @@ class Socket
         using HandleReturnValue::operator();
     };
 
-    // protected, so one wouldn't be able to do something like ::close(fd)
-    const int fd() const
-    {
-      return fd_;
-    }
 
   private:
-
 
     Domains domain_;
     int type_;
@@ -163,4 +189,4 @@ class Socket
 } // namespace Sockets
 } // namespace IPC
 
-#endif // _IPC_SOCKET_H_
+#endif // _IPC_SOCKETS_SOCKET_H_

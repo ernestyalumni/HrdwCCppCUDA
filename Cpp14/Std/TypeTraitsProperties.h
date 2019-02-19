@@ -258,6 +258,119 @@ std::ostream& operator<<(std::ostream& os, const TypeProperties<T>& traits)
   return os;
 }
 
+template <typename T>
+class RuleOf5Properties
+{
+  public:
+
+    RuleOf5Properties():
+      is_constructible_{std::is_constructible<T>::value},
+      is_trivially_constructible_{std::is_trivially_constructible<T>::value},
+      is_nothrow_constructible_{std::is_nothrow_constructible<T>::value},
+      is_default_constructible_{std::is_default_constructible<T>::value},
+      is_trivially_default_constructible_{
+        std::is_trivially_default_constructible<T>::value},
+      is_nothrow_default_constructible_{
+        std::is_nothrow_default_constructible<T>::value},
+      is_copy_constructible_{std::is_copy_constructible<T>::value},
+      is_trivially_copy_constructible_{
+        std::is_trivially_copy_constructible<T>::value},
+      is_nothrow_copy_constructible_{
+        std::is_nothrow_copy_constructible<T>::value},
+      is_move_constructible_{std::is_move_constructible<T>::value},
+      is_trivially_move_constructible_{
+        std::is_trivially_move_constructible<T>::value},
+      is_nothrow_move_constructible_{
+        std::is_nothrow_move_constructible<T>::value},
+//      is_assignable_{std::is_assignable<T>::value},
+//      is_trivially_assignable_{std::is_trivially_assignable<T>::value},
+//      is_nothrow_assignable_{std::is_nothrow_assignable<T>::value},
+      is_copy_assignable_{std::is_copy_assignable<T>::value},
+      is_trivially_copy_assignable_{
+        std::is_trivially_copy_assignable<T>::value},
+      is_nothrow_copy_assignable_{
+        std::is_nothrow_copy_assignable<T>::value},
+      is_move_assignable_{std::is_move_assignable<T>::value},
+      is_trivially_move_assignable_{
+        std::is_trivially_move_assignable<T>::value},
+      is_nothrow_move_assignable_{std::is_nothrow_move_assignable<T>::value},
+      is_destructible_{std::is_destructible<T>::value},
+      is_trivially_destructible_{std::is_trivially_destructible<T>::value},
+      is_nothrow_destructible_{std::is_nothrow_destructible<T>::value},
+      has_virtual_destructor_{std::has_virtual_destructor<T>::value}
+    {}
+
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& os,
+      const RuleOf5Properties<U>&);
+
+  private:
+
+    const bool is_constructible_;
+    const bool is_trivially_constructible_;
+    const bool is_nothrow_constructible_;
+    const bool is_default_constructible_;
+    const bool is_trivially_default_constructible_;
+    const bool is_nothrow_default_constructible_;
+    const bool is_copy_constructible_;
+    const bool is_trivially_copy_constructible_;
+    const bool is_nothrow_copy_constructible_;
+    const bool is_move_constructible_;
+    const bool is_trivially_move_constructible_;
+    const bool is_nothrow_move_constructible_;
+//    const bool is_assignable_;
+//    const bool is_trivially_assignable_;
+//    const bool is_nothrow_assignable_;
+    const bool is_copy_assignable_;
+    const bool is_trivially_copy_assignable_;
+    const bool is_nothrow_copy_assignable_;
+    const bool is_move_assignable_;
+    const bool is_trivially_move_assignable_;
+    const bool is_nothrow_move_assignable_;
+    const bool is_destructible_;
+    const bool is_trivially_destructible_;
+    const bool is_nothrow_destructible_;
+    const bool has_virtual_destructor_;
+};
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const RuleOf5Properties<T>& traits)
+{
+  os << 
+    " is_constructible : " << traits.is_constructible() <<
+    " is_trivially_constructible : " << traits.is_trivially_constructible() <<
+    " is_nothrow_constructible : " << traits.is_nothrow_constructible() <<
+    " is_default_constructible : " << traits.is_default_constructible() <<
+    " is_trivially_default_constructible : " <<
+      traits.is_trivially_default_constructible() <<
+    " is_nothrow_default_constructible : " <<
+      traits.is_nothrow_default_constructible() <<
+    " is_copy_constructible : " << traits.is_copy_constructible() <<
+    " is_trivially_copy_constructible : " <<
+      traits.is_trivially_copy_constructible() <<
+    " is_nothrow_copy_constructible : " << traits.is_nothrow_copy_constructible() <<
+    " is_move_constructible : " << traits.is_move_constructible() <<
+    " is_trivially_move_constructible : " <<
+      traits.is_trivially_move_constructible() <<
+    " is_nothrow_move_constructible : " << traits.is_nothrow_move_constructible() <<
+//    " is_assignable : " << traits.is_assignable() <<
+//    " is_trivially_assignable : " << traits.is_trivially_assignable() <<
+//    " is_nothrow_assignable : " << traits.is_nothrow_assignable() <<
+    " is_copy_assignable : " << traits.is_copy_assignable() <<
+    " is_trivially_copy_assignable : " << traits.is_copy_trivially_assignable() <<
+    " is_nothrow_copy_assignable : " << traits.is_nothrow_copy_assignable() <<
+    " is_move_assignable : " << traits.is_move_assignable() <<
+    " is_trivially_move_assignable : " <<
+      traits.is_trivially_move_assignable() <<
+    " is_nothrow_move_assignable : " << traits.is_nothrow_move_assignable() <<
+    " is_destructible : " << traits.is_destructible() <<
+    " is_trivially_destructible : " << traits.is_trivially_destructible() <<
+    " is_nothrow_destructible : " << traits.is_nothrow_destructible() <<
+    " has_virtual_destructor : " << traits.has_virtual_destructor() << '\n';
+
+  return os;
+}
+
 } // namespace Std
 
 #endif // _STD_TYPE_TRAITS_PROPERTIES_H_

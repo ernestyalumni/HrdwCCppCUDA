@@ -56,7 +56,8 @@ void HandleReturnValue::operator()(
       errno,
       std::system_category(),
       "Failed to " + custom_error_string + " with errno : " +
-        error_number_.as_string() + "\n");
+        error_number_.as_string() + " and error number " +
+          std::to_string(error_number().error_number()) + '\n');
   }
 }
 

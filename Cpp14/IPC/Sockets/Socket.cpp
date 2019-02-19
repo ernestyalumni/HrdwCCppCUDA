@@ -54,6 +54,8 @@ Socket::~Socket()
   HandleClose()(result);
 }
 
+Socket::HandleSocket::HandleSocket() = default;
+
 void Socket::HandleSocket::operator()(const int result)
 { 
   this->operator()(result, "create file descriptor (::eventfd)");
@@ -66,7 +68,6 @@ std::ostream& operator<<(std::ostream& os, const Socket& socket)
 
   return os;
 }
-
 
 } // namespace Sockets
 } // namespace IPC
