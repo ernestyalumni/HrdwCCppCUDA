@@ -29,9 +29,11 @@
 
 #include "InternetAddress.h"
 #include "Socket.h"
+#include "UnixDomainAddress.h"
 #include "Utilities/ErrorHandling.h" // HandleReturnValue
 
 #include <cstring> // std::memset 
+#include <string>
 #include <type_traits>
 
 namespace IPC
@@ -131,7 +133,7 @@ class BindAddressFamily : public Bind<BindAddressFamily<AddressFamily>>
     /// \brief Constructor
     /// \ref https://en.cppreference.com/w/cpp/string/byte/memset
     //--------------------------------------------------------------------------    
-    BindAddressFamily(const AddressFamily& address):
+    explicit BindAddressFamily(const AddressFamily& address):
       address_{address}
     {}
 
@@ -163,6 +165,23 @@ class BindAddressFamily : public Bind<BindAddressFamily<AddressFamily>>
 
     AddressFamily address_;
 }; // class BindAddressFamily
+
+class BindUnixDomainAddress : public Bind<BindUnixDomainAddress>
+{
+  protected:
+
+    using HandleBind = typename Bind<BindUnixDomainAddress>::HandleBind;
+
+  public:
+
+    explicit BindUnixDomainAddress(const std::string& sun_path);
+
+    void operator()(Socket& socket);
+
+  private:
+
+    UnixDomainAddress unix_domain_address_;
+}; // class BindUnixDomainAddress
 
 #if 0
 

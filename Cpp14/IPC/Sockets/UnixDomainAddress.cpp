@@ -27,6 +27,7 @@
 #include "UnixDomainAddress.h"
 
 #include "Socket.h"
+#include "Utilities/casts.h" // get_underlying
 
 #include <cstring> // std::memset, std::strncpy, std::strlen
 #include <netinet/un.h>
@@ -34,6 +35,7 @@
 #include <unistd.h> // unlink
 
 using IPC::Sockets::Domains;
+using Utilities::get_underlying_value;
 
 namespace IPC
 {
@@ -48,28 +50,38 @@ UnixDomainSocketAddress::UnixDomainSocketAddress(
 {
   this->sun_family = sun_family;
   std::strcpy(this->sun_path, sun_path.c_str());
+
+  /// \url https://github.com/skuhl/sys-prog-examples/blob/master/ \
+  /// simple-examples/unix-dgram-server.c
+  /// Notice that we called ::unlink() before ::bind() to remove the socket if
+  /// it already exists. You'll get an EINVAL error if file is already there.
   ::unlink(this->sun_path);
 }
 
 UnixDomainSocketAddress::UnixDomainSocketAddress(const std::string& sun_path):
-  UnixDomainSocketAddress{AF_INET, sin_port, INADDR_ANY}
+  UnixDomainSocketAddress{
+    get_underlying_value<Domains>(Domains::unix),
+    sun_path}
 {}
 
 UnixDomainSocketAddress::UnixDomainSocketAddress() = default;
 
 UnixDomainAddress::UnixDomainAddress(
-  const uint16_t sin_family,
-  const uint16_t sin_port,
-  const uint32_t sin_addr
+  const uint16_t sun_family,
+  const std::string& sun_path
   ):
-  socket_address_internet_{sin_family, ::htons(sin_port), ::htonl(sin_addr)}
+{
+  socket_address_unix_.sun_family = sun_family;
+  std::strcpy(socket_address_unix_.sun_path, sun_path.c_str());
+
+  ::unlink(socket_address_unix_.sun_path);
+}
+
+UnixDomainAddress::UnixDomainAddress(const std::string& sun_path):
+  UnixDomainAddress{get_underlying_value<Domains>(Domains::unix), sun_path}
 {}
 
-UnixDomainAddress::UnixDomainAddress(const uint16_t sin_port):
-  UnixDomainAddress{AF_INET, sin_port, INADDR_ANY}
-{}
-
-UnixDomainAddress::InternetAddress() = default;
+UnixDomainAddress::UnixDomainAddress() = default;
 
 } // namespace Sockets
 } // namespace IPC

@@ -21,7 +21,7 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -I ../../ -std=c++14 Socket.cpp Bind_main.cpp ../../Utilities/ErrorHandling.cpp ../../Utilities/Errno.cpp -o Bind_main
+///  g++ -I ../../ -std=c++17 Socket.cpp Bind_main.cpp ../../Utilities/ErrorHandling.cpp ../../Utilities/Errno.cpp -o Bind_main
 //------------------------------------------------------------------------------
 #include "Bind.h"
 #include "Socket.h"

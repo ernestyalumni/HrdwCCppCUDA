@@ -23,15 +23,19 @@
 /// COMPILATION TIPS:
 ///   g++ --std=c++17 -I ../../ Event.cpp Event_main.cpp -o Event_main
 //------------------------------------------------------------------------------
-#include "InternetAddress.h"
-#include "Socket.h"
-#include "Utilities/ErrorHandling.h" // HandleReturnValue
+#include "Bind.h"
+
+#include <string>
 
 namespace IPC
 {
 
 namespace Sockets
 {
+
+BindUnixDomainAddress::BindUnixDomainAddress(const std::string& sun_path):
+  unix_domain_address_{sun_path}
+{}
 
 } // namespace Sockets
 } // namespace IPC

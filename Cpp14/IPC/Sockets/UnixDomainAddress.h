@@ -4,8 +4,8 @@
 /// \email  ernestyalumni@gmail.com
 /// \brief  Wrappers and classes for UNIX domain addresses.
 /// \ref http://man7.org/linux/man-pages/man7/unix.7.html
-/// \details Only 1 IP (Internet Protocol) socket may be bound to any given
-/// local (address, port) pair.
+/// \details The AF_UNIX (also known as AF_LOCAL) socket family is used to
+/// communicate between processes on same machine efficienctly.
 /// \copyright If you find this code useful, feel free to donate directly
 /// (username ernestyalumni or email address above), going directly to:
 ///
@@ -28,7 +28,7 @@
 #define _IPC_SOCKETS_UNIX_DOMAIN_ADDRESS_H_
 
 #include <cstddef> // std::size_t
-#include <netinet/un.h>
+#include <sys/un.h>
 #include <ostream>
 
 namespace IPC
@@ -125,19 +125,19 @@ class UnixDomainAddress
 
   operator ::sockaddr*()
   {
-    return reinterpret_cast<::sockaddr*>(&socket_address_internet_);
+    return reinterpret_cast<::sockaddr*>(&socket_address_unix_);
   }
 
   /// Accessors for Linux system call.
 
   const ::sockaddr_un* to_socket_address_unix_pointer() const
   {
-    return &socket_address_internet_;
+    return &socket_address_unix_;
   }
 
   ::sockaddr_un* to_socket_address_unix_pointer()
   {
-    return &socket_address_internet_;
+    return &socket_address_unix_;
   }
 
   const ::sockaddr_un* as_socket_address_unix_pointer() const
