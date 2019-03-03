@@ -601,6 +601,55 @@ One way of explaining what's going on here is `dynamic_cast` translates from imp
 
 It's important to note what's *not* mentioned in this example: the actual type of the object. Object will be a particular kind of `Ival_box`, say, an `Ival_slider`, implemented by a particular kind of `BBwindow`, say `BBslider`.
 
+*downcast* - casting from a base class to derived class; base -> derived
+*upcast* - cast from a derived class to base
+*crosscast* - cast that goes from base to sibling class
+
+`dynamic_cast` requires a ptr or reference to a polymorphic type in order to do downcast or crosscast.
+
+**Require the pointer's type to be polymorphic**. 
+- because it makes it easy to find a place to hold the necessary information about the object's type.
+- a typical implementation will attach a "type information object" (Sec. 22.5) to an object by placing a pointer to the type information in the virtual function table for the object's class (Sec. 3.2.3).
+
+If its type *is* known, we don't need to use `dynamic_cast`.
+
+Target type of `dynamic_cast` need not be polymorphic. 
+- This allows us to wrap a concrete type in polymorphic type, say,
+- for transmission through an object I/O system (Sec. 22.2.4), and then "unwrap" the concrete type later.
+e.g.
+
+```
+class IoObj // base class for object I/O system
+{
+  virtual IoObj* clone() = 0;
+};
+
+class IoDate : public Date, public IoObj
+{};
+
+void f(IoObj* pio)
+{
+  Date* pd = dynamic_cast<Date*>(pio);
+  // ...
+}
+```
+
+`dynamic_cast` to `void*` can be used to determine address of beginning of an object of polymorphic type. e.g.
+
+```
+void g(IvalBox* pb, Date* pd)
+{
+  void* pb2 = dynamic_cast<void*>(pb); // OK
+  // void* pd2 = dynamic_cast<void*>(pd); // error: Date not polymorphic
+}
+```
+
+Such casts are only useful for interaction with very low-level functions (only such functions deal with `void*`s). There's no `dynamic_cast` from `void*` (because there'd be no way of knowing where to find `vptr`; Sec. 22.2.3).
+
+
+
+
+
 
 
 
