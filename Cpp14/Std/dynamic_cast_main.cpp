@@ -71,7 +71,13 @@
 /// or ref to type Derived, a run-time check is performed: // EY RUN-TIME check!
 ///   a) Most derived object pointed/identified by expression is examined. If,
 /// in that object, expression points/refers to a public base of Derived, and if
-/// only 1 subobject or Derived type is derived from subobject
+/// only 1 subobject or Derived type is derived from subobject pointed/
+/// identified by expression, then result of cast points/refers to that Derived
+/// subobject. (this is known as a "downcast.")
+///   b) Otherwise, if expression points/refers to public base of most derived
+/// object, and simultaneously, most derived object has unambiguous public base
+/// class of type Derived, result of cast points/refers to that Derived (This is
+/// known as "sidecast")
 //------------------------------------------------------------------------------
 
 struct V
