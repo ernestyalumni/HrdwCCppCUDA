@@ -605,7 +605,13 @@ It's important to note what's *not* mentioned in this example: the actual type o
 *upcast* - cast from a derived class to base
 *crosscast* - cast that goes from base to sibling class
 
-`dynamic_cast` requires a ptr or reference to a polymorphic type in order to do downcast or crosscast.
+cf. 22.2.1 `dynamic_cast`, pp. 643 "Class Hierarchy Navigation", Stroustrup.
+
+Purpose of `dynamic_cast` is to deal with case in which correctness of conversion can't be determined by compiler.
+- In that case, `dynamic_cast<T*>(p)` looks at the **object pointed to** by `p` (if any).
+- Note requirement that conversion must be to a uniquely identified object.
+
+`dynamic_cast` *requires a ptr or reference to a polymorphic type* in order to do downcast or crosscast.
 
 **Require the pointer's type to be polymorphic**. 
 - because it makes it easy to find a place to hold the necessary information about the object's type.
@@ -646,9 +652,49 @@ void g(IvalBox* pb, Date* pd)
 
 Such casts are only useful for interaction with very low-level functions (only such functions deal with `void*`s). There's no `dynamic_cast` from `void*` (because there'd be no way of knowing where to find `vptr`; Sec. 22.2.3).
 
+## `dynamic_cast` to Reference
 
+cf. 22.2.1.1, pp. 645 Stroustrup, Ch. 22 Run-Time Type Information
 
+When a `dynamic_cast` is used for a ptr type, `nullptr` indicates failure.
+- Given a ptr result, we must consider possibility that result is `nullptr`, i.e. ptr doesn't point to an object.
+- Consequently, result of a `dynamic_cast` of a ptr should always be explicitly tested,
 
+```
+void fp(Ival_box* p)
+{
+  if (Ival_slider* is = dynamic_cast<Ival_slider*>(p))
+  { // does p point to an Ival_slider
+    // ... use is ...
+  }
+}
+```
+
+- For a ptr `p`, `dynamic_cast<T*>(p)` can be seen as the question "Is the object pointed to by `p`, if any, of type `T`?"
+
+On the other hand, we may legitimately assume that a reference refers to an object (Sec. 7.7.4). 
+- consequently, `dynamic_cast<T&>(r)` of a reference `r` isn't a question but an assertion: "The object referred to by `r` is of type `T`"
+
+**The difference in results of a failed dynamic pointer cast and a failed dynamic reference cast reflects a fundamental difference between references and pointers.**
+
+If a user wants to protect against bad casts to references, a suitable handler must be provided, e.g. 
+
+```
+void g(BB_ival_slider& slider, BB_ival_dial& dial)
+{
+  try
+  {
+    fp(&slider); // ptr to BB_ival_slider passed as Ival_box*
+    fr(slider); // reference to BB_ival_slider passed as Ival_box&
+    fp(&dial);  // ptr to BB_ival_dial passed as Ival_box*
+    fr(dial);   // dial passed as Ival_box
+  }
+  catch (bad_cast) // Sec. 30.4.1.1
+  {
+      // ...
+  }
+}
+```
 
 
 

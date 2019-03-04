@@ -83,20 +83,27 @@ class Interface2
 
 
 //------------------------------------------------------------------------------
-/// \class Interface3
+/// \class A
 /// \brief Represents class A in dynamic_cast operator example
 /// \ref https://www.bogotobogo.com/cplusplus/dynamic_cast.php
 /// \details Should contain no data.
 //------------------------------------------------------------------------------
-class Interface3
+class A
 {
   public:
 
     virtual void f();
 
-    virtual ~Interface3()
+    virtual ~A()
     {}
-}; // class Interface3
+}; // class A
+
+class A1
+{
+  public:
+
+    A1();
+};
 
 //------------------------------------------------------------------------------
 /// \class Implementation1
@@ -125,16 +132,46 @@ class Implementation1 : public Interface1
 }; // class Implementation1
 
 //------------------------------------------------------------------------------
-/// \class Implementation3
+/// \class B
 /// \brief Represents class B in dynamic_cast operator example
 /// \ref https://www.bogotobogo.com/cplusplus/dynamic_cast.php
 //------------------------------------------------------------------------------
-class Implementation3 : public Interface3
+class B : public A
 {
   public:
 
     void f();
 };
+
+class B1 : public A, protected A1
+{
+  public:
+
+    B1();
+};
+
+
+//------------------------------------------------------------------------------
+/// \class IoObj
+/// \brief Represents Io_obj class in Stroustrup examples.
+/// \details Base class for object I/O system
+/// \ref Ch. 22 RTTI, 22.2.1 `dynamic_cast`, pp. 644
+//------------------------------------------------------------------------------
+class IoObj
+{
+  public:
+
+    virtual IoObj* clone() = 0;
+}; // class IoObj
+
+class IoDate : public A, public IoObj
+{
+  public:
+
+    IoObj* clone();
+};
+
+
 
 } // namespace ClassHierarchy
 

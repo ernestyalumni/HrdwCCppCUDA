@@ -31,10 +31,14 @@
 namespace ClassHierarchy
 {
 
-void Interface3::f()
+void A::f()
 {
   std::cout << "A::f()" << std::endl;
 }
+
+A1::A1() = default;
+
+B1::B1() = default;
 
 Implementation1::Implementation1() = default;
 
@@ -59,9 +63,14 @@ void Implementation1::run1()
   std::cout << "\n Implementation1 run1 \n";
 }
 
-void Implementation3::f()
+void B::f()
 {  
   std::cout << "B::f()" << std::endl;
+}
+
+IoObj* IoDate::clone()
+{
+  return this;
 }
 
 } // namespace ClassHierarchy
