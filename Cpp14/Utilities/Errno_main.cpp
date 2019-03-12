@@ -25,6 +25,7 @@
 //------------------------------------------------------------------------------
 #include "Errno.h"
 
+#include <cerrno> // E2BIG, EACCESS
 #include <cmath>
 #include <iostream>
 #include <system_error> // std::errc
@@ -94,6 +95,17 @@ int main()
     std::cout << error_number.error_code() << '\n';
 
     std::cout << error_number.error_code().value() << '\n';
+
+    std::cout << " error_number.error_code().value() == EDOM : " <<
+      (error_number.error_code().value() == EDOM);
+
+    std::cout << " error_number.error_condition().value() == EDOM : " <<
+      (error_number.error_condition().value() == EDOM);
+
+
+    std::cout << " error_number.error_number() == EDOM : " <<
+      (error_number.error_number() == EDOM);
+
   }
 
 

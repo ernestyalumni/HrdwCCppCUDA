@@ -1,5 +1,57 @@
 # `IO` - IO
 
+cf. [Nonblocking I/O by Cindy Sridharan](https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957)
+
+# `fd` is a reference to a *stream of bytes*
+
+The fundamental building block of all I/O in Unix is a sequence of *bytes*. Most programs work with an even simpler abstraction - a *stream of bytes* or an *I/O stream*.
+
+A process references I/O streams with the help of fds.
+- Pipes, files, FIFOs, POSIX IPCs (message queues, semaphores, shared memory), event queues are all examples of *I/O streams* referenced by a fd.
+
+## Creation and Release of fd's
+
+Fd's are either created explicitly by system calls like `open`, `pipe`, `socket`, or inherited from parent process.
+
+Fd's are released when
+- process exits
+- by calling `close` system call
+- implicitly after an `exec` when fd is marked "close on exec"
+
+## Close-on-exec
+
+When a process forks, all descriptors are "duplicated" in child process.
+
+If any fd's are marked **close on exec**, then after parent **forks**, but before child **execs**, fds in child marked as "close-on-exec" are closed and will no longer be available to child process.
+
+Data transfer happens via `read` or `write` system call on a fd.
+
+## File entry
+
+Every fd points to a data structure called **file entry** in the kernel.
+
+user process -> kernel list
+fd |-> file entry
+
+fd |-> entry \in file entry
+entry = file offset (in bytes)
+
+*file entry* maintains a per fd *file offset* in bytes from the beginning of the file entry object. An `open` system call creates a new **file entry**.
+
+user process \subset *filedesc* process substructure -> kernel list
+
+fd \in descriptor descriptor table |-> file entry = file or device, IPC, virtual memory
+
+## Fork/Dup and File Entries
+
+*fork* system call results in fds being **shared** by parent and child, with **share by reference** semantics.
+
+Both parent and child **are using the same fd** and reference the **same offset** in file entry.
+- Same semantics apply to *dup/dup2* system call used to duplicate a fd.
+
+
+
+
 ## `epoll`
 
 cf. https://linux.die.net/man/4/epoll
