@@ -1342,6 +1342,46 @@ At time $t_6 > t_5$, pid polls status of fd, and fd is ready. This time, pid can
 
 Process $pid$ receives a notification only when fd is "ready" (usually when there's any new activity on fd since it was last monitored). This can be seen as the "push" model, in that a notification is pushed to the process about readiness of a fd.
 
+process pid only notified that fd is ready for I/O, but not provided additional information like for instance how many bytes arrived on socket buffer.
+
+Thus, pid only armed with incomplete data as it tries to perform any subsequent I/O operation 
+e.g. 
+ at $t_2 > t_0$, pid gets notification about fd being ready.
+ 
+ byte stream $(b_n)_{n\in \mathbb{N}}$ available for I/O stored in buffer.
+ 
+ Assume $N_b = 1024$ bytes available for reading, when pid gets notification at $t= t_2$. 
+ \[
+ \Longrightarrow (b_n)_{n <N_b} \subset (b_n)_{n\in \mathbb{N}}
+ \]
+ 
+Assume pid only reads $N_b' = 500$ bytes $<N_b$
+
+That means for $t=t_3, t_4, \dots t_{i_2}$, there are still $N_b - N_b' = $ 524 bytes available in $(b_n)_{n < N_b}$ that pid can read without blocking.
+
+But since pid can only perform I/O once it gets next notification, these $N_b - N_b'$ bytes remain sitting in buffer for that duration.
+
+Assume pid gets next notification at $t_{i_2} = t_6$, when additional $N_b$ bytes have arrived in buffer.
+
+Then total amount of data available on $(b_n)_{n\in \mathbb{N}} = 2N_b - N_b' = 1548 = 524 + 1024$.
+
+Assume pid reads in $N_b = 1024$ bytes.
+
+This means that at end of 2nd. I/O operation, $N_b - N_b' = 524$ bytes still remain in $(b_n)_{n\in \mathbb{N}}$ that pid won't read before next notification arrives.
+
+While it might be tempting to perform all I/O immediately once notification arrives, doing so has consequences. 
+\begin{itemize}
+	\item large I/O operation on single fd has potential to starve other fd's 
+	\item Furthermore, even with case of level-triggered notifications, an extremely large Write or send call has potential to block.
+\end{itemize}
+
+\section{Multiplexing I/O on fds}
+
+In above, we only described how pid handles I/O on a single fd.
+
+Often, pid wants to handle I/O on more than 1 fd.
+
+e.g. program prog needs to log to \texttt{stdout}, \texttt{stderr}, while accept socket connections, and make outgoing RPC connections to other services. 
 
 
 

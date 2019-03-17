@@ -1163,6 +1163,205 @@ Given address $a$,
 	
 \end{definition}
 
+\part{Linux System Programming}
+
+\section{File Descriptors}
+
+cf. \url{https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957}
+
+Let byte $b \in (\mathbb{Z}_2)^8 \equiv B \equiv o$ (when referring to exactly 8 bits).
+
+The fundamental building block of I/O in Unix is a sequence of bytes $(b_n)_{n\in \mathbb{N}}$, $b_n \in B$. 
+
+Most programs work with an even simpler abstraction - a stream of bytes or an I/O stream.
+
+File descriptors $\equiv fd$. $fd$ references I/O streams.  $fd \in \mathbb{N}$ (by definition and the Linux programmer's manual).
+
+\[
+\begin{gathered}
+\mathbb{N} \to B^{\mathbb{N}} \\
+fd \xmapsto{\text{surj}} (b_n)_{n \in \mathbb{N}}
+\end{gathered}
+\]
+
+e.g. Pipes, files, FIFOs, POSIX IPC's (message queues, semaphores, shared memory), event queues are examples of I/O streams referenced by a fd, i.e. $fd \xmapsto{\text{surj}} (b_n)_{n \in \mathbb{N}}$.
+
+\subsection{Creation and Release of Descriptors}
+
+fd's are either 
+\begin{itemize}
+	\item explicitly created by system calls like \texttt{open, pipe, socket}, etc. or 
+	\item inherited from parent process
+\end{itemize}
+
+fd's released when
+\begin{itemize}
+	\item process exists
+	\item calling \texttt{close} system call
+	\item implicitly after an \texttt{exec} when fd marked as \textbf{close on exec}; i.e. fd automatically (and atomically) closed when \texttt{exec}-family function succeeds
+\end{itemize}
+
+\section{Unix execution model}
+
+cf. \url{https://stackoverflow.com/questions/4204915/please-explain-the-exec-function-and-its-family/37558902}
+
+\subsection{Processes and Programs}
+
+A process is something in which a program executes. $pid \in \mathbb{N} \xmapsto{\text{surj}} \text{ process }$
+
+These 2 operations that you can do is the entire UNIX execution model:
+
+\texttt{fork} - creates new process containing duplicate of current program, including its state. There are differences between the processes so to be able to distinguish which is parent, which is child:
+
+\[
+\begin{gathered}
+pid_P \xmapsto{\text{surj}} pid_C > 0 \\
+\text{prog}_i \text{ s.t. } \text{prog}_i \in pid_P \mapsto \text{prog}_i \in pid_C 
+\end{gathered}
+\]
+
+\texttt{exec} - replaces program in current process with brand new program:
+\[
+\begin{gathered}
+\text{prog}_i \in pid_i \mapsto \text{prog}_{i'} \in pid_i \\
+\text{ s.t. } \text{prog}_i = \emptyset, \, \text{prog}_i \neq \text{prog}_{i'}
+\end{gathered}
+\]
+
+More details:
+
+$\texttt{fork()}$ makes a near duplicate of current process, identical in almost every way; 1 process calls \texttt{fork()} while 2 processes return from it:
+\[
+pid_P \xmapsto{\texttt{fork()}} pid_P, pid_C >0
+\]
+
+Examples:
+
+- When \texttt{fork}, \texttt{exec} used in sequence: 
+In shells, \texttt{find}: 
+\[
+pid_{\text{shell}} \xmapsto{\texttt{fork()}} pid_{\text{shell}}, pid_C \qquad \, \text{prog}_j, pid_C \xmapsto{\texttt{exec()}} \text{prog}_{j'} \in pid_C
+\] 
+
+Shell forks, then child loads \texttt{find} program into memory, setting up all command line arguments, standard I/O, etc.
+
+- \texttt{fork()} only.
+Daemons simply listening on TCP port and fork copy of themselves to process specific request, while parent goes back to listening. 
+
+Notice that nominally, parent waits for child to exit. 
+
+\textbf{close-on-exec} flag, if set, will have fd automatically be closed during a successful \textbf{execve} (or \texttt{exec}) (cf. \url{http://man7.org/linux/man-pages/man2/fcntl.2.html})
+
+\subsection{File entry}
+
+Every fd points to a data structure called \emph{file entry} in the kernel.
+
+\[
+fd \mapsto \text{ file entry }
+\]
+i.e. $\forall \, fd$, $\exists \,$ \text{ file entry } and pointer to that file entry.
+
+
+\textbf{open file description} - an entry in system-wide table of open files. \\
+open file description records file offset and file status flags.
+
+$n_{\text{offset}} \equiv $ file offset, per fd, from the beginning of file entry.
+
+\texttt{fork()} results in both parent and child processes using same fd and reference to same offset $n_{\text{offset}}$ in file entry.
+
+If process was last to reference file entry, kernel then deallocates that file entry.
+
+
+Each file entry contains
+\begin{itemize}
+	\item the type
+	\item array of function pointers, that translates generic operations on fds to file-type specific implementations.
+\end{itemize}
+
+\texttt{open} call implementation greatly varies for different file types, even if higher level API exposed is the same.
+
+e.g. sockets - Same \texttt{read, write} used for byte-stream type connections, but different system calls handle addressed messages like network datagrams.
+
+
+For a process pid, consider fd table of fds. $\forall \, $ fd, $fd \mapsto $ open file description $\in$ open file table (system-wide).
+
+$\forall \, $ open file description $\in $ open file table, \\
+\qquad \, open file description $= n_{\text{offset}}$, status flags, and \\
+\qquad \, open file description $\xmapsto{ \text{ inode ptr } }$ inode table.
+
+A blocking system call is 1 that suspends or puts calling process on wait until an event occurs \footnote{\url{https://stackoverflow.com/questions/19309136/what-is-meant-by-blocking-system-call}, \url{https://www.quora.com/What-is-the-difference-between-a-blocking-system-call-and-an-non-blocking-system-call}}
+
+\subsection{Readiness of fds}
+
+cf. \url{https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957}
+
+A fd is considered \emph{ready} if process can perform I/O operation on fd without blocking (i.e. without process having to wait or be suspended). For fd to be considered "ready", it doesn't matter if \textbf{the operation actually transfer any data} - all that matters is that the I/O operation can be performed without blocking (i.e. the calling process won't wait or be suspended).
+
+A fd changes into a \emph{ready} state when an I/O \emph{event} happens, such as the arrival of new input or completion of a socket connection or when space is available on previously full socket send buffer after TCP transmits queued data to the socket peer.
+
+There are 2 ways to find out about the readiness status of a descriptor - edge triggered and level-triggered.
+
+\subsection{Level Triggered}
+
+cf. \url{https://medium.com/@copyconstruct/nonblocking-i-o-99948ad7c957}
+
+To determine if fd is ready, the process tries to perform a non-blocking I/O operation. Also seen as "pull" or "poll" model. (User "pull" on the fd).
+
+At time $t_0$, process pid tries I/O operation on non-blocking fd. If I/O operation blocks, system call returns error \texttt{err}. \\
+At time $t_1 > t_0$, pid tries I/O on fd (again). Say call blocks again, and returns \texttt{err}. \\
+At time $t_2 > t_1$, pid tries I/O on fd (again). Assume call blocks again, and returns \texttt{err}. \\
+At time $t_3 > t_2$, pid polls status of fd, and fd is ready. pid can then choose to actually perform entire I/O operation (e.g. read all data available on socket). \\
+At time $t_4 > t_3$, assume pid polls status of fd, and fd isn't ready; call blocks (again), and I/O operation returns \texttt{err}. \\
+At time $t_5 > t_4$, pid polls for status of fd, and fd is ready. pid can then choose to only perform a partial I/O operation (e.g., reading only half of all data available) \\
+At time $t_6 > t_5$, pid polls status of fd, and fd is ready. This time, pid can choose to perform no I/O.
+
+\subsection{Edge Triggered}
+
+Process $pid$ receives a notification only when fd is "ready" (usually when there's any new activity on fd since it was last monitored). This can be seen as the "push" model, in that a notification is pushed to the process about readiness of a fd.
+
+process pid only notified that fd is ready for I/O, but not provided additional information like for instance how many bytes arrived on socket buffer.
+
+Thus, pid only armed with incomplete data as it tries to perform any subsequent I/O operation 
+e.g. 
+at $t_2 > t_0$, pid gets notification about fd being ready.
+
+byte stream $(b_n)_{n\in \mathbb{N}}$ available for I/O stored in buffer.
+
+Assume $N_b = 1024$ bytes available for reading, when pid gets notification at $t= t_2$. 
+\[
+\Longrightarrow (b_n)_{n <N_b} \subset (b_n)_{n\in \mathbb{N}}
+\]
+
+Assume pid only reads $N_b' = 500$ bytes $<N_b$
+
+That means for $t=t_3, t_4, \dots t_{i_2}$, there are still $N_b - N_b' = $ 524 bytes available in $(b_n)_{n < N_b}$ that pid can read without blocking.
+
+But since pid can only perform I/O once it gets next notification, these $N_b - N_b'$ bytes remain sitting in buffer for that duration.
+
+Assume pid gets next notification at $t_{i_2} = t_6$, when additional $N_b$ bytes have arrived in buffer.
+
+Then total amount of data available on $(b_n)_{n\in \mathbb{N}} = 2N_b - N_b' = 1548 = 524 + 1024$.
+
+Assume pid reads in $N_b = 1024$ bytes.
+
+This means that at end of 2nd. I/O operation, $N_b - N_b' = 524$ bytes still remain in $(b_n)_{n\in \mathbb{N}}$ that pid won't read before next notification arrives.
+
+While it might be tempting to perform all I/O immediately once notification arrives, doing so has consequences. 
+\begin{itemize}
+	\item large I/O operation on single fd has potential to starve other fd's 
+	\item Furthermore, even with case of level-triggered notifications, an extremely large Write or send call has potential to block.
+\end{itemize}
+
+Multiplexing I/O on fd's.
+
+In above, we only described how pid handles I/O on a single fd.
+
+Often, pid wants to handle I/O on more than 1 fd.
+
+e.g. program prog needs to log to \texttt{stdout}, \texttt{stderr}, while accept socket connections, and make outgoing RPC connections to other services. 
+
+
+
 
 \begin{thebibliography}{9}
 \bibitem{Meye1997}
