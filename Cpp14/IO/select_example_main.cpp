@@ -22,12 +22,13 @@
 /// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-/// g++ -std=c++17 -I ../ Write.cpp ../Utilities/Errno.cpp
-///   ../Utilities/ErrorHandling.cpp Open_main.cpp -o Fork_main
+/// g++ -std=c++17 -I ../ ../Utilities/Errno.cpp ../Utilities/ErrorHandling.cpp select_example_main.cpp -o select_example_main
 //------------------------------------------------------------------------------
 #include "Utilities/ErrorHandling.h" // HandleReturnValue
 
+#include <array>
 #include <iostream>
+#include <string>
 #include <unistd.h> // STDIN_FILENO
 
 // According to POSIX.1-2001, POSIX.1-2008
@@ -43,19 +44,59 @@
 // wait up to 5 seconds
 constexpr long timeout {5};
 
+constexpr std::size_t buffer_length {1024};
+
 using Utilities::ErrorHandling::HandleReturnValue;
 
 class HandleSelect : public HandleReturnValue
 {
   public:
 
-    HandleSelect();
+    HandleSelect():
+      HandleReturnValue{},
+      last_total_number_of_fds_in_descriptor_sets_{}
+    {}
 
+    //--------------------------------------------------------------------------
+    /// \url http://man7.org/linux/man-pages/man2/select.2.html
+    /// \details On success, select() and pselect() return number of fds
+    /// contained in the 3 returned descriptor sets (that is, total number of
+    /// bits that are set in readfds, writefds, exceptfds) which may be 0 if the
+    /// timeout expires before anything interesting happens. On error, -1 is
+    /// returned, and errno is set to indicate error; the file descriptor sets
+    /// are unmodified and timeout becomes undefined.
+    /// ERRORS:
+    /// EBADF An invalid fd was given in 1 of sets (perhaps fd was already
+    /// closed, or 1 on which an error has occurred)
+    //--------------------------------------------------------------------------
     void operator()(const int result)
+    {
+      // error and errno is set
+      if (result < 0)
+      {
+        HandleReturnValue::operator()(result, "Error for (select())");
+      }
+      else if (!result)
+      {
+        std::cout << timeout << "seconds elapsed and returned " << result <<
+          '\n';
+      }
+      else
+      {
+        last_total_number_of_fds_in_descriptor_sets_ = result;
+      }
+    }
+
+    int last_total_number_of_fds_in_descriptor_sets() const
+    {
+      return last_total_number_of_fds_in_descriptor_sets_;
+    }
 
   private:
 
     using HandleReturnValue::error_number;
+
+    int last_total_number_of_fds_in_descriptor_sets_;
 };
 
 int main()
@@ -111,6 +152,8 @@ int main()
   std::cout << " tv.tv_sec : " << tv.tv_sec << '\n';
   std::cout << " tv.tv_usec : " << tv.tv_usec << '\n';
 
+  HandleSelect handle_select;
+
   //----------------------------------------------------------------------------
   /// \url http://man7.org/linux/man-pages/man2/select.2.html
   /// \details
@@ -140,4 +183,42 @@ int main()
       nullptr,
       nullptr,
       &tv)};
+
+  std::cout << " return value : " << return_value << '\n';
+
+  handle_select(return_value);
+  std::cout << " last_total_number_of_fds_in_descriptor_sets : " <<
+    handle_select.last_total_number_of_fds_in_descriptor_sets() << '\n';
+
+  //----------------------------------------------------------------------------
+  /// \url http://man7.org/linux/man-pages/man2/select.2.html
+  /// \details 
+  /// int FD_ISSET(int fd, fd_set* set);
+  /// FD_ISSET() tests to see if a fd is part of the set; this is useful after
+  /// select() returns.
+  //----------------------------------------------------------------------------
+
+  int result_fd_isset {FD_ISSET(STDIN_FILENO, &read_fds)};
+
+  std::cout << " result_fd_isset : " << result_fd_isset << '\n';
+
+  std::array<char, buffer_length + 1> buffer_as_array;
+
+  if (result_fd_isset)
+  {
+    const ssize_t length{
+      ::read(STDIN_FILENO, buffer_as_array.data(), buffer_length)};
+
+    HandleReturnValue()(length);
+
+    std::cout << " length : " << length << '\n';
+
+    if (length)
+    {
+      buffer_as_array[buffer_length] = '\0';
+      std::cout << " read : " << std::string{buffer_as_array.data()} << '\n';
+    }
+  }
+
+
 }
