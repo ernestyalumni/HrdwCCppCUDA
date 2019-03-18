@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// \file Write.cpp
+/// \file select_example_main.cpp
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
 /// \brief Example based on Love's Linux System Programming for ::select.

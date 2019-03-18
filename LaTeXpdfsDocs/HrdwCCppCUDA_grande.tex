@@ -1384,8 +1384,67 @@ Often, pid wants to handle I/O on more than 1 fd.
 e.g. program prog needs to log to \texttt{stdout}, \texttt{stderr}, while accept socket connections, and make outgoing RPC connections to other services. 
 
 
+There are several ways of multiplexing I/O on fds.
+\begin{itemize}
+	\item nonblocking I/O (fd itself is marked as non-blocking; operations may finish partially)
+	\item signal-drive I/O (pid owning fd is notified when I/O state of fd changes)
+	\item polling I/O (e.g. \texttt{select}, \texttt{poll}, both provide level-triggered notifications about readiness of fd)
+\end{itemize}
 
+\subsection{Multiplexing I/O with Non-blocking I/O}
 
+We could put all fds in non-blocking mode.
+
+pid can try to perform I/O operations on fds to check if any I/O operations result in error.
+
+\emph{kernel} performs I/O operation on fd and returns err, or partial output, or result of I/O operation if it succeeds.
+
+\textbf{Cons}:
+\begin{itemize}
+	\item Frequent checks
+	\item Infrequent checks. If such operations are conducted infrequently, then it might take pid unacceptably long time to respond to I/O event that's available.
+\end{itemize}
+
+\emph{When does this approach make sense?}
+
+Operations on output fds (e.g. writes) don't generally block.  \\
+- In such cases, it might help to try to perform I/O operation first, and revert back to polling when operation returns err.
+
+It might also make sense to use non-blocking approach with edge-triggered notifications, where fds can be put in nonblocking mode, and once pid gets notified of I/O event, it can repeatedly try I/O operations until system calls would block with an \texttt{EAGAIN} or \texttt{EWOULDBLOCK}. 
+
+\subsection{Multiplexing I/O via signal driven I/O}.
+
+Kernel instructed to send the pid a signal when I/O can be performed on any of the fds.
+
+pid will wait for signals to be delivered when an of the fds is ready for I/O operation.
+
+\textbf{Cons}: Signals are expensive to catch, rendering signal drive I/O impractical for cases where large amount of I/O is performed.
+
+Typically used for "exceptional conditions."
+
+\subsection{Multiplexing I/O via polling I/O}.
+
+fds placed in non-blocking mode.
+
+pid uses \textbf{level triggered mechanism} to ask kernel by means of system call (\texttt{select} or \texttt{poll}) which fds are capable of performing I/O. 
+
+\subsubsection{\texttt{poll}, and \texttt{select} vs. \texttt{poll} }
+
+With \texttt{select}, we pass in 3 sets of fds we want to monitor for reads, writes, and exceptional cases.
+
+With \texttt{poll}, we pass in a set of fds, \textbf{each marked with the events it specifically needs to track}.
+
+\subsubsection{What happens in the kernel (with \texttt{select} and \texttt{poll})?}
+
+Both \texttt{select} and \texttt{poll} are \emph{stateless}, meaning, \\
+every time a \texttt{select} or \texttt{poll} system call is made, the kernel checks \emph{every fd}, in the input array passed as 1st. argument, for the occurrence of an event and return the result to the pid. \\
+$\Longrightarrow$ this means that the cost of \texttt{select}/\texttt{poll} is O(N), where N is the number of fds monitored.
+
+The implementation of \texttt{select} and \texttt{poll} comprises 2 tiers:
+\begin{itemize}
+	\item Specific top tier which decodes incoming request, as well as several device or socket specific bottom layers
+	\item bottom layers comprise of \emph{kernel poll functions} used both by \texttt{select}, \texttt{poll}
+\end{itemize}
 
 
 
