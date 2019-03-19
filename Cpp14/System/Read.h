@@ -100,6 +100,6 @@ class Read
 
 //};
 
-}; // namespace System
+} // namespace System
 
 #endif // _SYSTEM_READ_H_

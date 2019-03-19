@@ -1446,7 +1446,18 @@ The implementation of \texttt{select} and \texttt{poll} comprises 2 tiers:
 	\item bottom layers comprise of \emph{kernel poll functions} used both by \texttt{select}, \texttt{poll}
 \end{itemize}
 
+\section{\texttt{epoll} Event poll}
 
+cf. \href{https://medium.com/@copyconstruct/the-method-to-epolls-madness-d9d2d6378642}{"The method to epoll's madness" by Cindy Sridharan}\cite{Srid2017}
+
+\texttt{epoll}, a Linux specific construct, allows for a pid to monitor multiple fds and get notifications when I/O is possible on them. 
+
+
+\subsection{\texttt{epoll} Syntax}
+
+\emph{epoll}, unlike \emph{poll}, is not a system call. It's a kernel data structure that allows a pid to multiplex I/O on multiple fds.
+
+This data structure can be created, modified, deleted by 3 system calls: \texttt{epoll\_create}, \texttt{epoll\_ctl}, \texttt{epoll\_wait}.
 
 
 \end{multicols*}
@@ -1488,6 +1499,8 @@ Stanley B. Lippman, Jos\'{e}e Lajoie, Barbara E. Moo. \textbf{C++ Primer} (5th E
 
 \bibitem{ScMe2014}
 Scott Meyers.  \textbf{Effective Modern C++: 42 Specific Ways to Improve Your Use of C++11 and C++14}. 1st Edition.  O'Reilly Media; 1 edition (December 5, 2014)  ISBN-13: 978-1491903995
+
+\bibitem{Srid2017} Cindy Sridharan. "The method to epoll's madness." \emph{Medium}. Oct. 29, 2017. \url{https://medium.com/@copyconstruct/the-method-to-epolls-madness-d9d2d6378642}
 
 
 \end{thebibliography}

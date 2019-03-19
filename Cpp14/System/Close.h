@@ -101,6 +101,6 @@ class Close
 };
 
 
-}; // namespace System
+} // namespace System
 
 #endif // _SYSTEM_FORK_H_
