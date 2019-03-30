@@ -28,6 +28,7 @@
 
 #include <ostream>
 #include <sys/epoll.h>
+#include <vector>
 
 namespace IO
 {
@@ -114,57 +115,68 @@ class Event
 {
   public:
 
-  Event(const EventTypes& event_type, const int fd);
+    Event(const EventTypes& event_type, const int fd);
 
-  Event(const uint32_t events, const int fd);
+    Event(const uint32_t events, const int fd);
 
-  explicit Event(const EventTypes& event_type);
+    explicit Event(const EventTypes& event_type);
 
-  explicit Event(const uint32_t events);
+    explicit Event(const uint32_t events);
 
-  Event() = default;
+    Event() = default;
 
-  //----------------------------------------------------------------------------
-  /// \brief user-defined conversion
-  /// \details Make a reference when user wants to pass this user-defined
-  /// converted Event into a function that takes a pointer, e.g.
-  ///
-  /// &(::epoll_event{some_event})
-  ///
-  /// \ref https://en.cppreference.com/w/cpp/language/cast_operator
-  //----------------------------------------------------------------------------
-  operator ::epoll_event() const
-  {
-    return epoll_event_;
-  }
+    //----------------------------------------------------------------------------
+    /// \brief user-defined conversion
+    /// \details Make a reference when user wants to pass this user-defined
+    /// converted Event into a function that takes a pointer, e.g.
+    ///
+    /// &(::epoll_event{some_event})
+    ///
+    /// \ref https://en.cppreference.com/w/cpp/language/cast_operator
+    //----------------------------------------------------------------------------
+    operator ::epoll_event() const
+    {
+      return epoll_event_;
+    }
 
-  /// Accessors for Linux system call.
+    /// Accessors for Linux system call.
 
-  const ::epoll_event* to_epoll_event_pointer() const
-  {
-    return &epoll_event_;
-  }
+    const ::epoll_event* to_epoll_event_pointer() const
+    {
+      return &epoll_event_;
+    }
 
-  ::epoll_event* to_epoll_event_pointer()
-  {
-    return &epoll_event_;
-  }
+    ::epoll_event* to_epoll_event_pointer()
+    {
+      return &epoll_event_;
+    }
 
-  const ::epoll_event* as_epoll_event_pointer() const
-  {
-    return reinterpret_cast<const ::epoll_event*>(this);
-  }
+    const ::epoll_event* as_epoll_event_pointer() const
+    {
+      return reinterpret_cast<const ::epoll_event*>(this);
+    }
 
-  ::epoll_event* as_epoll_event_pointer()
-  {
-    return reinterpret_cast<::epoll_event*>(this);
-  }
+    ::epoll_event* as_epoll_event_pointer()
+    {
+      return reinterpret_cast<::epoll_event*>(this);
+    }
 
-  friend std::ostream& operator<<(std::ostream& os, const Event& event);
+    std::vector<EventTypes> mode_events() const
+    {
+      return more_events_;
+    }
+
+    /// Setters
+
+    void add_event(const EventTypes& event_type);
+
+    friend std::ostream& operator<<(std::ostream& os, const Event& event);
 
   private:
 
     ::epoll_event epoll_event_;
+
+    std::vector<EventTypes> more_events_;
 };
 
 } // namespace Epoll

@@ -63,25 +63,44 @@ std::ostream& operator<<(std::ostream& os, const EpollEvent& epoll_event)
   return os;
 }
 
-Event::Event(const EventTypes& event_type, const int fd):
-  epoll_event_{Utilities::get_underlying_value<EventTypes>(event_type)}
+Event::Event(const EventTypes& event_type, const int fd)
+//  epoll_event_{Utilities::get_underlying_value<EventTypes>(event_type)}
 {
+  epoll_event_.events = Utilities::get_underlying_value<EventTypes>(event_type);
+  epoll_event_.data.fd = fd;
+
+  more_events_.emplace_back(event_type);
+}
+
+Event::Event(const uint32_t events, const int fd)
+//  epoll_event_{events}
+{
+  epoll_event_.events = events;
   epoll_event_.data.fd = fd;
 }
 
-Event::Event(const uint32_t events, const int fd):
-  epoll_event_{events}
+Event::Event(const EventTypes& event_type)
+//  epoll_event_{Utilities::get_underlying_value<EventTypes>(event_type)}
 {
-  epoll_event_.data.fd = fd;
+  epoll_event_.events = Utilities::get_underlying_value<EventTypes>(event_type);
+
+  more_events_.emplace_back(event_type);
 }
 
-Event::Event(const EventTypes& event_type):
-  epoll_event_{Utilities::get_underlying_value<EventTypes>(event_type)}
-{}
+Event::Event(const uint32_t events)
+//  epoll_event_{events}
+{
+  epoll_event_.events = events;
+}
 
-Event::Event(const uint32_t events):
-  epoll_event_{events}
-{}
+void Event::add_event(const EventTypes& event_type)
+{
+  more_events_.emplace_back(event_type);
+
+  epoll_event_.events =
+    epoll_event_.events |
+      Utilities::get_underlying_value<EventTypes>(event_type);
+}
 
 std::ostream& operator<<(std::ostream& os, const Event& event)
 {
@@ -90,7 +109,6 @@ std::ostream& operator<<(std::ostream& os, const Event& event)
 
   return os;
 }
-
 
 } // namespace Epoll
 
