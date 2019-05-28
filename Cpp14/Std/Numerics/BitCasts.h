@@ -39,6 +39,8 @@ namespace Numerics
 {
 
 //------------------------------------------------------------------------------
+/// \brief Obtain a value of type To by reinterpreting the object
+/// representation of from.
 /// \details This overload only participates in overload resolution if
 /// sizeof(To) == sizeof(From) and both To and From are TriviallyCopyable types.
 //------------------------------------------------------------------------------

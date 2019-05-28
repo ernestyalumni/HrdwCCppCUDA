@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 3.5.1)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
 
 # Language of the project is CXX (for C++)
 PROJECT (VOLTRON CXX)
@@ -19,11 +19,19 @@ ELSE()
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 ENDIF()
 
+FIND_PROGRAM(CCACHE_FOUND ccache)
+
+IF(CCACHE_FOUND)
+  SET(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+ENDIF()
+
 # Include directories so that header files can be found.
 INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
+#  "${PROJECT_SOURCE_DIR}/UnitTests")
 
 # add_subdirectory call makes use of libraries.
-ADD_SUBDIRECTORY (Hierarchy)
+ADD_SUBDIRECTORY(Hierarchy
+  UnitTests)
 
 ADD_EXECUTABLE(Main Main.cpp)
 
@@ -36,3 +44,4 @@ ADD_EXECUTABLE(Main Main.cpp)
 
 #TARGET_LINK_LIBRARIES(Check
 #  Hierarchy)
+

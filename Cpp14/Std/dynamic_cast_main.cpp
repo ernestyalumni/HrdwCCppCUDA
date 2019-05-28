@@ -32,7 +32,7 @@
 /// fails and new_type is a ptr type, it returns a null ptr of that type.
 //------------------------------------------------------------------------------
 /// COMPILATION TIPS:
-///  g++ -std=c++14 List_main.cpp -o List_main
+///  g++ -std=c++17 dynamic_cast_main.cpp -o dynamic_cast_main_main
 //------------------------------------------------------------------------------
 
 #include <iostream>
@@ -121,4 +121,23 @@ int main()
 {
   D d; // the most derived object
   A& a = d; // upcast, dynamic_cast maybe used, but unnecessary
+  D& new_d = dynamic_cast<D&>(a); // downcast
+  B& new_b = dynamic_cast<B&>(a); // sidecast
+
+  Base* b1 = new Base;
+  if (Derived* d = dynamic_cast<Derived*>(b1))
+  {
+    std::cout << "downcast from b1 to d successful \n";
+    d->name(); // safe to call
+  }
+
+  Base* b2 = new Derived;
+  if (Derived* d = dynamic_cast<Derived*>(b2))
+  {
+    std::cout << "downcast from b2 to d successful \n";
+    d->name(); // safe to call
+  }
+
+  delete b1;
+  delete b2;
 }

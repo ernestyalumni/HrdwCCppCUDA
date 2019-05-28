@@ -59,7 +59,23 @@ Uses current working directory as the build tree, and `<path-to-source>` as sour
 
 Check whether the CXX compiler supports a given flag.
 
-**`check_cxx_compiler_flag`
+** `check_cxx_compiler_flag`
+
+https://cmake.org/cmake/help/v3.15/prop_tgt/LANG_COMPILER_LAUNCHER.html?highlight=compiler
+
+`<LANG>_COMPILER_LAUNCHER`, 
+
+This property is implemented only when `<LANG>` is `C`, `CXX`, or `CUDA`, e.g.
+
+`CUDA_COMPILER_LAUNCHER`, `CXX_COMPILER_LAUNCHER`.
+
+Specify a semicolon-separated list containing a command line for a compiler launching tool. The Makefile Generators and the Ninja generator will run this tool and pass the compiler and its arguments to the tool. e.g. Example tools are distcc and ccache.
+
+This property is *initialized* by the value of the `CMAKE_<LANG>_COMPILER_LAUNCHER` variable if it's set when a target is created.
+
+
+
+
 
 ```
 check_cxx_compiler_flag(<flag> <var>)
@@ -140,3 +156,20 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ```
 
 cf. [stackoverflow, "Inducing minimal C++ standard version in CMake"](https://stackoverflow.com/questions/48148275/inducing-minimal-c-standard-version-in-cmake)
+
+
+## Abridged explanations of `cmake-modules`
+
+### FindBoost
+
+Find Boost include dirs and libraries.
+
+Use this module by invoking `find_packages` with the form:
+
+```
+find_package(Boost
+  [version] [EXACT]
+  [REQUIRED]
+  [COMPONENTS <libs>...] # Boost libraries by their canonical name
+  ) # e.g. "date_time" for "libboost_date_time"
+```

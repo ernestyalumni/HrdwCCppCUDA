@@ -2,7 +2,7 @@
 /// \file Event_main.cpp
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
-/// \brief  Wrappers and examples classes for errno and error handling.
+/// \brief  Wrappers and classes epoll events.
 /// \ref https://linux.die.net/man/2/epoll_ctl
 /// https://en.cppreference.com/w/cpp/error/errno_macros
 /// \details Event describes object linked to fd.  struct epoll_event.
