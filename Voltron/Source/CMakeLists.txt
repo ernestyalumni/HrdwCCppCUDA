@@ -1,7 +1,11 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
 
 # Language of the project is CXX (for C++)
-PROJECT (VOLTRON CXX)
+PROJECT (VOLTRON LANGUAGES CXX)
+
+INCLUDE_DIRECTORIES(BEFORE ${CMAKE_SOURCE_DIR})
+
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../CMake)
 
 # Include will load and run CMake code of this module, "CheckCXXCompilerFlag."
 INCLUDE(CheckCXXCompilerFlag)
@@ -25,13 +29,25 @@ IF(CCACHE_FOUND)
   SET(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 ENDIF()
 
+SET(BOOST_MIN_VERSION "1.61.0")
+
+IF (ALLOW_NEWER_BOOST)
+#  FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED)
+  FIND_PACKAGE(Boost)
+ELSE()
+  # FIND_PACKAGE(Boost 1.61.0 EXACT REQUIRED)
+  FIND_PACKAGE(Boost)
+ENDIF()
+
+
 # Include directories so that header files can be found.
 INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
 #  "${PROJECT_SOURCE_DIR}/UnitTests")
 
-# add_subdirectory call makes use of libraries.
-ADD_SUBDIRECTORY(Hierarchy
-  UnitTests)
+# Add_subdirectory call makes use of libraries.
+ADD_SUBDIRECTORY(Hierarchy)
+ADD_SUBDIRECTORY(UnitTests)
+
 
 ADD_EXECUTABLE(Main Main.cpp)
 
@@ -44,4 +60,5 @@ ADD_EXECUTABLE(Main Main.cpp)
 
 #TARGET_LINK_LIBRARIES(Check
 #  Hierarchy)
+
 
