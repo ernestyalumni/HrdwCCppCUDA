@@ -1049,6 +1049,216 @@ Difference stems from differing ways smart pointers support custom deleters.  Fo
 
 \part{Integers, numeric encodings, number representation, binary representation, hexidecimal representation}
 
+\section{Introduction: \texttt{int} $\neq \mathbb{Z}$, \texttt{float} $\neq \mathbb{R}$}
+
+cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_1-429h.pdf}{Systems 1, Introduction to Computer Systems, Introduction lecture at University of Texas, CS429; Don Fussell}.
+
+\texttt{int} $\neq \mathbb{Z}$, \texttt{float} $\neq \mathbb{R}$
+
+e.g. $x^2 \geq 0$? 
+
+\texttt{float}: Yes!  \\
+\texttt{int}: $40000 \times 40000 \to 1600000000$ \\
+\phantom{int} $50000 \times 50000 \to $ ??
+
+Is $(x+y) + z = x + (y +z)?$
+
+\texttt{unsigned} and \texttt{signed int}: Yes!
+
+\texttt{float}'s 
+\[
+\begin{gathered}
+(1e20 + -1e20) + 3.14 \to 3.14 \\
+1e20 + (-1e20 + 3.14) \to ??
+\end{gathered}
+\]
+
+Can't assume "usual" properties due to finiteness of representations, so that integer operations satisfy "ring" properties
+- commutativity, associativity, distributivity
+
+floating point operations satisfy "ordering" properties
+- monotonicity, values of signs
+
+
+\section{Bits and Bytes}
+
+cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_2-429h.pdf}{Lecture 2, Bits and Bytes, CS429}.
+
+Consider a (number) system with radix or base $b$ ($b>1$), \\
+string of digits $d_1, \dots , d_n$, \\
+\begin{equation}
+c = \sum_{i=1}^n d_i b^{n-i}, \qquad \, 0 \leq d_i < b \qquad \forall \, i = 1 \dots n 
+\end{equation}
+
+with notation $c \equiv c_b$ to help denote the base or "radix", e.g. $15213_{10}$, $00000000_2$.
+
+Byte $\equiv B$, 1 Byte $ = 8$ bits. Note that $2^8 = 256$
+
+e.g. Binary $00000000_2$ to $11111111_2$ \\
+Decimal: $0_{10}$ to $255_{10}$ \\
+Hexadecimal: $00_{16}$ to $FF_{16}$
+
+\subsection{Machine Words}
+
+Machine has "Word size".
+
+Nominal size of integer-valued data, including addresses.
+
+\subsection{Word-oriented Memory Organization}
+
+Addresses specify Byte locations. 
+
+Addresses of successive words differ by 4 (32-bit) or 8 (64-bit).
+
+32-bit words:
+
+Addr = 0000, Addr = 0004
+
+64-bit words:
+
+Addr = 0000, Addr = 0008
+
+\subsection{Byte-ordering: Big-Endian, Little-Endian}
+
+$b = 8$
+
+\begin{equation}
+c = \sum_{i=0}^{n-1} d_i 8^{n-1 -i}
+\end{equation}
+
+\textbf{Big-Endian}: Least significant byte has highest address.
+
+For address $a$, 
+\[
+\begin{gathered}
+	a \mapsto d_0 \\
+	a+1 \mapsto d_1 \\
+\vdots \\
+a+n-1 \mapsto d_{n-1}
+\end{gathered}
+\]
+
+\textbf{Little-Endian}: Least significant byte has lowest address
+\[
+\begin{gathered}
+a \mapsto d_{n-1}  \\
+a+1 \mapsto d_{n-2} \\
+\vdots \\
+a+n -1 \mapsto d_0
+\end{gathered}
+\]
+
+\subsection{Representing Strings}
+
+C Strings
+
+- represented by array of characters, each character encoded in ASCII format 
+- string should by null-terminated meaning final character $=0$
+
+\subsection{Machine-Level Code Representation}
+
+Encode program as sequence of Instructions. 
+
+Each simple operation
+- arithmetic operation, read or write memory, conditional branch.
+- instructions encoded as bytes, 
+i.e. programs are byte sequences too!
+
+\subsection{Boolean Algebra}
+
+Boole's Algebraic representation of logic.
+
+And: \\
+$A \& B = 1$ when both $A=1$ and $B=1$
+
+Or: \\
+$A | B = 1$ when either $A=1$ or $B=1$
+
+Not: \\
+${}^{\sim}A= 1$ when $A=0$, \\
+${}^{\sim}A= 0$ when $A=1$, \\
+
+Exclusive-Or (Xor)
+$A {}^{\wedge} B = 1$ when either $A=1$ or $B=1$, but not both
+
+\begin{center}
+	\begin{tabular}{ l | c  c }
+		${}^{\wedge}$ & 0 & 1 \\ \hline 
+		0 & 0 & 1 \\
+		1 & 1 & 0
+	\end{tabular}
+\end{center}
+
+\subsubsection{Application of Boolean Algebra}
+
+Claude Shannon 1937 MIT Master's Thesis. Encode closed switch as 1, open switch as 0. Connection when $A\& \sim B | \sim A \& B = A \wedge B$
+
+\subsubsection{Integer Algebra}
+
+$\langle \mathbb{Z}, +, *, - , 0 , 1 \rangle$ forms a ring
+
+\subsubsection{Boolean Algebra}
+
+$\langle \lbrace 0, 1 \rbrace , |, \& , \sim, 0, 1 \rangle $ forms a "Boolean algebra"
+
+Or ($|$) is "sum" operation. \\
+And ($\&$) is "product" operation. \\
+$\sim$ is "complement" operation. \\
+$0$ is additive identity. \\
+$1$ is multiplicative identity.
+
+Consider Boolean Ring:
+\[
+\langle \lbrace 0 , 1 \rbrace, \wedge, \&, I, 0 , 1 \rangle \simeq \mathbb{Z}_2 \equiv  \text{ integers} \mod{2} 
+\]
+where $I$ is identity operation $I(A) = A$, \\
+and 
+$A\wedge A = 0$ is the additive inverse (existence) property.
+
+\subsubsection{De Morgan's Laws}
+
+\[
+\begin{gathered}
+A \& B = \sim (\sim A | \sim B) \\
+A | B = \sim (\sim A \& \sim B)
+\end{gathered}
+\]
+
+\subsubsection{Exclusive-Or using Inclusive Or}
+
+\[
+\begin{gathered} 
+	A \wedge B = (\sim A \& B) | (A \& \sim B) \\
+ A \wedge B = (A | B) \& \sim (A \& B)
+\end{gathered} 
+\]
+
+All properties of Boolean Algebra apply to bit vectors.
+
+\subsection{Representing and Manipulating Sets; bit vectors as sets}
+
+Width $w$ bit vector represents subsets of $\lbrace 0 ,\dots, w-1 \rbrace$, s.t. for $a\in \lbrace 0 ,1 \rbrace^w$, $a_j \in \lbrace 0 , 1 \rbrace$, $\forall \, j = 0,1,\dots w -1$. 
+
+\qquad \\
+If $a_j = 1, j \in A$; otherwise, \\
+If $a_j =0$, $j \notin A$
+\qquad \\
+
+\subsubsection{Operations}
+
+\qquad \\
+$\& \to $ intersection \\
+$| \to $ union \\
+$\wedge \to $ symmetric difference \\
+$\sim \to $ complement
+\qquad \\
+
+Logic operations in C: $\& \&$, $||$, $!$ 
+
+Shift operations
+
+
+
 cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_3-429h.pdf}{Systems 1, Integers lecture at University of Texas, CS429} is a \textbf{very good lecture}; both \emph{mathematically rigorous} and full of useful, \emph{clear} examples.
 
 \section{Unsigned integers}

@@ -55,6 +55,74 @@ Uses current working directory as the build tree, and `<path-to-source>` as sour
 
 ## Abridged explanations of `cmake-commands`
 
+### ['add_library'](https://cmake.org/cmake/help/latest/command/add_library.html)
+
+Add a library to the project using specified source files.
+
+#### What is a library?
+
+**What is a library?**
+
+cf. [A.1 Static and dynamic libraries](https://www.learncpp.com/cpp-tutorial/a1-static-and-dynamic-libraries/)
+
+A **library** is a package of code that's meant to be reused by many programs. Typically, a *C++ library* comes in 2 pieces:
+
+1. header file that defines the functionality the library is exposing to programs using it
+2. A precompiled binary that contains the implementation, pre-compiled into machine language.
+
+Libraries are precompiled for several reasons,
+- since libraries rarely change, they don't need to be recompiled often
+- because precompiled objects are in machine language, prevents people from accessing or changing the source code, 
+
+there's 2 types, static and dynamic:
+
+- **static library** (a.k.a. **archive**) consists of routines that are compiled and linked directly into your program. When you compile a program that uses a static library, all functionality of the static library that your program uses becomes part of your executable.
+  * in Windows, static libraries typically have `.lib` extension, linux, `.a` (archive) extension
+  * 1 advantage: you only have to distribute executable in order for users to run your program.
+- **dynamic library** (a.k.a. **shared library**) consists of routines that are loaded into application at runtime. 
+  * When you compile a program that uses a dynmaic library, library doesn't become part of executable - it remains as a separate unit.
+  * On Windows, dynamic libraries typically have `.dll` (dynamic link library) extension, linux `.so` (shared object) extension
+  * 1 advantage, is that many programs can shared 1 copy, which saves space. Perhaps a bigger advantage is that dynamic library can be upgraded to a newer version without replacing all executables that use it.
+
+
+#### Normal Libraries
+
+```
+add_library(<name> [STATIC | SHARED | MODULE]
+  [EXCLUDE_FROM_ALL]
+  [source1] [source2 ...])
+```
+
+Adds a library target called `<names>` to be built from source files listed in the command invocation.  (Source files can be omitted if they're added later using `target_sources()`.) 
+
+- `STATIC` - `STATIC` libraries are archives of object files for use when linking other targets.
+- `SHARED` libraries are linked dynamically and loaded at runtime.
+- `MODULE` - libraries are plugins that aren't linked into other targets but maybe loaded dynamically at runtime using dlopen-like functionality.
+
+cf. https://cliutils.gitlab.io/modern-cmake/chapters/basics.html
+
+If you leave this choice off, `BUILD_SHARED_LIBS` will be used to pick between `STATIC` and `SHARED`.
+
+
+### ['add_subdirectory'](https://cmake.org/cmake/help/v3.0/command/add_subdirectory.html)
+
+Add a subdirectory to the build.
+```
+add_subdirectory(source_dir [binary_dir]
+  [EXCLUDE_FROM_ALL])
+```
+
+The `source_dir` specifies directory in which the source `CMakeLists.txt` and code files are located. If it's a relative path, it'll be evaluated with respect to the current directory (typical usage), but may also be an absolute path.
+
+`binary_dir` specifies directory in which to place output files. If `binary_dir` isn't specified, value of `source_dir`, before expanding any relative path, will be used (typical usage).
+
+The `CMakelists.txt` file in the specified source directory will be processed immediately by CMake before processing in the current input file continues beyond this command.
+
+If `EXCLUDE_FROM_ALL` argument is provided, then targets in subdirectory won't be included in the `ALL` target of parent directory by default, and will be excluded from IDE project files.
+
+
+
+
 ### [`CheckCXXCompilerFlag`](https://cmake.org/cmake/help/v3.14/module/CheckCXXCompilerFlag.html)
 
 Check whether the CXX compiler supports a given flag.
@@ -72,9 +140,6 @@ This property is implemented only when `<LANG>` is `C`, `CXX`, or `CUDA`, e.g.
 Specify a semicolon-separated list containing a command line for a compiler launching tool. The Makefile Generators and the Ninja generator will run this tool and pass the compiler and its arguments to the tool. e.g. Example tools are distcc and ccache.
 
 This property is *initialized* by the value of the `CMAKE_<LANG>_COMPILER_LAUNCHER` variable if it's set when a target is created.
-
-
-
 
 
 ```
@@ -108,10 +173,6 @@ include (<file|module> [OPTIONAL] [RESULT_VARIABLE <var>]
 ```
 
 ### include_directories
-
-### ['add_library']()
-
-
 
 ### [`project`](https://cmake.org/cmake/help/v3.6/command/project.html#command:project)
 

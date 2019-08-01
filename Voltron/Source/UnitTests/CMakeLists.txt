@@ -1,5 +1,8 @@
 #CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
 
+# cf. https://stackoverflow.com/questions/50468620/what-does-enable-testing-do-in-cmake
+#ENABLE_TESTING()
+
 # Dependencies
 # Find a boost install with the libraries unit_test_framework.
 FIND_PACKAGE(Boost COMPONENTS filesystem unit_test_framework REQUIRED)
