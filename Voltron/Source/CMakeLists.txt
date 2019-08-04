@@ -4,7 +4,9 @@ CMAKE_MINIMUM_REQUIRED (VERSION 3.5)
 # Language of the project is CXX (for C++)
 PROJECT (VOLTRON LANGUAGES CXX)
 
-#INCLUDE_DIRECTORIES(BEFORE ${CMAKE_SOURCE_DIR})
+# BEFORE prepends directories onto current list of directories.
+# cf. https://cmake.org/cmake/help/v3.0/command/include_directories.html
+INCLUDE_DIRECTORIES(BEFORE ${CMAKE_SOURCE_DIR})
 
 #LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../CMake)
 
@@ -50,6 +52,7 @@ INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
 # directory.
 ADD_SUBDIRECTORY(Hierarchy)
 ADD_SUBDIRECTORY(UnitTests)
+ADD_SUBDIRECTORY(Utilities)
 
 ADD_EXECUTABLE(Main Main.cpp)
 

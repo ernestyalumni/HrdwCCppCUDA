@@ -17,7 +17,8 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 ADD_EXECUTABLE(Check
   Main.cpp
-  Utilities/FunctionObject_test.cpp)
+  Utilities/FunctionObject_test.cpp
+  Utilities/NarrowCast_test.cpp)
 
 TARGET_LINK_LIBRARIES(Check
   Hierarchy

@@ -756,10 +756,13 @@ void g(IvalBox* ptr_b, A2* ptr_a2)
   void* ptrdb = dynamic_cast<void*>(pd); // error: Date not polymorphic.
 }
 ```
-The object representing a base class, such as IvalBox, in a derived class object isn't necessarily the first subobject in that object of the most derived class.
 
-So `pb` doesn't necessarily hold the same address as `pb2`. 
+~~The object representing a base class, such as IvalBox, in a derived class object isn't necessarily the first subobject in that object of the most derived class.~~
 
-Such casts are only useful for interaction with very low-level functions (only such functions deal with `void*`s). There's no `dynamic_cast` from `void*` (because there'd be no way of knowing where to find the `vptr` (Sec. 22.2.3))
+~~So `pb` doesn't necessarily hold the same address as `pb2`.~~
+
+~~Such casts are only useful for interaction with very low-level functions (only such functions deal with `void*`s). There's no `dynamic_cast` from `void*` (because there'd be no way of knowing where to find the `vptr` (Sec. 22.2.3))~~
 
 On the other hand, 
+
+
