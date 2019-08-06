@@ -1,4 +1,4 @@
-// \file FunctionObject_tests.cpp
+// \file FunctionObject_test.cpp
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
