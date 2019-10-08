@@ -18,6 +18,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 ADD_EXECUTABLE(Check
   Main.cpp
   Categories/Monoidal/Monad_tests.cpp
+  Categories/Monoidal/Monoid_tests.cpp
   Cpp/Operations_test.cpp
   Utilities/BitSet_test.cpp
   Utilities/FunctionObject_test.cpp
