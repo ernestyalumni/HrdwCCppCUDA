@@ -20,6 +20,8 @@ ADD_EXECUTABLE(Check
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
   Cpp/Operations_test.cpp
+  Cpp/Std/Algorithm/Transform_tests.cpp
+  DeskCalculator/Token_tests.cpp
   Utilities/BitSet_test.cpp
   Utilities/FunctionObject_test.cpp
   Utilities/NarrowCast_test.cpp
