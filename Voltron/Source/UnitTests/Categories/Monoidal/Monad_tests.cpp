@@ -11,7 +11,7 @@ BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Monoidal)
 BOOST_AUTO_TEST_SUITE(Monad_tests)
 
-// optioanl can be used as the return type of a factory that may fail
+// optional can be used as the return type of a factory that may fail
 std::optional<std::string> create(bool b)
 {
   if (b)
