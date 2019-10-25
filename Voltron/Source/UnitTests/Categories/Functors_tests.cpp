@@ -111,6 +111,52 @@ BOOST_AUTO_TEST_CASE(FunctorsOnStdVectorIntroductoryExample)
   BOOST_TEST(lengths_1[3] == 4);
 }
 
+std::function<int()> lifted_length(std::function<std::string()> fStr)
+{
+  return [fStr]() 
+  {
+    return string_length(fStr());
+  };
+}
+
+template <class A, class B>
+std::function<B()> fmap(std::function<B(A)> f, std::function<A()> fA)
+{
+  return [f, fA]()
+  {
+    return f(fA());
+  };
+}
+
+template <class C, class A, class B>
+std::function<B(C)> fmap(std::function<B(A)> f, std::function<A(C)> rdA)
+{
+  return [f, rdA](C cfg)
+  {
+    return f(rdA(cfg));
+  };
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FunctorsOnFunctionObjectsExamples)
+{
+  std::function<std::string()> example_string_function_object =
+    []() -> std::string
+    {
+      return "Example static string function object";
+    };
+
+  const auto resulting_length = lifted_length(example_string_function_object);
+
+  BOOST_TEST(resulting_length() == 37);
+
+  const auto mapped_string_length =
+    fmap(string_length, example_string_function_object);
+
+  BOOST_TEST(mapped_string_length() == 37);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // FromFPCompleteBlog
 
 BOOST_AUTO_TEST_SUITE_END() // FunctorExamples

@@ -20,6 +20,7 @@ ADD_EXECUTABLE(Check
   Categories/Functors_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
+  Cpp/Functions_tests.cpp
   Cpp/Operations_test.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
   DeskCalculator/Token_tests.cpp
