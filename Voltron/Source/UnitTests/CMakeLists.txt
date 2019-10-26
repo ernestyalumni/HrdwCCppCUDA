@@ -10,7 +10,7 @@ FIND_PACKAGE(Boost COMPONENTS filesystem unit_test_framework REQUIRED)
 # Build unit tests
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
-#ADD_SUBDIRECTORY(Utilities)
+ADD_SUBDIRECTORY(Categories)
 
 #ADD_LIBRARY(UnitTesting
 #  Utilities/FunctionObject_test.cpp)

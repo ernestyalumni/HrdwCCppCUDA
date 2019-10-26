@@ -2,9 +2,13 @@
 // \file Functions_tests.cpp
 //------------------------------------------------------------------------------
 
+#include "UnitTests/Categories/Person.h"
+
 #include <boost/test/unit_test.hpp>
 #include <algorithm> // std::for_each
 #include <vector>
+
+using Categories::PersonT;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Functions_tests)
@@ -234,12 +238,38 @@ class DivisibleByN
 
     bool operator()(const int x) const
     {
-      return x % N == 0;
+      return x % N_ == 0;
     }
 
   private:
 
     int N_;
+};
+
+// 3.1.4. pp. 52 Creating generic function objects.
+
+// Instead of creating class template, make call operator a template member
+// function. This way, you won't need to specify the type when you
+// instantiate the function object.
+// Compiler will automatically deduce type of argument when invoking call
+// operator.
+class DivisibleBy
+{
+  public:
+
+    DivisibleBy(const int N) :
+      N_{N}
+    {}
+
+  template <typename T>
+  bool operator()(T&& object) const
+  {
+    return std::forward<T>(object) % N_ == 0;
+  }
+
+private:
+
+  int N_;
 };
 
 //------------------------------------------------------------------------------
@@ -254,7 +284,119 @@ BOOST_AUTO_TEST_CASE(CallOperatorOverloadingExamples)
   BOOST_TEST(s.sum_ == 6);
 
   std::vector<int> v_int {1, 2, 3, 4, 4, 3, 7, 8, 9, 10};
+
+  // You can now use DivisibleBy function object without explicitly stating type
+  // of object you'll be calling it on.
+
+  DivisibleBy predicate2 {2};
+  DivisibleBy predicate3 {3};
+
+  // count_if returns number of elements in range [first, last) satisfying
+  // criteria.
+  // c is for constant in cbegin, cend
+  const auto result2 = std::count_if(v_int.cbegin(), v_int.cend(), predicate2);
+  BOOST_TEST(result2 == 5);
+
+  const auto result3 = std::count_if(v_int.cbegin(), v_int.cend(), predicate3);
+  BOOST_TEST(result3 == 3);
 }
 
-BOOST_AUTO_TEST_SUITE_END() // Operations_tests
+// 3.2 Lambdas and closures
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// cf. http://www.cplusplus.com/reference/algorithm/copy_if/
+BOOST_AUTO_TEST_CASE(LambdaExamples)
+{
+  std::vector<int> foo {25, 15, 5, -5, -15};
+  //std::vector<int> bar (foo.size());
+  std::vector<int> bar;
+
+  // copy only positive numbers:
+  auto it =
+    std::copy_if(
+      foo.begin(),
+      foo.end(),
+      std::back_inserter(bar),
+      [](int i){return !(i < 0);});
+
+  //bar.resize(std::distance(bar.begin(), it)); // shrink container to new size.
+
+  // it is a back_insert_iterator    
+  it = 6;
+
+  BOOST_TEST(bar[0] == 25);
+  BOOST_TEST(bar[1] == 15);
+  BOOST_TEST(bar[2] == 5);
+  BOOST_TEST(bar[3] == 6);
+  BOOST_TEST(bar.size() == 4);
+}
+
+// cf. 3.2.2. Under the hood of lambdas
+
+class CompanyT
+{
+  public:
+
+    std::string team_name_for(const PersonT& employee) const
+    {
+      return employee.name();
+    }
+
+    int count_team_members(const std::string& team_name) const;
+
+  private:
+
+    std::vector<PersonT> employees_;
+};
+
+int CompanyT::count_team_members(const std::string& team_name) const
+{
+  return std::count_if(
+    employees_.cbegin(),
+    employees_.cend(),
+    // You need to capture "this" because you're implicitly using it when
+    // calling the team_name_ for member function, and you've captured team_name
+    // becuase you need to use it for comparison.
+    // As before, this function object has only 1 argument: an employee. You'll
+    // return whether they belong to the specified team.
+    [this, &team_name](const PersonT& employee)
+    {
+      return team_name_for(employee) == team_name;
+    });
+}
+
+// 4.2 Currying
+
+BOOST_AUTO_TEST_SUITE(Currying_tests)
+
+// greater function and its curried version
+
+// greater : (double, double) -> bool
+
+bool greater(double first, double second)
+{
+  return first > second;
+}
+
+// greater_curried : double -> (double -> bool)
+auto greater_curried(double first)
+{
+  return [first](double second)
+  {
+    return first > second;
+  };
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CurryingExamples)
+{
+  BOOST_TEST(!greater(2, 3));
+  BOOST_TEST(!greater_curried(2)(3));
+}
+
+BOOST_AUTO_TEST_SUITE_END() // Currying_tests 
+
+BOOST_AUTO_TEST_SUITE_END() // Functions_tests
 BOOST_AUTO_TEST_SUITE_END() // Cpp
