@@ -27,6 +27,8 @@ ADD_EXECUTABLE(Check
   Utilities/BitSet_test.cpp
   Utilities/FunctionObject_test.cpp
   Utilities/NarrowCast_test.cpp
+  Utilities/OnlyOneArgument_test.cpp
+  Utilities/StdForward_tests.cpp
   Utilities/ToBytes_test.cpp)
 
 TARGET_LINK_LIBRARIES(Check

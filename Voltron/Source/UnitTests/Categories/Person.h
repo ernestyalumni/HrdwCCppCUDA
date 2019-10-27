@@ -35,9 +35,50 @@ class PersonT
       gender_{male}
     {}
 
+    PersonT(
+      std::string name,
+      const std::string& surname,
+      GenderT gender,
+      int age = 0
+      ):
+      name_{name},
+      surname_{surname},
+      gender_{gender},
+      age_{age}
+    {}
+
     std::string name() const
     {
       return name_;
+    }
+
+    std::string surname() const
+    {
+      return surname_;
+    }
+
+    GenderT gender() const
+    {
+      return gender_;
+    }
+
+    int age() const
+    {
+      return age_;
+    }
+
+    void print(
+      std::ostream &out,
+      PersonT::OutputFormatT format) const
+    {
+      if (format == PersonT::name_only)
+      {
+        out << name();
+      }
+      else if (format == PersonT::full_name)
+      {
+        out << name() << surname();
+      }
     }
 
   private:

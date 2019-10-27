@@ -6,6 +6,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <algorithm> // std::for_each
+#include <iostream>
 #include <vector>
 
 using Categories::PersonT;
@@ -89,7 +90,7 @@ BOOST_AUTO_TEST_CASE(FunctionConceptsExamples)
   // decltype(auto) : function return type will be decltype of returned
   // expression.
   // This is useful when you're writing generic functions that forward result of
-  // another function without modifying it. In thi case, you don't know in
+  // another function without modifying it. In this case, you don't know in
   // advance what function will be passed to you, and you can't know whether you
   // should pass its result back to caller as value or as reference.
   // If you pass reference, it might return a reference to temporary value
@@ -388,12 +389,64 @@ auto greater_curried(double first)
   };
 }
 
+void print_person(
+  const PersonT& person,
+  std::ostream& out,
+  PersonT::OutputFormatT format)
+{
+  if (format == PersonT::name_only)
+  {
+    out << person.name() << '\n';
+  }
+  else if (format == PersonT::full_name)
+  {
+    out << person.name() << ' ' << person.surname() << '\n';
+  }
+}
+
+// Setup
+std::vector<PersonT> people {
+  {"David", "A", PersonT::male},
+  {"Jane", "B", PersonT::female},
+  {"Martha", "C", PersonT::female}
+};
+
+auto print_person_curried(const PersonT& person)
+{
+  return [&](std::ostream& out)
+  {
+    return [&](PersonT::OutputFormatT format)
+    {
+      print_person(person, out, format);
+    };
+  };
+};
+
+auto curried_add3(int a)
+{
+  return [a](int b)
+  {
+    return [a, b](int c)
+    {
+      return a + b + c;
+    };
+  };
+};
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(CurryingExamples)
 {
   BOOST_TEST(!greater(2, 3));
   BOOST_TEST(!greater_curried(2)(3));
+
+  // David A
+  print_person_curried(people[0])(std::cout)(PersonT::full_name); // David A
+  print_person_curried(people[1])(std::cout)(PersonT::name_only); // Jane
+  print_person_curried(people[2])(std::cout)(PersonT::full_name); // Martha C
+
+  BOOST_TEST(curried_add3(3)(2)(1) == 6);
+  BOOST_TEST(curried_add3(7)(4)(2) == 13);  
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Currying_tests 

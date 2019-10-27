@@ -36,3 +36,13 @@ wildcards `[&]`, `[=]`
 
 ## Currying, 4.2
 
+### Currying and partial function application, 4.2.3.
+
+Currying con: currying is more limiting in the sense that it must bind arguments in order:
+- first argument first, last argument last
+
+`std::bind` advantage: you can bind any of the arguments, whereas the curried function first binds the first argument.
+
+`std::bind` drawback - you need to know exactly how many arguments the function you're passing to `std::bind` has. You need to bind each argument to either a value (or a variable, a reference) or placeholder. 
+- with curried function, you don't need to care about that; you define value for first function argument, query returns function that accepts all other arguments, no matter how many there are.
+
