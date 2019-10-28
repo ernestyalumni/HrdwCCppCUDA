@@ -433,6 +433,24 @@ auto curried_add3(int a)
   };
 };
 
+auto less_than =
+  [](int i)
+  {
+    return [i](int j)
+    {
+      return j < i;
+    };
+  };
+
+template <typename B, typename M, typename E>
+inline void write_partitions(B b, M m, E e)
+{
+  std::copy(b, m, std::ostream_iterator<int>(std::cout, " "));
+  std::cout << "  |  ";
+
+  std::copy(m, e, std::ostream_iterator<int>(std::cout, " "));
+}
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(CurryingExamples)
@@ -447,6 +465,29 @@ BOOST_AUTO_TEST_CASE(CurryingExamples)
 
   BOOST_TEST(curried_add3(3)(2)(1) == 6);
   BOOST_TEST(curried_add3(7)(4)(2) == 13);  
+
+  // cf. https://cukic.co/2013/08/06/curry-all-over-the-c11/
+
+  std::vector<int> ns { 1, -2, 3, -4, 5, -6, 7, -8, 9, -10};
+
+  // Original vector
+  std::copy(ns.begin(), ns.end(),
+    std::ostream_iterator<int>(std::cout, " "));
+  std::cout << " - Original vector" << std::endl;
+
+  // Partitions for numbers ranging from 0 to 9
+  for (int i {0}; i < 10; i++)
+  {
+    auto p = std::partition(ns.begin(), ns.end(), less_than(i));
+
+    write_partitions(
+      ns.begin(),
+      p,
+      ns.end());
+
+    std::cout << " - Predicate: _ < " << i << std::endl;
+  }
+
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Currying_tests 
