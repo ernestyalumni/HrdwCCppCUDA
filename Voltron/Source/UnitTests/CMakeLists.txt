@@ -23,6 +23,7 @@ ADD_EXECUTABLE(Check
   Cpp/Functions_tests.cpp
   Cpp/Operations_test.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
+  Cpp/Templates/Template_Metaprogramming_tests.cpp
   DeskCalculator/Token_tests.cpp
   Utilities/BitSet_test.cpp
   Utilities/Curry_test.cpp

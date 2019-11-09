@@ -50,7 +50,8 @@ INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
 # Add_subdirectory call makes use of libraries.
 # Add_subdirectory adds the source CMakeLists.txt and code files in the
 # directory.
-#ADD_SUBDIRECTORY(Categories)
+ADD_SUBDIRECTORY(Categories)
+ADD_SUBDIRECTORY(Cpp)
 #ADD_SUBDIRECTORY(DeskCalculator)
 ADD_SUBDIRECTORY(Hierarchy)
 ADD_SUBDIRECTORY(UnitTests)

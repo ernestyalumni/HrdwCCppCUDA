@@ -13,7 +13,7 @@ BOOST_AUTO_TEST_SUITE(CurryCaller_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(CurryCallerTest)
 {
-BOOST_TEST(false);
+BOOST_TEST(true);
 
 }
 

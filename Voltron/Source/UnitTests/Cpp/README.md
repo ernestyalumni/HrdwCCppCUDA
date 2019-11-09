@@ -46,3 +46,5 @@ Currying con: currying is more limiting in the sense that it must bind arguments
 `std::bind` drawback - you need to know exactly how many arguments the function you're passing to `std::bind` has. You need to bind each argument to either a value (or a variable, a reference) or placeholder. 
 - with curried function, you don't need to care about that; you define value for first function argument, query returns function that accepts all other arguments, no matter how many there are.
 
+# Template metaprogramming, Ch. 11, pp. 226
+
