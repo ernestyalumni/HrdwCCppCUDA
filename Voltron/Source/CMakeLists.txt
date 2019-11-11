@@ -1,5 +1,4 @@
-#CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
-CMAKE_MINIMUM_REQUIRED (VERSION 3.5)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.14)
 
 # Language of the project is CXX (for C++)
 PROJECT (VOLTRON LANGUAGES CXX)
@@ -44,7 +43,10 @@ ENDIF()
 
 
 # Include directories so that header files can be found.
-INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
+INCLUDE_DIRECTORIES(BOOST_INCLUDES ${Boost_INCLUDE_DIRS})
+
+# Do we need to include these source project directories? I don't know.
+#INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
 #  "${PROJECT_SOURCE_DIR}/UnitTests")
 
 # Add_subdirectory call makes use of libraries.
@@ -54,6 +56,7 @@ ADD_SUBDIRECTORY(Categories)
 ADD_SUBDIRECTORY(Cpp)
 #ADD_SUBDIRECTORY(DeskCalculator)
 ADD_SUBDIRECTORY(Hierarchy)
+ADD_SUBDIRECTORY(Tools)
 ADD_SUBDIRECTORY(UnitTests)
 ADD_SUBDIRECTORY(Utilities)
 

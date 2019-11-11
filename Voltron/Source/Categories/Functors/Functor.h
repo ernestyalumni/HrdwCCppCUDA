@@ -68,11 +68,11 @@ struct Composition
   auto operator()(X&& x) -> decltype(f_(g_(std::declval<X>)))
 }
 
-template <class Function>
-struct Functor<Function>
-{
-  template <class F, class G, class C =
-}
+//template <class Function>
+//struct Functor<Function>
+//{
+//  template <class F, class G, class C =
+//}
 
 } // namespace Functors
 } // namespace Categories

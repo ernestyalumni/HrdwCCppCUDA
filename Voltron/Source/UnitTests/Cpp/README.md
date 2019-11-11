@@ -46,5 +46,30 @@ Currying con: currying is more limiting in the sense that it must bind arguments
 `std::bind` drawback - you need to know exactly how many arguments the function you're passing to `std::bind` has. You need to bind each argument to either a value (or a variable, a reference) or placeholder. 
 - with curried function, you don't need to care about that; you define value for first function argument, query returns function that accepts all other arguments, no matter how many there are.
 
+# Algebraic data types, Ch. 9, pp. 174
+
+In functional world, building new types from old ones usually done with 2 operations:
+* sum
+* product
+
+These new types are thus called *algebraic*.
+
+Product of 2 types `A`, `B` is a new type that contains an instnace of `A`, instance of `B` (it'll be Cartesian product of set of all values of type `A`, and set of all values of `B`)
+
+e.g. `std::pair`, `std::tuple`
+
+Sum types: sume type of types A and B is a type that can hold an instance of A or an instance of B, but not both at the same time.
+
+Enums are a special kind of sum type; enum is a sum type of one-element sets; define enum specifying different values it can hold, instance of that enum type can hold exactly 1 of those values, and treat these values as 1-element sets.
+
+sums are disjoint union or coproduct
+https://en.wikipedia.org/wiki/Coproduct
+
+## Sum types through inheritance
+
+cf. 9.1.1. Sum types through inheritance, Cukic, pp. 177
+
+
+
 # Template metaprogramming, Ch. 11, pp. 226
 

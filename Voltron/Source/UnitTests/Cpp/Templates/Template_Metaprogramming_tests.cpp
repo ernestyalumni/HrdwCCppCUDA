@@ -1,5 +1,6 @@
 //------------------------------------------------------------------------------
-// \file Template_Metaprogramming_tests.cpp
+/// \file Template_Metaprogramming_tests.cpp
+///
 //------------------------------------------------------------------------------
 
 #include <boost/test/unit_test.hpp>
