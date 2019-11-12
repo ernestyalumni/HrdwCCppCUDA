@@ -106,7 +106,10 @@ class ProgramT
 
     void count_words(const std::string& file_name)
     {
-      assert(state_.index() == 0);
+      //assert(state_.index() == 0);
+      const auto *state = std::get_if<InitialT>(&state_);
+      assert(state != nullptr);
+
       state_ = RunningT{file_name};
       std::get<RunningT>(state_).count_words();
       counting_finished();
@@ -130,7 +133,7 @@ class ProgramT
       // Another approach is to use the std::visit function which executes a
       // given function on the value stored inside of the variant.
       //
-      // The 'overloaded' helper function can be used to coming several
+      // The 'overloaded' helper function can be used to combine several
       // lambdas of different signatures into a single function
       // object.
       return std::visit(
