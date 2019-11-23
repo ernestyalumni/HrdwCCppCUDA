@@ -98,8 +98,6 @@ BOOST_AUTO_TEST_CASE(ProgramTCounts)
   program.count_words(full_filepath);
   std::cout << "Program count : " << program.count() << std::endl;
   BOOST_TEST(program.count() == 69);
-
-
 }
 
 

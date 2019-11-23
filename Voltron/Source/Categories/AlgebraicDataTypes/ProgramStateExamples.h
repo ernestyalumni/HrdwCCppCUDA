@@ -10,6 +10,8 @@
 
 #include <cassert>
 #include <memory> // std::make_unique
+#include <optional>
+#include <string>
 #include <variant>
 
 namespace Categories
@@ -144,12 +146,24 @@ class InitialT
 class RunningT
 {
   public:
+    RunningT(const std::string& file_name) :
+      file_name_{file_name}
+    {}
+
+    RunningT() = delete;
+
+    void count_length()
+    {
+      count_ = file_name_.length();
+    }
+
     unsigned count() const
     {
       return count_;
     }
   private:
     unsigned count_ {0};
+    std::string file_name_;
     // socket_t web_page_;
 };
 
@@ -237,8 +251,78 @@ class ProgramTThroughStdVariant
     }
 
   private:
+    // cf. https://en.cppreference.com/w/cpp/utility/variant
+    // template <class... Types>
+    // class variant;
+    // class template std::variant represnts type-safe union.
+    // Instance of std::variant at any given time either holds a value of 1 of
+    // its alternative types, or in case of error - no value.
     std::variant<InitialT, RunningT, FinishedT> state_;
 };
+
+// TODO: get this to work
+/*
+class ProgramTThroughStdOptional
+{
+  public:
+
+    using FinishedT = ProgramStates::ThroughStdVariant::FinishedT;
+    using InitialT = ProgramStates::ThroughStdVariant::InitialT;
+    using RunningT = ProgramStates::ThroughStdVariant::RunningT;
+
+    // You initialized 
+    ProgramTThroughStdOptional() :
+      state_{InitialT{}}
+    {}
+
+    template <typename T, template <typename... Args> typename Variant>
+    std::optional<T> get_variant_value_if(const Variant<Args ...>& variant)
+    {
+      T* ptr = std::get_if<T>(&variant);
+
+      if (ptr)
+      {
+        return *ptr;
+      }
+      else
+      {
+        return std::optional<T>();
+      }
+    }
+
+    void count_length(const std::string& file_name)
+    {
+      auto state = get_variant_value_if<InitialT>(state_);
+      assert(state.has_value());
+      state_ = RunningT{file_name};
+      std::get<RunningT>(state_).count_length();
+    }
+
+    void counting_finished()
+    {
+      // Uses std::get_if to check whether there's a value of a specified type
+      // in std::variant. You didn't pass it a pointer.
+      //  - std::variant isn't based on dynamic polymorphism; it doesn't store
+      //  pointers to objects allocated on the heap.
+      // std::variant stores actual object in its own memory space, just as with
+      // ordinary unions.
+      // It automatically handles construction and destruction of objects stored
+      // within, and knows actly type of object it contains at any given time.
+      // std::get either returns value or throws
+      // std::get_if returns ptr to contained value, or nullptr on error.
+      auto state = get_variant_value_if<RunningT>(state_);
+
+      // Returns nullptr if the variant doesn't hold the value of the specified
+      // type.
+      assert(state.has_value());
+
+      state_ = FinishedT{state->count()};
+    }
+
+  private:
+    std::variant<InitialT, RunningT, FinishedT> state_;
+};
+*/
 
 } // namespace MainPrograms
 

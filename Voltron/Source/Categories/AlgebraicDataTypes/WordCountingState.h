@@ -111,6 +111,8 @@ class ProgramT
       assert(state != nullptr);
 
       state_ = RunningT{file_name};
+      // https://en.cppreference.com/w/cpp/utility/variant/get
+      // std:: (std::variant) returns reference to value stored in variant
       std::get<RunningT>(state_).count_words();
       counting_finished();
     }

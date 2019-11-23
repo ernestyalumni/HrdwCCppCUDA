@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED (VERSION 3.14)
 # Language of the project is CXX (for C++)
 PROJECT (VOLTRON LANGUAGES CXX)
 
-# BEFORE prepends directories onto current list of directories.
+# BEFORE prepends the directories specified onto current list of directories.
 # cf. https://cmake.org/cmake/help/v3.0/command/include_directories.html
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_SOURCE_DIR})
 

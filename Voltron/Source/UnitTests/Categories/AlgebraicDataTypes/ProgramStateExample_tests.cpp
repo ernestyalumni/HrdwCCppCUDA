@@ -7,6 +7,9 @@
 
 //using namespace Categories::AlgebraicDataTypes;
 
+//using
+  //Categories::AlgebraicDataTypes::ProgramStates::MainPrograms::ProgramTThroughStdOptional;
+
 BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(AlgebraicDataTypes)
 BOOST_AUTO_TEST_SUITE(ProgramStateExamples_tests)
