@@ -130,17 +130,15 @@ BOOST_AUTO_TEST_CASE(IsInvocableWorks)
 	BOOST_TEST((std::is_invocable_r<int(*)(), decltype(func2), char>::value));
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(IsInvocableDistinguishesBetween0And1Arguments)
 {
 	BOOST_TEST((std::is_invocable_v<decltype(dummy_f0)>));
 	BOOST_TEST(!(std::is_invocable_v<decltype(dummy_f1)>));
 	BOOST_TEST((std::is_invocable_v<decltype(dummy_f0b)>));
 	BOOST_TEST(!(std::is_invocable_v<decltype(dummy_f1b)>));
-
-
 }
-
-
 
 BOOST_AUTO_TEST_SUITE_END() // StdForward_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities

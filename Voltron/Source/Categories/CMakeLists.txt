@@ -1,5 +1,5 @@
 ADD_SUBDIRECTORY(AlgebraicDataTypes)
 ADD_SUBDIRECTORY(Functors)
-ADD_SUBDIRECTORY(Monoidal)
+# ADD_SUBDIRECTORY(Monoidal)
 
 #ADD_LIBRARY(Categories)

@@ -26,6 +26,7 @@ ADD_EXECUTABLE(Check
   Utilities/BitSet_test.cpp
   Utilities/Curry_test.cpp
   Utilities/FunctionObject_test.cpp
+  Utilities/LazyValuation_tests.cpp
   Utilities/NarrowCast_test.cpp
   Utilities/OnlyOneArgument_test.cpp
   Utilities/StdForward_tests.cpp
