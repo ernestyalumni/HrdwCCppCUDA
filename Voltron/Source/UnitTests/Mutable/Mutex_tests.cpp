@@ -7,6 +7,7 @@
 
 #include <mutex> // std::unique_lock
 #include <string>
+#include <thread>
 #include <vector>
 #include <utility> // std::pair
 
@@ -26,19 +27,11 @@ class EmploymentHistory : public std::vector<std::string>
     }
 };
 
-// cf. https://en.cppreference.com/w/cpp/thread/unique_lock
-// Modified struct Box from cppreference example.
-struct SequenceNumber
-{
-  explicit SequenceNumber(int number) :
-    sequence_number_{number}
-  {}
-
-  int sequence_number_;
-};
+struct SequenceNumber;
 
 // cf. https://en.cppreference.com/w/cpp/thread/unique_lock
 // Modified transfer function as class.
+/*
 class DualSequenceNumbers
 {
   public:
@@ -51,14 +44,13 @@ class DualSequenceNumbers
       decreasing_sequence_number_{decreasing_sequence_number}
     {}
 
-    SequenceNumberStatus
-
   private:
     mutable std::mutex increasing_sequence_number_mutex_;
     mutable std::mutex decreasing_sequence_number_mutex_;
     mutable SequenceNumber increasing_sequence_number_;
     mutable SequenceNumber decreasing_sequence_number_;
 };
+*/
 
 // cf. Listing 5.8 Using mutable to implement caching, pp. 117
 class Person
@@ -108,6 +100,66 @@ BOOST_AUTO_TEST_CASE(MutexExamples)
 {
   BOOST_TEST(true);
 }
+
+BOOST_AUTO_TEST_SUITE(cppreference_tests) // cppreference.com 
+
+// cf. https://en.cppreference.com/w/cpp/thread/unique_lock
+// Modified struct Box from cppreference example.
+struct SequenceNumber
+{
+  explicit SequenceNumber(int number) :
+    sequence_number_{number}
+  {}
+
+  ~SequenceNumber() = default;
+
+  int sequence_number_;
+  std::mutex m_;
+};
+
+// cf. https://en.cppreference.com/w/cpp/thread/unique_lock
+void transfer(SequenceNumber& from, SequenceNumber& to, int number)
+{
+  // Don't actually take the locks yet
+  std::unique_lock<std::mutex> lock1 {from.m_, std::defer_lock};
+  std::unique_lock<std::mutex> lock2 {from.m_, std::defer_lock};
+
+  // Lock both unique_locks without deadlock
+  std::lock(lock1, lock2);
+
+  from.sequence_number_ -= number;
+  to.sequence_number_ += number;
+
+  // 'from.m_' and 'to.m_' mutexes unlocked in 'unique_lock' dtors
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(cppreferenceExamples)
+{
+  SequenceNumber acc1 {100};
+  SequenceNumber acc2 {50};
+
+  BOOST_TEST(acc1.sequence_number_ == 100);
+  BOOST_TEST(acc2.sequence_number_ == 50);
+
+  // Threads begin process once it gets created.
+  //std::thread t1 {transfer, std::ref(acc1), std::ref(acc2), 10};
+
+  //BOOST_TEST(acc1.sequence_number_ == 90);
+  //BOOST_TEST(acc2.sequence_number_ == 60);
+
+//  std::thread t2 {transfer, std::ref(acc2), std::ref(acc1), 5};
+
+  //t1.join();
+//  t2.join();
+
+  //BOOST_TEST(acc1.sequence_number_ == 95);
+  //BOOST_TEST(acc2.sequence_number_ == 55);
+  
+}
+
+BOOST_AUTO_TEST_SUITE_END() // cppreference_tests
 
 BOOST_AUTO_TEST_SUITE_END() // Mutex_tests
 

@@ -41,9 +41,13 @@ ELSE()
   FIND_PACKAGE(Boost)
 ENDIF()
 
-
 # Include directories so that header files can be found.
 INCLUDE_DIRECTORIES(BOOST_INCLUDES ${Boost_INCLUDE_DIRS})
+
+# Calls a CMake module that first, searches the file system for the appropriate
+# threads package for this platform, and then sets CMAKE_THREAD_LIBS_INIT
+# variable (and other variables as well).
+FIND_PACKAGE(Threads REQUIRED)
 
 # Do we need to include these source project directories? I don't know.
 #INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")

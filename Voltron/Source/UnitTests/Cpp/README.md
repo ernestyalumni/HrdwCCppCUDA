@@ -64,6 +64,18 @@ cf. pp. 106, 5.3 Programming without side effects
 
 In pure functional programming, instead of changing a value, you create a new one. Instead of changing a property of an object, you create copy of that object, and just the value of that property is changed to the new value.
 
+cf. 5.4 Mutable and immutable state in a concurrent environment, pp. 111
+
+When `mutex` is necessary: when you *want* to have things running in parallel - whether for efficiency or something else; mutexes solve the problem with concurrency by removing concurrency.
+
+From -David Butenhof on comp.programming.threads, (mutex - which stands for mutual exclusion), acts like a "bottleneck".
+
+Mutexes, like `for` loops and recursion, are low-level constructs useful for implementing higher-level abstractions for concurrent programming, but use it sparingly.
+- problems appear only if you have mutable data shared across different concurrently running processes. Solutions:
+1. not have concurrency
+2. not to use mutable data
+3. have mutable data, not share it.
+
 pp. 113 
 Mutable not shared ok
 Immutable shared and Immutable Not shared ok 
@@ -91,8 +103,10 @@ provides both *logical* `const`-*ness* (user-visible data in object never change
 and
 *internal* `const`-*ness* (no changes to internal data of object)
 
-
-
+pp. 117 
+- create `mutable` member variable in your class, member variable that can be changed even from const member functions; because you want to guarantee that class is immutable from user's perspective, you have to ensure 2 concurrent calls to `employmnet_history` can't return different values.
+  * **pattern** of implementing classes that are immutable on outside, but sometimes need to change internal data.
+    - it's required for constant member functions that either class data is kept unchanged or all changes are synchronized (unnoticeable even in the case of concurrent invocations).
 
 # Lazy Evaluation, Ch. 6
 

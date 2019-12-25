@@ -39,6 +39,8 @@ TARGET_LINK_LIBRARIES(Check
   #Categories
   Hierarchy
   Tools
+  # cf. https://stackoverflow.com/questions/1620918/cmake-and-libpthread
+  ${CMAKE_THREAD_LIBS_INIT}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
