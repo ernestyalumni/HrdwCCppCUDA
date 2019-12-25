@@ -46,6 +46,54 @@ Currying con: currying is more limiting in the sense that it must bind arguments
 `std::bind` drawback - you need to know exactly how many arguments the function you're passing to `std::bind` has. You need to bind each argument to either a value (or a variable, a reference) or placeholder. 
 - with curried function, you don't need to care about that; you define value for first function argument, query returns function that accepts all other arguments, no matter how many there are.
 
+# Purity: Avoiding mutable state, Ch. 5
+
+## Pure functions and referential transparency
+
+cf. 5.2 Pure functions and referential transparency. pp. 103
+
+Design flaw of class data encapsulation: having several components in the software system be responsible for the same data, without knowing when another component is changing that data. The *simplest* way to fix this is to forbid changing any data.
+
+Instead of saying you can't change state, let's see how to design software in a way that keeps mutations and side effects to a minimum.
+
+Expression is *referentially transparent* if the program wouldn't behave any differently if we replaced the entire expression with just its return value.
+
+As soon as a function call can't be completely replaced by its return value without changing the behavior of the program, it has *observable side effects.*
+
+cf. pp. 106, 5.3 Programming without side effects
+
+In pure functional programming, instead of changing a value, you create a new one. Instead of changing a property of an object, you create copy of that object, and just the value of that property is changed to the new value.
+
+pp. 113 
+Mutable not shared ok
+Immutable shared and Immutable Not shared ok 
+
+Mutable shared not ok.
+
+## Logical and internal `const`-ness
+
+cf. 5.5.1 Logical and internal const-ness
+
+Instead of making all member variables constant, make all (public) member functions constant:
+
+```
+class Person
+{
+  public:
+    std::string name() const;
+    std::string surname() const;
+  private:
+    std::string name_;
+    std::string surname_;
+};
+```
+provides both *logical* `const`-*ness* (user-visible data in object never changes)
+and
+*internal* `const`-*ness* (no changes to internal data of object)
+
+
+
+
 # Lazy Evaluation, Ch. 6
 
 See `Utilities/LazyValuation.h`

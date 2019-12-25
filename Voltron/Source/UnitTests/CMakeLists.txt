@@ -22,6 +22,8 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Templates/Template_Metaprogramming_tests.cpp
   DeskCalculator/Token_tests.cpp
+  Mutable/Mutable_tests.cpp
+  Mutable/Mutex_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
   Utilities/BitSet_test.cpp
   Utilities/Curry_test.cpp
