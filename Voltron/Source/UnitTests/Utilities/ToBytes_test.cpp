@@ -17,6 +17,9 @@ BOOST_AUTO_TEST_SUITE(ToBytes_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
 {
+  std::cout << "\n ReinterpretCastAndHexadecimalPrintExamples begins \n";
+
+
   constexpr unsigned short x_0 {15213};
   constexpr short x_1 {15213};
   constexpr short y {-15213};

@@ -65,6 +65,9 @@ ADD_SUBDIRECTORY(UnitTests)
 ADD_SUBDIRECTORY(Utilities)
 
 ADD_EXECUTABLE(Main Main.cpp)
+ADD_EXECUTABLE(CoderByteChallenges CoderByteChallenges.cpp)
+ADD_EXECUTABLE(HackerRankPractice HackerRankPractice.cpp)
+
 
 TARGET_LINK_LIBRARIES(Main
   Hierarchy)

@@ -1094,6 +1094,99 @@ Observe that
 \end{gathered}
 \end{equation}
 
+To recap and to clean up and unify the notation, recall the following: \\
+radix (i.e. base) $b$ \\
+string of digits $d_1, \dots d_n$, 
+\[
+c = \sum_{i=1}^n d_i b^{n-i} , \quad \, 0 \leq d_i < b \quad \, \forall \, i = 1 \dots n
+\]
+cf. \href{https://en.wikipedia.org/wiki/Radix}{wikipedia, "Radix"}
+i.e.
+\[
+\begin{gathered}
+\lbrace 0 ,1 ,\dots b-1 \rbrace^n \to \mathbb{Z} \\ 
+(d_1, \dots d_n) \mapsto c = \sum_{i=1}^n d_i b^{n-i}
+\end{gathered}
+\]
+or (alternative notation),
+\[
+\begin{gathered}
+\lbrace 0 1, ,\dots b-1 \rbrace^w \to \mathbb{Z} \\ 
+(d_{w-1}, d_{w-2}, \dots, d_0) \mapsto c = \sum_{i=0}^{w-1} d_i b^i 
+\end{gathered}
+\]
+
+In Fussell's notation, Fussell (2011) \cite{Fuss2011},
+\[
+\begin{gathered}
+\begin{gathered}
+\lbrace 0 ,1, \dots b-1 \rbrace^w \to \mathbb{Z} \text{ or } \mathbb{Z}^+_{2^w} \to \mathbb{Z}^+ \\
+(x_{w-1}, x_{w-2}, \dots x_0) \mapsto c = \sum_{i=0}^{w-1} x_i 2^i, \, x_i < 2
+\end{gathered}
+B2U(X) = B2U(x_{w-1}, \dots x_0) = \sum_{i=0}^{w-1} x_i 2^i
+\end{gathered}
+\]
+I will use this notation:
+\[
+B2U(x_w, x_{w-1}, \dots x_1) = \sum_{i=1}^w x_i 2^{i-1}
+\]
+
+For the \emph{Two's Complement},
+
+\[
+\begin{gathered}
+B2T(X) = B2T(-x_{w-1}, x_{w-2}, \dots x_0) = -x_{w-1}2^{w-1} + \sum_{i=0}^{w-2} x_i 2^i \\
+\lbrace 0 , 1, \dots b-1 \rbrace^w \to \mathbb{Z} 
+\end{gathered}
+\]
+or with the notation I'll use,
+\[
+B2T(-x_w, x_{w-1}, \dots x_1) = -x_w 2^{w-1} + \sum_{i=1}^{w-1} x_i 2^{i-1}
+\]
+Note that for hexadecimal,
+\[
+c = \sum_{i=1}^w x_i 2^{i-1} = \sum_{i=1}^v y_i (16)^{i-1} = \sum_{i=1}^v y_i 2^{4i-4}
+\]
+$v$ hexadecimal digits $\leftrightarrow  4v = w$ bits.
+
+\subsection{Numeric Ranges}
+
+For unsigned values, 
+\[
+\begin{gathered}
+\begin{gathered} 
+\text{UMin} = 0 \\
+000 \dots 0 
+\end{gathered} \\
+\text{UMax} = 2^w - 1  
+\end{gathered}
+\]
+
+For why UMax $=2^w -1$, consider the geometric progression:
+\[
+\begin{gathered}
+\sum_{k=1}^n ar^{k-1} \\
+(1-r) \sum_{k=1}^n ar^{k-1} = a-ar^n \text{ or } \sum_{k=1}^n ar^{k-1} = \frac{a(1-r^n) }{1-r} \\
+\Longrightarrow \sum_{i=1}^w 2^{i-1} = \frac{1-2^w}{1-2} = 2^w - 1
+\end{gathered}
+\]
+
+\[
+\begin{gathered}
+\begin{gathered} 
+\text{TMin} = -2^{w-1} \\
+100 \dots 0 
+\end{gathered} \\
+\begin{gathered} 
+\text{TMax} = 2^{w-1} - 1
+011\dots 1
+\end{gathered}
+\end{gathered} 
+\]
+
+$-1 \leftrightarrow 111 \dots 1$
+
+
 \subsection{Negating with complement}
 
 \begin{equation}
@@ -1501,6 +1594,9 @@ Stanley B. Lippman, Jos\'{e}e Lajoie, Barbara E. Moo. \textbf{C++ Primer} (5th E
 
 \bibitem{ScMe2014}
 Scott Meyers.  \textbf{Effective Modern C++: 42 Specific Ways to Improve Your Use of C++11 and C++14}. 1st Edition.  O'Reilly Media; 1 edition (December 5, 2014)  ISBN-13: 978-1491903995
+
+\bibitem{Fuss2011}
+Prof. Donald S. Fussell (Instructor). CS429H (378H) - Systems I (Honors) (Computer Organization, Architecture, and Programming). Spring 2011. University of Texas. \url{https://www.cs.utexas.edu/users/fussell/courses/cs429h/}
 
 \bibitem{Srid2017} Cindy Sridharan. "The method to epoll's madness." \emph{Medium}. Oct. 29, 2017. \url{https://medium.com/@copyconstruct/the-method-to-epolls-madness-d9d2d6378642}
 
