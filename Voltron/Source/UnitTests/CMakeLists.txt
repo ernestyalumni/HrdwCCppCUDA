@@ -23,6 +23,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Templates/Template_Metaprogramming_tests.cpp
   DeskCalculator/Token_tests.cpp
+  Hierarchy/AccessAndInheritance_tests.cpp
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
@@ -34,7 +35,8 @@ ADD_EXECUTABLE(Check
   Utilities/OnlyOneArgument_test.cpp
   Utilities/StdForward_tests.cpp
   Utilities/StdTuple_tests.cpp
-  Utilities/ToBytes_test.cpp)
+  Utilities/ToBytes_test.cpp
+  Utilities/ToHexString_tests.cpp)
 
 TARGET_LINK_LIBRARIES(Check
   #Categories
