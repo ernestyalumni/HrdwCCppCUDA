@@ -47,6 +47,11 @@ void ToBytes<T>::increasing_addresses_print() const
 
   for (std::size_t i {0}; i < number_of_bytes; ++i)
   {
+    // https://en.cppreference.com/w/cpp/io/c/fprintf
+    // x X converts an unsigned integer into hexadecimal representation hhhh
+    // For the x, conversion letters abcdef are used.
+    // For the X, conversion letters ABCDEF are used.
+    // 
     printf("%01x ", x_as_chars[i]);
   }
 }

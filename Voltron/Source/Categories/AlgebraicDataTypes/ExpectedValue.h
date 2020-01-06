@@ -13,6 +13,19 @@ namespace Categories
 namespace AlgebraicDataTypes
 {
 
+template <typename T, typename E>
+class ExpectedValue
+{
+  T& get()
+  {
+    if (valid_)
+  }
+
+
+  private:
+
+    
+};
 
 } // namespace AlgebraicDataTypes
 } // namespace Categories
