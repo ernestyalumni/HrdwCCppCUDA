@@ -56,6 +56,7 @@ FIND_PACKAGE(Threads REQUIRED)
 # Add_subdirectory call makes use of libraries.
 # Add_subdirectory adds the source CMakeLists.txt and code files in the
 # directory.
+ADD_SUBDIRECTORY(Algorithms)
 ADD_SUBDIRECTORY(Categories)
 ADD_SUBDIRECTORY(Cpp)
 #ADD_SUBDIRECTORY(DeskCalculator)
@@ -67,7 +68,6 @@ ADD_SUBDIRECTORY(Utilities)
 ADD_EXECUTABLE(Main Main.cpp)
 ADD_EXECUTABLE(CoderByteChallenges CoderByteChallenges.cpp)
 ADD_EXECUTABLE(HackerRankPractice HackerRankPractice.cpp)
-
 
 TARGET_LINK_LIBRARIES(Main
   Hierarchy)

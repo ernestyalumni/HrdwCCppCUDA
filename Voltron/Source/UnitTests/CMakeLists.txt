@@ -11,6 +11,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 ADD_EXECUTABLE(Check
   Main.cpp
+  Algorithms/Permutations_tests.cpp
   Categories/AlgebraicDataTypes/ProgramStateExample_tests.cpp
   Categories/AlgebraicDataTypes/WordCountingState_tests.cpp
   Categories/Functors_tests.cpp
@@ -39,7 +40,7 @@ ADD_EXECUTABLE(Check
   Utilities/ToHexString_tests.cpp)
 
 TARGET_LINK_LIBRARIES(Check
-  #Categories
+  Algorithms
   Hierarchy
   Tools
   # cf. https://stackoverflow.com/questions/1620918/cmake-and-libpthread
