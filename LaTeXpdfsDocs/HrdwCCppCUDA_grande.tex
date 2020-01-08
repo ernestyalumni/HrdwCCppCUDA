@@ -1501,10 +1501,235 @@ Instead, to tackle the confusing problem of byte ordering, think about the integ
 \end{aligned}
 \end{gathered}
 \end{equation}
-
- 
 	
 \end{definition}
+
+\part{Complexity, Data Structures, Algorithms}
+
+\section{Complexity, Big-$O$}
+
+Also note, let $N = $ number of elements in a collection.
+\[
+\begin{gathered}
+	\log_b{N} = n \leftrightarrow b^n = N \\ 
+ N \log_b{N} = n \leftrightarrow b^n = N^N \text{ but rather, use Stirling's approximation: } \\
+ N \ln N \cong \log_b{N!} = \sum_{i=1}^N \log_b{i} = n  
+\end{gathered}
+\]
+\[
+\begin{gathered}
+	O(N\log_b{N}) = O(\log_b{N!}) \text{ via Stirling's approximation: } \ln{N!} = N\ln{N} - N + O(\ln{N})
+\end{gathered}
+\]
+
+\subsection{Multi-Part Algorithms: Add vs. Multiply, e.g. $O(A + B)$ vs. $O(A*B)$}
+
+If your algorithm is "do this ($A$), then, when completed, do that ($B$)" then add runtimes: $O(A+B)$.
+
+If your algorithm is "do this for each time you do that", then multiply runtimes: $O(A*B)$.
+
+\subsection{Amoritized Time (e.g. dynamically resizing array "ArrayList" or maybe \texttt{std::vector})}
+
+Dynamically resize array $x$: if there are $N$ elements, s.t. $N= $ max. capacity at $N$, $|x| = N \mapsto |x| = 2N$ and there are $N$ copies to be made ($T=N$). 
+
+Let $X = $ number of elements to be inserted. 
+
+Suppose when $x=1, 2, 4, 8, 16, \dots 2^j, \dots X$, $x= 2^j$ copies are made. 
+
+total number of copies:
+\[
+\begin{gathered}
+\sum_{j=0}^{ \lfloor \log_2{X} \rfloor } 2^j = \sum_{j=0}^{ \lfloor \log_2{X} \rfloor } 2^{ \lfloor \log_2{X} \rfloor - j} = \sum_{j=0}^{ \lfloor \log_2{X} \rfloor } \frac{X}{2^j} = X\left( \frac{ 1 - 2^{ - (\lfloor \log_2{X} \rfloor  + 1)} }{ 1 - 1/2} \right) = 2X \left( 1 - 2/X \right) \\
+\cong 2X \text{ if $X$ large } 
+\end{gathered}
+\]
+Note that $\begin{aligned} & \quad \\ 
+ X & = 2^y \\ 
+ \log_2{X} & = y \end{aligned}$ 
+ 
+ $X$ insertions take $O(2X)$.  "Amoritized" time for each insertion is $O(1)$.
+ 
+\subsection{$\log{N}$ runtimes ($O(\log{N})$)} 
+
+e.g. binary search. find element (example) $c$ in $N$-element \emph{sorted} array. $x= x_i$, $i=0,1, \dots N-1 \mapsto i' = 1, 2 \dots N$. 
+
+First, compare $c$ to midpoint of array. 
+
+If $c= x_{ \lceil \frac{N}{2} \rceil }$, done.
+
+So let $n_1 =N$.  \\
+
+if $c< x_{ \lceil \frac{N}{2} \rceil }$, consider $x_1, x_2, \dots x_{ \lfloor \frac{N}{2} \rfloor }$, if $c> x_{ \lceil \frac{N}{2} \rceil }$, consider $x_{ \lceil \frac{N}{2} \rceil + 1},  \dots x_N$ \\
+ 
+Let $n_2= \lfloor \frac{N}{2} \rfloor$. 
+
+By induction, $n_j = \lfloor \frac{N}{2^{j-1}} \rfloor$
+
+We stop when we either find the value $c$ or we're down to just 1 element. \\
+$\Longrightarrow $ total runtime is the a matter of how many steps (dividing $N$ by 2 each time).
+
+$J = ?$ s.t. $n_J = 1 = \lfloor \frac{N}{2^{J-1}} \rfloor \Longrightarrow  0 = \log_2{N} + (-J + 1)$ or 
+\[
+J = \log_2{N}
+\]
+When you see a problem where number of elements $n_0 = N, \dots n_j$ gets halved each time, it'll likely be $O(\log_2{N})$ runtime. 
+
+Finding an element in a \textbf{balanced binary search tree}: $O(\log{N})$; with each comparison, we go either left or right.
+
+\subsection{Recursive run times $O(2^N)$}
+
+\[
+\begin{gathered}
+	\begin{aligned}
+	\text{ Let } & n_1 = N \\
+	& n_2 = N - 1 \\
+	& \dots  \\
+	& n_j = N - j + 1 \\
+	& \text{ until } j = N 
+	\end{aligned} \qquad \mapsto \qquad 
+	\begin{aligned}
+	& 2^1 \quad \, f(n_1 - 1) = f(N-1) \text{ calls } \\ 
+	& 4 = 2^2 \quad \, f(n_2- 1) \text{ calls }  \\
+	& \dots \\
+	& 2^j \quad \, f(n_j - 1) \text{ calls }  \\
+	& 2^N 
+	\end{aligned}
+\end{gathered}
+\]
+\[
+\begin{gathered}
+	\sum_{j=1}^N 2^j = \sum_{j=0}^{N-1} 2^{N-j} = 2^N \sum_{j=0}^{N-1} 2^{-j} = 2^N \left(\frac{ 1 - 2^{-N} }{ 1 - 1/2} \right) = 2^{N+1} (1- 2^{-N}) \cong 2^N \qquad \, (N \text{ large }) \\ 
+ \Longrightarrow 2^{N+1} -1 \text{ nodes } 
+\end{gathered}
+\]
+
+Try to remember this pattern. When you have a recursive function that makes multiple calls, runtime will often (not always) look like
+\begin{equation}
+	\boxed{ O(\text{branches}^{\text{depth}}) }
+\end{equation}
+branches $=$ number of times each recursive call branches.
+
+space complexity is $O(N)$, only $O(N)$ nodes exist at any time.
+
+cf. VI Big O, pp. 46, McDowell, Example 1
+
+\begin{verbatim}
+for (int i=0; i < N; i++)
+{ sum += array[i]; }
+\end{verbatim}
+$O(N)$.
+
+cf. VI Big O, pp. 46, McDowell, Example 2
+
+\begin{verbatim}
+for (int i = 0; i < N; i++)
+{
+	for (int j = 0; j < N; j++)
+	{
+		std::cout << i << j;
+	}
+}
+\end{verbatim}
+
+$O(N*N)= O(N^2)$ Or see it as printing $O(N^2)$ total number of pairs.
+
+cf. VI Big O, pp. 46, McDowell, Example 3
+\begin{verbatim}
+for (int i = 0; i < N; i++)
+{
+	for (int j = i + 1; j < N; j++)
+	{
+		std::cout << i << j;
+	}
+}
+\end{verbatim}
+\[
+\begin{gathered}
+	\begin{aligned}
+	& i = 1, 2 \dots N \\
+	& j = i+1, \dots N \\
+	& \sum_{j=i+1}^N 1 = N-i 
+	\end{aligned} \\
+\sum_{i=1}^N (N-i) = N\cdot N  - \sum_{i=1}^N i = N^2 - \frac{N(N+1)}{2} = N^2 - \frac{N^2}{2} - \frac{N}{2} = \frac{N^2 - N}{2} \cong N^2 \quad \, \text{(large)}
+\end{gathered}
+\]
+
+cf. VI Big O, pp. 46, McDowell, Example 4
+\begin{verbatim}
+for (int i = 0; i < NA; i++)
+{
+	for (int j = i + 1; j < NB; j++)
+	{
+		if (a[i] < b[j])
+		{
+			std::cout << a[i] << b[j];
+		}
+	}
+}
+\end{verbatim}
+if statement within $j$'s for loop is $O(1)$ time since it's just a sequence of constant time statements.
+
+$\Longrightarrow O(NA \cdot NB)$
+
+cf. VI Big O, pp. 47, McDowell, Example 5
+
+\begin{verbatim}
+for (int i = 0; i < NA; i++)
+{
+	for (int j = i + 1; j < NB; j++)
+	{
+		for (int k = 0; k < 1000000; k++) 
+		{
+		//...
+		}
+	}
+}
+\end{verbatim}
+
+$\Longrightarrow O(NA \cdot NB \cdot 1000000) = O(100000 (NA)(NB)) \cong O(NA\cdot NB)$
+
+100,000 units of work is still constant, so run time is $O(NA\cdot NB)$.
+
+cf. VI Big O, pp. 48, McDowell, Example 6
+
+\begin{verbatim}
+void reverse(int array[], const int N)
+{
+	for (int i = 0; i < N / 2; i++)
+	{
+		int other = N - i - 1;
+		int temp = array[i];
+		array[i] = array[other];
+		array[other] = temp;
+	}
+}
+\end{verbatim}
+$O(N)$ time. The fact that it only goes through half of the array (in terms of iterations) doesn't impact big O time.
+
+cf. VI Big O, pp. 47, McDowell, Example 8
+
+Let the longest string be of length $L$. \\
+sort each string $\to L\log{L}$ (merge sort or best "worst" case for a sort) \\
+$N_a= $ number of strings in the array of strings. \\
+$N_a L \log{L} = $ total number of sorts. \\
+
+Sort the full array.\\
+\emph{You should also take into account that you need to compare the strings.} \\
+\emph{Each string comparison takes $O(L)$ time (compare each string element at each position)}. \\
+$O(N_a \log{N_a})$ comparisons (sort the full array of strings) \\
+
+\[
+\Longrightarrow \boxed{ O(N_a L \log{L}) + O(L N_a \log{N_a}) = O(N_aL (\log{LN_a})) }
+\]
+
+
+
+
+\subsection{Time Complexities of all Sorting Algorithms}
+
+\url{https://www.geeksforgeeks.org/time-complexities-of-all-sorting-algorithms/}
+
+"Best" complexity (best of worst case) sort is $O(N \log{N})$.
 
 \part{Linux System Programming}
 
