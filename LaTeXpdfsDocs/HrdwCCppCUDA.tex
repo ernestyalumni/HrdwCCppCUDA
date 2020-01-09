@@ -1511,6 +1511,20 @@ $j = 2 \mapsto a(N-1)$ 2nd. largest. Iterated on $ 2, \dots N-1$ $N-2$ total (do
 $ \vdots$ \\
 $ j \mapsto a(N-j +1)$ $j$th largest, iterated on $2, \dots N- j +1$, $N-j$ total.
 
+\subsection{Merge Sort, $O(N \log{N})$ in time, $O(N)$ in space}
+
+cf. \href{https://classroom.udacity.com/courses/ud513/lessons/7123524086/concepts/71254347930923}{Efficiency of Merge Sort, Lesson 3: Searching and Sorting, Data Structures and Algorithms, Python}
+
+Use approximation (approximate to the \emph{worse case}!) to count the number of comparisons (operations) in a "pass" (iteration) \\
+multiply each iteration with number of comparisons per iteration.
+
+Number of iterations $\cong \log{N}$ since $2^J - 1 = $ array size. 
+
+$N$ comparisons for $\log{(N)}$ steps $\Longrightarrow O(N \log{N})$
+
+Space complexity. Auxilliary space $=O(N)$ at each step we need total arraying size $N$ to copy into.
+
+
 
 \subsection{Time Complexities of all Sorting Algorithms}
 

@@ -2,6 +2,7 @@
 // \file Sorting_tests.cpp
 //------------------------------------------------------------------------------
 #include "Algorithms/BubbleSort.h"
+#include "Algorithms/MergeSort.h"
 #include "Cpp/Std/TypeTraitsProperties.h"
 
 #include <array>
@@ -17,6 +18,7 @@ using Algorithms::Sorting::Details::naive_single_pass;
 using Algorithms::Sorting::Details::single_pass;
 using Algorithms::Sorting::Details::single_swap;
 using Algorithms::Sorting::bubble_sort;
+using Algorithms::Sorting::merge_sort;
 using Algorithms::Sorting::naive_bubble_sort;
 using Std::CompositeTypeTraits;
 using Std::PrimaryTypeTraits;
@@ -237,6 +239,40 @@ BOOST_AUTO_TEST_CASE(DemonstrateBubbleSort)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // BubbleSort_tests
+
+BOOST_AUTO_TEST_SUITE(MergeSort_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateMergeSort)
+{
+  {
+    std::array<unsigned int, 6> a {12, 11, 13, 5, 6, 7};
+
+    merge_sort(a);
+
+    BOOST_TEST(a[0] == 5);
+    BOOST_TEST(a[1] == 6);
+    BOOST_TEST(a[2] == 7);
+    BOOST_TEST(a[3] == 11);
+    BOOST_TEST(a[4] == 12);
+    BOOST_TEST(a[5] == 13);
+  }
+  {
+    std::vector<unsigned int> a {12, 11, 13, 5, 6, 7};
+
+    merge_sort(a);
+
+    BOOST_TEST(a[0] == 5);
+    BOOST_TEST(a[1] == 6);
+    BOOST_TEST(a[2] == 7);
+    BOOST_TEST(a[3] == 11);
+    BOOST_TEST(a[4] == 12);
+    BOOST_TEST(a[5] == 13);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // MergeSort_tests
 
 BOOST_AUTO_TEST_SUITE_END() // Sorting_tests
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
