@@ -1491,7 +1491,25 @@ $O(N_a \log{N_a})$ comparisons (sort the full array of strings) \\
 \Longrightarrow \boxed{ O(N_a L \log{L}) + O(L N_a \log{N_a}) = O(N_aL (\log{LN_a})) }
 \]
 
+\section{Sorting}
 
+\subsection{Bubble Sort, $O(N^2)$ in time, $O(1)$ in space}
+
+cf. \href{https://classroom.udacity.com/courses/ud513/lessons/7123524086/concepts/71191848070923}{Efficiency of Bubble Sort, Lesson 3: Searching and Sorting, Data Structures and Algorithms, Python}
+
+Time complexity of bubble sort: \\
+$\forall \, $ iteration, there were $N-1$ comparisons. Worst case is $N - 1$ iterations to order all $N$ elements. \\
+$\Longrightarrow $ $O(N^2)$ worse case \\
+\phantom{$\Longrightarrow$} $O(N^2)$ average case \\
+\phantom{$\Longrightarrow$} $O(N)$ best case (it was already sorted!) \\
+
+Space complexity $O(1)$ no extra arrays needed. Sort was "in-place."
+
+From wikipedia, "Bubble Sort" (Optimizing Bubble Sort), cf. \url{https://en.wikipedia.org/wiki/Bubble_sort}, Observe that for an array of elements $a$ indexed by $i = 1, 2 \dots N$,  \\
+$j = 1 \mapsto a(N) $ largest (otherwise it would not have been swapped; contradiction) \\
+$j = 2 \mapsto a(N-1)$ 2nd. largest. Iterated on $ 2, \dots N-1$ $N-2$ total (don't include the first).
+$ \vdots$ \\
+$ j \mapsto a(N-j +1)$ $j$th largest, iterated on $2, \dots N- j +1$, $N-j$ total.
 
 
 \subsection{Time Complexities of all Sorting Algorithms}

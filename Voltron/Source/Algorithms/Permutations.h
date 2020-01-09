@@ -20,7 +20,7 @@ namespace Details
 
 void single_swap(std::string& a, std::size_t l, std::size_t r);
 
-void permute(std::string& a, std::size_t l, std::size_t r);
+void print_permutations(std::string& a, std::size_t l, std::size_t r);
 
 } // namespace Details
 

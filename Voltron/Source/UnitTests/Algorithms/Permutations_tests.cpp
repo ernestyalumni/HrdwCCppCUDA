@@ -3,10 +3,14 @@
 //------------------------------------------------------------------------------
 #include "Algorithms/Permutations.h"
 
+#include <algorithm>
 #include <boost/test/unit_test.hpp>
 #include <string>
+#include <sstream>
+#include <vector>
 
 using Algorithms::Permutations::Details::single_swap;
+using Algorithms::Permutations::Details::print_permutations;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Permutations_tests)
@@ -48,6 +52,7 @@ BOOST_AUTO_TEST_SUITE_END() // StringExamples
 
 BOOST_AUTO_TEST_SUITE(Details_tests)
 
+// cf. https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DemonstrateSingleSwap)
@@ -59,8 +64,60 @@ BOOST_AUTO_TEST_CASE(DemonstrateSingleSwap)
 
     BOOST_TEST(a == "Qukci");
   }
+  {
+    std::string a {"abcdefghijklmnopqrstuvwxyz"};
 
+    single_swap(a, 4, 2);
+
+    BOOST_TEST(a == "abedcfghijklmnopqrstuvwxyz");
+  }
+  {
+    std::string a {"abcdefghijklmnopqrstuvwxyz"};
+
+    single_swap(a, 5, 2);
+
+    BOOST_TEST(a == "abfdecghijklmnopqrstuvwxyz");
+
+    single_swap(a, 3, 8);
+
+    BOOST_TEST(a == "abfiecghdjklmnopqrstuvwxyz");
+  }
 }
+
+// cf. https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstratePrintPermutations)
+{
+  {
+    std::string a = "ABC";
+    print_permutations(a, 0, a.length() - 1);
+    BOOST_TEST(true);
+  }
+}
+
+// cf. https://en.cppreference.com/w/cpp/algorithm/rotate
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateStdRotate)
+{
+  {
+    std::stringstream string_stream;
+    // cf. https://en.cppreference.com/w/cpp/algorithm/rotate
+    std::vector<int> v {2, 4, 2, 0, 5, 10, 7, 3, 7, 1};
+
+    // Before sort
+    for (int n : v)
+    {
+      string_stream << n << " ";
+    }
+
+    BOOST_TEST(string_stream.str() == "2 4 2 0 5 10 7 3 7 1 ");
+
+    string_stream.str(std::string{});
+  }
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // Details_tests
 

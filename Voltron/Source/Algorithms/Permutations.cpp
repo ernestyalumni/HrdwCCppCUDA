@@ -7,7 +7,10 @@
 
 #include <cassert>
 #include <cstddef>
+#include <iostream>
+#include <numeric> // std::iota
 #include <string>
+#include <vector>
 
 namespace Algorithms
 {
@@ -35,16 +38,31 @@ void single_swap(std::string& a, std::size_t l, std::size_t r)
 }
 
 // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
-void permute(std::string& a, std::size_t l, std::size_t r)
+void print_permutations(std::string& a, std::size_t l, std::size_t r)
 {
   // Base case
   if (l == r)
   {
-    return;
+    // Uncomment this out.
+    //std::cout << l << " : ";
+    //std::cout << a << '\n';
   }
 
-  // Permutations made
+  for (std::size_t index {l}; index <= r; ++index)
+  {
+    //std::cout << " indices : " << index << l << r << " ";
+    // Swapping done.
+    single_swap(a, l, index);
+    //std::cout << " First swap : " << a << ' ';
 
+    // Recursion called.
+    print_permutations(a, l + 1, r);
+
+    // backtrack.
+    single_swap(a, l, index);
+
+    //std::cout << " Second swap : " << a << ' ';
+  }
 }
 
 } // namespace Details
