@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 #include "Algorithms/BubbleSort.h"
 #include "Algorithms/MergeSort.h"
+#include "Algorithms/QuickSort.h"
 #include "Cpp/Std/TypeTraitsProperties.h"
 
 #include <array>
@@ -17,9 +18,13 @@
 using Algorithms::Sorting::Details::naive_single_pass;
 using Algorithms::Sorting::Details::single_pass;
 using Algorithms::Sorting::Details::single_swap;
+using Algorithms::Sorting::QuickSort::Details::partition_from_first;
 using Algorithms::Sorting::bubble_sort;
 using Algorithms::Sorting::merge_sort;
 using Algorithms::Sorting::naive_bubble_sort;
+using Algorithms::Sorting::QuickSort::Details::quick_sort_from_first;
+using Algorithms::Sorting::QuickSort::quick_sort_from_first;
+using Algorithms::Sorting::QuickSort::quick_sort_from_last;
 using Std::CompositeTypeTraits;
 using Std::PrimaryTypeTraits;
 
@@ -134,7 +139,6 @@ BOOST_AUTO_TEST_CASE(DemonstrateNaiveSinglePass)
     BOOST_TEST(a[3] == 9);
     BOOST_TEST(a[4] == 6);
   }
-
 }
 
 //------------------------------------------------------------------------------
@@ -273,6 +277,104 @@ BOOST_AUTO_TEST_CASE(DemonstrateMergeSort)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // MergeSort_tests
+
+BOOST_AUTO_TEST_SUITE(QuickSort_tests)
+
+BOOST_AUTO_TEST_SUITE(Details_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateQuickSortPartitionFromLast)
+{
+  {
+    std::vector<int> a {8, 3, 1, 7, 0, 10, 2};
+
+    std::size_t new_pivot {partition_from_first(a, 0, a.size() - 1)};
+
+    BOOST_TEST(new_pivot == 4);
+
+    BOOST_TEST(a[0] == 0);
+    BOOST_TEST(a[1] == 3);
+    BOOST_TEST(a[2] == 1);
+    BOOST_TEST(a[3] == 7);
+    BOOST_TEST(a[4] == 8);
+    BOOST_TEST(a[5] == 10);
+    BOOST_TEST(a[6] == 2);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateQuickSortFromLast)
+{
+  {
+    std::vector<int> a {8, 3, 1, 7, 0, 10, 2};
+
+    quick_sort_from_first(a, 0, a.size());
+
+    BOOST_TEST(a[0] == 0);
+    BOOST_TEST(a[1] == 1);
+    BOOST_TEST(a[2] == 2);
+    BOOST_TEST(a[3] == 3);
+    BOOST_TEST(a[4] == 7);
+    BOOST_TEST(a[5] == 8);
+    BOOST_TEST(a[6] == 10);   
+  }
+}
+
+
+BOOST_AUTO_TEST_SUITE_END() // Details_tests
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateQuickSortFromFirst)
+{
+  {
+    std::vector<int> a {12, 11, 13, 5, 6, 7};
+    
+    quick_sort_from_first(a);
+    
+    BOOST_TEST(a[0] == 5);
+    BOOST_TEST(a[1] == 6);
+    BOOST_TEST(a[2] == 7);
+    BOOST_TEST(a[3] == 11);
+    BOOST_TEST(a[4] == 12);
+    BOOST_TEST(a[5] == 13);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateQuickSortFromLast)
+{
+    std::array<unsigned int, 7> a {8, 3, 1, 7, 0, 10, 2};
+
+    quick_sort_from_last(a);
+
+    BOOST_TEST(a[0] == 0);
+    BOOST_TEST(a[1] == 1);
+    BOOST_TEST(a[2] == 2);
+    BOOST_TEST(a[3] == 3);
+    BOOST_TEST(a[4] == 7);
+    BOOST_TEST(a[5] == 8);
+    BOOST_TEST(a[6] == 10);
+
+  {
+    std::vector<int> a {12, 11, 13, 5, 6, 7};
+    
+    quick_sort_from_last(a);
+    
+    BOOST_TEST(a[0] == 5);
+    BOOST_TEST(a[1] == 6);
+    BOOST_TEST(a[2] == 7);
+    BOOST_TEST(a[3] == 11);
+    BOOST_TEST(a[4] == 12);
+    BOOST_TEST(a[5] == 13);
+  }
+}
+
+
+BOOST_AUTO_TEST_SUITE_END() // QuickSort_tests
 
 BOOST_AUTO_TEST_SUITE_END() // Sorting_tests
 BOOST_AUTO_TEST_SUITE_END() // Algorithms

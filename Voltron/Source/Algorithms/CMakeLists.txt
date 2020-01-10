@@ -1,2 +1,3 @@
 ADD_LIBRARY(Algorithms
-  Permutations.cpp)
+  Permutations.cpp
+  QuickSort.cpp)

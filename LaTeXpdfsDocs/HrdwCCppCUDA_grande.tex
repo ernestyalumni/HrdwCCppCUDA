@@ -1743,7 +1743,60 @@ $j = 2 \mapsto a(N-1)$ 2nd. largest. Iterated on $ 2, \dots N-1$ $N-2$ total (do
 $ \vdots$ \\
 $ j \mapsto a(N-j +1)$ $j$th largest, iterated on $2, \dots N- j +1$, $N-j$ total.
 
+\subsection{Merge Sort, $O(N \log{N})$ in time, $O(N)$ in space}
 
+cf. \href{https://classroom.udacity.com/courses/ud513/lessons/7123524086/concepts/71254347930923}{Efficiency of Merge Sort, Lesson 3: Searching and Sorting, Data Structures and Algorithms, Python}
+
+Use approximation (approximate to the \emph{worse case}!) to count the number of comparisons (operations) in a "pass" (iteration) \\
+multiply each iteration with number of comparisons per iteration.
+
+Number of iterations $\cong \log{N}$ since $2^J - 1 = $ array size. 
+
+$N$ comparisons for $\log{(N)}$ steps $\Longrightarrow O(N \log{N})$
+
+Space complexity. Auxilliary space $=O(N)$ at each step we need total arraying size $N$ to copy into.
+
+\subsection{Quick Sort, $O(N \log{N})$ average time complexity, $O(N^2)$ worst time complexity, $O(1)$ in space (if inplace)}
+
+\subsubsection{First element pivot Implementation}
+
+cf. \url{https://stackoverflow.com/questions/22504837/how-to-implement-quick-sort-algorithm-in-c}
+
+Consider array $a=a_i$, $i=0,1, \dots N-1$; $|a|=N$ (array of length $N$).
+
+Given $l, r \in 0,1,\dots N-1$, \\
+Let $p:= a(l)$ (pivot value) \\
+$i=i_i$; $i_1=l$ \\
+Let $j=j_j$ s.t. $j_1=l+1, \dots , j_{r-l-1} = r-1$ (range over $r-1 - (l+1)+1 = r-l-1$) \\
+\qquad \, if $a(j_j) \leq p$ \\
+\qquad \, \phantom{if} $i_{j+1} = i_j+1$ \\
+\qquad \, \phantom{if} $a(i_{j+1}) = a(i_j+1) \leftrightarrow a(j_j)$. \\
+
+$a(i_{r-l-1}) \leftrightarrow a(l)$ \\
+$\mapsto i_{r-l-1}$.
+
+Let's work out a table for the first few steps:
+\begin{center}
+	\begin{tabular}{ l | c | c | l | r | c }
+		\hline
+		iteration & $i$ & $j$ & swaps & condition & example \\ \hline
+		1 & $l$ & $l+1$ & & & \\ \hline
+		& $l + 1$ &  $l + 1$ & $a(l + 1) \leftrightarrow a(l+1)$ & $p\geq a(l+1)$ & 5 \, 3 \, 4 \\
+		2 & $l$ & $l+2$ & & & \\
+		& $l+1$ & $l+2$ & & & \\
+		& $l + 1$ & $l+2$ & $a(l+1) \leftrightarrow a(l+2)$ & $p \geq a(l+2)$ & 5 \, 6 \, 3 \\
+		& $l + 2$ & $l+ 2$ & $a(l+2) \leftrightarrow a(l+2)$ & $p \geq a(l+2)$ & 5 \, 3 \, 4 \\
+		3 & $l+1$ & $l+3$ & $a(l+1) \leftrightarrow a(l+3)$ & $p\geq a(l+3)$ & 5 \, 8 \, 6 \, 3 $\mapsto $ 5 \, 3 \, 6 \, 8 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\subsubsection{Complexity of Quick Sort}
+
+Worst case if \emph{all} pivots are in place, e.g. $1,2,8,13$ \\
+Cannot "split" (partition) by pivots since it's already sorted $\Longrightarrow O(N^2)$. \\
+Average case $O(N\log{N})$ ($N$ iterations (for each element) $\log{N}$ comparisons (via split)) \\
+$O(1)$ space complexity.
 
 
 \subsection{Time Complexities of all Sorting Algorithms}
