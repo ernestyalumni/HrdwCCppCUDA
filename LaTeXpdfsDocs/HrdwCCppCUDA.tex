@@ -1491,6 +1491,83 @@ $O(N_a \log{N_a})$ comparisons (sort the full array of strings) \\
 \Longrightarrow \boxed{ O(N_a L \log{L}) + O(L N_a \log{N_a}) = O(N_aL (\log{LN_a})) }
 \]
 
+\begin{center}
+	\begin{tabular}{ l | c | r }
+		\hline
+		Operation & Average & Amoritized Worst Case \\ \hline
+		Copy & $O(N)$ & $O(N)$ \\ \hline
+		Append(1) & $O(1)$ & $O(1)$ \\ \hline
+		pop last & $O(1)$ & $O(1)$ \\ \hline
+		insert & $O(N)$ & $O(N)$ \\ \hline
+		Get item & $O(1)$ & $O(1)$ \\ \hline
+		Set item & $O(1)$ & $O(1)$ \\ \hline
+		Delete item & $O(N)$ & $O(N)$ \\ \hline
+		Get slice & $O(k)$ & $O(k)$ \\ \hline		
+		\hline
+	\end{tabular}
+\end{center}
+
+Insert and delete is $O(N)$. Need to move every element with index greater than $k$, and reindex each element.
+
+Get array length is $O(1)$. cf. \url{https://stackoverflow.com/questions/21614298/what-is-the-runtime-of-array-length} 
+
+\subsection{Linked Lists, $O(1)$ insertion}
+
+\subsubsection{Linked Lists vs. arrays}
+
+main difference: Linked lists and arrays store difference information in each element. \\
+
+Both cases: each element stores a value. \\
+Both cases: stores 1 more information. \\
+
+Array: index as a number. \\
+Linked List: reference to next element, e.g. store addresses of next element, e.g. $x0123$ \\
+e.g.
+\[
+\begin{gathered}
+\begin{gathered}
+x0122 \\
+\text{value}: 8 \\
+\text{next}: x0123
+\end{gathered} \qquad \qquad \, 
+\begin{gathered}
+x0122 \\
+\text{value}: 8 \\
+\text{next}: \text{nullptr}
+\end{gathered}
+\end{gathered}
+\]
+Trick to remember: Given elements at addresses 1, 2, 3. If you delete the next reference for 1 (to 2), and replace it with a new object, you'll lose your reference to 3. \\
+Assign your next reference to object at 2 before assigning next reference to 1.
+
+Insertion takes constant time since you're just shifting around (constant, finite number of) pointers, instead of iterating every element of the list.
+
+Doubly linked list: Also have pointers to previous element, e.g.
+\[
+\begin{gathered}
+\begin{gathered}
+1 \\
+\text{value:} 8 \\
+\text{next:} 2 \\
+\text{prev:} 0
+\end{gathered} \qquad \, 
+\begin{gathered}
+2 \\
+\text{value:} 2 \\
+\text{next:} 3 \\
+\text{prev:} 1
+\end{gathered} \qquad \, 
+\begin{gathered}
+3 \\
+\text{value:} 6 \\
+\text{next:} 4 \\
+\text{prev:} 2
+\end{gathered}
+\end{gathered}
+\]
+
+
+
 \section{Sorting}
 
 \subsection{Bubble Sort, $O(N^2)$ in time, $O(1)$ in space}
