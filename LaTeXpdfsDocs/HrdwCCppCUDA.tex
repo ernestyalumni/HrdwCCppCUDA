@@ -1566,7 +1566,34 @@ Doubly linked list: Also have pointers to previous element, e.g.
 \end{gathered}
 \]
 
+cf. \url{https://en.wikipedia.org/wiki/Linked_list}
 
+Disadvantages of Linked Lists:
+\begin{itemize}
+	\item Use more memory than arrays because storage used by their pointers
+	\item Nodes in linked list must be read in order from beginning: inherently sequential access
+	\item nodes stored in continguously (possibly)
+	\item difficult to reverse traverse, doubly linked list helps, but memory consumed in allocating space for back-ptr
+\end{itemize}
+
+Linked lists vs. dynamic arrays: \\
+List data structures comparison \\
+
+\begin{center}
+	\begin{tabular}{ l | c | c | c | c | r }
+		\hline
+		& Linked list & Array & Dynamic Array & Balanced Tree & Hashed array tree \\ \hline 
+		indexing & $O(N)$ & $O(1)$ & $O(1)$ & $O(\log{N})$ & $O(1)$ \\ \hline 
+		insert/delete at beginning & $O(1)$ &  & $O(N)$ & $O(\log{N})$ & $O(N)$ \\ \hline 
+		insert/delete at end & $\begin{gathered} O(1) \text{ when last element is known } \\ O(N) \text{ when last element is unknown }\end{gathered}$ &  & $O(1)$ amoritized  & $O(\log{N})$  & $O(N)$ \\ \hline 
+		insert/delete in middle & search time $+ O(1)$ &  & $O(N)$ & $O(\log{N})$ & $O(N)$ \\ \hline 
+		wasted space (average) & $O(N)$ & 0  & $O(N)$ & $O(\log{N})$ & $O(\sqrt{N})$ \\ \hline 
+		\hline
+	\end{tabular}
+\end{center}
+
+head of list is 1st. node. \\
+tail of 1st. last node in 1st. (or rest of list)
 
 \section{Sorting}
 
