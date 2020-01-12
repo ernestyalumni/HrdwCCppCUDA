@@ -1595,6 +1595,133 @@ List data structures comparison \\
 head of list is 1st. node. \\
 tail of 1st. last node in 1st. (or rest of list)
 
+\subsection{Stack, $O(1)$ pop, $O(1)$ push}
+
+\href{https://classroom.udacity.com/courses/ud513/lessons/7117335401/concepts/71225347790923}{"Stack Details", Udacity, Data Structures and Algorithms}
+
+top element $\mapsto $ Linked List head \\
+push top element, pop top element.
+Last in, first out. \\
+Last element you put in (new head), is the First out (when you pop).
+
+\subsection{Queue, $O(1)$ insert, $O(1)$ delete, $O(N)$ search, $O(N)$ space complexities}
+
+\url{https://en.wikipedia.org/wiki/Queue_(abstract_data_type)}
+\href{https://classroom.udacity.com/courses/ud513/lessons/7117335401/concepts/71222050580923}{Lesson 2: List-Based Collections, 11. Queues}
+
+Oldest element (tail) comes out first.
+
+First In, First Out. \\
+first element you put in (tail) is the first out (when you pop). \\
+
+\subsubsection{Queue as Linked List}
+
+head. "oldest element in the queue", "first" \\
+tail. "newest element in queue", "last", \\
+(I guess it grows from the tail) \\
+add element to tail, enqueue. \\
+Dequeue, remove head. \\
+peek - peek at head. \\
+
+Save references to head and tail.
+
+\subsubsection{Deque. double-ended queue}
+
+One can enqueue and dequeue from either end.
+
+\subsubsection{Priority Queue}. 
+Assign each element in queue with a priority. \\
+Remove oldest and highest priority element first.
+
+\subsection{STL Containers}
+
+cf. Ch. 31, STL Containers, Bjarne Stroustrup (2013) \cite{Stro2013}
+
+pp. 886 Stroustrup (2013) \cite{Stro2013}
+\verb|std::vector<T, A>| contiguous allocated sequence of \verb|T|s;
+
+cf. pp. 888 Sec. 31.2.1 "Container Representation", \cite{Stro2013}
+
+\verb|vector| element data structure is most likely an array:
+
+\verb|vector|: rep $\leftarrow$ elements | free space
+
+\verb|list| : likely represented by sequence of links pointing to elements and number of elements; doubly-linked list of \verb|T|; use when you need to insert and delete elements without moving existing elements.
+
+\verb|map| : likely implemented as (balanced) tree of nodes pointing to (key, value) pairs:
+
+\verb|unordered_map| likely implemented as hash table
+
+\verb|unordered_map| rep $\leftarrow $ hash table $\leftarrow$, $\leftarrow$, $\dots$ (k, v), (k, v) , $\dots$
+
+\verb|string| for short strings, characters are stored in the string handle itself, for longer strings elements are stored contiguously on free-store (like \verb|vector| elements). Like \verb|vector|, \verb|string| can grow into "free space" allocated to avoid repeated reallocations.
+
+\verb|string|: rep $\leftarrow$ characters -- free space
+
+Like a built-in array, \verb|array| is simply sequence of elements, with no handle,
+\verb|array|: elements
+
+cf. pp. 894, Sec. 31.3, Operations Overview, Stroustrup (2013) \cite{Stro2013}
+
+Standard Container Operation Complexity
+\begin{center}
+	\begin{tabular}{ l | l | l | l | l | l }
+		\hline
+		& \verb|[]| Sec. 31.2.2 & List Sec. 31.3.7 & Front Sec. 31.4.2 & Back Sec. 31.3.6 & Iterators  Sec. 33.1.2 \\ \hline \hline
+		\verb|vector| & const & $O(n)+$ &  & const $+$ & Ran \\ \hline 
+		\verb|list| &  & const &  const  & const & Bi \\ \hline 
+		\verb|forward_list| &  & const &  const  &  & For \\ \hline 
+		\verb|deque| & const & $O(N)$ &  const  & const & Ran \\ \hline \hline 
+		\verb|stack| &  &  &   & const &  \\ \hline 
+		\verb|queue| &  &  & const  & const &  \\ \hline 
+		\verb|priority_queue| &  &  & $O(\log{(n)})$  & $O(\log{(n)})$ &  \\ \hline \hline
+		\verb|map| & $O(\log{(n)})$ & $O(\log{(n)})+$ & & & Bi \\ \hline
+		\verb|set| &  & $O(\log{(n)})+$ & & & Bi \\ \hline
+		\verb|unordered_map| & const+ & const$+$ & & & For \\ \hline
+		\verb|unordered_set| &  & const$+$ & & & For \\ \hline \hline 
+		\verb|string| & const & $O(n)+$ & $O(n)+$ & const$+$ & Ran \\ \hline
+		\verb|array| & const &  & & & Ran \\ \hline 	
+		\hline
+	\end{tabular}
+\end{center}
+Ran - random-access iterator, "For" - "forward iterator", "Bi" - "bidirectional iterator"
+
+\subsection{vector}
+
+\subsubsection{vector and growth}
+
+Layout of \verb|vector| : elem $\leftarrow$ "front" of elements, \\
+space $\leftarrow$ "front" of extra space (meets end of elements) \\
+last $\leftarrow$ end of extra space \\
+alloc
+
+Use of both size (number of elements), and capacity (number of available slots for elements without reallocation) makes growth through \verb|push_back()| reasonably efficient: there's not an allocation operation each time we add an element, only every time we exceed capacity (Sec. 13.6) \\
+adding half the size is common, standard doesn't specify by how much capacity is increased
+
+\subsubsection{vector and Nesting}
+
+\verb|vector| (and similarly contiguously allocated data structures) has 3 major advantages:
+\begin{itemize}
+	\item elements of \verb|vector| compactly stored; no per-element memory overhead (contiguous on memory address) \\
+	amount of memory consumed by \verb|vec| of type \verb|vector<X>| roughly \\
+	\verb|sizeof(vector<X>)+vec.size()*sizeof(X)|; \verb|sizeof(vector<X>)| is about 12 bytes, insignificant for large vectors
+	\item fast traversal, consecutive access, to get to next element, code doesn't have to indirect through a pointer 
+	\item simple and efficient random access, makes sort and binary search efficient
+\end{itemize}
+
+vs. doubly-linked list, \verb|list|, incurs 4-words-per-element memory overhead (2 links plus free-store allocation header)
+
+be careful don't unintentional compromise efficiency of access, e.g. 2-dim. matrix \\
+don't do \verb|vector<vector<double>>|, \\
+do \verb|vector<double>| and compute locations from the indices 
+
+\subsubsection{vector vs. array}
+
+\verb|vector| resource handle, i.e. allows it to be resized and enable efficient move semantics, \\
+disadvantage to arrays that don't rely on storing elements separately from handle; keeps sequence of elements on stack or in another object.
+
+
+
 \section{Sorting}
 
 \subsection{Bubble Sort, $O(N^2)$ in time, $O(1)$ in space}

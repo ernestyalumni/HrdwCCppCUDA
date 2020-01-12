@@ -373,7 +373,6 @@ BOOST_AUTO_TEST_CASE(DemonstrateQuickSortFromLast)
   }
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // QuickSort_tests
 
 BOOST_AUTO_TEST_SUITE_END() // Sorting_tests

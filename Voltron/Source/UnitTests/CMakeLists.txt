@@ -25,6 +25,8 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Std/Pointers_tests.cpp
   Cpp/Templates/Template_Metaprogramming_tests.cpp
+  DataStructures/DataStructures_tests.cpp
+  DataStructures/LinkedLists_tests.cpp
   DeskCalculator/Token_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
   Mutable/Mutable_tests.cpp

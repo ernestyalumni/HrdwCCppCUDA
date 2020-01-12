@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 /// \file Pointers_tests.cpp
-/// \ref Ch. 26 Instantiation Stroustrup, "The C++ Programming Language"
+/// \ref 
 //------------------------------------------------------------------------------
 #include <boost/test/unit_test.hpp>
 #include <iostream>
@@ -164,7 +164,19 @@ BOOST_AUTO_TEST_CASE(DemonstrateUniquePointers)
     // This refers to q1 going out of scope and being deleted.
     BOOST_TEST(is_Quantity_constructed.value() == false);
   }
+  {
+    Quantity q1 {42};
+    std::unique_ptr<Quantity> u_ptr {nullptr};
+    u_ptr = std::make_unique<Quantity>(q1);
+    BOOST_TEST(u_ptr->x() == 42);
+  }
+}
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateUniquePointersInClasses)
+{
+  // TODO
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Pointers_test
