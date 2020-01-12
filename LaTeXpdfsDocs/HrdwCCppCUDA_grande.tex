@@ -2093,12 +2093,113 @@ Cannot "split" (partition) by pivots since it's already sorted $\Longrightarrow 
 Average case $O(N\log{N})$ ($N$ iterations (for each element) $\log{N}$ comparisons (via split)) \\
 $O(1)$ space complexity.
 
-
 \subsection{Time Complexities of all Sorting Algorithms}
 
 \url{https://www.geeksforgeeks.org/time-complexities-of-all-sorting-algorithms/}
 
 "Best" complexity (best of worst case) sort is $O(N \log{N})$.
+
+\subsection{Hashing, $O(1)$ lookup, or $O(n)$ bucket lookup}
+
+
+\subsubsection{Hash maps} 
+
+key $\xrightarrow{ \text{ Hash function } }$  $\begin{aligned} & \quad \\ 
+& \text{ Hash: } \\
+& \text{ Value: } \end{aligned}$ Key 
+
+$\langle \text{Key}, \text{ Value} \rangle \xrightarrow{ \text{ Hash function on Key } } \begin{aligned} & \quad \\ 
+& \text{ Hash: } \\
+& \text{ Value: } \end{aligned}$ \quad $\langle K , V \rangle$ 
+
+Use keys are inputs to has function.
+
+Store Key, Value pair in map $\langle K, V \rangle$
+
+\subsubsection{Hash Functions}
+
+Value $\xrightarrow{ \text{ Hash function } }$ Hash Value (often index in an array)
+
+Fast $O(1)$ look up
+
+e.g. ticket number  \\
+$8675309 \xrightarrow{?} $ some index.
+
+Take last two digits of a big number \\
+$01234956 \mapsto 56 \mapsto 56/100 = 5$
+
+"last few digits are the most random"
+
+collisions \\
+e.g. 
+$\begin{aligned} 
+& \quad \\ 
+& 0123456 \mapsto 56 \% 10 \\
+& 6543216 \mapsto 16 \% 10 \end{aligned}$ 
+
+To deal with collisions
+1) change value(s used in hash function) in hash function or change hash function completely, or 2) change structure of array $\mapsto $ buckets.
+
+Normal Array vs. Bucket \\
+Value \phantom{ Array vs. } collection \\
+
+\begin{enumerate}
+	\item $ X \% 1000000$, $O(1)$ 
+	\item Bucket, iterate through bucket $O(n)$, $n$ allocated size of each bucket
+	\begin{enumerate}
+		\item  Hash function inside 
+	\end{enumerate}
+\end{enumerate}
+
+\textbf{load factor} - how "full" has table is.
+
+Load factor $=$ number of entries $/$ number of buckets 
+
+e.g. 10 values in 1000 buckets, load factor $=0.01$, majority of buckets in table will be empty. \\
+waste memory with empty buckets, so rehash i.e. come up with new hash function with less resulting buckets. \\
+
+closer load factor to 1, better to rehash and add more buckets \\
+any table with load value greater than 1, guaranteed to have collisions.
+
+100 numbers $N$ \\
+a number is a multiple of 5: $x = 5n$ 
+
+Number of values $= 100$ numbers = $N$
+
+Number of buckets $= 100$ ($0$ to $99$)
+
+$\Longrightarrow 100/ 100 = 1$ load factor.
+
+$100/107 < 1$ (good)
+
+125 is a multiple of 5.
+
+$x=5n$. $\frac{x}{125} = \frac{5n}{125} = \frac{n}{25} \mapsto $ loss of collisions.
+
+$\frac{100}{87} > 1 \mapsto$ collisions.
+
+$\frac{100}{1000} = 0.1$ but waste memory, ton of empty buckets.
+
+\subsubsection{Hash Table}
+
+Constant time lookup important to speed up.
+
+String Keys.
+
+ASCII values from letters.
+
+30 or less words, Use ASCII. 
+
+e.g. "UD" $\mapsto \begin{aligned} & \quad \\
+& U = 85 \\
+& D = 68 \end{aligned}$ 
+
+$31 = (32 : 326)$ 
+
+Huge has values for 4-letter strings \\
+31 \\
+$s(0) 31^{n-1} + s(1) 32^{n-2} + \dots + s(n-1)$
+
 
 \part{Linux System Programming}
 
