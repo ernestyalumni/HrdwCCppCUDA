@@ -6,6 +6,8 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <string>
+#include <utility>
 
 BOOST_AUTO_TEST_SUITE(Cpp) // The C++ Language
 BOOST_AUTO_TEST_SUITE(Pointers_test)
@@ -100,9 +102,7 @@ BOOST_AUTO_TEST_CASE(DemonstrateNullPtr)
     // error: 'void*' is not a pointer-to-object type
     //*x;
   }
-
 }
-
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -177,6 +177,122 @@ BOOST_AUTO_TEST_CASE(DemonstrateUniquePointers)
 BOOST_AUTO_TEST_CASE(DemonstrateUniquePointersInClasses)
 {
   // TODO
+}
+
+class IntString
+{
+  public:
+
+    IntString(const int x, const std::string& s):
+      x_{x},
+      s_{s}
+    {}
+
+    int x() const
+    {
+      return x_;
+    }
+
+    const std::string& s() const
+    {
+      return s_;
+    }
+
+    void x(const int x)
+    {
+      x_ = x;
+    }
+
+    void s(const std::string& s)
+    {
+      s_ = s;
+    }
+
+  private:
+
+    int x_;
+    std::string s_;
+};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateReleasingUniquePointers)
+{
+  {
+    IntString int_string {42, "Peek"};
+    const IntString const_int_string {43, "Linked List"};
+
+    std::unique_ptr<IntString> u_ptr {std::make_unique<IntString>(int_string)};
+
+    BOOST_TEST(u_ptr->x() == 42);
+    BOOST_TEST(u_ptr->s() == "Peek");
+
+    u_ptr.release();
+
+    BOOST_TEST(int_string.x() == 42);
+    BOOST_TEST(int_string.s() == "Peek");
+
+    u_ptr = std::make_unique<IntString>(const_int_string);
+
+    BOOST_TEST(u_ptr->x() == 43);
+    BOOST_TEST(u_ptr->s() == "Linked List");
+
+    BOOST_TEST(const_int_string.x() == 43);
+    BOOST_TEST(const_int_string.s() == "Linked List");
+
+    std::cout << " &u_ptr : " << &u_ptr << '\n';
+
+    auto released_ptr = u_ptr.release();
+
+    std::cout << " u_ptr release: " << &released_ptr << ' ' << released_ptr << '\n';
+
+    u_ptr = std::make_unique<IntString>(int_string);
+
+    BOOST_TEST(int_string.x() == 42);
+    BOOST_TEST(int_string.s() == "Peek");
+
+    int_string.x(69);
+    int_string.s("Last-in First-Out");
+
+    BOOST_TEST(int_string.x() == 69);
+    BOOST_TEST(int_string.s() == "Last-in First-Out");
+
+    BOOST_TEST(u_ptr->x() == 42);
+    BOOST_TEST(u_ptr->s() == "Peek");
+
+    std::cout << " &u_ptr : " << &u_ptr << '\n';
+
+    auto released_ptr1 = u_ptr.release();
+
+    std::cout << " u_ptr release1: " << &released_ptr1 << ' ' << released_ptr1 << '\n';
+
+    u_ptr = std::make_unique<IntString>(std::move(int_string));
+
+    BOOST_TEST(u_ptr->x() == 69);
+    BOOST_TEST(u_ptr->s() == "Last-in First-Out");
+
+    int_string.x(70);
+    int_string.s("Queues");
+
+    BOOST_TEST(int_string.x() == 70);
+    BOOST_TEST(int_string.s() == "Queues");
+
+    BOOST_TEST(u_ptr->x() == 69);
+    BOOST_TEST(u_ptr->s() == "Last-in First-Out");
+
+    u_ptr->x(70);
+    u_ptr->s("Queues");
+
+    BOOST_TEST(u_ptr->x() == 70);
+    BOOST_TEST(u_ptr->s() == "Queues");
+
+    std::cout << " &u_ptr : " << &u_ptr << '\n';
+
+    auto released_ptr2 = u_ptr.release();
+
+    std::cout << " u_ptr release2: " << &released_ptr2 << ' ' << released_ptr2 << '\n';
+
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Pointers_test
