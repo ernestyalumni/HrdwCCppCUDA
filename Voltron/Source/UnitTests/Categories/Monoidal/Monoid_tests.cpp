@@ -5,7 +5,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
-#include <optional>
 
 BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Monoidal)

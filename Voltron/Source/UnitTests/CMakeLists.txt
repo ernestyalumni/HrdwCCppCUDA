@@ -12,6 +12,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 ADD_EXECUTABLE(Check
   Main.cpp
   Algorithms/Permutations_tests.cpp
+  Algorithms/Search_tests.cpp
   Algorithms/Sorting_tests.cpp
   Categories/AlgebraicDataTypes/ProgramStateExample_tests.cpp
   Categories/AlgebraicDataTypes/WordCountingState_tests.cpp

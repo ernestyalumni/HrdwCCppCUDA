@@ -1958,8 +1958,64 @@ do \verb|vector<double>| and compute locations from the indices
 \verb|vector| resource handle, i.e. allows it to be resized and enable efficient move semantics, \\
 disadvantage to arrays that don't rely on storing elements separately from handle; keeps sequence of elements on stack or in another object.
 
- 
+\section{Search}
 
+\subsection{Binary Search $O(\log{(N)})$}
+
+\url{https://classroom.udacity.com/courses/ud513/lessons/7123524086/concepts/71154040750923}
+
+$O(\log{(N)} + 1) = O(\log{(N)})$ Binary search efficiency.
+
+Given array $a=a_i$, $i=0,1,\dots N-1$, $N$ elements in an array, s.t. $a(i) \leq a(j)$ if $i\leq j$, $i,j \in 0, 1\dots N-1$ (i.e. sorted array) \\
+Given $x$ to search for, \\
+Consider $m_j$ s.t. \\
+For $j=1$, given $N$, $m_1 := \begin{cases} \frac{N}{2} & \text{ if $N$ odd } \\
+\frac{N}{2} -1 & \text{ if $N$ even } \end{cases} $ \\
+
+$m_1=$ midpoint to compare against. \\
+
+if $x=a(m_1)$ done. \\
+if $x< a(m_1)$, consider $a_i$ s.t. $i=0, \dots m_1-1$ \\
+if $x>a(m_1)$, consider $a_i$ s.t. $i=m_1+1 \dots N-1$ \\
+
+For $j$, given $a_i$, $i=l, \dots r$ $l\leq r$, ($l, r$ are included in the range), \\
+Let $L_j := r - l +1$ \\
+\[
+m_j := \begin{cases} \frac{L_j}{2} + l & \text{ if $L_j$ odd } \\
+\frac{L_j}{2} - 1 + l & \text{if $L_j$ even } \end{cases} 
+\]
+
+If $x=a(m_j)$ done, \\
+if $x<a(m_j)$, consider $a_i$ s.t. $i=0,\dots m_j -1$ \\
+If $x> a(m_j)$, consider $a_i$ s.t. $i=m_j+1, \dots N-1$ 
+
+Stop when $L_j=0$.
+
+\section{Recursion}
+
+cf. \url{https://en.wikipedia.org/wiki/Recursion},  Udacity 
+
+Recursion
+\begin{itemize}
+	\item must call itself at some pt.
+	\item base case
+	\item alter input parameter
+\end{itemize}
+
+\begin{theorem}[Recursion (from set theory)]
+Given $X \in \textbf{Set}$, $a\in X$, $f:X \to X$ \\
+$\exists \, ! \, F: \mathbb{N} \to X$ s.t. \\
+$\begin{aligned}
+& F(0) = a \\
+& F(n+1) = f(F(n))
+\end{aligned}$
+
+e.g. $\begin{aligned} & \quad \\ 
+	& \text{Fib}(0) = 0  \\
+	& \text{Fib}(1) = 1 \end{aligned}$ 
+	
+	$\forall \, n > 1, \, n \in \mathbb{Z}$, $\text{Fib}(n) := \text{Fib}(n-1) + \text{Fib}(n-2) = f(\text{Fib}(n-1), \text{Fib}(n-2))$
+\end{theorem} 
 
 
 \section{Sorting}

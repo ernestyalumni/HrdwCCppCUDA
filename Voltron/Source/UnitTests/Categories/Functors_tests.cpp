@@ -8,7 +8,6 @@
 #include <iostream>
 #include <iterator> // std::back_inserter
 #include <memory>
-#include <optional>
 #include <string>
 #include <vector>
 
