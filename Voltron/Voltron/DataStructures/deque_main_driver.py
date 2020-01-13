@@ -65,6 +65,13 @@ d.extend(test_sequence)
 d.rotate(-3)
 print(d)
 
+print(len(d))
+
+d1 = deque()
+print(len(d1))
+
+
+
 # https://classroom.udacity.com/courses/ud513/lessons/7117335401/concepts/78875255560923
 # Queue Practice
 

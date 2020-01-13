@@ -1958,6 +1958,18 @@ do \verb|vector<double>| and compute locations from the indices
 \verb|vector| resource handle, i.e. allows it to be resized and enable efficient move semantics, \\
 disadvantage to arrays that don't rely on storing elements separately from handle; keeps sequence of elements on stack or in another object.
 
+\subsection{Trees}
+
+value, left pointer, right pointer,
+
+levels - how many connections it takes to reach the root $+ 1$
+child can only have 1 parent
+height - number of edges between it and farthest leaf \\
+depth - number of edges to root.
+
+height, depth are inverse
+
+
 \section{Search}
 
 \subsection{Binary Search $O(\log{(N)})$}
@@ -1990,6 +2002,158 @@ if $x<a(m_j)$, consider $a_i$ s.t. $i=0,\dots m_j -1$ \\
 If $x> a(m_j)$, consider $a_i$ s.t. $i=m_j+1, \dots N-1$ 
 
 Stop when $L_j=0$.
+
+\subsection{Breadth-first search (BFS)}
+
+\url{https://en.wikipedia.org/wiki/Breadth-first_search}
+
+starts at tree root, or some arbitrary node, and explores all neighbor nodes at present depth prior to moving on to nodes at next depth level.
+
+Worst-cast performance $O(|V|+|E|) = O(b^d)$, Worst-case space complexity $O(|V|) = O(b^d)$
+
+\url{https://www.quora.com/What-are-the-advantages-of-using-BFS-over-DFS-or-using-DFS-over-BFS-What-are-the-applications-and-downsides-of-each}
+
+Pro: \\
+1. Solution definitely found out by BFS, 2. never get trapped in blind alley, unwanted nodes, 3. if there are more than 1 solution, will find solution with shortest steps
+
+Con: \\
+1. Memory constraints: as it stores all nodes of present level to go for next level
+2. if solution far away, consumes time
+
+Application of BFS: \\
+1. Find shortest Path,
+2. Check graph with bipertiteness
+
+\subsection{Depth-first search}
+
+Pre-order - check off nodes as soon as you see it, before seeing children. \\
+root check it off, pick first left child, ... \\
+
+In-order. \\
+check off node once left child is seen. \\
+went left most to right, went through all nodes in order. \\
+
+Post-order. \\
+Check off leaf, don't check off parent, check right child. \\
+
+Delete $O(N)$.
+insert.
+
+When do we want to use these structures? pros and cons.
+
+\subsection{Binary Search Tree (BST), $O(\log{N})$ height of the tree, run-time complexity, worst case $O(N)$}
+
+Given node $x$, functions $l, r, v$ s.t. $l(x), r(x) \in \textbf{Nodes} \cup \emptyset$, $v(x)$ is some ordered value, so $v(x) \in \textbf{OrderedSet}$. 
+
+Binary Search tree has the condition that $\forall \, x$, 
+\[
+v(l(x)) \leq v(x) \leq v(r(x))
+\]
+
+Given search value $y$, \\
+if $v(x) = y$, done, \\
+if $v(x) < y$, $x_1 = r(x)$ \\
+if $v(x) > y$, $x_1= l(x)$ \\
+
+height of tree is $O(\log{N})$, run-time complexity. \\
+insert $O(\log{(N)})$ \\
+delete $O(\log{(N)})$ \\
+
+Unbalanced, distribution of nodes skewed, worse case $O(N)$ search, insert, delete e.g. $5 \to 10 \to 15 \to 20$
+
+\subsection{Heaps}
+
+max-heap: parent must always have bigger value than its child. \\
+min-heap: parent must always have smaller value than its children. \\
+Unlike binarytree, heap can have any number of children. 
+
+Pro: \\ 
+1. heap finds max, min (root)
+2. heap data structure efficiently use graph algorithm, e.g. Dijkstra
+
+Con: \\
+1. takes more time to compare and execute. \\
+heap $ = $ max. efficient implementation of priority queue. 
+
+\begin{center}
+	\begin{tabular}{ l | l | l | l | l  }
+		\hline
+		Heap & find min & delete min & insert & decrease-value \\ \hline
+		Binary Heap & $O(1)$ & $O(\log{N})$ & $O(\log{N})$ & $O(\log{N})$ \\ \hline 
+		\hline
+	\end{tabular}
+\end{center}
+
+e.g. max binary heap.
+
+"complete" all levels except last are completely full. \\
+if not, continue adding values from left to right. \\
+
+Search: $O(N)$ no guarantee child is $\lessgtr$. end up searching entire tree.
+
+improved search: if $x >$ root, quit search (for max-heap) \\
+In general, if $v(\text{node}) =$ node value $< x$, no need to check children of node. \\
+
+Search: worse cast: $O(N)$ \\
+\phantom{Search} Average case: $O(N/2) = O(N)$ \\
+
+\subsubsection{Heapify (Worst case $O(\log{N})$)} 
+
+stick new element in open spot of the tree. \\
+heapify - reorder tree based on heap property: $\forall \, $ given node $C$, if parent node $P$ of $C$, $v(P) \geq v(C)$ (max heap) \\
+
+Swap $P$ and $C$ when $v(C) > v(P)$ \\
+Extract; remove root. replace root with right most element. Then swap when necessary. \\
+
+Heapify: worst case $O(\log{N})$. \\
+As many operations as height of the tree.
+
+\subsubsection{Heap implementation (array)}
+
+max-binary heap: since we know how may children (2), $\forall \, $ parent, \\
+Use some math to find next mode. If level $l$, nodes per level $l= 2^{l-1}$ \\
+Sorted array into tree.
+
+Let sorted array be $a=a_i$ s.t. 
+\[
+\begin{gathered} 
+	a_0 \mapsto l = 1\\ 
+a_1, a_2 \mapsto l = 2 \\ 
+a_3, a_4, a_5, a_6 \mapsto l = 3 
+\end{gathered} 
+\]
+
+$\left(\sum_{m=1}^{l-1} 2^{m-1} \right) - 1 = k$ index to start from. 
+
+Tree vs. Array
+
+if tree uses nodes, need pointers: Arrays save space. 
+
+\subsection{Self-balancing tree}
+
+Balanced minimize number of levels to use
+
+\subsection{Red-Black Tree; search $O(\log{N})$, space $O(N)$, insert $O(\log{N})$, delete $O(\log{N})$ }
+
+root black, \\
+level 1 black \\
+level 2 red \\
+level 3 black \\
+
+null leaf nodes must be colored black (i.e. all leaves are black)
+
+Rule 4 (optional) root must be black.
+
+Rule 5 every node; every path descending down must contain same number of black nodes. i.e. $\forall\, $ path from given node, to any of its descendant NIL nodes (leaf) must contain same number of black nodes. 
+
+red-black tree = self balancing binary search tree ($\forall \, $ node $x$, $v(l(x)) \leq v(x) \leq v(r(x))$)
+
+\subsubsection{Red-Black Trees, insertion}
+
+Insert Red Nodes Only. 
+
+runtime for insertion worst case $O(\log{N})$. Binary search tree worse case $O(N)$ because BST could be unbalanced. 
+
 
 \section{Recursion}
 
