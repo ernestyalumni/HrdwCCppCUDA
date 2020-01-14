@@ -487,7 +487,6 @@ BOOST_AUTO_TEST_CASE(CurryingExamples)
 
     std::cout << " - Predicate: _ < " << i << std::endl;
   }
-
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Currying_tests 

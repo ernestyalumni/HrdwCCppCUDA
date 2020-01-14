@@ -621,12 +621,41 @@ Suppose return address of a function (such as \verb|main|), $\text{eval}(\verb|R
 \]
 If we write to \verb|buf| more values than $L$, we can write over \text{eval}(\verb|RIP|), making \text{eval}(\verb|RIP|) a different value than before.  
 
-
-
-
-
+\begin{figure}
+	\centering
+	% 	\includegraphics[totalheight=8cm]{images/Cmemory/memoryLayoutC.jpg}
+	\begin{minipage}{.5\textwidth}
+		\includegraphics[width=1.2\textwidth]{images/Cmemory/memoryLayoutC.jpg}
+		\caption{cf. \url{https://www.geeksforgeeks.org/memory-layout-of-c-program/}}
+		\label{Fig:TypicalCMemoryLayout}
+	\end{minipage}
+\end{figure}
 
 \subsection{Stack}
+
+
+cf. \url{https://www.geeksforgeeks.org/memory-layout-of-c-program/}
+
+Traditionally, stack area adjoined heap area and they grow in opposite direction. \\
+When stack ptr meets heap ptr, free memory exhausted. \\
+(with modern large address spaces, virtual memory techniques, they may be placed almost anywhere, but they still typically grow opposite direction)  \\
+
+stack area contains program stack, UFO structure, typically located in higher parts of memory. \\
+On standard x86, grows toward address 0. \\
+"stack ptr" register tracks top of stack, adjusted to point to top each time a value is "pushed" onto stack. \\
+set of values pushed for 1 function call is "stack frame", stack frame consists at minimum of return address. 
+
+Newly called function allocates room on stack for its automatic and temporary variables. \\
+$\Longrightarrow$ recursion: each time recursive function calls itself, new stack frame is used, so 1 set of variables (in recursion) doesn't interfere with variables from another instance of the function. 
+
+cf. \href{https://www.tutorialspoint.com/where-are-static-variables-stored-in-c-cplusplus}{Where are static variables in C/C++? Tutorialspoint}
+
+static variables remain in memory; lifetime is entire program, stored in data segment of memory (near heap); data segment is part of virtual address space of a program.
+
+asked here \url{https://www.codingame.com/work/cpp-interview-questions/}, what is a static variable
+
+
+
 cf. Ferres (2010) \cite{Ferr2010}
 
 Stack and functions: When a function executes, it may add some of its state data to top of the stack (EY : 20171111, stack grows downward, so "top" is smallest address?); when function exits, stack is responsible for removing that data from stack.  
@@ -1722,6 +1751,90 @@ do \verb|vector<double>| and compute locations from the indices
 \verb|vector| resource handle, i.e. allows it to be resized and enable efficient move semantics, \\
 disadvantage to arrays that don't rely on storing elements separately from handle; keeps sequence of elements on stack or in another object.
 
+\subsection{Trees}
+
+value, left pointer, right pointer,
+
+levels - how many connections it takes to reach the root $+ 1$
+child can only have 1 parent
+height - number of edges between it and farthest leaf \\
+depth - number of edges to root.
+
+height, depth are inverse
+
+\subsection{Graphs}
+
+edges can store data too. \\
+Directed graph edges have a sense of direction. \\
+$A =$ set of ordered pairs of vertices. \\
+undirected graph. \\
+acyclic (no cycles) \\
+DAG Directed graph with no cycles.
+
+\subsubsection{Connectivity} 
+
+connected graph has only 1 connected component. $\exists \, $ path $\forall \, $ pair of vertices. \\
+\qquad \, minimum number of elements (edges) to remove, to disconnect a component. \\
+
+weakly connected directed graph if replacing all its directed edges with undirected edges produces a connected (undirected) graph. 
+
+\subsubsection{Graph Representation} 
+
+vertex object: \\
+list of edges. 
+
+Edge Object \\
+vertices. 
+
+Edge List: $=E$ 
+
+Adjacency list $l = l(i)$ s.t. $\forall \, i \in V$, $l(i) \in \textbf{Set}$ s.t. $l(i) = $ set of all adjacent vertices. \\
+
+Adjacent Matrix. 
+
+Let $V=$ set of all vertices. \\
+$\forall \, v \in V$, label them: $v=v(i)$, $i \in \mathbb{N}$ \\
+
+$\forall \, v_i \in V$, so $\forall \, i = 0, 1, \dots N-1$, \\
+Consider $\forall \, w = w_j \in V$, so $\forall \, j = 0 , 1, \dots N-1$. \\
+
+If $v_i, w_j$ are adjacen, let $a(i,j) = 1$, otherwise $w(i,j) =0$. (adjacent means $\exists \,$ edge s.t. $E = \lbrace v_i, w_j \rbrace$) \\
+$\Longrightarrow a$ is an adjacency matrix. 
+
+Adjacency list. 
+
+$\forall \, v = v_i \in V$, $i=0,1,\dots N-1$ \\
+$E = \lbrace (v_o, v_t) | v_o, v_t \in V \rbrace$ \\
+if $\exists \, e \in E$ s.t. $v_i = e(0) = v_o$, then $e(1) = v_t$ is adjacent to it. 
+
+\subsubsection{Graph Traversal}  
+
+Depth-first search (DFS) \\
+Breadth-first search (BFS) \\
+
+DFS. \\
+implementation: stack. \\
+keep 2 structures: 1. Seen list, 2. stack. 
+
+If seen before, pop stack and go back. \\
+$O(|E| + |V|)$ visit every edge twice $O(2|E| + |V|) = O(|E| + |V|)$. \\
+$O(|V|)$ time to look up a vertex. 
+
+More on procedure:
+
+begin with any node $v_1$. Put $v(v_1)$ into seen. Put $v_1$ on stack. \\
+if $\exists \, \lbrace e \rbrace \subset E$ s.t. for $e = (v_o, v_t)$ , $v_o = v_1$, then, put $v(v_t)$ into seen. Put $v_t$ on stack.
+
+Then consider $v_t$. \\
+If $v(v_t) \in $ seen, consider another edge. \\
+If you run out of edges with new node, pop stack. 
+
+Eulerian path $O(|E|) $ 
+
+Hamiltonian path
+
+
+
 \section{Search}
 
 \subsection{Binary Search $O(\log{(N)})$}
@@ -2400,6 +2513,20 @@ This data structure can be created, modified, deleted by 3 system calls: \texttt
 
 Best discussion of the relation to monads in category theory to monads in "computer science": \url{https://ncatlab.org/nlab/show/monad+%28in+computer+science%29}
 	
+\part{Technical Interviews}
+
+\href{https://classroom.udacity.com/courses/ud513/lessons/7707710408/concepts/77114606610923}{"Interview Introduction", Data Structures and Algorithms in Python, Udacity}
+
+\begin{itemize}
+	\item Clarifying the Question
+	\item Generating Inputs and Outputs
+	\item Generating Test Cases
+	\item Brainstorming
+	\item Runtime Analysis
+	\item Coding
+	\item Debugging
+\end{itemize}
+
 
 
 

@@ -2,7 +2,7 @@
 """
 @ref https://classroom.udacity.com/courses/ud513/lessons/7114284829/concepts/93630ecc-7369-4ffa-8db7-e988dd290927
 """
-from graph_searches import (Node, Edge, Graph)
+from graph_searches import (Node, Edge, Graph, _Graph)
 
 
 graph = Graph()
@@ -49,3 +49,8 @@ pp.pprint(graph.get_adjacency_list_names())
 
 print("\nAdjacency Matrix")
 pp.pprint(graph.get_adjacency_matrix())
+
+# Tests
+
+test_graph1 = _Graph()
+

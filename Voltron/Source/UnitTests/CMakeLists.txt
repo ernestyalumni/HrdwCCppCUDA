@@ -20,6 +20,7 @@ ADD_EXECUTABLE(Check
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
   Cpp/Functions_tests.cpp
+  Cpp/Keywords_tests.cpp
   Cpp/Recursion_tests.cpp
   Cpp/IO/IO_tests.cpp
   Cpp/Operations_test.cpp
