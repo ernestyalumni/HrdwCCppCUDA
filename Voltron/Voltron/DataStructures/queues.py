@@ -20,6 +20,10 @@ from collections import deque
 
 # @ref https://classroom.udacity.com/courses/ud513/lessons/7117335401/concepts/78875255560923
 
+# deque as a queue
+# d.appendleft(8) is the "push" to d.pop()
+# d.pop() 
+
 class Queue:
     def __init__(self, head=None):
         self.storage = [head]

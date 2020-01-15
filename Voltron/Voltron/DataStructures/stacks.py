@@ -1,5 +1,9 @@
 # @name stack.py
 # @ref https://classroom.udacity.com/courses/ud513/lessons/7117335401/concepts/78792965540923
+#
+# a Python list is a stack if treated as 
+# a.append(5) # push
+# a.pop() # 5 pop, LIFO
 
 from linked_list import (Element, LinkedList)
 

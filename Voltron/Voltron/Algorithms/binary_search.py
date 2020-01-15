@@ -1,4 +1,5 @@
 # @name binary_search.py
+# logO(N) complexity
 
 def calculate_midpoint(l, r):
     """
