@@ -53,4 +53,12 @@ pp.pprint(graph.get_adjacency_matrix())
 # Tests
 
 test_graph1 = _Graph()
+test_graph1.set_node_names(['a'])
+test_graph1.insert_node(1)
+print(test_graph1.get_edge_list())
+print(test_graph1.get_edge_list_names())
+print(test_graph1.get_adjacency_list())
+print(test_graph1.get_adjacency_list_names())
+print(test_graph1.get_adjacency_matrix())
+print(test_graph1.find_max_index())
 
