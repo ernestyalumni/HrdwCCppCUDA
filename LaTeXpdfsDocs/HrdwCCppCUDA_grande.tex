@@ -2039,7 +2039,7 @@ $\forall \, v \in V$, label them: $v=v(i)$, $i \in \mathbb{N}$ \\
 $\forall \, v_i \in V$, so $\forall \, i = 0, 1, \dots N-1$, \\
 Consider $\forall \, w = w_j \in V$, so $\forall \, j = 0 , 1, \dots N-1$. \\
 
-If $v_i, w_j$ are adjacen, let $a(i,j) = 1$, otherwise $w(i,j) =0$. (adjacent means $\exists \,$ edge s.t. $E = \lbrace v_i, w_j \rbrace$) \\
+If $v_i, w_j$ are adjacent, let $a(i,j) = 1$, otherwise $w(i,j) =0$. (adjacent means $\exists \,$ edge s.t. $E = \lbrace v_i, w_j \rbrace$) \\
 $\Longrightarrow a$ is an adjacency matrix. 
 
 Adjacency list. 
@@ -2047,6 +2047,8 @@ Adjacency list.
 $\forall \, v = v_i \in V$, $i=0,1,\dots N-1$ \\
 $E = \lbrace (v_o, v_t) | v_o, v_t \in V \rbrace$ \\
 if $\exists \, e \in E$ s.t. $v_i = e(0) = v_o$, then $e(1) = v_t$ is adjacent to it. 
+
+Adjacency list useful for counting number of edges that a node has or number of adjacencies.
 
 \subsubsection{Graph Traversal}  
 
@@ -2363,6 +2365,10 @@ Worst case if \emph{all} pivots are in place, e.g. $1,2,8,13$ \\
 Cannot "split" (partition) by pivots since it's already sorted $\Longrightarrow O(N^2)$. \\
 Average case $O(N\log{N})$ ($N$ iterations (for each element) $\log{N}$ comparisons (via split)) \\
 $O(1)$ space complexity.
+
+Best case; move pivot to middle and divide each partition by 2.
+Bad case; array already somewhat sorted, hard to move pivot to middle.
+
 
 \subsection{Time Complexities of all Sorting Algorithms}
 

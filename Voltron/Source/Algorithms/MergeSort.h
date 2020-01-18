@@ -3,6 +3,7 @@
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating Merge Sort.
 /// \ref https://gist.github.com/kbendick/1de4f311e2a780339eb3
+/// O(N log(N)) time complexity, log(N) iterations, N comparisons
 ///-----------------------------------------------------------------------------
 #ifndef ALGORITHMS_SORTING_MERGE_SORT_H
 #define ALGORITHMS_SORTING_MERGE_SORT_H
@@ -61,10 +62,12 @@ void merge(
 
   for (int i {0}; i < L; ++i)
   {
+    // Already done with left subarray; keep adding rest of right subarray
     if (l > l_high)
     {
       temp[i] = a[r++];
     }
+    // Already done with right subarray; keep adding rest of left subarray
     else if (r > r_high)
     {
       temp[i] = a[l++];

@@ -1,6 +1,11 @@
 # @name quick_sort.py
 
 # @param right_index Very last index to include in the range (included)
+"""
+@details O(N log(N)) time complexity. inspace O(1) space complexity.
+log(N) iterations, N comparisons
+"""
+
 def _partition_from_last(a, left_index, right_index):
     pivot_value = a[right_index]
 
