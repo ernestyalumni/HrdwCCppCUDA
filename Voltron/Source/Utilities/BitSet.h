@@ -1,11 +1,11 @@
 //------------------------------------------------------------------------------
-/// \file BitCast.h
+/// \file BitSet.h
 /// \author Ernest Yeung
-/// \brief std::bitcast extension.
+/// \brief std::bitset extension.
 /// \ref https://en.cppreference.com/w/cpp/utility/bitset
 ///-----------------------------------------------------------------------------
-#ifndef _UTILITIES_BIT_CAST_H_
-#define _UTILITIES_BIT_CAST_H_
+#ifndef _UTILITIES_BIT_SET_H_
+#define _UTILITIES_BIT_SET_H_
 
 #include <bitset>
 
@@ -15,15 +15,15 @@ namespace Utilities
 constexpr std::size_t number_of_bits_in_a_byte = 8;
 
 template <std::size_t N = sizeof(unsigned long) * number_of_bits_in_a_byte>
-class BitCast
+class BitSet
 {
   public:
 
     // default constructors
-    BitCast();
+    BitSet();
 
     template <typename T>
-    BitCast(T x);
+    BitSet(T x);
 
     // cf. https://en.cppreference.com/w/cpp/language/operator_assignment    
     template <typename T>
@@ -35,25 +35,25 @@ class BitCast
 };
 
 template <std::size_t N>
-BitCast<N>::BitCast():
+BitSet<N>::BitSet():
   bitset_{}
 {}
 
 template <std::size_t N>
 template <typename T>
-BitCast<N>::BitCast(T x):
+BitSet<N>::BitSet(T x):
   bitset_{x}
 {}
 
 template <std::size_t N>
 template <typename T>
-void BitCast<N>::operator=(const T& x)
+void BitSet<N>::operator=(const T& x)
 {
   bitset_ = x;
 }
 
 template <typename T>
-class BitCast2 : public std::bitset<sizeof(T) * number_of_bits_in_a_byte>
+class BitSet2 : public std::bitset<sizeof(T) * number_of_bits_in_a_byte>
 {
   using BitSetT = std::bitset<sizeof(T) * number_of_bits_in_a_byte>;
 
@@ -70,4 +70,4 @@ class BitCast2 : public std::bitset<sizeof(T) * number_of_bits_in_a_byte>
 
 } // namespace Utilities
 
-#endif // _UTILITIES_BIT_CAST_H_
+#endif // _UTILITIES_BIT_SET_H_
