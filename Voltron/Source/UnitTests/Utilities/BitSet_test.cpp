@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+// https://stackoverflow.com/questions/20731/how-do-you-clear-a-stringstream-variable
 #include <sstream>
 
 using Utilities::number_of_bits_in_a_byte;
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_CASE(DemonstrateStdBitSet)
     // count function returns number of set bits in bitset
     int numberof1 = set8.count();
 
-    
+
   }
 }
 
