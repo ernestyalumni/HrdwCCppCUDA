@@ -89,6 +89,5 @@ BOOST_AUTO_TEST_CASE(FibonacciCachedRecursion)
   std::cout << "\n FibonacciCachedRecursion ends \n";
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // Functions_tests
 BOOST_AUTO_TEST_SUITE_END() // Cpp

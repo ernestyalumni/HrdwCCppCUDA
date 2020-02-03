@@ -86,6 +86,28 @@ BOOST_AUTO_TEST_CASE(DemonstratePointers)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PointerSizes)
+{
+  {
+    int x {10};
+    int* xPtr = &x;
+    char y {'a'};
+    char* yPtr {&y};
+    float z {3.f};
+    float* zptr {&z};
+
+    BOOST_TEST(sizeof(x) == 4); // 4 bytes, 32 bit
+    BOOST_TEST(sizeof(xPtr) == 8); // 8 byte, 64 bit
+    BOOST_TEST(sizeof(y) == 1); // 1 byte, 8 bit
+    BOOST_TEST(sizeof(yPtr) == 8); // 8 byte, 64 bit
+    BOOST_TEST(sizeof(z) == 4); // 4 byte, 32 bit
+    BOOST_TEST(sizeof(zptr) == 8); // 8 byte, 64 bit
+  }
+}
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DemonstrateNullPtr)
 {
   {

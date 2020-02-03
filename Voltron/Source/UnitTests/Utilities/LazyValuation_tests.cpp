@@ -63,4 +63,62 @@ BOOST_AUTO_TEST_CASE(IsInvocableWorks)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // LazyValuation_tests
+
+// cf. https://nalaginrut.com/archives/2019/10/31/8%20essential%20patterns%20you%20should%20know%20about%20functional%20programming%20in%20c%2B%2B14
+
+BOOST_AUTO_TEST_SUITE(Lazy_tests)
+
+// Thunk is a nullary function, say, a function without any parameters.
+using thunk_t = std::function<int(void)>; 
+// Return type is trivial, point is "nullary".
+// Why does "nullary" matter? You have closure, so you can capture values you
+// need, parameters are unnnecessary for us. May realize that thunk may help you
+// to unify interface.
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateLazyPattern)
+{
+	{
+		int x {5};
+		auto thunk = 
+			[x]()
+				{
+					std::cout << "now it run" << std::endl;
+				};
+
+		std::cout << "Thunk will not run before you run it" << std::endl;
+		thunk();
+
+		BOOST_TEST(true);
+	}
+}
+
+template <typename T>
+using UnaryF_t = std::function<T(void)>;
+
+// https://stackoverflow.com/questions/265392/why-is-lazy-evaluation-useful
+// https://bartoszmilewski.com/2014/04/21/getting-lazy-with-c/
+// https://github.com/BartoszMilewski/Okasaki/blob/master/LazyQueue/Queue.h
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareAsLazyEvaluation)
+{
+	{
+		double external_x {2};
+		auto thunk = 
+			[&external_x]()
+			{
+				return external_x * external_x;
+			};
+
+		external_x = thunk();
+		external_x = thunk();
+		external_x = thunk();
+		BOOST_TEST(external_x == 256);
+	}
+}
+
+
+BOOST_AUTO_TEST_SUITE_END() // Lazy_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities

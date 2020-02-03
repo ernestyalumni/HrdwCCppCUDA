@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
-/// \file QuickSort.h
+/// \file LinkedLists.h
 /// \author Ernest Yeung
-/// \brief Classes and functions demonstrating Quick Sort.
+/// \brief Classes and functions demonstrating LinkedLists.
 /// @ref https://gist.github.com/charlierm/5691020
 ///-----------------------------------------------------------------------------
 #ifndef ALGORITHMS_SORTING_QUICK_SORT_H
@@ -25,8 +25,6 @@ class Element
       value_{value},
       next_{nullptr}
     {}
-
-
 
     ~Element() = default;
 

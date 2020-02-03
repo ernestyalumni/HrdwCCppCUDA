@@ -6,6 +6,8 @@
 #ifndef _CATEGORIES_FUNCTORS_FUNCTOR_H_
 #define _CATEGORIES_FUNCTORS_FUNCTOR_H_
 
+#include <functional>
+
 namespace Categories
 {
 namespace Functors
@@ -43,10 +45,13 @@ template <class R, class ... X>
 struct Category<R(&)(X...)>
 {
   using Type = R(&)(X...);
-}
+};
 
 template <class T>
 using CategoryType = typename Category<T>::type;
+
+namespace OtherAlternatives
+{
 
 template <class ... >
 struct Functor;
@@ -65,8 +70,36 @@ struct Composition
   G g_;
 
   template <class X>
-  auto operator()(X&& x) -> decltype(f_(g_(std::declval<X>)))
-}
+  auto operator()(X&& x) -> decltype(f_(g_(std::declval<X>)));
+}; 
+
+} // namespace OtherAlternatives
+
+// cf. https://nalaginrut.com/archives/2019/10/31/8%20essential%20patterns%20you%20should%20know%20about%20functional%20programming%20in%20c%2B%2B14
+
+template <class From, class To>
+class Functor
+{
+	public:
+
+		Functor(std::function<To(From)> operation) :
+			operation_{operation}
+		{}
+
+		~Functor()
+		{};
+
+		template <class T>
+		T operator()(T c)
+		{
+			std::transform(c.begin(), c.end(), c.begin(), operation_);
+			return c;
+		}
+
+	private:
+		std::function<To(From)> operation_;
+};
+
 
 //template <class Function>
 //struct Functor<Function>

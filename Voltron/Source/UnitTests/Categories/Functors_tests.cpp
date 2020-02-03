@@ -1,15 +1,20 @@
 //------------------------------------------------------------------------------
 // \file Functors_tests.cpp
 //------------------------------------------------------------------------------
+#include "Categories/Functors/Functor.h"
 
 #include <algorithm> // std::move, std::transform
+#include <array>
 #include <boost/test/unit_test.hpp>
 #include <cstring>
 #include <iostream>
 #include <iterator> // std::back_inserter
+#include <list>
 #include <memory>
 #include <string>
 #include <vector>
+
+using Categories::Functors::Functor;
 
 BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Functors)
@@ -157,6 +162,40 @@ BOOST_AUTO_TEST_CASE(FunctorsOnFunctionObjectsExamples)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // FromFPCompleteBlog
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FunctorDemonstration)
+{
+  {
+    std::list<int> a {1, 2, 3};
+
+    // <int, int> implies "int -> int" type annotation
+    auto f = Functor<int, int> ([](int x) { return 2 * x;});
+    auto g = Functor<int, int> ([](int x) { return 10 * x;});
+    auto z = Functor<int, int> ([](int x) { return x + 1;});
+
+    // Function composition preserving
+    auto result1 = g(f(a));
+    auto result2 = f(g(a));
+
+    BOOST_TEST(result1 == result2);
+
+    std::array<int, 3> expected {20, 40, 60};
+    {
+      int i {0};
+      for (const auto& ele : result1)
+      {
+        BOOST_TEST(ele == expected[i]);
+        i++;
+      }
+    }
+  }
+
+
+  BOOST_TEST(true);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // FunctorExamples
 

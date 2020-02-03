@@ -5,8 +5,10 @@
 #include <boost/test/unit_test.hpp>
 
 #include <algorithm> // std::transform
+#include <array>
 #include <cctype> // std::toupper
 #include <iostream>
+#include <list>
 #include <optional>
 #include <string>
 
@@ -66,6 +68,35 @@ BOOST_AUTO_TEST_CASE(StdTransformExamples)
   }
 
   BOOST_TEST(true);
+}
+
+// cf. https://nalaginrut.com/archives/2019/10/31/8%20essential%20patterns%20you%20should%20know%20about%20functional%20programming%20in%20c%2B%2B14
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StdTransformAsMapAsHighOrderFunction)
+{
+  std::list<int> c {1, 2, 3};
+  std::transform(
+    c.begin(),
+    c.end(),
+    c.begin(),
+    [](int i)
+      {
+        return '0' + i;
+      });
+
+  for (char i : c)
+  {
+    std::cout << i << std::endl;
+  }
+  std::array<char, 3> c_expected {'1', '2', '3'};
+  int i {0};
+  for (const auto& ele : c)
+  {
+    BOOST_TEST(ele == c_expected[i]);
+    i++;
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Monoid_tests

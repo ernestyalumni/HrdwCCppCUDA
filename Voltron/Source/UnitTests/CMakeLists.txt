@@ -11,6 +11,8 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 ADD_EXECUTABLE(Check
   Main.cpp
+  Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp
+  Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
   Algorithms/Permutations_tests.cpp
   Algorithms/Search_tests.cpp
   Algorithms/Sorting_tests.cpp
@@ -19,6 +21,7 @@ ADD_EXECUTABLE(Check
   Categories/Functors_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
+  Cpp/Closure_tests.cpp
   Cpp/Functions_tests.cpp
   Cpp/Keywords_tests.cpp
   Cpp/Recursion_tests.cpp
