@@ -7,6 +7,7 @@
 #define _CATEGORIES_FUNCTORS_FUNCTOR_H_
 
 #include <functional>
+#include <optional>
 
 namespace Categories
 {
@@ -100,6 +101,24 @@ class Functor
 		std::function<To(From)> operation_;
 };
 
+// pp. 201, Cukic, Ivan. Functional Programming in C++. 10.1.1 Handling optional
+// values, Listing 10.1 Defining the transform function for std::optional
+template <typename T1, typename F>
+auto transform(const std::optional<T1>& opt, F f)
+  // Specify the return type, because you're returning just {} when there's no
+  // value.
+  -> decltype(std::make_optional(f(opt.value())))
+{
+  if (opt)
+  {
+    return std::make_optional(f(opt.value())); 
+  }
+  else
+  {
+    // If no value, returns an empty instance of std::optional
+    return {};
+  }
+}
 
 //template <class Function>
 //struct Functor<Function>

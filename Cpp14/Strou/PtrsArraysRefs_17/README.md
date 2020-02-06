@@ -25,3 +25,8 @@ Primary use for `void*` is for passing ptrs to functions that aren't allowed to 
 To use such an object, we must use explicit type conversion.
 
 Where used for optimization `void*` can be hidden behind type-safe interface (27.3.1)
+
+## 7.2.2 `nullptr`
+
+`nullptr` - ptr that doesn't point to an object
+

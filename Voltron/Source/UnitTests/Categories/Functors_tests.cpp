@@ -11,10 +11,12 @@
 #include <iterator> // std::back_inserter
 #include <list>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
 using Categories::Functors::Functor;
+using Categories::Functors::transform;
 
 BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Functors)
@@ -192,8 +194,30 @@ BOOST_AUTO_TEST_CASE(FunctorDemonstration)
     }
   }
 
-
   BOOST_TEST(true);
+}
+
+template <typename T>
+auto add_x(const T x)
+{
+  return [x](const T y)
+    {
+      return x + y; 
+    };
+};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateStdOptionalTransform)
+{
+  {
+    // Test out add_x
+    BOOST_TEST(add_x(42)(69) == 111);
+
+    std::optional<int> a {69};
+    const auto a_final {transform(a, add_x(42))};
+    BOOST_TEST(a_final.value() == 111);
+  }
 }
 
 
