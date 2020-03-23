@@ -34,6 +34,7 @@ ADD_EXECUTABLE(Check
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DeskCalculator/Token_tests.cpp
+  DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
   Mutable/Mutable_tests.cpp
