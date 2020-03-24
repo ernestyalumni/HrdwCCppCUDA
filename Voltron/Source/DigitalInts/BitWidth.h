@@ -6,6 +6,7 @@
 namespace DigitalInts
 {
 
+// "Generic" case.
 template <std::size_t NBits, class Enable = void>
 class UInt32BitWidth
 {

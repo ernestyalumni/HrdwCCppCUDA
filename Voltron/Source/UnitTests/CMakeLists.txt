@@ -31,6 +31,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Pointers_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
   Cpp/Templates/Template_Metaprogramming_tests.cpp
+  Cpp/Templates/Basics/Max_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DeskCalculator/Token_tests.cpp
