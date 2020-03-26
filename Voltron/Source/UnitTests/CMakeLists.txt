@@ -32,6 +32,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Utilities/Optional_tests.cpp
   Cpp/Templates/Template_Metaprogramming_tests.cpp
   Cpp/Templates/Basics/Max_tests.cpp
+  Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DeskCalculator/Token_tests.cpp
@@ -41,7 +42,6 @@ ADD_EXECUTABLE(Check
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
-  Utilities/BitSet_test.cpp
   Utilities/Curry_test.cpp
   Utilities/FunctionObject_test.cpp
   Utilities/LazyValuation_tests.cpp

@@ -1,2 +1,3 @@
 ADD_SUBDIRECTORY(Templates)
 ADD_SUBDIRECTORY(Templates/Basics)
+ADD_SUBDIRECTORY(Utilities)

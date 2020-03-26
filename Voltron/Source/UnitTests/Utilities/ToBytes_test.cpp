@@ -7,6 +7,7 @@
 #include <cstddef> // std::byte
 #include <cstdio> // printf
 #include <iostream>
+#include <limits>
 
 using Utilities::ToBytes;
 
@@ -58,8 +59,10 @@ BOOST_AUTO_TEST_CASE(ToBytesWorks)
 
   const ToBytes to_bytes_x_0 {x_0};
 
-  //to_bytes_x_0.increasing_addresses_print(); // WORKS
+  std::cout << "\n Print 15213 with increasing addresses \n";
+  to_bytes_x_0.increasing_addresses_print(); // WORKS
   //to_bytes_x_0.decreasing_addresses_print(); // WORKS
+  std::cout << "\n END OF Print 15213 with increasing addresses \n";
 
   ToBytes to_bytes_x_1 {x_1};
 
@@ -70,6 +73,158 @@ BOOST_AUTO_TEST_CASE(ToBytesWorks)
 
   to_bytes_y.increasing_addresses_print(); // WORKS c4
   to_bytes_y.decreasing_addresses_print(); // WORKS 93
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IncreasingAddressesHexWorks)
+{
+  constexpr unsigned short x_0 {15213};
+  constexpr short x_1 {15213};
+  constexpr short y {-15213};
+
+  const ToBytes to_bytes_x_0 {x_0};
+
+  ToBytes to_bytes_x_1 {x_1};
+
+  const ToBytes to_bytes_y {y};
+
+  const std::string x_0_str {to_bytes_x_0.increasing_addresses_hex()};
+  BOOST_TEST(x_0_str == "6d3b");
+
+  const std::string x_1_str {to_bytes_x_1.increasing_addresses_hex()};
+  BOOST_TEST(x_1_str == "6d3b");
+
+  const std::string y_str {to_bytes_y.increasing_addresses_hex()};
+  BOOST_TEST(y_str == "93c4");
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IncreasingAddressesHexWorksByInduction)
+{
+  {
+    BOOST_TEST(sizeof(unsigned int) == 4);
+    const unsigned int x {0};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "0000");
+  }
+  {
+    const unsigned int x {1};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "1000");
+  }
+  {
+    const unsigned int x {2};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "2000");
+  }
+  {
+    const unsigned int x {15};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "f000");
+  }
+  {
+    const unsigned int x {16};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "10000");
+  }
+  {
+    const unsigned int x {17};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "11000");
+  }
+  {
+    const unsigned int x {std::numeric_limits<unsigned int>::max() - 1};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "feffffff");
+  }
+  {
+    const unsigned int x {std::numeric_limits<unsigned int>::max()};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "ffffffff");
+  }
+  {
+    const unsigned int x {std::numeric_limits<unsigned int>::min()};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.increasing_addresses_hex() == "0000");
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DecreasingAddressesHexWorksByInduction)
+{
+  {
+    BOOST_TEST(sizeof(unsigned int) == 4);
+    const unsigned int x {0};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "0000");
+  }
+  {
+    const unsigned int x {1};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "0001");
+  }
+  {
+    const unsigned int x {2};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "0002");
+  }
+  {
+    const unsigned int x {15};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "000f");
+  }
+  {
+    const unsigned int x {16};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "00010");
+  }
+  {
+    const unsigned int x {17};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "00011");
+  }
+  {
+    const unsigned int x {std::numeric_limits<unsigned int>::max() - 1};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "fffffffe");
+  }
+  {
+    const unsigned int x {std::numeric_limits<unsigned int>::max()};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "ffffffff");
+  }
+  {
+    const unsigned int x {std::numeric_limits<unsigned int>::min()};
+    const ToBytes to_bytes_x {x};
+    BOOST_TEST(to_bytes_x.decreasing_addresses_hex() == "0000");
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DecreasingAddressesHexWorks)
+{
+  constexpr unsigned short x_0 {15213};
+  constexpr short x_1 {15213};
+  constexpr short y {-15213};
+
+  const ToBytes to_bytes_x_0 {x_0};
+
+  ToBytes to_bytes_x_1 {x_1};
+
+  const ToBytes to_bytes_y {y};
+
+  const std::string x_0_str {to_bytes_x_0.decreasing_addresses_hex()};
+  BOOST_TEST(x_0_str == "3b6d");
+
+  const std::string x_1_str {to_bytes_x_1.decreasing_addresses_hex()};
+  BOOST_TEST(x_1_str == "3b6d");
+
+  const std::string y_str {to_bytes_y.decreasing_addresses_hex()};
+  BOOST_TEST(y_str == "c493");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ToBytes_tests
