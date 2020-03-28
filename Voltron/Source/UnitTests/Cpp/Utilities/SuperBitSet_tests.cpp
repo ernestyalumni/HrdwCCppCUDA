@@ -213,6 +213,80 @@ BOOST_AUTO_TEST_CASE(SuperBitSetWorksWithBitwiseNot)
   // 0 to 255, to decreasing range from 255 to 0.
 }
 
+// cf. https://en.wikipedia.org/wiki/Bitwise_operation Arithmetic shift section.
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SuperBitSetWorksWithLeftShift)
+{
+  {
+    SuperBitSet<8> bits {"00010111"};
+    BOOST_TEST_REQUIRE(bits.to_string() == "00010111");
+    BOOST_TEST(bits.to_ulong() == 23);
+    BOOST_TEST((bits << 1).to_string() == "00101110");
+    BOOST_TEST((bits << 1).to_ulong() == 46);
+    BOOST_TEST((bits << 2).to_string() == "01011100");
+    BOOST_TEST((bits << 2).to_ulong() == 92);
+  }
+}
+
+// cf. https://en.wikipedia.org/wiki/Bitwise_operation Arithmetic shift section.
+// In a right arithmetic shift, sign bit (MSB in two's complement) is shifted in
+// on left, preserves sign of operand. If MSB is 1, new 1 is copied into
+// leftmost position.
+// Logical right-shift inserts 0 into most significant bit, instead of copying
+// sign bit; it's ideal for unsigned binary numbers, while
+// arithmetic right-shift ideal for signed two's complement binary numbers.
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SuperBitSetWorksWithRightShiftAsLogicalShift)
+{
+  {
+    SuperBitSet<8> bits {"10010111"};
+    BOOST_TEST_REQUIRE(bits.to_string() == "10010111");
+    BOOST_TEST(bits.to_ulong() == 151);
+    BOOST_TEST((bits >> 1).to_string() == "01001011");
+    BOOST_TEST((bits >> 1).to_ulong() == 75);
+    BOOST_TEST((bits >> 2).to_string() == "00100101");
+    BOOST_TEST((bits >> 2).to_ulong() == 37);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(UseBitwiseLeftShiftToGetMax)
+{
+  // unsigned long long is 64 bits or 8 bytes.
+  SuperBitSet<64> bits {1ull};
+  BOOST_TEST(sizeof(unsigned long long) == 8);
+  {
+    BOOST_TEST_REQUIRE(
+      bits.to_string() ==
+        "0000000000000000000000000000000000000000000000000000000000000001");
+    BOOST_TEST(bits.to_ullong() == 1ull);
+
+    BOOST_TEST((bits << 0).to_string() ==
+      "0000000000000000000000000000000000000000000000000000000000000001");
+    BOOST_TEST((bits << 0).to_ullong() == 1);
+    BOOST_TEST((bits << 1).to_string() ==
+      "0000000000000000000000000000000000000000000000000000000000000010");
+    BOOST_TEST((bits << 1).to_ullong() == 2);
+    BOOST_TEST((bits << 4).to_string() ==
+      "0000000000000000000000000000000000000000000000000000000000010000");
+    BOOST_TEST((bits << 4).to_ullong() == 16);
+
+    BOOST_TEST(SuperBitSet<8>{(bits << 0).to_ullong() - 1}.to_string() ==
+      "00000000");
+    BOOST_TEST(SuperBitSet<8>{(bits << 0).to_ullong() - 1}.to_ulong() == 0);
+    BOOST_TEST(SuperBitSet<8>{(bits << 1).to_ullong() - 1}.to_string() ==
+      "00000001");
+    BOOST_TEST(SuperBitSet<8>{(bits << 1).to_ullong() - 1}.to_ulong() == 1);
+    BOOST_TEST(SuperBitSet<8>{(bits << 4).to_ullong() - 1}.to_string() ==
+      "00001111");
+    BOOST_TEST(SuperBitSet<8>{(bits << 4).to_ullong() - 1}.to_ulong() == 15);
+  }
+}
+
 BOOST_AUTO_TEST_SUITE_END() // SuperBitSet_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities
 BOOST_AUTO_TEST_SUITE_END() // Cpp

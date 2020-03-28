@@ -42,6 +42,7 @@ ADD_EXECUTABLE(Check
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
+  Utilities/BitsStream_tests.cpp
   Utilities/Curry_test.cpp
   Utilities/FunctionObject_test.cpp
   Utilities/LazyValuation_tests.cpp
@@ -56,6 +57,7 @@ TARGET_LINK_LIBRARIES(Check
   Algorithms
   Hierarchy
   Tools
+  Utilities
   # cf. https://stackoverflow.com/questions/1620918/cmake-and-libpthread
   ${CMAKE_THREAD_LIBS_INIT}
   ${Boost_FILESYSTEM_LIBRARY}
