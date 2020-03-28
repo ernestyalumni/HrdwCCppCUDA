@@ -93,7 +93,8 @@ std::ostream& ToHexString<T>::as_increasing_addresses(std::ostream& out) const
 
   const auto x_as_uchars = reinterpret_cast<const unsigned char*>(&value_);
 
-  std::list<unsigned int> list_range {number_of_bytes};
+  // Initializer list doesn't work to make std::list have size of N.
+  std::list<unsigned int> list_range (number_of_bytes);
   // https://en.cppreference.com/w/cpp/algorithm/iota
   // template <class ForwardIt, class T>
   // void iota(ForwardIt first, ForwardIt last, T value);
@@ -113,7 +114,8 @@ std::ostream& ToHexString<T>::as_decreasing_addresses(std::ostream& out) const
 
   const auto x_as_uchars = reinterpret_cast<const unsigned char*>(&value_);
 
-  std::list<unsigned int> list_range {number_of_bytes};
+  // Initializer list doesn't work to make std::list have size of N.
+  std::list<unsigned int> list_range (number_of_bytes);
   std::generate(
     list_range.begin(),
     list_range.end(),
@@ -134,7 +136,8 @@ void ToHexString<T>::increasing_addresses_print() const
 
   auto x_as_uchars = reinterpret_cast<const unsigned char*>(&value_);
 
-  std::list<unsigned int> range_list {number_of_bytes};
+  // Initializer list doesn't work to make std::list have size of N.
+  std::list<unsigned int> range_list (number_of_bytes);
   std::iota(range_list.begin(), range_list.end(), 0);
 
   std::for_each(
@@ -153,7 +156,8 @@ void ToHexString<T>::decreasing_addresses_print() const
 
   auto x_as_uchars = reinterpret_cast<const unsigned char*>(&value_);
 
-  std::list<unsigned int> range_list {number_of_bytes};
+  // Initializer list doesn't work to make std::list have size of N.
+  std::list<unsigned int> range_list (number_of_bytes);
   std::generate(
     range_list.begin(),
     range_list.end(),

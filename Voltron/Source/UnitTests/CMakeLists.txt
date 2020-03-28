@@ -27,6 +27,7 @@ ADD_EXECUTABLE(Check
   Cpp/Recursion_tests.cpp
   Cpp/IO/IO_tests.cpp
   Cpp/Operations_test.cpp
+  Cpp/Std/Algorithm/Algorithms_tests.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Std/Pointers_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp

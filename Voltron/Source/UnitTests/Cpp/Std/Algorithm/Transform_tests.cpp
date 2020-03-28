@@ -58,9 +58,9 @@ BOOST_AUTO_TEST_CASE(StdTransformExamples)
     std::back_inserter(ordinals),
     [](unsigned char c) -> std::size_t { return c;});
 
-  std::cout << s << ':';
+  //std::cout << s << ':';
 
-  BOOST_TEST(s == "HELLO");
+  //BOOST_TEST(s == "HELLO");
 
   for (auto ord : ordinals)
   {
