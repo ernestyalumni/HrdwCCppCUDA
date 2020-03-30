@@ -1241,6 +1241,24 @@ $\sim$ is "complement" operation. \\
 $0$ is additive identity. \\
 $1$ is multiplicative identity.
 
+cf. \url{https://en.wikipedia.org/wiki/Bitwise_operation}
+
+Bitwise OR may be used to set to 1 selected bits of register. e.g. fourth bit of 0010 may be set by performing bitwise OR with pattern with only 4th bit set.
+
+Bitwise AND is equivalent to multiplying corresponding bits. Thus, if both bits in compared position are 1, bit in resulting binary representation is ($1 \times 1 = 1$); otherwise result is 0 ($1 \times 0 = 0$ and $0 \times 0 = 0$).
+
+Operation may be used to determine whether particular bit is set (1) or clear (0). e.g. given bit pattern 0011 (decimal 3), to determine whether 2nd bit is set, use bitwise AND with bit pattern containing 1 only in 2nd. bit. Because result 0010 is non-zero, we know 2nd. bit in original pattern is set. This is often called \emph{bit masking} (by analogy, use of masking tape covers, or \emph{masks}, portions that are not of interest)
+
+Bitwise AND may be used to clear selected bits (or flags) of a register in which each bit represents an individual Boolean state.
+\begin{itemize}
+	\item This technique is an efficient way to store a number of Boolean values using as little memory as possible.
+	\item Also, easy to check parity (even or odd?) of binary number by checking value of lowest valued bit.
+\end{itemize}
+
+Bitwise XOR may be used to invert selected bits in a register (also called toggle or flip). Any bit may be toggled by XORing with 1. e.g. given bit pattern 0010, 2nd and 4th bits may be toggled by bitwise XOR with bit pattern containing 1 in 2nd. and 4th. positions.
+
+
+
 Consider Boolean Ring:
 \[
 \langle \lbrace 0 , 1 \rbrace, \wedge, \&, I, 0 , 1 \rangle \simeq \mathbb{Z}_2 \equiv  \text{ integers} \mod{2} 

@@ -44,6 +44,7 @@ ADD_EXECUTABLE(Check
   Mutable/Mutex_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
   Utilities/BitsStream_tests.cpp
+  Utilities/BooleanAlgebra_tests.cpp
   Utilities/Curry_test.cpp
   Utilities/FunctionObject_test.cpp
   Utilities/LazyValuation_tests.cpp
