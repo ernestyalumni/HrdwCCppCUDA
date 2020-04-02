@@ -32,7 +32,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Pointers_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
   Cpp/Templates/Template_Metaprogramming_tests.cpp
-  Cpp/Templates/Basics/Max_tests.cpp
+  Cpp/Templates/FunctionT/Max_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp

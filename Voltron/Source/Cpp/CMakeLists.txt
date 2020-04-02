@@ -1,3 +1,3 @@
 ADD_SUBDIRECTORY(Templates)
-ADD_SUBDIRECTORY(Templates/Basics)
+ADD_SUBDIRECTORY(Templates/FunctionT)
 ADD_SUBDIRECTORY(Utilities)
