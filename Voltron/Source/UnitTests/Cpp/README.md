@@ -61,6 +61,15 @@ In low-level, we occasionally need to store or pass along address of memory loca
 
 A pointer to any type of object can be assigned to variable of type `void*`, but pointer to function (Sec. 12.5), or pointer to member (Sec. 20.6) cannot. 
 
+In addition
+- `void*` can be assigned to another `void*`
+- `void*`s can be compared for equality and inequality, and
+- `void*` can be explicitly converted to another type.
+
+Other operations unsafe because compiler cannot know what kind of object is really pointed to.
+
+To use `void*`, we must explicitly convert it to a ptr to specific type.
+
 
 cf. Functional Programming in C++. Ivan Čukić. November 2018 ISBN 9781617293818 
 320 pages Manning Publications

@@ -45,10 +45,37 @@ BOOST_AUTO_TEST_CASE(Declarations)
   // int
   int* f(char*); // function taking a char* argument; returns a pointer to int
 
-
   BOOST_TEST(true);
 }
 
+void void_pointer_points(int* pi)
+{
+  void* pv = pi; // OK: implicit conversion of int* to void*
+  // *pv; // error: can't deference void*
+  // ++pv; // error: can't increment void* (the size of the object pointed to is
+  // unknown)
+
+  int* pi2 = static_cast<int*>(pv); // explicit conversion back to int*
+
+  // double* pd1 = pv; // error
+  // double* pd2 = pi; // error
+  // double* pd3 = static_cast<double*>(pv); // unsafe (Sec. 11.5.2)
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(VoidPointerExplicitlyConvertsToAnotherPointer)
+{
+  {
+    const int pi_value {42};
+    const int* pi = &pi_value;
+    BOOST_TEST(true);
+  }
+  int pi_value {42};
+  int* pi = &pi_value;
+
+  void_pointer_points(pi);
+}
 
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences_tests
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences

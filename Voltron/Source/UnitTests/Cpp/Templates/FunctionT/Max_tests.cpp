@@ -117,8 +117,8 @@ BOOST_AUTO_TEST_CASE(TypeConversionsDuringTypeDeductionByValueDecay)
 
   int& ir {i};
   BOOST_TEST_REQUIRE(max(i, ir) == i); // OK: T is deduced as int
-  int arr[4];
-  BOOST_TEST(max(&i, arr) == &i);
+  //int arr[4];
+  //BOOST_TEST(max(&i, arr) == &i);
 
   // ERROR: T can be deduced as int or double.
   //max(4, 7.2);
