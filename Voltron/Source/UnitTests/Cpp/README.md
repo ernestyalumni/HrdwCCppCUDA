@@ -1,3 +1,67 @@
+cf. Bjarne Stroustrup. The C++ Programming Language, 4th Edition. Addison-Wesley Professional. May 19, 2013. ISBN-13: 978-0321563842
+
+# Pointers, Arrays, References
+
+cf. Stroustrup (2013), pp. 171, Ch. 7 Pointers, Arrays, and References
+
+cf. 7.1 Introduction, pp. 171, Stroustrup (2013)
+
+In C++ (most) objects "have identity" - i.e. reside at a specific address in memory, and
+- object can be accessed if you know its address and its type.
+
+The language constructs for holding and using addresses are *pointers and references.*
+
+## Pointers
+
+cf. 7.2 Pointers, pp. 172, Stroustrup (2013)
+
+For type `T`, `T*` is type "pointer to `T`"
+- variable of type `T*` can hold the address of an object of type `T`
+
+Pointers (its implementation, specifically, is intended to) map directly to addresses of the machine on which program runs. 
+
+cf. 6.3.1 pp. 154, Stroustrup (2013).
+
+Structure of Declarations, 3rd part:
+* A declarator optionally including a name (e.g. `p[7], n`, or `*(*)[]`)
+
+Declarator is composed of (an optional) name, and optionally some declarator operators.
+Most common declarator operators are:
+
+Declarator Operators
+
+
+| Declarator Operators   |
+| :------------ |:------------  | :----|
+| prefix      | `*` | pointer |
+| prefix      | `*const` | constant pointer |
+| prefix      | `*volatile` | volatile pointer |
+| prefix      | `&` | lvalue reference (Sec. 7.7.1) |
+| prefix      | `&&` | rvalue reference (Sec. 7.7.2) |
+| prefix      | auto | function (using suffix return type) |
+| postfix      | `[]` | array |
+| postfix      | `()` | function |
+| postfix      | `->` | returns from function |
+
+Their use would be simple if they were all either prefix or postfix (!!!).
+However, `*`, `[]`, `()` were designed to mirror their use in expressions (Sec. 10.3).
+Thus, `*` is prefix, `[]` `()` are postfix.
+Postfix declarator operators bind tighter than prefix ones.
+Consequently, `char* kings[]` is an array of pointers to `char`, whereas `char(*kings)[]` is a pointer to an array of `char`. 
+
+Pointers to functions Sec. 12.5
+
+Pointers to class members in Sec. 20.6
+
+### `void*`
+
+In low-level, we occasionally need to store or pass along address of memory location without actually knowing what type of object stored there (e.g. Linux System Programming).
+
+`void*` - "pointer to an object of unknown type"
+
+A pointer to any type of object can be assigned to variable of type `void*`, but pointer to function (Sec. 12.5), or pointer to member (Sec. 20.6) cannot. 
+
+
 cf. Functional Programming in C++. Ivan Čukić. November 2018 ISBN 9781617293818 
 320 pages Manning Publications
 

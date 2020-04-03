@@ -137,6 +137,8 @@ BOOST_AUTO_TEST_CASE(TypeConversionsDuringTypeDeductionByValueDecay)
   // type deduction:
   BOOST_TEST(max<double>(4, 7.2) == 7.2);
 
+  // 3. Specify that parameters may have different types.
+  
   BOOST_TEST(true);
 }
 
