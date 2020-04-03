@@ -318,6 +318,37 @@ BOOST_AUTO_TEST_CASE(ArrayTraverseRequiresExplicitlyStatedSize)
   BOOST_TEST(true);
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DeclareMultidimensionalArrays)
+{
+  int ma[3][5]; // 3 arrays with 5 ints each
+
+  BOOST_TEST(true);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InitializeMultidimensionalArrays)
+{
+  int ma[3][5]; // 3 arrays with 5 ints each
+
+  for (int i {0}; i != 3; ++i)
+  {
+    for (int j {0}; j != 5; ++j)
+    {
+      ma[i][j] = 10 * i + j;
+    }
+  }
+
+  for (int k {0}; k < 15; ++k)
+  {
+    BOOST_TEST(
+      ma[ k / 5][ k - 5 * (k / 5)] == 10 * (k / 5) + (k - 5 * (k / 5)));
+  }
+}
+
+
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences_tests
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences
 BOOST_AUTO_TEST_SUITE_END() // Cpp

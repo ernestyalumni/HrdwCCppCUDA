@@ -148,6 +148,8 @@ Complicated pointer arithmetic is usually unnecessary and best avoided.
 Arrays *are not self-describing* because number of elements of an array isn't guaranteed to be stored with the array. 
 - This implies that to traverse asn array that doesn't contain a terminator the way C-style strings do, we must supply the number of elements.
 
+## Multidimensional Arrays
+
 
 
 cf. Functional Programming in C++. Ivan Čukić. November 2018 ISBN 9781617293818 
