@@ -70,9 +70,89 @@ Other operations unsafe because compiler cannot know what kind of object is real
 
 To use `void*`, we must explicitly convert it to a ptr to specific type.
 
+Primary use for `void*` is for passing pointers to functions that aren't allowed to make assumptions about type of object and for returning untyped objects from functions (e.g. Linux System Programming).
+
+Where used for optimization, `void*` can be hidden behind type-safe interface (Sec. 27.3.1).
+
+### `nullptr` 
+
+cf. 7.2.2. pp. 173-174
+
+literal `nullptr` represents null pointer, i.e. a pointer that doesn't point to an object. 
+- Can be assigned to any pointer type, but not to other built-in types.
+
+
+## Arrays
+
+cf. Stroustrup (2013), pp. 174, 7.3 Arrays
+
+If what you want is a simple fixed-length sequence of objects of a given type in memory, an array is the ideal solution.
+
+There's no array assignment.
+Name of an array implicitly converts to pointer to its first element.
+
+Avoid arrays in interfaces (e.g. as function arguments) because implicit conversion to pointer is root cause of common errors in C, C-style C++ code.
+
+Most widely used kinds of arrays is a zero-terminated array of `char`; that's the way C stores strings.
+- Often, `char*` or `const char*` assumed to point to zero-terminated sequence of characters.
+
+## String Literals
+
+A *string literal* is a character sequence enclosed within double quotes:
+```
+"this is a string"
+```
+A string literal contains 1 more character than it appears to have; it's terminated by null character, `\0`, with value `0`. e.g.
+```
+sizeof("Bohr") == 5;
+```
+
+A string literal is statically allocated, so that it's safe to return 1 from a function. e.g.
+```
+const char* error_message(int i)
+{
+  // ...
+  return "range error";
+}
+```
+
+### Larger Character Sets
+
+string with prefix `L`, e.g. `L"angst"` is string of wide characters; its type is `const wchar_t[]`
+
+TODO: take notes on Sec. 7.3.2.2, pp. 178, Stroustrup (2013)
+
+
+## Pointers into Arrays
+
+Implicit conversion of an array name to a pointer to the initial element of the array is extensively used in function calls in C-style code.
+
+There is no implicit or explicit conversion from a pointer to an array.
+
+Implicit conversion of array argument to pointer means size of array is lost to called function.
+- To determine size, C standard-library functions taking pointers to characters, `strlen()` relies on zero to indicate end-of-string
+
+## Navigating Arrays: Pointer Arithmetic
+
+cf. 7.4.1 Navigating Arrays, pp. 181, Stroustrup (2013)
+
+Efficient and elegant access to arrays is key to many algorithms (see Sec. 4.5, Ch. 32). 
+- Access can be achieved either through a pointer to an array plus index or through pointer to an element.
+  * No inherent reason why 1 version should be faster than other
+
+Subscripting a built-in array is defined in terms of the pointer operations `+` and `*`. 
+
+
+Complicated pointer arithmetic is usually unnecessary and best avoided. 
+
+Arrays *are not self-describing* because number of elements of an array isn't guaranteed to be stored with the array. 
+- This implies that to traverse asn array that doesn't contain a terminator the way C-style strings do, we must supply the number of elements.
+
+
 
 cf. Functional Programming in C++. Ivan Čukić. November 2018 ISBN 9781617293818 
 320 pages Manning Publications
+
 
 # Function objects, Ch. 3, pp. 45
 
