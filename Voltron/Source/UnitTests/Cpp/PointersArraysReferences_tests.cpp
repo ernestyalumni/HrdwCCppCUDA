@@ -348,6 +348,166 @@ BOOST_AUTO_TEST_CASE(InitializeMultidimensionalArrays)
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MultidimensionalArraysAreRowMajor)
+{
+  int ma[3][5]; // 3 arrays with 5 ints each
+
+  // Initialize array.
+  for (int i {0}; i != 3; ++i)
+  {
+    for (int j {0}; j != 5; ++j)
+    {
+      ma[i][j] = 10 * i + j;
+    }
+  }
+
+  for (int i {0}; i < 2; ++i)
+  {
+    // size of int (4 bytes) * 5 elements in a "row"
+    BOOST_TEST(byte_diff(&ma[i], &ma[i + 1]) == 20);
+  }
+
+  for (int i {0}; i < 3; ++i)
+  {
+    for (int j {0}; j < 4; ++j)
+    {
+      BOOST_TEST(byte_diff(&ma[i][j], &ma[i][j + 1]) == 4);
+    }
+  }
+
+  // Need 2nd. dimension to locate actual first element.
+  int* ptr {&ma[0][0]};
+
+  for (int k {0}; k < 15; ++k)
+  {
+    BOOST_TEST(*(ptr + k) == 10 * (k / 5) + (k - 5 * (k / 5)));
+  }
+}
+
+// cf. 7.4.3 Passing Arrays, pp. 184, Stroustrup (2013)
+
+void comp(double arg[10]) // arg is a double*
+{
+  for (int i {0}; i != 10; ++i)
+  {
+    arg[i] += 99;
+  }
+}
+
+// This function is equivalent to comp.
+void comp2(double* arg) // arg is a double*
+{
+  for (int i {0}; i != 10; ++i)
+  {
+    arg[i] += 99;
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PassArraysAsPointerToFirstElement)
+{
+  double a1[10];
+  double a2[5];
+  double a3[100];
+
+  comp(a1);
+  // The following line comp(a2) compiles
+  // comp(a2); // disaster!
+  comp(a3); // uses only the first 10 elements
+
+  for (int i {0}; i < 10; ++i)
+  {
+    a1[i] == 99;
+    a3[i] == 99;
+  }
+
+  comp2(a1);
+  comp2(a3);
+
+  for (int i {0}; i < 10; ++i)
+  {
+    a1[i] == 189;
+    a3[i] == 189;
+  }
+}
+
+// cf. 7.4.3 Passing Arrays, pp. 184-185, Stroustrup (2013)
+// If dimensions are known at compile time, passing arrays as pointer.
+
+int expected_v[3][5] {
+  {0, 1, 2, 3, 4},
+  {10, 11, 12, 13, 14},
+  {20, 21, 22, 23, 24}
+};
+
+void print_m35(int m[3][5])
+{
+  for (int i {0}; i != 3; ++i)
+  {
+    for (int j {0}; j != 5; ++j)
+    {
+      BOOST_TEST(m[i][j] == expected_v[i][j]);
+    }
+  }
+}
+
+void print_mi5(int m[][5], int dim1)
+{
+  for (int i {0}; i != dim1; ++i)
+  {
+    for (int j {0}; j != 5; ++j)
+    {
+      BOOST_TEST(m[i][j] == expected_v[i][j]);
+    }
+  }
+}
+
+// argument declaration m[][] is illegal because 2nd. dimension of a
+// multidimensional array must be known in order to find location of an element.
+//void print_mij(int m[][], int dim1, int dim2)
+// To call this function, we pass a matrix as an ordinary pointer.
+void print_mij(int* m, int dim1, int dim2)
+{
+  for (int i {0}; i != dim1; ++i)
+  {
+    for (int j {0}; j != dim2; ++j)
+    {
+      BOOST_TEST(m[i * dim2 + j] == expected_v[i][j]);
+    }
+  }
+}
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PassArraysAsPointerIfDimensionsKnown)
+{
+  int v[3][5] {
+    {0, 1, 2, 3, 4},
+    {10, 11, 12, 13, 14},
+    {20, 21, 22, 23, 24}
+  };
+
+  print_m35(v);
+  print_mi5(v, 3);
+
+  print_mij(&v[0][0], 3, 5);
+}
+
+// cf. Sec. 7.5, Pointers and const, Stroustrup (2013), pp. 186
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DeclareWithConst)
+{
+  const int model = 90; // mode is a const
+  const int v[] = {1, 2, 3, 4}; // v[i] is a const
+  //const int x; // error; no initializer
+
+}
 
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences_tests
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences

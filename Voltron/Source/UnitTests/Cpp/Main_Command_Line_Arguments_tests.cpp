@@ -10,13 +10,8 @@ BOOST_AUTO_TEST_SUITE(Main_Command_Line_Arguments_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(TemplateArgumentDeducedAsPartOfConstReferenceType)
+BOOST_AUTO_TEST_CASE(MainArguments)
 {
-  std::complex<float> c1, c2;
-  c1 = {3.0, -5.0};
-  c2 = {42.0, -69.0};
-
-  //::max(c1, c2); // ERROR at compile time.
 
   BOOST_TEST(true);
 }

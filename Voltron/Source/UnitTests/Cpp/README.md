@@ -96,7 +96,7 @@ Avoid arrays in interfaces (e.g. as function arguments) because implicit convers
 Most widely used kinds of arrays is a zero-terminated array of `char`; that's the way C stores strings.
 - Often, `char*` or `const char*` assumed to point to zero-terminated sequence of characters.
 
-## String Literals
+### String Literals
 
 A *string literal* is a character sequence enclosed within double quotes:
 ```
@@ -116,14 +116,14 @@ const char* error_message(int i)
 }
 ```
 
-### Larger Character Sets
+#### Larger Character Sets
 
 string with prefix `L`, e.g. `L"angst"` is string of wide characters; its type is `const wchar_t[]`
 
 TODO: take notes on Sec. 7.3.2.2, pp. 178, Stroustrup (2013)
 
 
-## Pointers into Arrays
+### Pointers into Arrays
 
 Implicit conversion of an array name to a pointer to the initial element of the array is extensively used in function calls in C-style code.
 
@@ -132,7 +132,7 @@ There is no implicit or explicit conversion from a pointer to an array.
 Implicit conversion of array argument to pointer means size of array is lost to called function.
 - To determine size, C standard-library functions taking pointers to characters, `strlen()` relies on zero to indicate end-of-string
 
-## Navigating Arrays: Pointer Arithmetic
+### Navigating Arrays: Pointer Arithmetic
 
 cf. 7.4.1 Navigating Arrays, pp. 181, Stroustrup (2013)
 
@@ -148,9 +148,50 @@ Complicated pointer arithmetic is usually unnecessary and best avoided.
 Arrays *are not self-describing* because number of elements of an array isn't guaranteed to be stored with the array. 
 - This implies that to traverse asn array that doesn't contain a terminator the way C-style strings do, we must supply the number of elements.
 
-## Multidimensional Arrays
+### Multidimensional Arrays
 
+Multidimensional arrays are represented as arrays of arrays; a 3-by-5 arrays is declared
+```
+int ma[3][5]; // 3 arrays with 5 ints each
+```
 
+### Passing Arrays
+
+Arrays cannot directly be passed by value.
+
+When used as function argument, first dimension of array is simply treated as a pointer. Any array bound specified is simply ignored.
+- This implies that if you want to pass a sequence of elements without losing size information, you should not pass a built-in array.
+- Instead, place array inside a class as a member (as is done for `std::array`), or define class that acts as handle (as done for `std::string`, `std::vector`)
+
+If you insist on using arrays directly,
+
+* If dimensions are known at compile time, there's no problem:
+- array or multidimensional array passed as a pointer (rather than copied; Sec. 7.4, implicit conversion of array to pointer). 
+
+For multidimensional array, first dimension of array is irrelevant to finding location of element; it simply states how many elements of appropriate type are present.
+- for example, for `ma[3][5]`, by knowing only second dimension is 5, we can locate `ma[i][5]` for any `i`. 
+
+## Pointers and `const`
+
+cf. 7.5 Pointers and `const`, pp. 186, Ch. 7, Stroustrup (2013)
+
+C++ offers 2 related meanings of "constant":
+* `constexpr` : Evaluate at compile time (Sec. 2.2.3, Sec. 10.4)
+* `const` : Do not modify in this scope (Sec. 2.2.3)
+
+`constexpr` role is to enable and ensure compile-time evaluation, whereas, 
+`const`'s primary role is to specify immutability in interfaces.
+
+Let's consider interface specification, `const`'s role
+
+Many objects don't have their values changed after initialization:
+* symbolic constants lead to more maintainable code than using literals directly in code
+* many pointers often read through but never written through.
+* most function parameters are read but not written to.
+
+When using a pointer, 2 objects are involved; pointer itself and object pointed to.
+"Prefixing" a declaration of a pointer with `const` makes object, but not the pointer, a constant.
+To declare a pointer itself, rather than the object pointed to, to be a constant, we use declarator operator `*const` instead of plain `*`.
 
 # Main function, command line, Program arguments
 
