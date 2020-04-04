@@ -193,6 +193,29 @@ When using a pointer, 2 objects are involved; pointer itself and object pointed 
 "Prefixing" a declaration of a pointer with `const` makes object, but not the pointer, a constant.
 To declare a pointer itself, rather than the object pointed to, to be a constant, we use declarator operator `*const` instead of plain `*`.
 
+An object that's constant when accessed through 1 pointer may be variable when accessed in other ways. This is particularly useful for function arguments. 
+- By declaring a pointer argument `const`, function is prohibited from modifying the object pointed to.
+
+You can assign address of non-`const` variable to a pointer to constant because no harm can come from that.
+- However, address of constant cannot be assigned to an unrestricted pointer because this would allow object's value to be changed.
+
+It's possible, by typically unwise, to explicitly remove restrictions on pointer to `const` by explicit type conversion (Sec. 16.2.9, Sec. 11.5)
+
+## Pointers and Ownership
+
+It's usually a good idea to immediately place a pointer that represents ownership in a (resource handle) class, such as `std::vector`, `std::string`, and `std::unique_ptr`. That way, we can assume that every pointer that isn't within a resource handle isn't an owner and must not be `delete`d. 
+
+Ch. 13 discusses resource management. (summary; use RAII)
+
+## References
+
+A pointer allows us to pass potentially large amounts of data around at low cost: instead of copying data, simply pass its address as a pointer value.
+
+Using a pointer differes from using name of an object:
+* We can make a pointer point to different objects at different times
+* We must be more careful when using pointers than when using an object directly; pointer may be a `nullptr` or point to an object that wasn't the one we expected.
+
+
 # Main function, command line, Program arguments
 
 cf. [Main function](https://en.cppreference.com/w/cpp/language/main_function)

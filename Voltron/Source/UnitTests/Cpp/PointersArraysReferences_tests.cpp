@@ -499,6 +499,26 @@ BOOST_AUTO_TEST_CASE(PassArraysAsPointerIfDimensionsKnown)
 
 // cf. Sec. 7.5, Pointers and const, Stroustrup (2013), pp. 186
 
+void f1(char* p)
+{
+  char s[] = "Gorm";
+  const char* pc = s; // pointer to constant
+
+  const char* pc2 {s}; 
+  // pc[3] = 'g'; // error: pc points to constant
+
+  pc = p; // OK
+  
+  char* const cp = s; // constant pointer
+  cp[3] = 'a'; // OK
+  // cp = p; // error: cp is constant
+
+  const char* const cpc = s; // const pointer to const
+  //cpc[3] = 'a'; // error: cpc points to constant
+  //cpc = p; // error: cpc is constant  
+
+}
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DeclareWithConst)
@@ -507,7 +527,23 @@ BOOST_AUTO_TEST_CASE(DeclareWithConst)
   const int v[] = {1, 2, 3, 4}; // v[i] is a const
   //const int x; // error; no initializer
 
+  char* p;
+
+  f1(p);
+
+  char* const cp; // const pointer to char
+  char const* pc; // pointer to const char
+  const char* pc2; // pointer to const char
+
+  BOOST_TEST(true);
 }
+
+// This 1st version is used for strings where elements mustn't be modified and
+// returns a pointer to const that does not allow modification.
+const char* strchr(const char* p, char c); // find first occurrence of c in p
+
+// 2nd version used for mutable strings
+char* strchr(char* p, char c);
 
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences_tests
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences
