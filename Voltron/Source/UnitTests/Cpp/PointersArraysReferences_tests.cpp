@@ -14,7 +14,7 @@ BOOST_AUTO_TEST_SUITE(PointersArraysReferences_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(Declarations)
+BOOST_AUTO_TEST_CASE(PointerDeclarations)
 {
   // cf. Stroustrup (2013). 6.3.1, pp. 153. Definition of an array of C-style
   // strings.

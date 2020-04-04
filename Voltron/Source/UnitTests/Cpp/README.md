@@ -152,6 +152,23 @@ Arrays *are not self-describing* because number of elements of an array isn't gu
 
 
 
+# Main function, command line, Program arguments
+
+cf. [Main function](https://en.cppreference.com/w/cpp/language/main_function)
+
+```
+int main(int argc, char* argv[]) { // body }
+```
+`argc` - Non-negative value representing number of arguments passed to program from environment in which program is run.
+
+`argv` - Pointer to first element of an array of `argc + 1` pointers, of which last one is null and previous ones, if any, point to null-terminated multibyte strings that represent arguments passed to program.
+
+If `argv[0]` is not null pointer (or, equivalently, if `argc > 0`). It points to string that represents name used to invoke the program, or to an empty string.
+
+`argv[0]` is pointer to initial character of a null-terminated multibyte string that represents name used to invoke program itself (or an empty string `""` if these is not supported by execution environment).
+
+The strings are modifiable.
+
 cf. Functional Programming in C++. Ivan Čukić. November 2018 ISBN 9781617293818 
 320 pages Manning Publications
 

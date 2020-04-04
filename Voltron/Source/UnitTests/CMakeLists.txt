@@ -24,6 +24,7 @@ ADD_EXECUTABLE(Check
   Cpp/Closure_tests.cpp
   Cpp/Functions_tests.cpp
   Cpp/Keywords_tests.cpp
+  Cpp/Main_Command_Line_Arguments_tests.cpp
   Cpp/PointersArraysReferences_tests.cpp
   Cpp/Recursion_tests.cpp
   Cpp/IO/IO_tests.cpp
