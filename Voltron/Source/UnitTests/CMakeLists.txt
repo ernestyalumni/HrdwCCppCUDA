@@ -24,7 +24,7 @@ ADD_EXECUTABLE(Check
   Cpp/Closure_tests.cpp
   Cpp/Functions_tests.cpp
   Cpp/Keywords_tests.cpp
-  Cpp/Main_Command_Line_Arguments_tests.cpp
+  Cpp/MainCommandLineArguments_tests.cpp
   Cpp/PointersArraysReferences_tests.cpp
   Cpp/Recursion_tests.cpp
   Cpp/IO/IO_tests.cpp
@@ -56,6 +56,9 @@ ADD_EXECUTABLE(Check
   Utilities/StdTuple_tests.cpp
   Utilities/ToBytes_test.cpp
   Utilities/ToHexString_tests.cpp)
+
+ADD_EXECUTABLE(CommandLineArguments
+  MainCommandLineArguments.cpp)
 
 TARGET_LINK_LIBRARIES(Check
   Algorithms

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// \file Main_Command_Line_tests.cpp
+/// \file MainCommandLine_tests.cpp
 /// \ref Bjarne Stroustrup. The C++ Programming Language, 4th Edition.
 /// Addison-Wesley Professional. May 19, 2013. ISBN-13: 978-0321563842
 //------------------------------------------------------------------------------
