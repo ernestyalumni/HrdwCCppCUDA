@@ -44,6 +44,12 @@ ENDIF()
 # Include directories so that header files can be found.
 INCLUDE_DIRECTORIES(BOOST_INCLUDES ${Boost_INCLUDE_DIRS})
 
+# cf. https://cmake.org/cmake/help/latest/command/include_directories.html?highlight=s
+# Add given directories to those compiler uses to search for include files.
+# Relative paths are interpreted as relative to current source directory.
+# If SYSTEM option given, compiler told directories meant as system include directories in some platforms.
+INCLUDE_DIRECTORIES(SYSTEM ThirdParty)
+
 # Calls a CMake module that first, searches the file system for the appropriate
 # threads package for this platform, and then sets CMAKE_THREAD_LIBS_INIT
 # variable (and other variables as well).

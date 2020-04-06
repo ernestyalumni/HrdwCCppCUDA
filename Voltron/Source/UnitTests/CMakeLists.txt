@@ -60,6 +60,9 @@ ADD_EXECUTABLE(Check
 ADD_EXECUTABLE(CommandLineArguments
   MainCommandLineArguments.cpp)
 
+ADD_EXECUTABLE(TClapping
+  MainTClap.cpp)
+
 TARGET_LINK_LIBRARIES(Check
   Algorithms
   Hierarchy
