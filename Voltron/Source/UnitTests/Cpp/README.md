@@ -211,9 +211,37 @@ Ch. 13 discusses resource management. (summary; use RAII)
 
 A pointer allows us to pass potentially large amounts of data around at low cost: instead of copying data, simply pass its address as a pointer value.
 
-Using a pointer differes from using name of an object:
+Using a pointer differs from using name of an object:
 * We can make a pointer point to different objects at different times
 * We must be more careful when using pointers than when using an object directly; pointer may be a `nullptr` or point to an object that wasn't the one we expected.
+
+*reference* - alias for an object, usually implemented to hold machine address of an object, and doesn't impose performance overhead compared to pointers.
+
+reference differs from a pointer in that:
+* You access reference with exactly the same syntax as name of any object
+* reference always refers to the object to which it was initialized.
+* There's no "null reference," and we may assume that a reference refers to an object (Sec. 7.7.4)
+
+Main use of references is for
+* specifying arguments and return values for functions in general, and for
+* overloaded operators (Ch. 18), in particular
+
+e.g.
+```
+template <class T>
+class vector
+{
+  T* elem;
+  // ...
+
+  public:
+    T& operator[](int i) { return elem[i]; } // return reference to element
+    const T& operator[](int i) const { return elem[i]; } // return reference to const element
+
+    void push_back(const T& a); // pass element to be added by reference
+    //...
+};
+```
 
 
 # Main function, command line, Program arguments
@@ -235,6 +263,19 @@ If `argv[0]` is not null pointer (or, equivalently, if `argc > 0`). It points to
 The strings are modifiable.
 
 ## Command-Line Arguments
+
+cf. pp. 253, 10.2.7 Command-Line Arguments, Stroustrup (2013)
+
+`main()` is given 2 arguments, `argc` - number of arguments, and
+an array of arguments, `argv`. 
+  - arguments are C-style character strings (Sec. 2.2.5, Sec. 7.3), so type of `argv` is `char*[argc + 1]`.
+
+name of program (as it occurs on command line) is passed as `argv[0]`, so `argc` always is at least 1.
+
+List of arguments is zero-terminated; i.e. `argv[argc] == 0`
+
+Idea is to read from command string in same way that we read from the input stream. 
+- A stream that reads from a string is `istringstream` (Sec. 38.2.2)
 
 
 

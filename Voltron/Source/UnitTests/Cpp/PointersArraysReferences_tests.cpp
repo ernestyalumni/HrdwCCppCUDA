@@ -531,7 +531,10 @@ BOOST_AUTO_TEST_CASE(DeclareWithConst)
 
   f1(p);
 
-  char* const cp; // const pointer to char
+  // error: uninitalized const
+  //char* const cp; // const pointer to char
+  char* const cp {p};
+
   char const* pc; // pointer to const char
   const char* pc2; // pointer to const char
 
@@ -544,6 +547,33 @@ const char* strchr(const char* p, char c); // find first occurrence of c in p
 
 // 2nd version used for mutable strings
 char* strchr(char* p, char c);
+
+BOOST_AUTO_TEST_SUITE(References)
+
+void f(std::vector<double>& v)
+{
+  double d1 = v[1]; // copy the value of the double referred to by
+  // v.operator[](1) into d1
+  v[2] = 7;
+
+  v.push_back(d1); // give push_back() a reference to d1 to work with
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ReferenceUsedToSpecifyArguments)
+{
+  std::vector<double> v {0.0, 1.2, 1.3};
+  BOOST_TEST_REQUIRE(v.size() == 3);
+  f(v);
+  BOOST_TEST(v[0] == 0.0);
+  BOOST_TEST(v[1] == 1.2);
+  BOOST_TEST(v[2] == 7);
+  BOOST_TEST(v[3] == 1.2);  
+  BOOST_TEST(v.size() == 4);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // References
 
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences_tests
 BOOST_AUTO_TEST_SUITE_END() // PointersArraysReferences
