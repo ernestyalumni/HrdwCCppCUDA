@@ -55,7 +55,7 @@ cf. 1.2 Template Argument Deduction, VJG (2017), pp. 7
 
 When we call a function template for some arguments, template parameters are determined by the arguments we pass.
 
-However, `T` might only be "part" of the type. e.g. if we declare `max()~ to use constant references:
+However, `T` might only be "part" of the type. e.g. if we declare `max()~` to use constant references:
 ```
 template <typename T>
 T max (T const& a, T const& b)
@@ -98,3 +98,22 @@ However, following are errors:
   // 3. Specify that parameters may have different types.
   
   BOOST_TEST(true);
+
+Sec. 1.3, pp. 9, will elaborate on these options. Sec. 7.2 on pp. 108 and Ch. 15 will discuss rules for type conversions during type deduction in detail.
+
+
+#### Type Deduction for Default Arguments
+
+Type deduction doesn't work for default call arguments.
+
+To support this case, you also have to declare a default argument for template parameter, which will be discussed in Sec. 1.4 on pp. 13.
+
+### Multiple Template Parameters
+
+So far, function templates have 2 distinct sets of parameters:
+1. *Template parameters*, which are declared in angle brackets before function template name
+2. *Call parameters*, which are declared in parentheses after function template name:
+```
+T max(T a, T b) // a and b are call parameters
+```
+

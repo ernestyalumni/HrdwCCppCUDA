@@ -142,7 +142,37 @@ BOOST_AUTO_TEST_CASE(TypeConversionsDuringTypeDeductionByValueDecay)
   BOOST_TEST(true);
 }
 
+template <typename T>
+void f(T ="")
+{
+  return;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TypeDeductionForDefaultArguments)
+{
+  f(1); // OK: deduced T to be int, so that it calls f<int>(1)
+  //  error: no matching function for call to ‘f()’
+  //f(); // ERROR: cannot deduce T
+}
+
+// Declare argument for the template parameter.
+template <typename T = std::string>
+void f1(T ="")
+{
+  return;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TypeDeductionForDefaultTemplateArgument)
+{
+  f1(); // OK
+}
+
 BOOST_AUTO_TEST_SUITE_END() // Max_tests
+
 BOOST_AUTO_TEST_SUITE_END() // FunctionTemplates
 BOOST_AUTO_TEST_SUITE_END() // Templates
 BOOST_AUTO_TEST_SUITE_END() // Cpp
