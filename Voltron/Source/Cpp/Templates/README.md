@@ -117,3 +117,14 @@ So far, function templates have 2 distinct sets of parameters:
 T max(T a, T b) // a and b are call parameters
 ```
 
+# Nontype (Non-Type) template parameters
+
+```
+// Pointers to functions.
+// \ref https://en.cppreference.com/w/cpp/language/template_parameters
+template<typename X, typename FX, FX (*ObjectMap)(const X&)>
+FX object_map(const X& x)
+{
+  return (*ObjectMap)(x);
+}
+```
