@@ -117,6 +117,27 @@ So far, function templates have 2 distinct sets of parameters:
 T max(T a, T b) // a and b are call parameters
 ```
 
+If you use 1 of the parameter types as return type, argument for other parameter might get converted to this type, regardless of caller's intention.
+
+different ways to deal with this problem:
+* Introduce 3rd template parameter for return type.
+* Let compiler find out return type
+* Declare return type to be "common type" of 2 parameter types.
+
+#### Template Parameters for Return Types
+pp. 10. Ch. 1: Function Templates, VJG
+
+Template argument deduction doesn't take return types into account
+- Deduction can be seen as part of overload resolution - a process that's not based on selction of return types. 
+  * sole exception is return type of conversion operator members.
+
+If template argument, e.g. `RT` doesn't appear in types of function call parameters, in C++, return type can't be deduced from context in which caller uses the call.
+
+
+### Overloading Function Templates
+
+A nontemplate function can coexist with a function template that has same name and can be instantiated with same type. All other factors being equal, overload resolution process prefers nontemplate over one generated from template.
+
 # Nontype (Non-Type) template parameters
 
 ```

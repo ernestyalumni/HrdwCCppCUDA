@@ -155,6 +155,7 @@ BOOST_AUTO_TEST_CASE(TypeDeductionForDefaultArguments)
   f(1); // OK: deduced T to be int, so that it calls f<int>(1)
   //  error: no matching function for call to ‘f()’
   //f(); // ERROR: cannot deduce T
+  BOOST_TEST(true);
 }
 
 // Declare argument for the template parameter.
@@ -169,7 +170,24 @@ void f1(T ="")
 BOOST_AUTO_TEST_CASE(TypeDeductionForDefaultTemplateArgument)
 {
   f1(); // OK
+  BOOST_TEST(true);
 }
+
+// pp. 15, Sec. 1.5 Overloaindg Function Templates
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(OverloadingFunctionTemplates)
+{
+  BOOST_TEST(max(7, 42) == 42); // calls nontemplate for 2 ints.
+  BOOST_TEST(max(7.0, 42.0) == 42.0); // call max <double> (by argument
+    //deduction)
+  BOOST_TEST(max('a', 'b') == 'b'); // calls max<char> (by argument deduction)
+  BOOST_TEST(max<>(7, 42) == 42); // call max<int> (by argument deduction)
+  BOOST_TEST(max<double>(7, 42) == 42.0); // calls max<double> (no argument
+  // deduction)
+  BOOST_TEST(max('a', 42.7) == 97); // call the nontemplate for two ints 
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // Max_tests
 
