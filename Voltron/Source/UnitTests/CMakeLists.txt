@@ -18,6 +18,7 @@ ADD_EXECUTABLE(Check
   Algorithms/Sorting_tests.cpp
   Categories/AlgebraicDataTypes/ProgramStateExample_tests.cpp
   Categories/AlgebraicDataTypes/WordCountingState_tests.cpp
+  Categories/Category_tests.cpp
   Categories/Functors_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
