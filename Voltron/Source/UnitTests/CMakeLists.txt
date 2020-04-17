@@ -20,6 +20,7 @@ ADD_EXECUTABLE(Check
   Categories/AlgebraicDataTypes/WordCountingState_tests.cpp
   Categories/Category_tests.cpp
   Categories/Functors_tests.cpp
+  Categories/Monads/OptionalMonad_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
   Cpp/Closure_tests.cpp
