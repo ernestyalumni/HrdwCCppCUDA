@@ -282,7 +282,6 @@ Idea is to read from command string in same way that we read from the input stre
 cf. Functional Programming in C++. Ivan Čukić. November 2018 ISBN 9781617293818 
 320 pages Manning Publications
 
-
 # Function objects, Ch. 3, pp. 45
 
 See `Functions_tests.cpp`.
@@ -417,7 +416,33 @@ https://en.wikipedia.org/wiki/Coproduct
 
 cf. 9.1.1. Sum types through inheritance, Cukic, pp. 177
 
+# Functors, Monads
 
+cf. Ch. 10 of Ivan Čukić, **Functional Programming in C++**,  Manning Publications; 1st edition (November 19, 2018). ISBN-13: 978-1617293818
+
+## Writer Monad, handling state with monads
+
+Look back at Ch. 5, idea of handling mutable state by creating new worlds, instead of changing the current one. (??)
+
+Look back `user_full_name`, `to_html` functions. Reuse them.
+This time, don't handle failures; instead keep a debugging log of operations performed.
+- This log is the state you want to change.
+Instead of using `optional` or `expected`, which are union types that can contain either a value or something denoting an error,
+you'll want a product type that contains both the value and the additional information (debugging log) at the same time.
+
+### Composition with Writer Monad
+
+If you want to easily compose these 2 functions, you'll need to make a monad out of `WithLog` (See Fig. 10.13 of Čukić (2018))
+- copy resulting value from `WithLog` object that's the result of transformation. 
+  e.g. Douglas Adams |-> Douglas Adams
+- log just can't be copied; need to merge old log with log you got from transformation.
+
+What Čukić calls the `transform` is the morphism map for the endofunctor.
+
+
+## Handling state with monads
+
+cf. 10.6 "Handling state with monads", pp. 216, Čukić (2018)
 
 # Template metaprogramming, Ch. 11, pp. 226
 
