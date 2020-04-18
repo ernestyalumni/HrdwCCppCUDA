@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 
+using Categories::Monads::ReaderMonad::apply_morphism;
 using Categories::Monads::ReaderMonad::ask;
 using Categories::Monads::ReaderMonad::return_;
 using Categories::Monads::ReaderMonad::unit;
@@ -24,6 +25,8 @@ struct TestEnvironment
 };
 
 TestEnvironment initial_test_environment {false, 42.0, "Start"};
+const TestEnvironment test_environment {true, 1.616, "Middle"};
+
 
 // Test morphisms.
 
@@ -51,8 +54,6 @@ BOOST_AUTO_TEST_SUITE(Morphisms_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(TestMorphismsMapEnvironmentToCategoryObjectType)
 {
-  const TestEnvironment test_environment {true, 1.616, "Middle"};
-
   BOOST_TEST(r(initial_test_environment) == 0.0);
   BOOST_TEST(r(test_environment) == 1.616);
   BOOST_TEST(s(initial_test_environment) == "Go back.");
@@ -91,6 +92,19 @@ BOOST_AUTO_TEST_CASE(AskReturnsEnvironmentAsIdentity)
   BOOST_TEST(result.s_ == "Start");
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ApplyMorphismReturnsValueOfTypeX)
+{
+  {
+    const auto result = apply_morphism(r, initial_test_environment);
+    BOOST_TEST(result == 0.0);
+  }
+  {
+    const auto result = apply_morphism(r, test_environment);
+    BOOST_TEST(result == 1.616);
+  }
+}
 
 BOOST_AUTO_TEST_SUITE_END() // Morphisms_tests
 

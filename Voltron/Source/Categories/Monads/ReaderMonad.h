@@ -18,9 +18,9 @@ namespace ReaderMonad
 
 // What Haskell/Functional Programming calls "return"
 template <typename X, typename E>
-auto unit(const X& x)
+auto unit(const X x)
 {
-  return [&x](const E& e)
+  return [x](const E& e)
   {
     return x;
   };
@@ -50,6 +50,15 @@ X evaluate_endomorphism(TX tx, const E& environment)
   return tx(environment);
 }
 */
+
+template <
+  typename E,
+  typename EToX
+  >
+auto apply_morphism(EToX e_to_x, const E& environment)
+{
+  return e_to_x(environment);
+}
 
 auto runReader = [](auto ra, auto environment)
 {
