@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// \file PointersArraysReferences_tests.cpp
+/// \file OptionalMonad_tests.cpp
 /// \ref Ivan Čukić, Functional Programming in C++,  Manning Publications;
 /// 1st edition (November 19, 2018). ISBN-13: 978-1617293818
 //------------------------------------------------------------------------------
@@ -52,13 +52,34 @@ std::optional<std::string> usable_to_html(const std::string& text)
 // T : X \to T(X), where T(X) is of type std::optional
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(TestFunctionBehavesAsAMorphism)
+BOOST_AUTO_TEST_CASE(TestFunctionsBehavesAsAMorphism)
 {
-  const std::string test_name {"Jean-Francois Roberval"};
-  // result of morphism f of type T(Y), as f : X \to T(Y)
-  const auto result = usable_user_full_name(test_name);
-  BOOST_TEST(static_cast<bool>(result));
-  BOOST_TEST((result.value() == "Jean-Francois Roberval"));
+  {
+    const std::string test_name {"Jean-Francois Roberval"};
+    // result of morphism f of type T(Y), as f : X \to T(Y)
+    const auto result = usable_user_full_name(test_name);
+    BOOST_TEST(static_cast<bool>(result));
+    BOOST_TEST((result.value() == "Jean-Francois Roberval"));
+  }
+  {
+    const std::string test_name {"None"};
+    // result of morphism f of type T(Y), as f : X \to T(Y)
+    const auto result = usable_user_full_name(test_name);
+    BOOST_TEST(!static_cast<bool>(result));
+  }
+  {
+    const std::string test_address {"lapresse.ca"};
+    // result of morphism f of type T(Y), as f : X \to T(Y)
+    const auto result = usable_to_html(test_address);
+    BOOST_TEST(static_cast<bool>(result));
+    BOOST_TEST((result.value() == "lapresse.ca"));    
+  }
+  {
+    const std::string test_address {"No address"};
+    // result of morphism f of type T(Y), as f : X \to T(Y)
+    const auto result = usable_to_html(test_address);
+    BOOST_TEST(!static_cast<bool>(result));
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -68,11 +89,29 @@ BOOST_AUTO_TEST_CASE(EndomorphismMorphismMapWorksOnFunctionReturningStdOptional)
   const auto test_full_name =
     std::make_optional<std::string>("Jacques Cartier");
 
+  BOOST_TEST_REQUIRE((test_full_name.value() == "Jacques Cartier"));
+  BOOST_TEST_REQUIRE(static_cast<bool>(test_full_name));
+
   const auto result =
     endomorphism_morphism_map(test_full_name, usable_user_full_name);
 
   BOOST_TEST(static_cast<bool>(result));
   BOOST_TEST((result.value() == test_full_name.value()));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ComposeMorphismMapWithMultiplicationComponent)
+{
+  const auto test_full_name =
+    std::make_optional<std::string>("Samuel de Champlain");
+
+  const auto result =
+    multiplication_component(
+      endomorphism_morphism_map(test_full_name, usable_user_full_name));
+
+  BOOST_TEST(static_cast<bool>(result));
+  BOOST_TEST((result.value() == test_full_name.value()));  
 }
 
 //------------------------------------------------------------------------------

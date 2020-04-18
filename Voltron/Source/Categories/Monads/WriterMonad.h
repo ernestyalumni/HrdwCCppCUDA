@@ -9,10 +9,13 @@
 #define CATEGORIES_MONADS_WRITER_MONAD_H
 
 #include <string>
+#include <type_traits>
 
 namespace Categories
 {
 namespace Monads
+{
+namespace WriterMonad
 {
 
 // cf. Sec. 10.6 Handling state with monads, pp. 216, Ch. 10 Monads of Čukić
@@ -79,6 +82,54 @@ Ret mbind(const WithLog<T>& val, F f)
     val.log() + result_with_log.log());
 }
 
+// This is the Cartesian product of W and X, W x X
+template <typename X, typename W>
+class WriterMonadEndomorphism
+{
+  public:
+
+    WriterMonadEndomorphism(const X value, const W& log) :
+      value_{value},
+      log_{log}
+    {}
+
+    explicit WriterMonadEndomorphism(const X value) :
+      value_{value},
+      log_{W{}}
+    {}
+
+    X value() const
+    {
+      return value_;
+    }
+
+    W log() const
+    {
+      return log_;
+    }
+
+  private:
+
+    X value_;
+    W log_;
+};
+
+// T is the endomorphism
+template <typename X, typename T>
+T unit(const X x)
+{
+  return T{x};
+}
+
+template <typename Morphism, typename T>
+T bind(const T& tx, Morphism f)
+{
+  const auto ty = f(tx.value());
+
+  return T{ty.value(), tx.log() + ty.log()};
+}
+
+} // namespace WriterMonad
 } // namespace Monads
 } // namespace Categories
 
