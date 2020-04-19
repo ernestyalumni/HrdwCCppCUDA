@@ -51,6 +51,8 @@ X evaluate_endomorphism(TX tx, const E& environment)
 }
 */
 
+// TODO: Make this work
+
 template <
   typename E,
   typename EToX
@@ -60,18 +62,35 @@ auto apply_morphism(EToX e_to_x, const E& environment)
   return e_to_x(environment);
 }
 
-auto runReader = [](auto ra, auto environment)
+template <
+  typename E,
+  typename EToX,
+  typename Morphism
+  >
+auto bind(EToX e_to_x, Morphism f)
 {
-  return ra(environment);
+  return [e_to_x, f](const E& environment)
+  {
+    return apply_morphism<E, EToX>(
+      f(apply_morphism<E, EToX>(e_to_x, environment)),
+      environment);
+  };
+}
+
+// "runReader" as Haskell/Functional Programming programmers would call it.
+auto map_morphism = [](auto e_to_x, auto environment)
+{
+  return e_to_x(environment);
 };
 
-auto bind = [](auto ra, auto f)
+auto bind_ = [](auto e_to_x, auto f)
 {
-  return [ra, f](auto environment)
+  return [e_to_x, f](auto environment)
   {
-    return runReader(f(runReader(ra, environment)), environment);
+    return map_morphism(f(map_morphism(e_to_x, environment)), environment);
   };
 };
+
 
 } // namespace ReaderMonad
 } // namespace Monads

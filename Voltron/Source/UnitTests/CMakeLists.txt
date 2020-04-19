@@ -22,6 +22,7 @@ ADD_EXECUTABLE(Check
   Categories/Functors_tests.cpp
   Categories/Monads/OptionalMonad_tests.cpp
   Categories/Monads/ReaderMonad_tests.cpp
+  Categories/Monads/StateMonad_tests.cpp
   Categories/Monads/WriterMonad_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
