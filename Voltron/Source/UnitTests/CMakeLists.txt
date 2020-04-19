@@ -41,6 +41,7 @@ ADD_EXECUTABLE(Check
   Cpp/Templates/Template_Metaprogramming_tests.cpp
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
+  Cpp/Threads/Future_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp

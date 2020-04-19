@@ -1,7 +1,8 @@
 //------------------------------------------------------------------------------
 /// \file ReaderMonad.h
 /// \author Ernest Yeung
-/// \brief
+/// \brief Reader Monad
+/// \ref https://www.slideshare.net/ovidiuf/monadic-computations-in-c14
 ///-----------------------------------------------------------------------------
 #ifndef CATEGORIES_MONADS_READER_MONAD_H
 #define CATEGORIES_MONADS_READER_MONAD_H
