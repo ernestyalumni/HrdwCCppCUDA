@@ -55,6 +55,7 @@ ADD_EXECUTABLE(Check
   Utilities/BitsStream_tests.cpp
   Utilities/BooleanAlgebra_tests.cpp
   Utilities/Curry_test.cpp
+  Utilities/FloatingPoint_tests.cpp
   Utilities/FunctionObject_test.cpp
   Utilities/LazyValuation_tests.cpp
   Utilities/NarrowCast_test.cpp
@@ -72,6 +73,7 @@ ADD_EXECUTABLE(TClapping
 
 TARGET_LINK_LIBRARIES(Check
   Algorithms
+#  Cpp
   Hierarchy
   Tools
   Utilities

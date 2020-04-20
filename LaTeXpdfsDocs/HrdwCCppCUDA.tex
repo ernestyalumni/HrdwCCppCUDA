@@ -1530,6 +1530,239 @@ Given address $a$,
 
 \part{Floating Point Numbers}
 
+\section{Floating point, IEEE Floating}
+
+IEEE Standard 754
+
+Recall our previous notation for the sum representation of a number $c$:
+
+\begin{equation}
+c = \sum_{i=1}^n d_i b^{n-i}; \qquad \, 0 \leq d_i < b , \quad \forall \, i = 1\dots n 
+\end{equation}
+e.g.
+\[
+c = 42_{10} = 4 \cdot 10^{2-1} + 2\cdot 10^{2-2} = d_1 b^{n-1} + d_2 b^{n-2}
+\]
+By writing the exponent to be $n-i$, then we can write the digit representing the largest value in the summation "starting from the left" as such: \\
+\[
+c = (d_1, d_2, \dots d_{n-1}, d_n)
+\]
+e.g. $(4, 2) = 42$.
+
+However, the \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_4-429h.pdf}{CS429h} lectures uses the following notation for the \texttt{unsigned int}:
+
+\[
+B2U(X) = \sum_{i=0}^{w-1} x_i 2^i \text{ or } (x_{w-1}, x_{w-2}, \dots x_1, x_0) \mapsto \sum_{i=0}^{w-1} x_i 2^i
+\]
+e.g. $(x_3, x_2, x_1, x_0) = (1, 0, 1, 1) \mapsto x_0 2^0 + x_1 2^1 + x_2 2^2 + x_3 2^3$
+
+\subsection{Fractional Binary Numbers}
+
+\subsubsection{Representation}
+
+Bits to right of "binary point" represent fractional powers of 2. \\
+Binary number is used to represent a rational number, which in turn is a floating-point \emph{representation}. 
+\begin{equation}
+\sum_{k=-j}^i b_k \cdot 2^k \equiv \sum_{k=-M}^N b_k 2^k
+\end{equation}
+\begin{equation}
+b \equiv (b_N, b_{N-1}, \dots b_1, b_0, b_{-1}, \dots b_{-M}) \mapsto \sum_{k=-M}^n b_k 2^k \equiv c
+\end{equation}
+
+i.e. 
+\[
+\sum_{k=-M}^N b_k 2^k = b_N \cdot 2^N + b_{N-1} 2^{N-1} + \dots + b_1 \cdot 2 + b_0 \cdot 1 + b_{-1} \cdot \frac{1}{2} + \dots + b_{-M} \cdot 2^{-M}
+\]
+e.g. $101.11_2 \mapsto 5 \frac{3}{4} $ 
+
+Divide by 2 by shifting right: 
+\begin{equation}
+\begin{gathered} 
+\frac{c}{2} = \sum_{k=-M}^N b_k 2^k/2 = \sum_{k=-M-1}^{N-1} b_{k+1} 2^k \\	
+(b_N, b_{N-1}, \dots b_{-M}) \xrightarrow{ \cdot \frac{1}{2}} (0, b_N, b_{N-1}, \dots b_{-M-1}, b_{-M})
+\end{gathered} 
+\end{equation}
+
+Multiply by 2 by shifting left:
+
+\begin{equation}
+\begin{gathered}
+2  \cdot c = \sum_{k=-M}^N b_k \cdot 2^k \cdot 2 = \sum_{k=-M+1}^{N+1} b_{k-1} 2^k \\
+(b_N, b_{N-1}, \dots b_{-M}) \xrightarrow{ \cdot 2} (b_N, b_{N-1}, \dots b_{-M} , 0)
+\end{gathered}
+\end{equation}
+
+This implies that we first choose the "most significant bit", the digit $b_k$ representing the largest value in the sum representation to start from the \emph{left}.
+
+Numbers of form $0.111111\dots_2$ just below 1.0 (remember those are bits, 0 or 1).
+
+\[
+\frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \dots + \frac{1}{2^{M}} + \dots \to 1.0
+\]
+Use $1.0 - \epsilon$ notation.
+
+\subsubsection{Limitation of representable numbers}
+
+Can only exactly represent numbers of form $\frac{x}{2^k}$
+
+The other numbers have repeating bit representations.
+
+\begin{center}
+	\begin{tabular}{ l | l }
+		\hline
+		Value & Representation \\ \hline
+		$\frac{1}{3}$ & $0.0101010101[01]\dots_2$ \\ 
+		$\frac{1}{5}$ & $0.001100110011[0011] \dots 2$ \\
+		$\frac{1}{10}$ & $0.0001100110011[0011] \dots_2$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\subsubsection{Floating Point Representation}
+
+\emph{Numerical Form}: 
+\begin{equation}
+-1^s \, M \, 2^E
+\end{equation}
+where \\
+
+sign bit $s$, $+1$ or $-1$ \\
+significand (mantissa, or coefficient) $M$, normally a fractional value in range $[1.0, 2.0)$ \\
+Exponent $E$ weights value by power of $2$. \\
+
+From \href{https://en.wikipedia.org/wiki/Floating-point_arithmetic}{wikipedia}, 
+\begin{equation}\label{Eqn:FloatingPointRepresentationExplicit}
+\frac{s}{b^{p-1}} \cdot b^e
+\end{equation}
+where $s$ significand (ignoring an implied decimal point), $p$ precision (number of digits in significand), base $b$.
+
+e.g.
+\[
+1.528535047 \times 10^5 = \frac{ 1528535047 }{ 10^9 } \times 10^5
+\]
+
+Another example:
+\[
+\begin{gathered}
+\left( \sum_{n=0}^{p-1} c_n 2^{-n} \right) \times 2^e = \\
+(1 \times 2^{-0} + 1.2^{-1} + 0\cdot 2^{-2} + 0 \cdot 2^{-3} + 1\cdot 2^{-4} + \dots + 1\cdot 2^{-23}) \times 2^1 \\
+\approx 1.5707964 \times 2 \approx 3.1415928
+\end{gathered}
+\]
+
+For the encoding of this numerical form, \\
+
+Most significant bit (MSB) is sign bit. \\
+
+$\exp$ field encodes $E$ \\
+frac field encodes $M$ \\
+
+\[
+s \qquad \, \exp \qquad \, \qquad \qquad \text{frac} \qquad 
+\]
+
+\emph{Sizes} for the encoding:
+
+Single precision: 8 exp bits, 23 frac bits; 31 bits + 1 s bit = 32 bit \\
+and so \\
+$2^{8-1}$ \\
+\[
+\sum_{i=0}^{M-1} c_i 2^{-i} \xrightarrow{\text{max}} 2^{M-1} = 2^{23-1}
+\]
+
+Double precision: 11 exp bits, 52 frac bits; 63 bits + 1 s bit = 64 bits \\
+$2^{\text{exp} - 1} = 2^{11 - 1} = 1024$. This is the max value of $e$ in decimal. \\
+$2^{M-1} = 2^{52- 1}$
+
+\subsubsection{"Normalized" Numeric Values}
+
+Condition: \\
+\[
+\text{exp} \neq 000\dots 0 \text{and } \text{exp} \neq 111 \dots 1
+\]
+
+Exponent coded as biased value: \\
+\begin{equation}
+E = \text{Exp} - \text{Bias} 
+\end{equation}
+Exp: unsigned value determined by exp \\
+Bias: Bias value \\
+
+Note that $E$ is the actual value desired, e.g. $2^{13} = 2^{E}$, whereas $\text{Exp}$ is the actual binary representation.
+
+\begin{itemize}
+	\item Single precision: 127 (Exp: $1\dots 254$, E: $-126 \dots 127$) 
+	\item Double precision: 1023 (Exp: $1\dots 2046$, E: $-1022 \dots 1023$) 
+\end{itemize}
+In general
+\begin{equation}
+\text{Bias} = 2^{e-1} - 1
+\end{equation}
+where $e$ is number of exponent bits.
+
+\href{https://en.wikipedia.org/wiki/Exponent_bias}{wikipedia} says this: the exponent is "biased" in the engineering sense of the word - value stored is offset from actual value by the \textbf{exponent bias}. Biasing is done because exponents have to be signed value in order to be able to represent both tiny and huge values. It's not represented in two's complement, usual representation for signed values; it'd make comparison harder.
+
+Exponent is stored as unsigned value which is suitable for comparison, and when interpreted, it's converted into an exponent within a \emph{signed} range by subtracting the bias.
+
+\href{https://en.wikipedia.org/wiki/Exponent_bias}{wikipedia} uses this notation:
+\[
+2^{k-1} - 1 = \text{ bias for floating point number }
+\]
+where $k$ is number of bits in exponent.
+
+Number of normalized floating-point numbers in system $(B, P, L, U)$ where 
+\begin{itemize}
+	\item base $B$
+	\item precision of system to $P$ numbers
+	\item $L$ smallest exponent representable in system
+	\item $U$ largest exponent used in system
+\end{itemize}
+\begin{equation}
+2(B-1)(B^{P-1}) (U - L + 1) + 1
+\end{equation}
+Smallest positive normalized floating-point number.
+
+Underflow level $= \text{UFL} = B^L$
+
+TODO: Understand all of this in \url{https://en.wikipedia.org/wiki/Floating-point_arithmetic}
+
+Significand coded with implied leading 1: \\
+Get extra leading bit for "free". \\
+$xxx\dots x$: bits of frac \\
+Minimum when $000 \dots 0$ ($M=1.0$)
+Maximum when $111 \dots 1$ ($M = 2.0 - \epsilon$)
+
+\subsubsection{Denormalized Values and other Special Values}
+
+Consider "denormalized" values, the special case with the following condition:
+\[
+\text{exp} = 000\dots 0
+\]
+
+The Value is this: \\
+Exponent value $E = -\text{Bias} + 1$ (compare this to Eq. \ref{Eqn:ExponentCodingForNonZeroExp}). \\
+Significand value $M = 0.xxx\dots x_2$, i.e. $xxx...x$: bits of frac.
+
+Consider these special cases:
+\begin{itemize}
+	\item exp $= 000\dots 0$, frac $ = 000\dots 0$, which represents value 0 \\
+	Note that there are distinct values for $+0$ and $-0$
+	\item exp $= 000 \dots 0$, frac $\neq 000\dots 0$ \\
+	These represent numbers that are very close to 0.0. They lose precision as they get smaller. There's "gradual underflow". TODO: understand what it means for "gradual underflow", cf. \url{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_4-429h.pdf}, pp. 10
+\end{itemize}
+
+Consider special values with the condition that 
+\[
+\text{exp} = 111\dots 1
+\]
+
+They include the following cases: 
+\begin{itemize}
+	\item exp $ = 111\dots 1$, frac $= 000 \dots 0$. This represents the value at infinity, $\infty$. Operation that overflows. There are positive infinity and negative infinity. \\
+	e.g. $1.0/0.0 = -1.0/-0.0 = +\infty$, $1.0/-0.0 = -\infty$
+	\item exp $ = 111\dots 1$, frac $\neq 000\dots 0$ This is Not-a-Number (NaN). It represents case when no numeric value can be determined. e.g. \verb|sqrt(-1)|, $\infty - \infty$.
+\end{itemize}
+
 
 
 \part{Complexity, Data Structures, Algorithms}

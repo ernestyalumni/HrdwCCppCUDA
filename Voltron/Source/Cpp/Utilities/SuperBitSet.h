@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// \file BitSet.h
+/// \file SuperBitSet.h
 /// \author Ernest Yeung
 /// \brief std::bitset extension.
 /// \ref https://en.cppreference.com/w/cpp/utility/bitset
@@ -8,6 +8,8 @@
 #define CPP_UTILITIES_BIT_SET_H
 
 #include <bitset>
+// cf. https://en.cppreference.com/w/cpp/types/climits
+#include <climits> // CHAR_BIT
 
 namespace Cpp
 {
@@ -17,7 +19,8 @@ namespace Utilities
 namespace
 {
 
-constexpr std::size_t number_of_bits_in_a_byte = 8;
+//constexpr std::size_t number_of_bits_in_a_byte = 8;
+constexpr std::size_t number_of_bits_in_a_byte = CHAR_BIT;
 
 } // anonymous namespace
 

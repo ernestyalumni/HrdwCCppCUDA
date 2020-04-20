@@ -1,2 +1,3 @@
 ADD_LIBRARY(Utilities
-  BitsStream.cpp)
+  BitsStream.cpp
+  FloatingPoint.cpp)
