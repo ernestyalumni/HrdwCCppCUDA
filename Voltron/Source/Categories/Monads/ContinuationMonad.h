@@ -72,7 +72,7 @@ auto return_ = [](auto x)
   };
 };
 
-auto bind = [](auto ca, auto f)
+auto bind = [runContinuation](auto ca, auto f)
 {
   return [ca, f](auto continuation)
   {
@@ -80,6 +80,22 @@ auto bind = [](auto ca, auto f)
     {
       return runContinuation(f(x), continuation);
     });
+  };
+};
+
+// cf. https://github.com/Iasi-C-CPP-Developers-Meetup/presentations-code-samples/blob/master/radugeorge/monadic/main.cpp
+auto call_cc = [runContinuation](auto f)
+{
+  return [f, runContinuation](auto continuation)
+  {
+    return runContinuation(
+      f([continuation](auto x)
+      {
+        return [continuation, x](auto)
+        {
+          return continuation(x);
+        };
+      }));
   };
 };
 
