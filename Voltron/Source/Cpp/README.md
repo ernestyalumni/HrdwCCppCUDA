@@ -444,5 +444,25 @@ What Čukić calls the `transform` is the morphism map for the endofunctor.
 
 cf. 10.6 "Handling state with monads", pp. 216, Čukić (2018)
 
+## Concurrency and the continuation monad
+
+cf. 10.7 "Concurrency and the continuation monad", pp. 219, Čukić (2018)
+
+Problem: e.g. input streams `std::cin`, difference between streams and containers is that you don't know their sizes in advance, and you can't access the elements until user enters them.
+
+But if you're executing code on input stream-like containers, program execution will be *blocked* until user enters all required data.
+
+Instead of requesting data and processing it, it's much better to tell program what to do when it becomes available.
+
+Need a handler that'll give access to data after it becomes available. 
+- *future* because data isn't available immediately, but will become available sometime in the future. 
+
+Summary: handler `future<T>` may not yet contain a value, but value of type `T` will be in it at some point. 
+  - With it, you'll be able to design programs that have different components executed concurrently or asynchronously 
+  - anytime you have a slow operation, or an operation whose *execution time you don't know*, you'll make it return a future instead of an ordinary value.
+  - future looks like a container type, *but* you can't get element directly - *unless* **asynchronous operation has finished**, and value is in container.
+
+  
+
 # Template metaprogramming, Ch. 11, pp. 226
 

@@ -11,6 +11,12 @@ BOOST_AUTO_TEST_SUITE(Threads)
 BOOST_AUTO_TEST_SUITE(Future_tests)
 
 // cf. https://en.cppreference.com/w/cpp/thread/future
+// cf. https://en.cppreference.com/w/cpp/thread/future/future
+// future(future& other) noexcept
+// Move ctor; constructs std::future with shared state of other using move
+// semantics. After ctor, other.valid() == false.
+// std::future is not CopyConstructible:
+// future(const future& other) = delete;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
