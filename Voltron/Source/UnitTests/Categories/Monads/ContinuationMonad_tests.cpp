@@ -10,14 +10,17 @@
 #include "Categories/Monads/ContinuationMonad.h"
 
 #include <boost/test/unit_test.hpp>
+#include <cmath>
 #include <future>
 #include <optional>
 #include <string>
 #include <utility>
 
+using Categories::Monads::ContinuationMonad::AsLambdas::eval;
 using Categories::Monads::ContinuationMonad::AsLambdas::return_;
 using Categories::Monads::ContinuationMonad::AsLambdas::runContinuation;
 using Categories::Monads::ContinuationMonad::apply_endomorphism;
+using Categories::Monads::ContinuationMonad::evaluate;
 using Categories::Monads::ContinuationMonad::unit;
 
 using namespace Categories::Monads::ContinuationMonad;
@@ -199,7 +202,7 @@ BOOST_AUTO_TEST_CASE(UnitComponentDelaysComputation)
 
     BOOST_TEST_REQUIRE(addition_result == "34");
     BOOST_TEST_REQUIRE(square_result == "25");
-
+    BOOST_TEST(addition(25, 9)(evaluate<int>) == 34);
     {
       auto create_add_x = [](const int x)
       {
@@ -208,9 +211,49 @@ BOOST_AUTO_TEST_CASE(UnitComponentDelaysComputation)
           return (x + y);
         };
       };
-      
-    }
+      auto add_6 = create_add_x(6);
+      auto add_7 = create_add_x(7);
 
+      BOOST_TEST(delay_square(add_6) == 31);
+      BOOST_TEST(delay_square(add_7) == 32);
+      BOOST_TEST(square(5)(add_6) == 31);
+      BOOST_TEST(square(5)(add_7) == 32);
+
+      auto intermediate = square(5)(
+        [addition](const int xx)
+        {
+          return addition(xx, 8);
+        });
+
+      BOOST_TEST_REQUIRE(intermediate(evaluate<int>) == 33);
+
+      auto intermediate_f = [square, addition](const int x, const int y)
+      {
+        return square(x)(
+          [addition, y](const int xx)
+          {
+            return addition(xx, y);
+          });
+      };
+
+      auto intermediate_f_result = intermediate_f(3, 6)(evaluate<int>);
+      BOOST_TEST(intermediate_f_result == 15);
+
+      auto pythagoras_formula = [addition, square](const int x, const int y)
+      {
+        return square(x)(
+          [addition, square, y](const int xx)
+          {
+            return square(y)(
+              [addition, xx](const int yy)
+              {
+                return addition(xx, yy);
+              });
+          });
+      };
+      BOOST_TEST(pythagoras_formula(5, 6)(evaluate<int>) == 61);
+      BOOST_TEST(pythagoras_formula(4, 4)(evaluate<int>) == 32);
+    }
   }
   {
     auto addition = [](const auto x, const auto y)
@@ -229,8 +272,67 @@ BOOST_AUTO_TEST_CASE(UnitComponentDelaysComputation)
 
     BOOST_TEST_REQUIRE(addition_result == "34");
     BOOST_TEST_REQUIRE(square_result == "25");
-  }
 
+    {
+      auto pythagoras_formula = [addition, square](const int x, const int y)
+      {
+        return square(x)(
+          [addition, square, y](const int xx)
+          {
+            return square(y)(
+              [addition, xx](const int yy)
+              {
+                return addition(xx, yy);
+              });
+          });
+      };
+      BOOST_TEST(pythagoras_formula(5, 6)(evaluate<int>) == 61);
+      BOOST_TEST(pythagoras_formula(4, 4)(evaluate<int>) == 32);
+    }
+  }
+}
+
+int pair_add(const std::pair<int, int> inputs)
+{
+  return inputs.first + inputs.second;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(UnitComponentTreatsFunctionsAsFirstClassValues)
+{
+  {
+    auto pair_addition = unit(pair_add);
+    BOOST_TEST_REQUIRE(pair_addition(eval)(std::make_pair<int, int>(40, 2)));
+    BOOST_TEST(unit(pair_add)(eval)(std::make_pair<int, int>(40, 2)));
+  }
+  {
+    auto pair_addition = return_(pair_add);
+    BOOST_TEST_REQUIRE(pair_addition(eval)(std::make_pair<int, int>(40, 2)));
+    BOOST_TEST(return_(pair_add)(eval)(std::make_pair<int, int>(40, 2)));    
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SimpleUnitComponentExamples)
+{
+  {
+    auto f = [](const auto x)
+    {
+      return unit(std::pow(x, 3));
+    };
+    auto g = [](const auto x)
+    {
+      return unit(x - 2);
+    };
+    auto h = [f, g](const auto x)
+    {
+      return (x == 5) ? f(x) : g(x);
+    };
+    auto do_c = unit(4.0)(h);
+    BOOST_TEST_REQUIRE(do_c(evaluate<float>) == 2.0);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // UnitComponent

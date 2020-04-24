@@ -4,7 +4,7 @@
 #include "Utilities/FloatingPoint.h"
 
 #include <boost/test/unit_test.hpp>
-#include <iostream>
+#include <cmath>
 #include <limits>
 
 using Utilities::Conversions::WithUnion::FloatingPointToBitsInUnion;
@@ -12,6 +12,14 @@ using Utilities::Conversions::WithUnion::floating_point_to_bitset;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
 BOOST_AUTO_TEST_SUITE(FloatingPoint_tests)
+
+// Significand is also the Mantissa
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DoublePrecisionInSignificand)
+{
+  BOOST_TEST(std::pow(2, -53) == 1.1102230246251565e-16);
+}
 
 BOOST_AUTO_TEST_SUITE(ConversionsWithUnion)
 
