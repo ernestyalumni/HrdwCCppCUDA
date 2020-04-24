@@ -317,6 +317,10 @@ BOOST_AUTO_TEST_CASE(UnitComponentTreatsFunctionsAsFirstClassValues)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(SimpleUnitComponentExamples)
 {
+  auto morphism_c = [](const auto x) -> std::string
+  {
+    return "Done: " + std::to_string(x);
+  };
   {
     auto f = [](const auto x)
     {
@@ -332,6 +336,24 @@ BOOST_AUTO_TEST_CASE(SimpleUnitComponentExamples)
     };
     auto do_c = unit(4.0)(h);
     BOOST_TEST_REQUIRE(do_c(evaluate<float>) == 2.0);
+    BOOST_TEST(do_c(morphism_c) == "Done: 2.000000");
+  }
+  {
+    auto f = [](const auto x)
+    {
+      return return_(std::pow(x, 3));
+    };
+    auto g = [](const auto x)
+    {
+      return return_(x - 2);
+    };
+    auto h = [f, g](const auto x)
+    {
+      return (x == 5) ? f(x) : g(x);
+    };
+    auto do_c = return_(4.0)(h);
+    BOOST_TEST_REQUIRE(do_c(evaluate<float>) == 2.0);
+    BOOST_TEST(do_c(morphism_c) == "Done: 2.000000");
   }
 }
 
