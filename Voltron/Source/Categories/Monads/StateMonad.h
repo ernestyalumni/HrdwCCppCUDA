@@ -6,7 +6,7 @@
 #ifndef CATEGORIES_MONADS_STATE_MONAD_H
 #define CATEGORIES_MONADS_STATE_MONAD_H
 
-#include <utility>
+#include <utility> // std::forward, std::pair
 
 namespace Categories
 {
@@ -15,64 +15,81 @@ namespace Monads
 namespace StateMonad
 {
 
-// This is what Haskell/Functional Programming calls an Algebraic Data Type,
-// the product type. Mathematically, this is an element of the object
-// T(X) = X \times S, where X \times S is the Cartesian product of X and S
-// for types X, and states S.
-template <typename X, typename S>
-class StateObject
+//------------------------------------------------------------------------------
+/// \class Unit
+/// \ref https://en.cppreference.com/w/cpp/utility/forward
+/// \details 1) Forwards lvalues as either lvalues or as rvalues, depending on T
+/// Forwards rvalues as rvalues and prohibits forwarding of rvalues as lvalues.
+//------------------------------------------------------------------------------
+template <typename X>
+class Unit
 {
   public:
 
-    StateObject(const X& x, const S s):
-      inputs_{x},
-      state_{s}
+    Unit(X& input):
+      input_{std::forward<X>(input)}
     {}
 
-    explicit StateObject(const X& x):
-      inputs_{x},
-      state_{}
+    Unit(X&& input):
+      input_{std::forward<X>(input)}
     {}
 
-    X inputs() const
+    X input() const
     {
-      return inputs_;
+      return input_;
     }
 
-    S state() const
+    // W is the mutable state type.
+    template <typename W>
+    std::pair<W, X> operator()(W&& state)
     {
-      return state_;
+      return std::make_pair<W, X>(
+        std::forward<W>(state),
+        std::forward<X>(input_));
     }
 
   private:
 
-    X inputs_;
-    S state_;
+    X input_;
 };
 
-template <typename X, typename S>
-class StateObjectAsPair : public std::pair<X, S>
+template <typename MorphismTY, typename MorphismTZ>
+auto compose(MorphismTZ g, MorphismTY f)
 {
-  public:
+  return [g, f](auto x)
+  {
+    return [g, f, x](auto s)
+    {
+      auto fxs = f(x)(s);
+      return g(fxs.second)(fxs.first);
+    };
+  };
+}
 
-    using std::pair<X, S>::pair;
+namespace AsLambdas
+{
 
-//    explicit StateObject(const X& x):
-//{}
+auto unit = [](auto x)
+{
+  return [x](auto state)
+  {
+    return std::pair{state, x};
+  };
 };
 
-template <typename X, typename S>
-StateObject<X, S> unit(const X& x)
+auto bind = [](auto g, auto f)
 {
-  return StateObject<X, S>{x};
-}
+  return [g, f](auto x)
+  {
+    return [g, f, x](auto s)
+    {
+      auto fxs = f(x)(s);
+      return g(fxs.second)(fxs.first);
+    };
+  };
+};
 
-template <typename X, typename S>
-StateObject<X, S> multiplication_component(
-  const std::pair<StateObject<X, S>, S>& ttx)
-{
-  return ttx.first;
-}
+} // namespace AsLambdas
 
 } // namespace StateMonad
 } // namespace Monads
