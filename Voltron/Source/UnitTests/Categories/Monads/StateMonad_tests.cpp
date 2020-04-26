@@ -302,6 +302,10 @@ BOOST_AUTO_TEST_CASE(BindComposesMorphisms)
   }
   {
     auto composed_morphisms = compose(test_morphism_g, test_morphism_f);
+    const auto result =
+      composed_morphisms(TestInputs2{69.0, 42.0})(two_states[1]);
+    BOOST_TEST(result.first == two_states[1]);
+    BOOST_TEST(result.second == 111.0);
   }
 }
 
