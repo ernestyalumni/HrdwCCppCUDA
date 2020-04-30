@@ -142,7 +142,6 @@ class Socket
       return fd_;
     }
 
-
   protected:
 
     //--------------------------------------------------------------------------
@@ -175,7 +174,6 @@ class Socket
 
         using HandleReturnValue::operator();
     };
-
 
   private:
 

@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 /// \file StateMonad_tests.cpp
 /// \author Ernest Yeung
+/// \email  ernestyalumni@gmail.com
 //------------------------------------------------------------------------------
 #include "Categories/Monads/StateMonad.h"
 

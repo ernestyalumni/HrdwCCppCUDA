@@ -52,6 +52,8 @@ ADD_EXECUTABLE(Check
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
+  IPC/Sockets/ParameterFamilies_tests.cpp
+  IPC/Sockets/Socket_tests.cpp
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
@@ -78,6 +80,7 @@ TARGET_LINK_LIBRARIES(Check
   Algorithms
 #  Cpp
   Hierarchy
+  IPC
   Tools
   Utilities
   # cf. https://stackoverflow.com/questions/1620918/cmake-and-libpthread
