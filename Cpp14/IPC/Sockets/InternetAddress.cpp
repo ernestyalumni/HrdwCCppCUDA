@@ -39,15 +39,11 @@ namespace Sockets
 {
 
 InternetSocketAddress::InternetSocketAddress(
-  const uint16_t sin_family,
   const uint16_t sin_port,
+  const uint16_t sin_family,
   const uint32_t sin_addr
   ):
   ::sockaddr_in{sin_family, ::htons(sin_port), {::htonl(sin_addr)}}
-{}
-
-InternetSocketAddress::InternetSocketAddress(const uint16_t sin_port):
-  InternetSocketAddress{AF_INET, sin_port, INADDR_ANY}
 {}
 
 InternetSocketAddress::InternetSocketAddress() = default;

@@ -1,5 +1,9 @@
 ADD_LIBRARY(IPC
-  Sockets/Socket.cpp)
+  Sockets/Bind.cpp
+  Sockets/GetSocketName.cpp
+  Sockets/Listen.cpp
+  Sockets/Socket.cpp
+  Sockets/InternetAddress.cpp)
 
 TARGET_LINK_LIBRARIES(IPC
   Utilities)

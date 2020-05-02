@@ -6,33 +6,17 @@
 /// \ref http://man7.org/linux/man-pages/man7/ip.7.html
 /// \details Only 1 IP (Internet Protocol) socket may be bound to any given
 /// local (address, port) pair.
-/// \copyright If you find this code useful, feel free to donate directly
-/// (username ernestyalumni or email address above), going directly to:
-///
-/// paypal.me/ernestyalumni
-///
-/// which won't go through a 3rd. party like indiegogo, kickstarter, patreon.
-/// Otherwise, I receive emails and messages on how all my (free) material on
-/// physics, math, and engineering have helped students with their studies, and
-/// I know what it's like to not have money as a student, but love physics (or
-/// math, sciences, etc.), so I am committed to keeping all my material
-/// open-source and free, whether or not sufficiently crowdfunded, under the
-/// open-source MIT license: feel free to copy, edit, paste, make your own
-/// versions, share, use as you wish.
-/// Peace out, never give up! -EY
 //------------------------------------------------------------------------------
-/// COMPILATION TIPS:
-///   g++ --std=c++17 -I ../../ Event.cpp Event_main.cpp -o Event_main
-//------------------------------------------------------------------------------
-#ifndef _IPC_SOCKETS_INTERNET_ADDRESS_H_
-#define _IPC_SOCKETS_INTERNET_ADDRESS_H_
+#ifndef IPC_SOCKETS_INTERNET_ADDRESS_H
+#define IPC_SOCKETS_INTERNET_ADDRESS_H
+
+#include "ParameterFamilies.h"
 
 #include <netinet/ip.h>
 #include <ostream>
 
 namespace IPC
 {
-
 namespace Sockets
 {
 
@@ -85,8 +69,6 @@ struct InternetSocketAddress : public ::sockaddr_in
     const uint16_t sin_family = AF_INET,
     const uint32_t sin_addr = INADDR_ANY);
 
-  InternetSocketAddress();
-
   // Consider using &internet_socket_address for
   // InternetSocketAddress internet_socket_address, instead.
   const ::sockaddr_in* to_sockaddr_in() const
@@ -109,6 +91,11 @@ struct InternetSocketAddress : public ::sockaddr_in
     return reinterpret_cast<::sockaddr*>(this);
   }
 
+  static unsigned int address_size()
+  {
+    return sizeof(::sockaddr);
+  }
+
   friend std::ostream& operator<<(
     std::ostream& os,
     const InternetSocketAddress& internet_socket_address);
@@ -123,13 +110,9 @@ class InternetAddress
   public:
 
   InternetAddress(
-    const uint16_t sin_family = AF_INET,
     const uint16_t sin_port = 0,
+    const uint16_t sin_family = AF_INET,
     const uint32_t sin_addr = INADDR_ANY);
-
-  explicit InternetAddress(const uint16_t sin_port);
-
-  InternetAddress();
 
   //----------------------------------------------------------------------------
   /// \brief user-defined conversion
@@ -182,6 +165,11 @@ class InternetAddress
     return reinterpret_cast<::sockaddr*>(this);
   }
 
+  static const unsigned int address_size()
+  {
+    return sizeof(::sockaddr);
+  }
+
   friend std::ostream& operator<<(
     std::ostream& os,
     const InternetAddress& internet_address);
@@ -192,7 +180,6 @@ class InternetAddress
 };
 
 } // namespace Sockets
-
 } // namespace IPC
 
 #endif // _IPC_SOCKETS_INTERNET_ADDRESS_H_

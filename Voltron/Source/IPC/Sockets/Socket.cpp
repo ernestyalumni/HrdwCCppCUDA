@@ -60,6 +60,5 @@ std::ostream& operator<<(std::ostream& os, const Socket& socket)
   return os;
 }
 
-
 } // namespace Sockets
 } // namespace IPC

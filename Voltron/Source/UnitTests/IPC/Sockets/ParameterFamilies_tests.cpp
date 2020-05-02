@@ -35,6 +35,6 @@ BOOST_AUTO_TEST_CASE(DomainsConvertToIntValues)
   }
 }
 
-BOOST_AUTO_TEST_SUITE_END() // ParameterFamiles_tests
+BOOST_AUTO_TEST_SUITE_END() // ParameterFamilies_tests
 BOOST_AUTO_TEST_SUITE_END() // Sockets
 BOOST_AUTO_TEST_SUITE_END() // IPC

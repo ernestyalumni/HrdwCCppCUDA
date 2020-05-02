@@ -7,6 +7,7 @@
 #ifndef IPC_SOCKETS_SOCKET_H
 #define IPC_SOCKETS_SOCKET_H
 
+#include "IPC/Sockets/InternetAddress.h"
 #include "IPC/Sockets/ParameterFamilies.h"
 #include "Utilities/ErrorHandling/ErrorHandling.h"
 
@@ -107,7 +108,6 @@ class Socket
 
     int fd_;
 };
-
 
 } // namespace Sockets
 } // namespace IPC
