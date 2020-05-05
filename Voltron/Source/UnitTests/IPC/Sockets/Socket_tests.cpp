@@ -6,14 +6,17 @@
 #include "IPC/Sockets/Socket.h"
 
 #include "IPC/Sockets/ParameterFamilies.h"
+#include "UnitTests/Tools/Contains.h"
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <sys/socket.h>
+#include <system_error>
 
 using IPC::Sockets::Domains;
 using IPC::Sockets::Socket;
 using IPC::Sockets::Types;
+using UnitTests::Tools::error_contains;
 
 BOOST_AUTO_TEST_SUITE(IPC)
 BOOST_AUTO_TEST_SUITE(Sockets)
@@ -31,6 +34,18 @@ BOOST_AUTO_TEST_CASE(SocketConstructsWithSpecialEnumClasses)
     // cf. https://www.cs.rutgers.edu/~pxk/417/notes/sockets/demo-udp-01.html
     std::cout << "\ncreated socket: descriptor: " << socket.fd() << '\n';
   }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SocketThrowsForUnsupportedProtocols)
+{
+	{
+		BOOST_CHECK_EXCEPTION(
+			Socket(Domains::ipv4, Types::raw),
+			std::system_error,
+			error_contains("93"));
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ParameterFamilies_tests

@@ -49,7 +49,7 @@ Socket::HandleSocket::HandleSocket() = default;
 
 void Socket::HandleSocket::operator()(const int result)
 { 
-  this->operator()(result, "create file descriptor (::eventfd)");
+  this->operator()(result, "create socket file descriptor (::socket)");
 }
 
 std::ostream& operator<<(std::ostream& os, const Socket& socket)

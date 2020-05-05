@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "Receive.h"
 
+#include "IPC/Sockets/InternetAddress.h"
 #include "IPC/Sockets/Socket.h"
 #include "Utilities/ErrorHandling/ErrorNumber.h"
 
@@ -15,6 +16,9 @@
 #include <utility>
 
 using Utilities::ErrorHandling::ErrorNumber;
+
+template <std::size_t N>
+using Receipt = typename IPC::Sockets::ReceivingOn::ReceivedFrom<N>::Receipt;
 
 namespace IPC
 {
@@ -64,7 +68,7 @@ std::pair<
       std::optional<ErrorNumber>,
       std::optional<std::tuple<std::size_t, socklen_t>>
       >(
-        std::move(error_number),
+        std::nullopt,
         std::make_optional<std::tuple<std::size_t, socklen_t>>(
           std::make_tuple<std::size_t, socklen_t>(
             std::move(return_value),
@@ -72,21 +76,9 @@ std::pair<
   }
 }
 
-template <std::size_t N>
-std::optional<ErrorNumber> ReceiveFrom<N>::HandleReceiveFrom::operator()(
-  const std::size_t return_value)
-{
-  if (return_value < 0)
-  {
-    const auto error_number = ErrorNumber{};
-
-    return std::make_optional<ErrorNumber>(error_number);
-  }
-  else
-  {
-    return std::nullopt;
-  }
-}
+ReceivingOn::ReceivingOn(const int flags):
+  flags_{flags}
+{}
 
 } // namespace Sockets
 } // namespace IPC

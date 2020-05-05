@@ -30,7 +30,9 @@
 
 #include <arpa/inet.h> // htonl, htons
 #include <netinet/ip.h> // ::sockaddr_in
+#include <optional>
 #include <ostream>
+#include <string>
 
 namespace IPC
 {
@@ -46,8 +48,6 @@ InternetSocketAddress::InternetSocketAddress(
   ::sockaddr_in{sin_family, ::htons(sin_port), {::htonl(sin_addr)}}
 {}
 
-InternetSocketAddress::InternetSocketAddress() = default;
-
 InternetAddress::InternetAddress(
   const uint16_t sin_family,
   const uint16_t sin_port,
@@ -56,11 +56,22 @@ InternetAddress::InternetAddress(
   socket_address_internet_{sin_family, ::htons(sin_port), ::htonl(sin_addr)}
 {}
 
-InternetAddress::InternetAddress(const uint16_t sin_port):
-  InternetAddress{AF_INET, sin_port, INADDR_ANY}
-{}
+std::optional<InternetSocketAddress> address_to_network_binary(
+  const std::string& internet_host_address,
+  InternetSocketAddress& address)
+{
+  int return_value {
+    ::inet_aton(internet_host_address.c_str(), &address.sin_addr)};
 
-InternetAddress::InternetAddress() = default;
+  if (return_value == 0)
+  {
+    return std::nullopt;
+  }
+  else
+  {
+    return std::make_optional<InternetSocketAddress>(address);
+  }
+}
 
 } // namespace Sockets
 } // namespace IPC

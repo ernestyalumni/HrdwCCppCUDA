@@ -16,7 +16,7 @@
 #include <optional>
 #include <sys/socket.h> // socklen_t
 #include <tuple>
-#include <utility>
+#include <utility> // std::pair
 
 namespace IPC
 {
@@ -115,6 +115,114 @@ class ReceiveFrom
     InternetSocketAddress sender_address_;
     // Also gives the "state" of ::recvfrom
     std::optional<Utilities::ErrorHandling::ErrorNumber> error_number_;
+
+    int flags_;
+};
+
+class ReceivingOn
+{
+  public:
+
+    template <std::size_t N>
+    class ReceivedFrom
+    {
+      public:
+
+        using ErrorNumber = Utilities::ErrorHandling::ErrorNumber;
+
+        struct Receipt
+        {
+          std::array<char, N> buffer_;
+          InternetSocketAddress sender_address_;
+          ssize_t received_bytes_;
+          socklen_t size_of_sender_address_;
+        };
+
+        explicit ReceivedFrom(Socket& socket, const int flags):
+          flags_{flags},
+          socket_fd_{socket.fd()}
+        {}
+
+        std::pair<std::optional<ErrorNumber>, std::optional<Receipt>> operator()()
+        {
+          std::array<char, N> buffer;
+          InternetSocketAddress sender_address;
+          socklen_t size_of_sender_address {sender_address.address_size()};
+
+          // ssize_t aka long int.
+          ssize_t return_value {
+            ::recvfrom(
+              socket_fd_,
+              buffer.data(),
+              buffer.size(),
+              flags_,
+              sender_address.to_sockaddr(),
+              &size_of_sender_address)};
+
+          std::optional<ErrorNumber> error_number {HandleReceivedFrom()(return_value)};
+
+          if (error_number)
+          {
+            return std::make_pair<
+              std::optional<ErrorNumber>,
+              std::optional<Receipt>
+              >(std::move(error_number), std::nullopt);
+          }
+          else
+          {
+            Receipt received_details {
+              buffer,
+              sender_address,
+              return_value,
+              size_of_sender_address};
+
+            return std::make_pair<
+              std::optional<ErrorNumber>,
+              std::optional<Receipt>
+              >(std::move(error_number), std::move(received_details));
+          }
+        }
+
+      private:
+
+        class HandleReceivedFrom
+        {
+          public:
+
+            HandleReceivedFrom() = default;
+
+            std::optional<ErrorNumber> operator()(const std::size_t return_value)
+            {
+              if (return_value < 0)
+              {
+                const auto error_number = ErrorNumber{};
+
+                return std::make_optional<ErrorNumber>(error_number);
+              }
+              else
+              {
+                return std::nullopt;
+              }              
+            }
+
+          private:
+
+            ErrorNumber error_number_;
+        };
+
+        int flags_;
+        int socket_fd_;
+    };
+
+    ReceivingOn(const int flags = 0);
+
+    template <std::size_t N = 2048>
+    ReceivedFrom<N> operator()(Socket& socket)
+    {
+      return ReceivedFrom<N>{socket, flags_};
+    }
+
+  private:
 
     int flags_;
 };

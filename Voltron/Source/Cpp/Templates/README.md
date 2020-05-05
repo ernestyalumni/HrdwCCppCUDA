@@ -133,6 +133,8 @@ Template argument deduction doesn't take return types into account
 
 If template argument, e.g. `RT` doesn't appear in types of function call parameters, in C++, return type can't be deduced from context in which caller uses the call.
 
+cf. pp. 11, Sec. 1.3.2 Deducing the Return Type. If return type depends on template parameters, simplest and best approach to deduce return type is to let compiler find out.
+
 
 ### Overloading Function Templates
 

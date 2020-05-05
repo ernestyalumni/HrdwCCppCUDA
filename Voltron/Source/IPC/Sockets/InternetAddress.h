@@ -13,7 +13,9 @@
 #include "ParameterFamilies.h"
 
 #include <netinet/ip.h>
+#include <optional>
 #include <ostream>
+#include <string>
 
 namespace IPC
 {
@@ -179,7 +181,20 @@ class InternetAddress
     ::sockaddr_in socket_address_internet_;
 };
 
+//------------------------------------------------------------------------------
+/// \fn address_to_network_binary
+/// \brief Wrapper for ::inet_aton(), which converts the Internet host address
+/// from IPv4 numbers-and-dots notation into binary form (in network byte order)
+/// and stores in structur that's pointed to.
+/// \ref https://linux.die.net/man/3/inet_aton
+/// \details in_addr_t inet_aton(const char* cp, struct in_addr* inp);
+/// ::inet_aton() returns nonzero if address is valid, 0 of not.
+//------------------------------------------------------------------------------
+std::optional<InternetSocketAddress> address_to_network_binary(
+  const std::string& internet_host_address,
+  InternetSocketAddress& address);
+
 } // namespace Sockets
 } // namespace IPC
 
-#endif // _IPC_SOCKETS_INTERNET_ADDRESS_H_
+#endif // IPC_SOCKETS_INTERNET_ADDRESS_H

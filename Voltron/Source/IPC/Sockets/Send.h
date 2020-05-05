@@ -39,12 +39,18 @@ class SendTo
 {
   public:
 
-    SendTo(const int flags = 0);
+    class SendMessage;
 
-    std::pair<
-      std::optional<Utilities::ErrorHandling::ErrorNumber>,
-      std::optional<std::tuple<std::size_t, socklen_t>>
-      > operator()(const InternetSocketAddress& destination_address);
+    SendTo(const int flags = 0):
+      flags_{flags}
+    {}
+
+    SendMessage operator()(const InternetSocketAddress& address)
+    {
+      destination_address(address);
+
+      return SendMessage{flags_, address};
+    }
 
     // Accessors and Setters.
 
@@ -71,20 +77,55 @@ class SendTo
     {
       public:
 
-        SendMessage();
+        using ErrorNumber = Utilities::ErrorHandling::ErrorNumber;
 
-        operator()(const std::array<char, N>& buffer);
+        SendMessage(const int flags, const InternetSocketAddress& address):
+          destination_address_{address},
+          flags_{flags}
+        {}
 
-        // Accessors and Setters.
-
-        std::array<char, N> buffer() const
+        auto operator()(const std::array<char, N>& buffer)
         {
-          return buffer_;
-        }
+          const int flags {flags_};
+          const InternetSocketAddress& destination_address {
+            destination_address_};
 
-        void buffer(const std::array<char, N>& buffer)
-        {
-          buffer_ = buffer;
+          auto send_on_socket =
+            [flags, &destination_address, &buffer](Socket& socket) ->
+              std::pair<
+                std::optional<ErrorNumber>,
+                std::optional<ssize_t>>
+            {
+              const ssize_t return_value {
+                ::sendto(
+                  socket.fd(),
+                  buffer.data(),
+                  buffer.size(),
+                  flags,
+                  destination_address.to_sockaddr(),
+                  destination_address.address_size())};
+
+              std::optional<ErrorNumber> error_number {
+                HandleSendMessage()(return_value)};
+
+              if (error_number)
+              {
+                return std::make_pair<
+                  std::optional<ErrorNumber>,
+                  std::optional<ssize_t>
+                  >(std::move(error_number), std::nullopt);
+              }
+              else
+              {
+                return std::make_pair<
+                  std::optional<ErrorNumber>,
+                  std::optional<ssize_t>
+                  >(
+                    std::nullopt,
+                    std::make_optional<ssize_t>(return_value));
+              }
+            };
+          return send_on_socket;
         }
 
       private:
@@ -123,15 +164,30 @@ class SendTo
         {
           public:
 
-            HandleSendMessage();
+            HandleSendMessage() = default;
 
-            std::optional<Utilities::ErrorHandling::ErrorNumber> operator()(
-              const std::size_t return_value);
+            std::optional<ErrorNumber> operator()(
+              const std::size_t return_value)
+            {
+              if (return_value < 0)
+              {
+                const auto error_number = ErrorNumber{};
+
+                return std::make_optional<ErrorNumber>(error_number);
+              }
+              else
+              {
+                return std::nullopt;
+              }                
+            }
 
           private:
 
-            Utilities::ErrorHandling::ErrorNumber error_number_;
+            ErrorNumber error_number_;
         };
+
+      InternetSocketAddress destination_address_;
+      int flags_;
     };
 
   private:

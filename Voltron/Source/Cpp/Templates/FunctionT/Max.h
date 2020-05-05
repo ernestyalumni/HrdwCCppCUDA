@@ -46,6 +46,8 @@ RT max (T1 a, T2 b)
   return b < a ? a : b;
 }
 
+// Another approach is to specify only the first arguments explicitly and to
+// allow deduction process to derive the rest.
 template <typename RT, typename T1, typename T2>
 RT max (T1 a, T2 b);
 
@@ -65,7 +67,6 @@ int max(int a, int b)
 {
   return b < a ? a : b;
 }
-
 
 } // namespace FunctionTemplates
 } // namespace Templates
