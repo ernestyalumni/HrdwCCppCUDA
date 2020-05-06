@@ -47,8 +47,8 @@ BOOST_AUTO_TEST_CASE(GetSocketNameGetsInternetAddress)
 
     const InternetSocketAddress returned_address {std::get<0>(*result.second)};
 
-    BOOST_TEST(returned_address.sin_port == 0);
-    BOOST_TEST(::ntohs(returned_address.sin_port) == 0);
+    BOOST_TEST(returned_address.sin_port > -1);
+    BOOST_TEST(::ntohs(returned_address.sin_port) > -1);
 
     //std::cout << "Bind complete. Port number = " << returned_address.sin_port <<
     //  " : " << ::ntohs(returned_address.sin_port) << "\n";

@@ -6,14 +6,19 @@
 /// \details int main() is needed.
 /// \ref https://www.cs.rutgers.edu/~pxk/417/notes/sockets/demo-udp-03.html
 ///-----------------------------------------------------------------------------
+#include "IPC/Sockets/InternetAddress.h"
+#include "IPC/Sockets/Send.h"
 #include "IPC/Sockets/Socket.h"
 #include "IPC/Sockets/UDP/CreateSocket.h"
 
 #include "Utilities/ToBytes.h"
 
+using IPC::Sockets::InternetSocketAddress;
+using IPC::Sockets::SendTo;
 using IPC::Sockets::Socket;
 using IPC::Sockets::UDP::UdpSocket;
 using IPC::Sockets::UDP::bind_to_any_ip_address;
+using IPC::Sockets::address_to_network_binary;
 using Utilities::ToBytes;
 
 #include "IPC/Sockets/UDP/Sender.h"
@@ -96,6 +101,33 @@ int main(int argc, char* argv[])
 	ToBytes((*bind_result.second).sin_port).increasing_addresses_print();
 	std::cout << "\n";
 
+	InternetSocketAddress destination_address {SERVICE_PORT};
+	std::string server_str {"127.0.0.1"};
+	auto binary_result =
+		address_to_network_binary(server_str, destination_address);
+	std::cout << "\n";
+	std::cout << " Address converted: " << static_cast<bool>(binary_result) << "\n";
+	destination_address = *binary_result;
+
+	ToBytes(destination_address.sin_port).increasing_addresses_print();
+	std::cout << "\n";
+	ToBytes(destination_address.sin_addr.s_addr).increasing_addresses_print();
+	std::cout << "\n";
+
+	for (int i {0}; i < MSGS; ++i)
+	{
+		std::cout << "Sending packet " << i << " to " << server << " port " <<
+			SERVICE_PORT << "\n";
+
+		sprintf(buf, "This is packet %d", i);
+		if (sendto(socket.fd(), buf, strlen(buf), 0, destination_address.to_sockaddr(), slen)==-1)
+			perror("sendto");
+	}
+
+	close(fd);
+	return 0;
+}
+
 	/*
 	memset((char *)&myaddr, 0, sizeof(myaddr));
 	myaddr.sin_family = AF_INET;
@@ -112,6 +144,7 @@ int main(int argc, char* argv[])
 	/* For convenience, the host address is expressed as a numeric IP address */
 	/* that we will convert to a binary format via inet_aton */
 
+	/*
 	memset((char *) &remaddr, 0, sizeof(remaddr));
 	remaddr.sin_family = AF_INET;
 	remaddr.sin_port = htons(SERVICE_PORT);
@@ -122,6 +155,7 @@ int main(int argc, char* argv[])
 
 	/* now let's send the messages */
 
+	/*
 	for (i=0; i < MSGS; i++) {
 		printf(":Sending packet %d to %s port %d\n", i, server, SERVICE_PORT);
 		sprintf(buf, "This is packet %d", i);
@@ -130,4 +164,5 @@ int main(int argc, char* argv[])
 	}
 	close(fd);
 	return 0;
-}
+	
+}*/

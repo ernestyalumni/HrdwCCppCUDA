@@ -52,6 +52,7 @@ ADD_EXECUTABLE(Check
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
+  IPC/MessageQueue/CreateOrOpen_tests.cpp
   IPC/Sockets/Bind_tests.cpp
   IPC/Sockets/GetSocketName_tests.cpp
   IPC/Sockets/InternetAddress_tests.cpp

@@ -62,11 +62,11 @@ int main()
 
   std::cout << " Queue : " << message_queue_object_name <<
     " \n\t - stores at most " << 
-    message_queue.message_attributes().mq_maxmsg <<
+    message_queue.attributes().mq_maxmsg <<
     " messages\n\t - large at most " << 
-    message_queue.message_attributes().mq_msgsize << 
+    message_queue.attributes().mq_msgsize << 
     " bytes each\n\t - current holds " <<
-    message_queue.message_attributes().mq_curmsgs << " messages. \n";
+    message_queue.attributes().mq_curmsgs << " messages. \n";
 
   // getting a message
   const ssize_t remove_from_queue_result {
@@ -75,7 +75,7 @@ int main()
     maximum_message_length)};
 
   std::cout << "Received message (" << remove_from_queue_result <<
-    " bytes) from " << message_queue.message_priority() <<
+    " bytes) from " << message_queue.priority() <<
     " : " << std::string{message_content.data()} << '\n';
 
 

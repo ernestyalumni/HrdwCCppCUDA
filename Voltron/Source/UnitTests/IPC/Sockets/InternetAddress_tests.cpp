@@ -11,11 +11,13 @@
 
 #include <boost/test/unit_test.hpp>
 #include <netinet/ip.h>
+#include <string>
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
 using IPC::Sockets::Domains;
 using IPC::Sockets::InternetAddress;
 using IPC::Sockets::InternetSocketAddress;
+using IPC::Sockets::address_to_network_binary;
 using Utilities::ToBytes;
 
 BOOST_AUTO_TEST_SUITE(IPC)
@@ -37,6 +39,19 @@ BOOST_AUTO_TEST_CASE(InternetSocketAddressConstructsWithHostByteOrdering)
 
 		to_bytes_sin_family.increasing_addresses_print();
 		BOOST_TEST((to_bytes_sin_family.increasing_addresses_hex() == "20"));
+	}
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(AddressToNetworkBinaryConvertsAddressIntoBinaryForm)
+{
+	{
+		std::string host_address {"127.0.0.1"};
+		InternetSocketAddress address {21234};
+		auto binary_result = 
+			address_to_network_binary(host_address, address);
+		BOOST_TEST_REQUIRE(static_cast<bool>(binary_result));
 	}
 }
 
