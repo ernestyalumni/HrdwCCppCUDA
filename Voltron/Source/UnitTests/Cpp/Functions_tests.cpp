@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <algorithm> // std::for_each
 #include <iostream>
+#include <iterator> // std::ostream_iterator
 #include <vector>
 
 using Categories::PersonT;

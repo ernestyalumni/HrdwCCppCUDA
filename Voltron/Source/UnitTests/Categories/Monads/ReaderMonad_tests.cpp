@@ -6,9 +6,19 @@
 #include "Categories/Monads/ReaderMonad.h"
 
 #include <boost/test/unit_test.hpp>
+#include <cassert>
+#include <cstdio> // std::tmpfile
+#include <filesystem> // std::filesystem::temp_directory_path;
+#include <fstream> 
+#include <iostream>
+#include <optional>
 #include <regex>
 #include <string>
 
+
+using Categories::Monads::ReaderMonad::Local;
+using Categories::Monads::ReaderMonad::MultiplicationEndomorphismComposed;
+using Categories::Monads::ReaderMonad::Unit;
 using Categories::Monads::ReaderMonad::apply_morphism;
 using Categories::Monads::ReaderMonad::ask;
 using Categories::Monads::ReaderMonad::bind;
@@ -19,6 +29,82 @@ using Categories::Monads::ReaderMonad::unit;
 BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Monads)
 BOOST_AUTO_TEST_SUITE(ReaderMonad_tests)
+
+class TemporaryDirectory
+{
+  public:
+
+    TemporaryDirectory(const std::string& temporary_directory):
+      temporary_directory_{temporary_directory}
+    {
+      std::filesystem::create_directory(temporary_directory);
+    }
+
+    class TemporaryFile
+    {
+      public:
+
+        TemporaryFile(
+          const std::filesystem::path directory,
+          const std::string& filename
+          ):
+          filename_path_{directory / filename}
+        {}
+
+        std::filesystem::path filename_path() const
+        {
+          return filename_path_;
+        }
+
+      private:
+
+        std::filesystem::path filename_path_;
+    };
+
+    ~TemporaryDirectory()
+    {
+      std::filesystem::remove_all(temporary_directory_);
+    }
+
+    TemporaryFile temporary_file(const std::string& filename)
+    {
+      return TemporaryFile{temporary_directory_, filename};
+    }
+
+  private:
+
+    std::filesystem::path temporary_directory_;
+};
+
+// cf. http://www.cplusplus.com/doc/tutorial/files/
+// https://stackoverflow.com/questions/3379956/how-to-create-a-temporary-directory-in-c
+
+
+void set_fake_state(const std::filesystem::path& filepath, const int value)
+{
+  std::ofstream output_stream {filepath, std::ios::binary};
+  output_stream.seekp(0, std::ios::beg);
+
+  output_stream << std::to_string(value) << "\n";
+
+  output_stream.close();
+}
+
+std::optional<int> read_fake_state(const std::filesystem::path& filepath)
+{
+  std::ifstream input_stream {filepath, std::ios::binary};
+  std::string s;
+  input_stream.seekg(0, std::ios::beg);
+
+  std::getline(input_stream, s);
+
+  if (s.empty())
+  {
+    return std::nullopt;
+  }
+
+  return std::make_optional<int>(std::stoi(s));
+}
 
 struct TestEnvironment
 {
@@ -186,6 +272,21 @@ BOOST_AUTO_TEST_CASE(BindWorksOnStringMorphisms)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MultiplicationEndomorphismComposedWorksOnStringMorphisms)
+{
+  // \mu_Y \circ Tf : [E, X] \to [E, Y]
+  // another_string_morphism = f: std::string -> [str, str]
+  // test_string_morphism, [E,X], (str -> str)
+  // test_string_morphism is a typical morphism. But, f, or another_string_
+  // morphism is how to "configure" the output behavior of test_string_morphism.
+
+  auto mu_Tf = MultiplicationEndomorphismComposed{another_string_morphism};
+  auto result = mu_Tf(test_string_morphism);
+  BOOST_TEST(result("Le Royer") == "Hello Le Royer!");
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(BindAsLambdaWorksOnStringMorphisms)
 {
   auto result = bind_(test_string_morphism, another_string_morphism);
@@ -194,6 +295,137 @@ BOOST_AUTO_TEST_CASE(BindAsLambdaWorksOnStringMorphisms)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Bind_tests
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TemporaryDirectoryAndFStreamMakesReadWriteEnvironment)
+{
+  {
+    std::filesystem::path temporary_path {
+      std::filesystem::temp_directory_path()};
+
+    std::string temporary_directory {"TestValues"};
+
+    std::string temporary_file_name {"TestValue"};
+    //std::filesystem::path new_path {temporary_path /= temporary_file_name};
+    std::filesystem::path new_path {temporary_path /= temporary_directory};
+
+    //std::cout << temporary_file_name << " " << new_path << "\n";
+
+    std::ofstream ofs {new_path / temporary_file_name, std::ios::binary};
+   
+    ofs << "1" << "\n";
+
+    //ofs.close();
+
+    // read back
+    std::ifstream istream {new_path / temporary_file_name, std::ios::binary};
+
+    std::string s;
+
+    // Doesnt work.
+    //istream >> s;
+
+    std::getline(istream, s);
+
+    //std::cout << " s : " << s << std::endl;
+    //int s_int {std::stoi(s)};
+
+    //BOOST_TEST(s_int == 1);
+
+    //BOOST_TEST(s == "1");
+
+    // Remove the directory and its contents.
+    std::filesystem::remove_all(new_path);
+  }
+  {
+    std::ofstream ofs {"TestValueTest", std::ios::binary};
+    ofs << "1" << "\n";
+    ofs.close();
+
+    std::ifstream istream {"TestValueTest", std::ios::binary};
+
+    std::string s;
+
+    std::getline(istream, s);
+
+    //istream >> s;
+
+    //std::cout << " s : " << s << "\n";
+
+    int s_int {std::stoi(s)};
+
+    BOOST_TEST(s_int == 1);
+  }
+  {
+    
+    std::filesystem::path temporary_directory {"TestValues"};
+    std::filesystem::create_directory(temporary_directory);
+
+    std::string temporary_file_name {"TestValue"};
+    std::filesystem::path new_path {temporary_directory / temporary_file_name};
+
+    //std::cout << new_path << "\n";
+
+    std::ofstream ofs {new_path, std::ios::binary};
+    ofs << "1" << "\n";
+    ofs.close();
+
+    std::ifstream istream {new_path, std::ios::binary};
+
+    std::string s;
+
+    std::getline(istream, s);
+
+    BOOST_TEST((!s.empty()));
+
+    //std::cout << " s : " << s << "\n";
+
+    int s_int {std::stoi(s)};
+
+    BOOST_TEST(s_int == 1); 
+
+    istream.close();
+
+    ofs.open(new_path, std::ios::binary);
+
+    ofs.seekp(0, std::ios::beg);
+    ofs << "0" << "\n";
+    ofs.close();
+
+    istream.open(new_path, std::ios::binary);
+
+    istream.seekg(0, std::ios::beg);
+
+    std::getline(istream, s);
+
+    s_int = std::stoi(s);
+
+    BOOST_TEST(s_int == 0); 
+
+    std::filesystem::remove_all(temporary_directory); 
+  }
+  {
+    TemporaryDirectory temp_dir {"TestValues"};
+    auto temp_file = temp_dir.temporary_file("TestValue");
+
+    set_fake_state(temp_file.filename_path(), 1);
+
+    auto fake_state = read_fake_state(temp_file.filename_path());
+
+    BOOST_TEST(static_cast<bool>(fake_state));
+    BOOST_TEST(*fake_state == 1);
+
+    set_fake_state(temp_file.filename_path(), 0);
+
+    fake_state = read_fake_state(temp_file.filename_path());
+
+    BOOST_TEST(static_cast<bool>(fake_state));
+    BOOST_TEST(*fake_state == 0);
+
+  }
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // ReaderMonad_tests
 BOOST_AUTO_TEST_SUITE_END() // Monads

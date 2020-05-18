@@ -9,6 +9,7 @@
 
 #include <string>
 #include <type_traits>
+#include <utility> // std::forward
 
 namespace Categories
 {
@@ -16,6 +17,147 @@ namespace Monads
 {
 namespace ReaderMonad
 {
+
+template <typename X>
+class Unit
+{
+  public:
+
+    Unit(X& x):
+      x_{std::forward<X>(x)}
+    {}
+
+    Unit(X&& x):
+      x_{std::forward<X>(x)}
+    {}
+
+    X x() const
+    {
+      return x_;
+    }
+
+    // E is the environment type.
+    template <typename E>
+    X operator()(E&& environment)
+    {
+      return x_;
+    }
+
+  private:
+
+    X x_;
+};
+
+template <typename Morphism>
+class MultiplicationEndomorphismComposed
+{
+  public:
+
+    MultiplicationEndomorphismComposed(Morphism f):
+      f_{f}
+    {}
+
+    template <typename InternalHom>
+    class MorphismFunctor
+    {
+      public:
+
+        MorphismFunctor(Morphism f, InternalHom r):
+          f_{f},
+          r_{r}
+        {}
+
+        template <typename E>
+        auto operator()(E&& environment)
+        {
+          return (f_(r_(std::forward<E>(environment))))(
+            std::forward<E>(environment));
+        }
+
+      private:
+
+        Morphism f_;
+        InternalHom r_;
+    };
+
+    template <typename InternalHom>
+    MorphismFunctor<InternalHom> operator()(InternalHom r)
+    {
+      return MorphismFunctor<InternalHom>{f_, r};
+    }
+
+    // Doesn't work.
+    /*
+    template <typename InternalHom, typename E>
+    auto operator()(InternalHom r)
+    {
+      // Capture of non-variable f_
+      return [f_, &r](E&& environment)
+      {
+        return (f_(r(std::forward<E>(environment))))(
+          std::forward<E>(environment));
+      };
+    }
+    */
+
+  private:
+
+    Morphism f_;
+};
+
+template <typename Endomorphism>
+class Local
+{
+  public:
+
+    Local(Endomorphism e):
+      e_{e}
+    {}
+
+    template <typename InternalHom>
+    class ComposeInternalHom
+    {
+      public:
+
+        ComposeInternalHom(InternalHom f):
+          f_{f}
+        {}
+
+        template <typename E>
+        auto operator()(E&& environment)
+        {
+          return f_(e_(std::forward<E>(environment)));
+        }
+
+      private:
+
+        InternalHom f_;
+    };
+
+    template <typename InternalHom>
+    ComposeInternalHom<InternalHom> operator()(InternalHom f)
+    {
+      return ComposeInternalHom<InternalHom>{f};
+    }
+
+    // Doesn't work
+    /*
+    template <typename Morphism, typename E>
+    auto operator()(Morphism f)
+    {
+      // error: capture of non-variable
+      return [&e_, &f](E&& environment)
+      {
+        return f(e(std::forward<E>(environment)));
+      };
+    }
+    */
+
+  private:
+
+    Endomorphism e_;
+};
+
 
 // What Haskell/Functional Programming calls "return"
 template <typename X, typename E>
