@@ -45,9 +45,11 @@ ADD_EXECUTABLE(Check
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
   Cpp/Threads/Future_tests.cpp
+  Cpp/Utilities/Memory/PointerWrappers_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp
+  DataStructures/Lists_tests.cpp
   DeskCalculator/Token_tests.cpp
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
@@ -83,7 +85,8 @@ ADD_EXECUTABLE(TClapping
 
 TARGET_LINK_LIBRARIES(Check
   Algorithms
-#  Cpp
+  #Cpp
+  #DataStructures
   Hierarchy
   IPC
   Tools

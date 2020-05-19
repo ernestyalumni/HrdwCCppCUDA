@@ -4,8 +4,8 @@
 /// \brief Classes and functions demonstrating LinkedLists.
 /// @ref https://gist.github.com/charlierm/5691020
 ///-----------------------------------------------------------------------------
-#ifndef ALGORITHMS_SORTING_QUICK_SORT_H
-#define ALGORITHMS_SORTING_QUICK_SORT_H
+#ifndef DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H
+#define DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H
 
 #include <iostream>
 #include <memory>
@@ -211,4 +211,4 @@ std::ostream& LinkedList<T>::operator<<(
 } // namespace LinkedLists
 } // namespace DataStructures
 
-#endif // ALGORITHMS_SORTING_QUICK_SORT_H
+#endif // DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H

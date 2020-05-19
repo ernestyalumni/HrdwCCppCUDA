@@ -85,10 +85,12 @@ class Bind
         template <typename InternalHom>
         auto operator()(InternalHom k)
         {
-          auto morphism = [&f_, &k](auto x)
+          //Morphism f {f_};
+
+          auto morphism = [&](auto x)//[&f, &k](auto x)
           {
             return (f_(x))(k);
-          }
+          };
 
           return tx_(morphism);
         }
