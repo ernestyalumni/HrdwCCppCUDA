@@ -60,6 +60,44 @@ enum class Types : int
   close_on_exec = SOCK_CLOEXEC
 };
 
+//------------------------------------------------------------------------------
+// \ref https://www.gnu.org/software/libc/manual/html_node/Socket_002dLevel-Options.html
+//------------------------------------------------------------------------------
+enum class Levels : int
+{
+  socket = SOL_SOCKET
+};
+
+//------------------------------------------------------------------------------
+/// \brief enum class for socket-level options
+/// \ref https://linux.die.net/man/3/setsockopt
+/// http://man7.org/linux/man-pages/man7/socket.7.html
+//------------------------------------------------------------------------------
+enum class Options : int
+{
+  // Turns on recording of debugging information. Option enables or disabled
+  // debugging in underlying protocol modules. Option takes int value. This is
+  // a Boolean option.
+  debug = SO_DEBUG,
+  // Permits sending broadcast messages, if supported by protocol. Option takes
+  // int value. This is a boolean option.
+  broadcast = SO_BROADCAST,
+  // Specifies rules used in validating addresses supplied to ::bind() should
+  // allow reuse of local addresses, if this is supported by protocol. Option
+  // takes int value. This is a Boolean option.
+  reuse_address = SO_REUSEADDR,
+  // Permits multiple AF_INET or AF_INET6 sockets to be bound to identical
+  // socket address. Option must be set on each socket (including first socket)
+  // prior to calling ::bind on socket.
+  reuse_port = SO_REUSEPORT,
+  // Keeps connections active by enabling periodic transmission of messages, if
+  // this is supported by protocol. Option takes int value.
+  keep_alive = SO_KEEPALIVE,
+  // enable or disable receiving of SO_TIMESTAMP control message. Timestamp
+  // control message sent with level SOL_SOCKET and cmsg_type of SCM_TIMESTAMP.
+  timestamp = SO_TIMESTAMP
+};
+
 } // namespace Sockets
 } // namespace IPC
 

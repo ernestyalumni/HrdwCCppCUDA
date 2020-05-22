@@ -12,6 +12,7 @@
 
 #include "ErrorNumber.h" // ErrorNumber
 
+#include <optional>
 #include <string> // std::string
 
 namespace Utilities
@@ -35,7 +36,7 @@ class HandleReturnValue
       const int result,
       const std::string& custom_error_string);
 
-    virtual void operator()(const int result);
+    //virtual void operator()(const int result);
 
     ErrorNumber error_number() const
     {
@@ -51,10 +52,39 @@ class HandleReturnValue
     ErrorNumber error_number_;
 };
 
+class HandleReturnValuePassively
+{
+  public:
+
+    HandleReturnValuePassively();
+
+    virtual std::optional<ErrorNumber> operator()(const int return_value);
+
+    ErrorNumber error_number() const
+    {
+      return error_number_;
+    }
+
+  protected:
+
+    void get_error_number();
+
+  private:
+
+    ErrorNumber error_number_;
+};
+
+
 //------------------------------------------------------------------------------
 /// \ref http://man7.org/linux/man-pages/man2/close.2.html
 /// \details On error, -1 is returned, and errno is set appropriately.
 /// 0 indicates success.
+/// EBADF fd isn't valid open fd
+/// EINTR close() call interrupted by signal
+/// EIO I/O error occurred.
+/// ENOSPC, EDQUOT On NFS, errors aren't normally reported against first write
+/// which exceeds available storage space, but instead against subsequent write,
+/// fsync, or close().
 //------------------------------------------------------------------------------
 class HandleClose : public HandleReturnValue
 {
@@ -62,10 +92,15 @@ class HandleClose : public HandleReturnValue
 
     HandleClose() = default;
 
-    void operator()(const int result);
+    std::optional<ErrorNumber> operator()(const int return_value);
+
+  protected:
+
+    using HandleReturnValue::get_error_number;
 
   private:
 
+    using HandleReturnValue::HandleReturnValue;
     using HandleReturnValue::operator();
 };
 

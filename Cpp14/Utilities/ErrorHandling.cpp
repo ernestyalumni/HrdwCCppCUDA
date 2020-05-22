@@ -27,7 +27,10 @@
 //------------------------------------------------------------------------------
 #include "ErrorHandling.h"
 
+#include "ErrorNumber.h" // ErrorNumber
+
 #include <iostream>
+#include <optional>
 #include <string>
 #include <system_error> // std::system_error, std::system_category
 
@@ -68,9 +71,49 @@ void HandleReturnValue::operator()(const int result)
     "Integer return value to check was less than 0, and so,");
 }
 
-void HandleClose::operator()(const int result)
+void HandleReturnValue::get_error_number()
 {
-  this->operator()(result, "Failed to close fd (::close())");
+  error_number_ = ErrorNumber{};
+}
+
+HandleReturnValuePassively::HandleReturnValuePassively():
+  error_number_{}
+{}
+
+std::optional<ErrorNumber> HandleReturnValuePassively::optional()(
+  const int return_value)
+{
+  if (return_value < 0)
+  {
+    get_error_number();
+
+    return std::make_optional<ErrorNumber>(error_number_);
+  }
+  else
+  {
+    return std::nullopt;
+  }
+}
+
+void HandleReturnValuePassively::get_error_number()
+{
+  error_number_ = ErrorNumber{};
+}
+
+std::optional<ErrorNumber> HandleClose::operator()(const int return_value)
+{
+  if (return_value < 0)
+  {
+    get_error_number();
+    
+    std::cerr << "Failed to close fd (::close()) with errno: " <<
+      error_number_.as_string() << " and error number " <<
+      std::to_string(error_number_.error_number()) << "\n";
+
+    return std::make_optional<ErrorNumber>(error_number_);
+  }
+
+  return std::nullopt;
 }
 
 void HandleRead::operator()(const ssize_t number_of_bytes)

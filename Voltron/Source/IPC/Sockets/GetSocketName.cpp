@@ -22,6 +22,45 @@ namespace IPC
 namespace Sockets
 {
 
+GetSocketName::GetSocketName():
+  socket_address_{std::nullopt}
+{}
+
+std::optional<ErrorNumber> GetSocketName::operator()(const Socket& socket)
+{
+  InternetSocketAddress internet_socket_address;
+
+  // cf. http://man7.org/linux/man-pages/man2/getsockname.2.html
+  // This, the "addrlen argument", needs to be initialized to indicate amount of
+  // space (in bytes) pointed to by addr, which is InternetSocketAddress size.
+  socklen_t size_of_address {sizeof(internet_socket_address)};
+
+  const int return_value {
+    ::getsockname(
+      socket.fd(),
+      internet_socket_address.to_sockaddr(),
+      &size_of_address)};
+
+  std::optional<ErrorNumber> error_number {
+    HandleGetSocketName()(return_value)};
+
+  if (error_number)
+  {
+    return std::forward<std::optional<ErrorNumber>>(error_number);
+  }
+  else
+  {
+    socket_address_ =
+      std::make_optional<std::tuple<InternetSocketAddress, socklen_t>>(
+        std::make_tuple<InternetSocketAddress, socklen_t>(
+          std::forward<InternetSocketAddress>(internet_socket_address),
+          std::move(size_of_address)));
+
+    return std::nullopt;
+  }
+}
+
+/*
 std::pair<
   std::optional<ErrorNumber>,
   std::optional<std::tuple<InternetSocketAddress, socklen_t>>
@@ -59,6 +98,7 @@ std::pair<
             std::move(size_of_address))));
   }
 }
+*/
 
 GetSocketName::HandleGetSocketName::HandleGetSocketName() = default;
 

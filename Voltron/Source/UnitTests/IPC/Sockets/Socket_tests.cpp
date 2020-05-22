@@ -20,7 +20,7 @@ using UnitTests::Tools::error_contains;
 
 BOOST_AUTO_TEST_SUITE(IPC)
 BOOST_AUTO_TEST_SUITE(Sockets)
-BOOST_AUTO_TEST_SUITE(ParameterFamilies_tests)
+BOOST_AUTO_TEST_SUITE(Socket_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(SocketConstructsWithSpecialEnumClasses)
     BOOST_TEST(socket.type() == SOCK_DGRAM);
 
     // cf. https://www.cs.rutgers.edu/~pxk/417/notes/sockets/demo-udp-01.html
-    std::cout << "\ncreated socket: descriptor: " << socket.fd() << '\n';
+    // std::cout << "\ncreated socket: descriptor: " << socket.fd() << '\n';
   }
 }
 
@@ -48,6 +48,6 @@ BOOST_AUTO_TEST_CASE(SocketThrowsForUnsupportedProtocols)
 	}
 }
 
-BOOST_AUTO_TEST_SUITE_END() // ParameterFamilies_tests
+BOOST_AUTO_TEST_SUITE_END() // Socket_tests
 BOOST_AUTO_TEST_SUITE_END() // Sockets
 BOOST_AUTO_TEST_SUITE_END() // IPC

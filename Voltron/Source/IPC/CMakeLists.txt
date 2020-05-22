@@ -5,6 +5,7 @@ ADD_LIBRARY(IPC
   Sockets/InternetAddress.cpp
   Sockets/Listen.cpp
   Sockets/Receive.cpp
+  Sockets/SetSocketOptions.cpp
   Sockets/Socket.cpp
   Sockets/UDP/CreateSocket.cpp
   Sockets/UDP/Receiver.cpp

@@ -36,7 +36,6 @@
 
 namespace IPC
 {
-
 namespace Sockets
 {
 

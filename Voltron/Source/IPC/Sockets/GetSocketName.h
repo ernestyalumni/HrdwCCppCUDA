@@ -1,10 +1,9 @@
 //------------------------------------------------------------------------------
 /// \file GetSocketName.h
 /// \author Ernest Yeung
-/// \brief Bind, or assign the address to the socket referred to by a file
-/// descriptor. Traditionally called "assigning a name to a socket."
+/// \brief ::getsockname wrapper.
 /// \ref http://man7.org/linux/man-pages/man2/getsockname.2.html
-///-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef IPC_SOCKETS_GET_SOCKET_NAME_H
 #define IPC_SOCKETS_GET_SOCKET_NAME_H
 
@@ -25,10 +24,23 @@ class GetSocketName
 {
   public:
 
+    GetSocketName();
+
+    std::optional<Utilities::ErrorHandling::ErrorNumber> operator()(
+      const Socket& socket);
+
+    /*
     std::pair<
       std::optional<Utilities::ErrorHandling::ErrorNumber>,
       std::optional<std::tuple<InternetSocketAddress, socklen_t>>
       > operator()(const Socket& socket);
+    */
+
+    std::optional<std::tuple<InternetSocketAddress, socklen_t>>
+      socket_address() const
+    {
+      return socket_address_;
+    }
 
   private:
 
@@ -57,6 +69,8 @@ class GetSocketName
 
         Utilities::ErrorHandling::ErrorNumber error_number_;
     };
+
+    std::optional<std::tuple<InternetSocketAddress, socklen_t>> socket_address_;
 };
 
 } // namespace Sockets

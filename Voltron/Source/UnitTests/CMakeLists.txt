@@ -54,6 +54,7 @@ ADD_EXECUTABLE(Check
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
+  IO/Epoll/EpollFd_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp
   IPC/Sockets/Bind_tests.cpp
   IPC/Sockets/GetSocketName_tests.cpp
@@ -88,6 +89,7 @@ TARGET_LINK_LIBRARIES(Check
   #Cpp
   #DataStructures
   Hierarchy
+  IO
   IPC
   Tools
   Utilities

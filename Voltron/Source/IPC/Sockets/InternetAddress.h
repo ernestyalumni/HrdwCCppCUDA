@@ -62,7 +62,10 @@ namespace Sockets
 /// directly with name resolver (see gethostbyname)
 ///
 /// There are several special addresses:
-/// INADDR_LOOPBACK (127.0.0.1)
+/// INADDR_LOOPBACK (127.0.0.1) always refers to local host via loopback device;
+/// INADDR_ANY (0.0.0.0) means any address for binding;
+/// INADDR_BROADCAST (255.255.255.255) means any host and has same effect on
+/// bind as INADDR_ANY for historical reasons.
 //------------------------------------------------------------------------------
 struct InternetSocketAddress : public ::sockaddr_in
 {
@@ -97,6 +100,10 @@ struct InternetSocketAddress : public ::sockaddr_in
   {
     return sizeof(::sockaddr);
   }
+
+  void as_any();
+
+  void as_loop_back();
 
   friend std::ostream& operator<<(
     std::ostream& os,

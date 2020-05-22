@@ -33,6 +33,16 @@ InternetSocketAddress::InternetSocketAddress(
   ::sockaddr_in{sin_family, ::htons(sin_port), {::htonl(sin_addr)}}
 {}
 
+void InternetSocketAddress::as_any()
+{
+  (this->sin_addr).s_addr = ::htonl(INADDR_ANY);
+}
+
+void InternetSocketAddress::as_loop_back()
+{
+  (this->sin_addr).s_addr = ::htonl(INADDR_LOOPBACK);
+}
+
 InternetAddress::InternetAddress(
   const uint16_t sin_port,
   const uint16_t sin_family,
