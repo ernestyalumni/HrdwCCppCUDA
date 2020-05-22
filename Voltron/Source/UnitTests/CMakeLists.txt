@@ -23,7 +23,8 @@ ADD_EXECUTABLE(Check
   Categories/Monads/ContinuationMonad_tests.cpp
   Categories/Monads/IOMonad_tests.cpp
   Categories/Monads/OptionalMonad_tests.cpp
-  Categories/Monads/ReaderMonad_tests.cpp
+  # TODO: Use C++17 C++20 exclusively for std::filesystem
+  #Categories/Monads/ReaderMonad_tests.cpp
   Categories/Monads/OldStateMonad_tests.cpp
   Categories/Monads/StateMonad_tests.cpp
   Categories/Monads/WriterMonad_tests.cpp
@@ -61,6 +62,7 @@ ADD_EXECUTABLE(Check
   IPC/Sockets/InternetAddress_tests.cpp
   IPC/Sockets/Listen_tests.cpp
   IPC/Sockets/ParameterFamilies_tests.cpp
+  IPC/Sockets/SetSocketOptions_tests.cpp
   IPC/Sockets/Socket_tests.cpp
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp

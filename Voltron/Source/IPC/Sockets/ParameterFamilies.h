@@ -72,6 +72,7 @@ enum class Levels : int
 /// \brief enum class for socket-level options
 /// \ref https://linux.die.net/man/3/setsockopt
 /// http://man7.org/linux/man-pages/man7/socket.7.html
+/// https://linux.die.net/man/7/socket
 //------------------------------------------------------------------------------
 enum class Options : int
 {
@@ -82,6 +83,17 @@ enum class Options : int
   // Permits sending broadcast messages, if supported by protocol. Option takes
   // int value. This is a boolean option.
   broadcast = SO_BROADCAST,
+  // Specify receiving timeouts until reporting error.
+  // argument is struct timeval.
+  // If input or output function blocks for this time period, and data has been
+  // received, return value of that function will be amount of data transferred;
+  // if no data been transferred and timeout reached, then -1 returned with
+  // errno set to EAGAIN or EWOULDBLOCK, or EINPROGRESS (for connect), just as
+  // if socket was specified to be nonblocking.
+  // If timeout set to 0 (default), operation will never timeout.
+  // timeouts only have effect for system calls that perform socket I/O;
+  // timeouts have no effect for select, poll, epoll_wait.
+  receiving_timeout = SO_RCVTIMEO,
   // Specifies rules used in validating addresses supplied to ::bind() should
   // allow reuse of local addresses, if this is supported by protocol. Option
   // takes int value. This is a Boolean option.

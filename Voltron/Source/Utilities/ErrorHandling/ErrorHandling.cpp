@@ -51,15 +51,27 @@ void HandleReturnValue::operator()(
   }
 }
 
-/*
-void HandleReturnValue::operator()(const int result)
-{
-  this->operator()(
-    result,
-    "Integer return value to check was less than 0, and so,");
-}
-*/
+HandleReturnValuePassively::HandleReturnValuePassively() = default;
 
+std::optional<ErrorNumber> HandleReturnValuePassively::operator()(
+  const int return_value)
+{
+  if (return_value < 0)
+  {
+    get_error_number();
+
+    return std::make_optional<ErrorNumber>(error_number_);
+  }
+  else
+  {
+    return std::nullopt;
+  }
+}
+
+void HandleReturnValuePassively::get_error_number()
+{  
+  error_number_ = ErrorNumber{};
+}
 
 std::optional<ErrorNumber> HandleClose::operator()(const int return_value)
 {

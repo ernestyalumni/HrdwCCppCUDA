@@ -11,7 +11,7 @@
 #include "IPC/Sockets/Socket.h"
 
 #include <boost/test/unit_test.hpp>
-//#include <iostream>
+#include <iostream>
 #include <tuple>
 
 using IPC::Sockets::Bind;

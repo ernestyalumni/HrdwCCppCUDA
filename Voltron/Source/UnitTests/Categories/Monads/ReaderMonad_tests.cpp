@@ -15,7 +15,6 @@
 #include <regex>
 #include <string>
 
-
 using Categories::Monads::ReaderMonad::Local;
 using Categories::Monads::ReaderMonad::MultiplicationEndomorphismComposed;
 using Categories::Monads::ReaderMonad::Unit;
