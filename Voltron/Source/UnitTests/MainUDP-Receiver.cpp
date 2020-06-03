@@ -8,12 +8,26 @@
 ///-----------------------------------------------------------------------------
 #include "IPC/Sockets/UDP/Receiver.h"
 
+#include "IPC/Sockets/Receive.h"
+#include "IPC/Sockets/Send.h"
+#include "IPC/Sockets/UDP/CreateSocket.h"
+
+#include "Utilities/ToBytes.h"
+
+#include <array>
 #include <cstdlib> // std::atoi
 #include <iostream>
 #include <string>
 #include <utility>
 
 using IPC::Sockets::UDP::Receiver;
+
+using IPC::Sockets::ReceivingOn;
+using IPC::Sockets::SendTo;
+using IPC::Sockets::Socket;
+using IPC::Sockets::UDP::bind_to_any_ip_address;
+using IPC::Sockets::UDP::UdpSocket;
+using Utilities::ToBytes;
 
 int main(int argc, char* argv[])
 {
@@ -30,11 +44,37 @@ int main(int argc, char* argv[])
 		port = std::atoi(argv[1]);
 	}
 
-	Receiver receiver {port};
+	std::array<char, buffer_size> send_buffer; // receive buffer
+
+	// Create a UDP socket.
+	UdpSocket socket {};
+
+	// Bind the socket to any valid IP address and a specific port.
+
+	auto bind_result = bind_to_any_ip_address(socket, port);
+	std::cout << "Bind had errors: " << static_cast<bool>(bind_result.first) << '\n';
+	std::cout << "Binded Sender address: "; 
+
+	ToBytes((*bind_result.second).sin_port).increasing_addresses_print();
+	std::cout << "\n";
+	ToBytes((*bind_result.second).sin_addr.s_addr).increasing_addresses_print();
+	std::cout << "\n";
+	ToBytes((*bind_result.second).sin_port).increasing_addresses_print();
+	std::cout << "\n";
+
+	//Receiver receiver {port};
+
+	ReceivingOn receive_on {};
+	auto received_from = receive_on(socket);
+
+	SendTo<buffer_size> sender_to {};
 
 	for (;;)
 	{
 		std::cout << "Waiting on port " << port << "\n";
+		
+		// TODO: fix Receiver.
+		/*
 		auto receipt = receiver.receiving_data<buffer_size>();
 		
 		if (receipt.second)
@@ -49,7 +89,33 @@ int main(int argc, char* argv[])
 		{
 			std::cout << "Un oh - something went wrong!\n";
 		}
-		
+		*/
+
+		auto result = received_from();
+
+		if (!static_cast<bool>(result.first))
+		{
+			std::cout << "received message: \"" << (*result.second).buffer_.data() <<
+				"\"" << (*result.second).received_bytes_ << " bytes)\n";
+		}
+		else
+		{
+			std::cout << "Uh oh - something went wrong!\n";
+		}
+
+		std::string message {"ack "};
+		message += std::to_string(message_count++);
+		std::copy(message.begin(), message.end(), send_buffer.data());
+
+		std::cout << "Sending response \"" << send_buffer.data() << "\"\n";
+
+		auto send_message = sender_to((*result.second).sender_address_);
+		auto send_result = send_message(send_buffer)(socket);
+
+		if (static_cast<bool>(send_result.first))
+		{
+			std::cerr << "sendto error" << "\n";
+		}
 
 	}	
 	// Never exits.

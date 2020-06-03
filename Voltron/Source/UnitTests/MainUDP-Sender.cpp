@@ -7,6 +7,7 @@
 /// \ref https://www.cs.rutgers.edu/~pxk/417/notes/sockets/demo-udp-03.html
 ///-----------------------------------------------------------------------------
 #include "IPC/Sockets/InternetAddress.h"
+#include "IPC/Sockets/Receive.h"
 #include "IPC/Sockets/Send.h"
 #include "IPC/Sockets/Socket.h"
 #include "IPC/Sockets/UDP/CreateSocket.h"
@@ -14,6 +15,8 @@
 #include "Utilities/ToBytes.h"
 
 using IPC::Sockets::InternetSocketAddress;
+using IPC::Sockets::ReceiveFrom;
+using IPC::Sockets::ReceivingOn;
 using IPC::Sockets::SendTo;
 using IPC::Sockets::Socket;
 using IPC::Sockets::UDP::UdpSocket;
@@ -79,6 +82,8 @@ int main(int argc, char* argv[])
 	char *server = "127.0.0.1";	/* change this to use a different server */
 	char buf[BUFLEN];
 
+	std::array<char, BUFLEN> message_buffer; // message buffer
+
 	/* create a socket */
 
 //	Socket socket {AF_INET, SOCK_DGRAM};
@@ -114,17 +119,40 @@ int main(int argc, char* argv[])
 	ToBytes(destination_address.sin_addr.s_addr).increasing_addresses_print();
 	std::cout << "\n";
 
+	SendTo<BUFLEN> sender_to {};
+	auto send_message = sender_to(destination_address);
+
+	ReceivingOn receive_on {};
+	auto received_from = receive_on(socket);
+
 	for (int i {0}; i < MSGS; ++i)
 	{
 		std::cout << "Sending packet " << i << " to " << server << " port " <<
 			SERVICE_PORT << "\n";
 
-		sprintf(buf, "This is packet %d", i);
-		if (sendto(socket.fd(), buf, strlen(buf), 0, destination_address.to_sockaddr(), slen)==-1)
-			perror("sendto");
+		std::string message {"This is packet "};
+		message += std::to_string(i);
+		std::cout << " message to be sent: " << message << "\n";
+		std::copy(message.begin(), message.end(), message_buffer.data());
+
+		auto send_result = send_message(message_buffer)(socket);
+
+		if (static_cast<bool>(send_result.first))
+		{
+			std::cerr << "sendto error" << "\n";
+		}
+
+		// Now receive an acknowledgement from the server.
+
+		auto result = received_from();
+
+		if (!static_cast<bool>(result.first))
+		{
+			std::cout << "received message: \"" << (*result.second).buffer_.data() <<
+				"\"\n";
+		}
 	}
 
-	close(fd);
 	return 0;
 }
 
