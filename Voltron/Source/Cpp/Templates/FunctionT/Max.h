@@ -15,6 +15,23 @@ namespace Templates
 namespace FunctionTemplates
 {
 
+namespace max1
+{
+
+/// \ref VJG (2017), pp. 3, basics/max1.hpp
+/// \brief This template def. specifies a family of functions that return the
+/// maximum of 2 values.
+// The type of these parameters is left open as template parameters.
+
+template <typename T>
+T max(T a, T b)
+{
+	// if b < a then yield a else yield b
+	return b < a ? a : b;
+}
+
+} // namespace max1
+
 // Values of type T, since C++17, can pass temporaries (rvalues, see Appendix B
 // of VJG (2017)), even if neither copy nor move ctor is valid.
 
