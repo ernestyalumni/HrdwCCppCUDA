@@ -42,10 +42,11 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Std/Pointers_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
-  Cpp/Templates/Template_Metaprogramming_tests.cpp
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
   Cpp/Templates/FunctionT/MoreMax_tests.cpp
+  Cpp/Templates/Template_Metaprogramming_tests.cpp
+  Cpp/Templates/TypeUtilities_tests.cpp
   Cpp/Threads/Future_tests.cpp
   Cpp/Utilities/Memory/PointerWrappers_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
