@@ -138,6 +138,8 @@ class CreateOrOpen
     /// ENOENT O_CREAT flag wasn't specified in olfag, and no queue with this
     /// name exists.
     //--------------------------------------------------------------------------
+    // TODO: inherit from HandleReturnValuePassively, it may fail to open
+    // another queue.
     class HandleMqOpen
     {
       public:

@@ -2,8 +2,8 @@
 /// \file TemporaryDirectory.h
 /// \brief Temporary directory.
 ///-----------------------------------------------------------------------------
-#ifndef _TOOLS_TEMPORARY_DIRECTORY_H_
-#define _TOOLS_TEMPORARY_DIRECTORY_H_
+#ifndef TOOLS_TEMPORARY_DIRECTORY_H
+#define TOOLS_TEMPORARY_DIRECTORY_H
 
 #include <string>
 
@@ -18,6 +18,8 @@ class TemporaryDirectory
       const std::string& base_directory_path);
 
     //--------------------------------------------------------------------------
+    /// \brief Create a temporary directory starting from the current directory
+    /// the function is called from.
     /// \param directory_name_prefix
     /// e.g. "Temp" or i.e. /Temp
     //--------------------------------------------------------------------------
@@ -43,4 +45,4 @@ class TemporaryDirectory
 
 } // namespace Tools
 
-#endif // _TOOLS_TEMPORARY_DIRECTORY_H_
+#endif // TOOLS_TEMPORARY_DIRECTORY_H

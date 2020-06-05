@@ -39,6 +39,8 @@ BOOST_AUTO_TEST_CASE(GetCwdAndMkdtempWorks)
   // value as buf.
   // On failure, these functions return NULL, errno set.
 
+  std::cout << "\n\n GetCwdAndMkdtempWorks \n";
+
   std::cout << " Path MAX : " << PATH_MAX << '\n';
 
   ::getcwd(buffer_array.data(), PATH_MAX);
