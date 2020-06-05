@@ -8,13 +8,14 @@
 #include <boost/test/unit_test.hpp>
 #include <complex>
 #include <string>
+#include <type_traits> // std::decay
 
 using namespace Cpp::Templates::FunctionTemplates;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Templates)
 BOOST_AUTO_TEST_SUITE(FunctionTemplates)
-BOOST_AUTO_TEST_SUITE(Max_tests)
+BOOST_AUTO_TEST_SUITE(MoreMax_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -89,6 +90,26 @@ BOOST_AUTO_TEST_CASE(Cpp11UsesTrailingReturnType)
   }
 }
 
+// https://en.cppreference.com/w/cpp/types/decay
+// Applies lvalue-to-rvalue, array-to-pointer, function-to-pointer implicit
+// conversions to type T, removes cv-qualifiers, defines resulting type as
+// member typedef type.
+template <typename T, typename U>
+struct DecayEquivalent : 
+  std::is_same<typename std::decay_t<T>, U>::type
+{};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StdDecay)
+{
+  BOOST_TEST((DecayEquivalent<int, int>::value));
+  BOOST_TEST((DecayEquivalent<int&, int>::value));
+  BOOST_TEST((DecayEquivalent<int&&, int>::value));
+  BOOST_TEST((DecayEquivalent<const int&, int>::value));
+  BOOST_TEST((DecayEquivalent<int[2], int*>::value));
+  BOOST_TEST((DecayEquivalent<int(int), int(*)(int)>::value));
+}
 
 /*
 
@@ -117,7 +138,7 @@ BOOST_AUTO_TEST_CASE(OverloadingFunctionTemplates)
 }
 */
 
-BOOST_AUTO_TEST_SUITE_END() // Max_tests
+BOOST_AUTO_TEST_SUITE_END() // MoreMax_tests
 
 BOOST_AUTO_TEST_SUITE_END() // FunctionTemplates
 BOOST_AUTO_TEST_SUITE_END() // Templates
