@@ -111,6 +111,23 @@ BOOST_AUTO_TEST_CASE(StdDecay)
   BOOST_TEST((DecayEquivalent<int(int), int(*)(int)>::value));
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MaxDecltypeDecayAppliesLvalueToRvalueDecay)
+{
+  {
+    int a {42};
+    int b {7};
+
+    int& a_ref {a};
+    int&& b_r_value {std::move(b)};
+
+    auto result = max_decltype_decay::max(a_ref, b_r_value);
+    BOOST_TEST(result == 42);
+  }
+
+}
+
 /*
 
 

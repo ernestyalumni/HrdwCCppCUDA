@@ -83,6 +83,11 @@ auto max(T1 a, T2 b) -> decltype(b < a ? a : b)
 namespace max_decltype_decay
 {
 
+//------------------------------------------------------------------------------
+/// \details Because member type is a type, you have to qualify the expression
+/// with typename to access it (see Sec. 5.1, pp. 67 of VJW (2017)).
+/// \ref VJW (2017), pp. 12, Ch. 1: Function Templates.
+//------------------------------------------------------------------------------
 template <typename T1, typename T2>
 auto max (T1 a, T2 b) -> typename std::decay_t<decltype(true ? a : b)>
 {

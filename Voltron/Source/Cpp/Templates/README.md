@@ -135,6 +135,10 @@ If template argument, e.g. `RT` doesn't appear in types of function call paramet
 
 cf. pp. 11, Sec. 1.3.2 Deducing the Return Type. If return type depends on template parameters, simplest and best approach to deduce return type is to let compiler find out.
 
+cf. pp. 12, VJG (2017).
+
+Note that initialization of type `auto` **always decays**. This also applies to return values when return type is just `auto`. `auto` as return type behaves just as in following code, where `a` is declared by decayed type of `i, int`. 
+
 
 ### Overloading Function Templates
 
@@ -151,3 +155,4 @@ FX object_map(const X& x)
   return (*ObjectMap)(x);
 }
 ```
+
