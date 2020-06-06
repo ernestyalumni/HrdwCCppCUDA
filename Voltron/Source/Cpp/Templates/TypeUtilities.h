@@ -19,6 +19,13 @@ namespace Templates
 namespace TypeUtilities
 {
 
+//------------------------------------------------------------------------------
+/// \brief Utility class for debugging deduced types.
+/// \ref https://gitlab.com/manning-fpcpp-book/code-examples/-/blob/master/chapter-11/contained-type/type_utils.h
+//------------------------------------------------------------------------------
+template <typename T>
+class Error;
+
 // cf. https://en.cppreference.com/w/cpp/types/remove_cv
 // template <class T>
 // struct remove_cv

@@ -466,3 +466,23 @@ Summary: handler `future<T>` may not yet contain a value, but value of type `T` 
 
 # Template metaprogramming, Ch. 11, pp. 226
 
+cf. 11.1.2 Pattern matching during compilation
+
+When defining metafunctions, think about result in general case, and then cover specific cases and calculate results for them.
+
+Because you're manipulating types, metafunction won't return a value `true` or `false`, but a *type* -
+  `std::true_type` or `std::false_type`
+
+Do more general type,
+```
+template <typename T1, typename T2>
+struct IsSame : std::false_type
+{};
+```
+
+```
+template <typename T>
+struct IsSame<T, T> : std::true_type
+{};
+```
+

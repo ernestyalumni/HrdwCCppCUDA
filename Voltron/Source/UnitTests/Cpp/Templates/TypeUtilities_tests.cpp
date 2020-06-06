@@ -7,12 +7,14 @@
 #include "Cpp/Templates/TypeUtilities.h"
 
 #include <boost/test/unit_test.hpp>
+#include <list>
 #include <string>
 #include <type_traits> // std::is_same, std::remove_reference
 #include <utility> // std::declval
 #include <vector>
 
 using Cpp::Templates::TypeUtilities::ContainedType;
+using Cpp::Templates::TypeUtilities::Error;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Templates)
@@ -103,6 +105,42 @@ BOOST_AUTO_TEST_CASE(ContainedTypeGetsTypeOfContainerElements)
       ContainedType<std::vector<NonDefault>>
       >()
     ));
+}
+
+// Writes the exact result of the ContainedType meta-function
+// Error<ContainedType<std::vector<std::string>>>();
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ErrorProducesCompilationError)
+{
+  // Produces compilation error, is not a template.
+  //Error<ContainedType<std::vector<std::string>>>();
+  BOOST_TEST(true);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StaticAssertVerifiesContainedType)
+{
+  static_assert(
+    std::is_same<int, ContainedType<std::vector<int>>>(),
+    "std::vector<int> should contain integers");
+
+  static_assert(
+    std::is_same<
+      std::string,
+      ContainedType<
+        std::list<std::string>>>(),
+    "std::list<std::string> should contain strings");
+
+  static_assert(
+    std::is_same<
+      NonDefault*,
+      ContainedType<
+        std::vector<NonDefault*>>>(),
+    "std::vector<NonDefault*> should contain NonDefault*");
+
+  BOOST_TEST(true);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // TypeUtilities_tests 

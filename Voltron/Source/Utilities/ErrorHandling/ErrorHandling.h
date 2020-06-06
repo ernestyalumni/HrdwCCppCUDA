@@ -56,8 +56,15 @@ class HandleReturnValuePassively
 {
   public:
 
+    using OptionalErrorNumber = std::optional<ErrorNumber>;
+
     HandleReturnValuePassively();
 
+    //--------------------------------------------------------------------------
+    /// \details If the return_value is less than 0, the error number is
+    /// obtained (since the errno would have been set), and a non-empty optional
+    /// is returned. Otherwise, an empty optional is returned.
+    //--------------------------------------------------------------------------
     virtual std::optional<ErrorNumber> operator()(const int return_value);
 
     ErrorNumber error_number() const

@@ -119,16 +119,15 @@ std::optional<ErrorNumber> CreateOrOpen::HandleMqOpen::operator()(
 {
   if (return_value < 0)
   {
-    const auto error_number = ErrorNumber{};
+    get_error_number();
 
-    return std::make_optional<ErrorNumber>(error_number);
+    return std::make_optional<ErrorNumber>(std::move(error_number()));
   }
   else
   {
     return std::nullopt;
   }
 }
-
 
 } // namespace MessageQueue
 } // namespace IPC

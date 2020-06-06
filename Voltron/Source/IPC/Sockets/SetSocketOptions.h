@@ -9,7 +9,7 @@
 
 #include "IPC/Sockets/ParameterFamilies.h"
 #include "IPC/Sockets/Socket.h"
-#include "Utilities/ErrorHandling/ErrorNumber.h"
+#include "Utilities/ErrorHandling/ErrorHandling.h"
 
 #include <optional>
 

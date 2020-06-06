@@ -98,15 +98,6 @@ class CreateOrOpen
       return operation_flag_;
     }
 
-  protected:
-  /*
-    // Protected to make amendable to unit tests.
-    static NewQueueInputs fill_in_new_queue_inputs(
-      const mode_t mode,
-      const long maximum_number_of_messages,
-      const long maximum_message_size);
-  */
-
     // Protected to make amendable to unit tests only.
     std::optional<NewQueueInputs> new_queue_inputs() const
     {
@@ -140,7 +131,8 @@ class CreateOrOpen
     //--------------------------------------------------------------------------
     // TODO: inherit from HandleReturnValuePassively, it may fail to open
     // another queue.
-    class HandleMqOpen
+    class HandleMqOpen :
+      Utilities::ErrorHandling::HandleReturnValuePassively
     {
       public:
 
