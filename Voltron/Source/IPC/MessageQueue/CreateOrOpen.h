@@ -22,9 +22,160 @@ namespace IPC
 namespace MessageQueue
 {
 
+namespace Details
+{
+
+class HandleMqOpen : Utilities::ErrorHandling::HandleReturnValuePassively
+{
+  public:
+
+    using OptionalErrorNumber =
+      Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
+
+    OptionalErrorNumber operator()(const mqd_t return_value);
+};
+
+} // namespace Details
+
+class OpenConfiguration
+{
+  public:
+    
+    OpenConfiguration(const std::string& name, const int operation_flag);
+
+    OpenConfiguration(const std::string& name, const OperationFlags flag);
+
+    std::string name() const
+    {
+      return name_;
+    }
+
+    int operation_flag() const
+    {
+      return operation_flag_;
+    }
+
+    void add_additional_operation(const AdditionalOperationFlags flag);
+
+  private:
+
+    std::string name_;
+    int operation_flag_;
+};
+
+//------------------------------------------------------------------------------
+/// \details Wraps the following system call:
+/// mqd_t mq_open(const char* name, int oflag)
+/// \ref https://man7.org/linux/man-pages/man3/mq_open.3.html
+//------------------------------------------------------------------------------
+class NoAttributesOpen
+{
+  public:
+
+    using OptionalErrorNumber =
+      Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
+    
+    using OptionalMqd = std::optional<mqd_t>;
+
+    NoAttributesOpen(const OpenConfiguration& configuration);
+
+    std::pair<OptionalErrorNumber, OptionalMqd> operator()();
+
+    OpenConfiguration configuration() const
+    {
+      return configuration_;
+    }
+
+    OptionalMqd message_queue_descriptor() const
+    {
+      return message_queue_descriptor_;
+    }
+
+  private:
+
+    OpenConfiguration configuration_;
+    OptionalMqd message_queue_descriptor_;
+};
+
 //------------------------------------------------------------------------------
 /// \brief Creates a new POSIX message queue or opens an existing queue.
 //------------------------------------------------------------------------------
+class CreateOrOpen
+{
+  public:
+
+    using OptionalErrorNumber =
+      Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
+
+    using OptionalAttributes = std::optional<Attributes>;
+    using OptionalMqd = std::optional<mqd_t>;
+
+    CreateOrOpen(const OpenConfiguration& configuration, const mode_t mode);
+
+    //--------------------------------------------------------------------------
+    /// \details Queue is created with implementation-defined default attributes
+    /// since struct mq_attr* attr argument set to NULL (via nullptr) for
+    /// ::mq_open(...) call.
+    //--------------------------------------------------------------------------        
+    CreateOrOpen(
+      const OpenConfiguration& configuration,
+      const ModePermissions permission);
+
+    //--------------------------------------------------------------------------
+    /// \param maximum_message_size (in bytes).
+    /// \details Fields of the struct mq_attr pointed to attr in ::mq_open(...)
+    /// specify maximum number of messages and maximum size of messages that
+    /// queue will allow.
+    ///
+    /// struct mq_attr {
+    ///   long mq_flags; // Flags (ignored for mq_open())
+    ///   long mq_maxmsg; // Max. # of messages on queue
+    ///   long mq_msgsize; // Max. message size (bytes)
+    ///   long mq_curmsgs; // # of messages currently in queue (ignored for
+    ///   // mq_open())
+    /// };
+    /// Therefore, only the maximum number of messages, and maximum message size
+    /// are needed.
+    /// \ref https://man7.org/linux/man-pages/man3/mq_open.3.html
+    //--------------------------------------------------------------------------   
+    CreateOrOpen(
+      const OpenConfiguration& configuration,
+      const mode_t permission,
+      const long maximum_number_of_messages,
+      const long maximum_message_size);
+
+    CreateOrOpen(
+      const OpenConfiguration& configuration,
+      const ModePermissions permission,
+      const long maximum_number_of_messages,
+      const long maximum_message_size);
+
+    std::pair<OptionalErrorNumber, OptionalMqd> operator()();
+
+    mode_t mode() const
+    {
+      return mode_;
+    }
+
+    OptionalMqd message_queue_descriptor() const
+    {
+      return message_queue_descriptor_;
+    }
+
+    OptionalAttributes attributes() const
+    {
+      return attributes_;
+    }
+
+  private:
+
+    mode_t mode_;
+    OptionalMqd message_queue_descriptor_;
+    OpenConfiguration configuration_;
+    OptionalAttributes attributes_;
+};
+
+/*
 class CreateOrOpen
 {
   public:
@@ -49,7 +200,7 @@ class CreateOrOpen
     /// oflag argument specifies flags that control the operation of the call.
     //--------------------------------------------------------------------------
     CreateOrOpen(const std::string& name, const int operation_flag);
-
+*/
     //--------------------------------------------------------------------------
     /// \fn CreateOrOpen
     /// \ref http://man7.org/linux/man-pages/man2/mq_open.2.html
@@ -71,6 +222,7 @@ class CreateOrOpen
     ///   long mq_curmsgs; /* # of messages currently in queue (ignored for
     ///   mq_open(); values in remaining fileds are ignored.)
     //--------------------------------------------------------------------------
+/*
     CreateOrOpen(
       const std::string& name,
       const int operation_flag,
@@ -144,6 +296,7 @@ class CreateOrOpen
     int operation_flag_;
     std::optional<NewQueueInputs> new_queue_inputs_;
 };
+*/
 
 } // namespace MessageQueue
 } // namespace IPC

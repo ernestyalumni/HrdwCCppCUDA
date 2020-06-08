@@ -10,22 +10,20 @@ TemporaryDirectory::TemporaryDirectory(
   const std::string& directory_name_prefix,
   const std::string& base_directory_path)
 {
-  temporary_directory_path_ =
-    make_temporary_directory(directory_name_prefix, base_directory_path);
+  path_ = make_temporary_directory(directory_name_prefix, base_directory_path);
 }
 
 TemporaryDirectory::TemporaryDirectory(const std::string& directory_name_prefix)
 {
   std::string current_dir_name_str {::get_current_dir_name()};
 
-  temporary_directory_path_ =
-    make_temporary_directory(directory_name_prefix, current_dir_name_str);
+  path_ = make_temporary_directory(directory_name_prefix, current_dir_name_str);
 }
 
 TemporaryDirectory::~TemporaryDirectory()
 {
   // cf. https://www.boost.org/doc/libs/1_45_0/libs/filesystem/v3/doc/reference.html
-  boost::filesystem::remove_all(temporary_directory_path_);
+  boost::filesystem::remove_all(path_);
 }
 
 std::string TemporaryDirectory::make_temporary_directory(

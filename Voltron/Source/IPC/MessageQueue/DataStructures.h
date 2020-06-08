@@ -43,8 +43,12 @@ enum class AdditionalOperationFlags : int
   nonblocking = O_NONBLOCK // non-blocking mode  
 };
 
-// mode_t is the mode of the file
-// cf. https://pubs.opengroup.org/onlinepubs/007908775/xsh/sysstat.h.html
+//------------------------------------------------------------------------------
+/// \brief Specifies permissions to be placed on a new queue.
+/// \details mode_t is the mode of the file
+/// \ref https://pubs.opengroup.org/onlinepubs/007908775/xsh/sysstat.h.html
+/// https://man7.org/linux/man-pages/man2/open.2.html
+//------------------------------------------------------------------------------
 enum class ModePermissions : mode_t
 {
 	user_rwx = S_IRWXU, // 00700 user (file owner) has read, write, and execute
@@ -57,7 +61,9 @@ enum class ModePermissions : mode_t
   group_write = S_IWGRP, // 00020 group has write permission
   group_exec = S_IXGRP, // 00010 group has execute permission
   others_rwx = S_IRWXO, // 00007 others have read, write, and execute permission
-  others_read = S_IROTH // 00004 others have read permission
+  others_read = S_IROTH, // 00004 others have read permission
+  others_write = S_IWOTH, // 00002 others have write permission
+  others_exec = S_IXOTH // 00001 others have execute permission
 	// TODO: fill up rest.
 };
 
@@ -102,6 +108,36 @@ struct Attributes : public ::mq_attr
   const ::mq_attr* to_mq_attr() const
   {
     return reinterpret_cast<const ::mq_attr*>(this);
+  }
+
+  long flags() const
+  {
+    return this->mq_flags;
+  }
+
+  long maximum_number_of_messages() const
+  {
+    return this->mq_maxmsg;
+  }
+
+  void maximum_number_of_messages(const long number)
+  {
+    this->mq_maxmsg = number;
+  }
+
+  long maximum_message_size() const
+  {
+    return this->mq_msgsize;
+  }
+
+  void maximum_message_size(const long number_of_bytes)
+  {
+    this->mq_msgsize = number_of_bytes;
+  }
+
+  long current_number_of_messages_in_queue() const
+  {
+    return this->mq_curmsgs;
   }
 
   ::mq_attr* to_mq_attr()

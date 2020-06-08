@@ -25,8 +25,7 @@ BOOST_AUTO_TEST_CASE(IfstreamExamples)
   // prepare a file to read
   double d {3.14};
 
-  const std::string full_filepath {
-    temp_dir.temporary_directory_path() + "/" + filename};
+  const std::string full_filepath {temp_dir.path() + "/" + filename};
 
   std::cout << full_filepath << '\n';
 

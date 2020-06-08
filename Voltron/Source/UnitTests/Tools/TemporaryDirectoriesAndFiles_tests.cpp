@@ -76,11 +76,9 @@ BOOST_AUTO_TEST_CASE(GetCwdAndMkdtempWorks)
 
   const std::string temporary_directory_prefix {"Temp"};
 
-
 //  std::string template_string {temporary_directory_prefix + "XXXXXX"};
   std::string template_string {
     current_dir_name_str + "/" + temporary_directory_prefix + "XXXXXX"};
-
 
   std::string resulting_template {::mkdtemp(template_string.data())};
   std::cout << resulting_template << '\n';
@@ -95,7 +93,9 @@ BOOST_AUTO_TEST_CASE(TemporaryDirectoryConstructs)
 {
   TemporaryDirectory temp_dir {"Temp"};
 
-  std::cout << temp_dir.temporary_directory_path() << '\n';
+  std::cout << temp_dir.path() << '\n';
+
+  BOOST_TEST(true);
 }
 
 //------------------------------------------------------------------------------
@@ -105,9 +105,7 @@ BOOST_AUTO_TEST_CASE(TemporaryFileAndFileDescriptorWorks)
   TemporaryDirectory temp_dir {"Temp"};
 
   auto filename_and_fd =
-    create_temporary_file_and_file_descriptor(
-      temp_dir.temporary_directory_path(),
-      "temp");
+    create_temporary_file_and_file_descriptor(temp_dir.path(), "temp");
 
   std::cout << filename_and_fd.first << ' ' << filename_and_fd.second << '\n';
 }

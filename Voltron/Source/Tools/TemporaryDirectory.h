@@ -27,9 +27,9 @@ class TemporaryDirectory
 
     ~TemporaryDirectory();
 
-    std::string temporary_directory_path() const
+    std::string path() const
     {
-      return temporary_directory_path_;
+      return path_;
     }
 
   protected:
@@ -40,7 +40,7 @@ class TemporaryDirectory
 
   private:
 
-    std::string temporary_directory_path_;
+    std::string path_;
 }; // class TemporaryDirectory
 
 } // namespace Tools

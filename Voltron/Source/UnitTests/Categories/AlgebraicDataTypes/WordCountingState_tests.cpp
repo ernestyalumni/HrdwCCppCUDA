@@ -65,8 +65,7 @@ BOOST_AUTO_TEST_CASE(ProgramTCounts)
   // cf. https://en.cppreference.com/w/cpp/io/basic_ifstream
   TemporaryDirectory temp_dir {"/temp"};  
   std::string filename {"Test.txt"};
-  const std::string full_filepath {
-    temp_dir.temporary_directory_path() + "/" + filename};
+  const std::string full_filepath {temp_dir.path() + "/" + filename};
   std::ofstream temp_out {full_filepath};
   temp_out << "As we knelt on the kitchen floor \n" <<
     "I said mommy Imma love you till you don't hurt no more \n" <<
