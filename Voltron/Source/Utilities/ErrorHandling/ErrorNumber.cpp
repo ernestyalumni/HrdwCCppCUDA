@@ -17,6 +17,7 @@ namespace Utilities
 namespace ErrorHandling
 {
 
+/*
 enum class ErrorNumbers: int
 {
   e2big = E2BIG, // Argument list too long
@@ -98,6 +99,7 @@ enum class ErrorNumbers: int
   ewouldblock = EWOULDBLOCK, // Operation would block
   exdev = EXDEV // Cross-device link
 };
+*/
 
 ErrorNumber::ErrorNumber():
   error_number_{errno},

@@ -53,8 +53,8 @@ void HandleReturnValue::operator()(
 
 HandleReturnValuePassively::HandleReturnValuePassively() = default;
 
-std::optional<ErrorNumber> HandleReturnValuePassively::operator()(
-  const int return_value)
+HandleReturnValuePassively::OptionalErrorNumber
+  HandleReturnValuePassively::operator()(const int return_value)
 {
   if (return_value < 0)
   {

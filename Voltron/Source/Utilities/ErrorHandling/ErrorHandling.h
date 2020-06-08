@@ -65,7 +65,7 @@ class HandleReturnValuePassively
     /// obtained (since the errno would have been set), and a non-empty optional
     /// is returned. Otherwise, an empty optional is returned.
     //--------------------------------------------------------------------------
-    virtual std::optional<ErrorNumber> operator()(const int return_value);
+    virtual OptionalErrorNumber operator()(const int return_value);
 
     ErrorNumber error_number() const
     {

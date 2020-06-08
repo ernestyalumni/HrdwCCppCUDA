@@ -63,7 +63,7 @@ CreateOrOpen::CreateOrOpen(
 {}
 
 std::pair<
-  std::optional<ErrorNumber>,
+  CreateOrOpen::OptionalErrorNumber,
   std::optional<mqd_t>
   > CreateOrOpen::operator()(const bool create_with_default_attributes)
 {
@@ -96,25 +96,25 @@ std::pair<
         attributes.to_mq_attr());
   }
 
-  std::optional<ErrorNumber> error_number {HandleMqOpen()(return_value)};
+  OptionalErrorNumber error_number {HandleMqOpen()(return_value)};
 
   if (error_number)
   {
     return std::make_pair<
-      std::optional<ErrorNumber>,
+      OptionalErrorNumber,
       std::optional<mqd_t>
       >(std::move(error_number), std::nullopt);
   }
   else
   {
     return std::make_pair<
-      std::optional<ErrorNumber>,
+      OptionalErrorNumber,
       std::optional<mqd_t>
       >(std::nullopt, std::make_optional<mqd_t>(return_value));
   }
 }
 
-std::optional<ErrorNumber> CreateOrOpen::HandleMqOpen::operator()(
+CreateOrOpen::OptionalErrorNumber CreateOrOpen::HandleMqOpen::operator()(
   const mqd_t return_value)
 {
   if (return_value < 0)

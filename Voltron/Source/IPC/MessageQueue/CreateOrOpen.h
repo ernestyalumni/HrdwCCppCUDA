@@ -13,7 +13,6 @@
 #include "Utilities/ErrorHandling/ErrorHandling.h"
 
 #include <mqueue.h> // ::mqd_t
-#include <optional>
 #include <sys/stat.h> // mode_t
 #include <utility>
 
@@ -29,6 +28,9 @@ namespace MessageQueue
 class CreateOrOpen
 {
   public:
+
+    using OptionalErrorNumber =
+      Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
 
     // Additional arguments that must be supplied if oflag is specified with
     // O_CREAT, i.e. create a new message queue since it doesn't exist.
@@ -81,10 +83,8 @@ class CreateOrOpen
       const int operation_flag,
       const mode_t mode);
 
-    std::pair<
-      std::optional<Utilities::ErrorHandling::ErrorNumber>,
-      std::optional<mqd_t>
-      > operator()(const bool create_with_default_attributes = false);
+    std::pair<OptionalErrorNumber, std::optional<mqd_t>>
+      operator()(const bool create_with_default_attributes = false);
 
     // Accessors
 
@@ -131,13 +131,11 @@ class CreateOrOpen
     //--------------------------------------------------------------------------
     // TODO: inherit from HandleReturnValuePassively, it may fail to open
     // another queue.
-    class HandleMqOpen :
-      Utilities::ErrorHandling::HandleReturnValuePassively
+    class HandleMqOpen : Utilities::ErrorHandling::HandleReturnValuePassively
     {
       public:
 
-        std::optional<Utilities::ErrorHandling::ErrorNumber> operator()(
-          const mqd_t return_value);
+        OptionalErrorNumber operator()(const mqd_t return_value);
     };
 
   private:

@@ -3,17 +3,31 @@
 //------------------------------------------------------------------------------
 #include "Utilities/ErrorHandling/ErrorHandling.h"
 
-#include <boost/test/unit_test.hpp>
+#include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
 
+#include <boost/test/unit_test.hpp>
+#include <cmath>
+
+using Cpp::Utilities::TypeSupport::get_underlying_value;
+using Utilities::ErrorHandling::ErrorNumbers;
+using Utilities::ErrorHandling::HandleReturnValuePassively;
+using OptionalErrorNumber =
+	Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
 BOOST_AUTO_TEST_SUITE(ErrorHandling_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(PrintsRValueCharAsHex)
+BOOST_AUTO_TEST_CASE(HandleReturnValuePassivelyGetsLatestErrno)
 {
-	BOOST_TEST(false);
+  double not_a_number {std::log(-1.0)};
+
+	const OptionalErrorNumber result {HandleReturnValuePassively()(-1)};
+
+	BOOST_TEST(static_cast<bool>(result));
+	BOOST_TEST((*result).error_number() ==
+		get_underlying_value(ErrorNumbers::edom));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ErrorHandling_tests

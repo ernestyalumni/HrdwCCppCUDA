@@ -11,11 +11,6 @@
 #include <mqueue.h>
 #include <string>
 
-#include <optional>
-#include "Utilities/ErrorHandling/ErrorNumber.h"
-
-using Utilities::ErrorHandling::ErrorNumber;
-
 namespace IPC
 {
 namespace MessageQueue
@@ -53,19 +48,18 @@ MessageQueueDescription::~MessageQueueDescription()
   }
 }
 
-/*
-std::optional<ErrorNumber> Close::operation()(const mqd_t message_queue_descriptor)
+Close::OptionalErrorNumber Close::operator()(
+  const mqd_t message_queue_descriptor)
 {
   const int return_value {::mq_close(message_queue_descriptor)};
   return HandleMqClose()(return_value);
 }
 
-std::optional<ErrorNumber> Unlink::operation()(const std::string& queue_name)
+Unlink::OptionalErrorNumber Unlink::operator()(const std::string& queue_name)
 {
   const int return_value {::mq_unlink(queue_name.c_str())};
   return HandleMqUnlink()(return_value);
 }
-*/
 
 } // namespace MessageQueue
 } // namespace IPC
