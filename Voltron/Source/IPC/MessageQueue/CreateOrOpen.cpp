@@ -146,7 +146,6 @@ CreateOrOpen::CreateOrOpen(
 std::pair<CreateOrOpen::OptionalErrorNumber, CreateOrOpen::OptionalMqd>
   CreateOrOpen::operator()()
 {
-
   mqd_t return_value;
 
   if (attributes_)
@@ -156,7 +155,7 @@ std::pair<CreateOrOpen::OptionalErrorNumber, CreateOrOpen::OptionalMqd>
         configuration_.name().c_str(),
         configuration_.operation_flag(),
         mode_,
-        attributes_.to_mq_attr());
+        (*attributes_).to_mq_attr());
   }
   else
   {
@@ -185,9 +184,9 @@ std::pair<CreateOrOpen::OptionalErrorNumber, CreateOrOpen::OptionalMqd>
   }
 }
 
-void CreateOrOpen::add_additional_permissions(const mode_t mode)
+void CreateOrOpen::add_additional_permissions(const ModePermissions permission)
 {
-  mode_ |= mode;
+  mode_ |= get_underlying_value(permission);
 }
 
 /*

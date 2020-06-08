@@ -167,6 +167,8 @@ class CreateOrOpen
       return attributes_;
     }
 
+    void add_additional_permissions(const ModePermissions permission);
+
   private:
 
     mode_t mode_;
