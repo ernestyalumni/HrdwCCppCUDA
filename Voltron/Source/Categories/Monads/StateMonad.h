@@ -115,7 +115,13 @@ class Compose
     };
 
     template <typename X>
-    ComposedMorphisms<X> operator()(X input)
+    ComposedMorphisms<X> operator()(X& input)
+    {
+      return ComposedMorphisms<X>{g_, f_, input};
+    }
+
+    template <typename X>
+    ComposedMorphisms<X> operator()(X&& input)
     {
       return ComposedMorphisms<X>{g_, f_, input};
     }
