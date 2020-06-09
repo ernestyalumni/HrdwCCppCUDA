@@ -66,6 +66,66 @@ auto compose(MorphismTZ g, MorphismTY f)
   };
 }
 
+template <typename MorphismTY, typename MorphismTZ>
+class Compose
+{
+  public:
+
+    Compose(MorphismTZ g, MorphismTY f):
+      g_{g},
+      f_{f}
+    {}
+
+    template <typename X>
+    class ComposedMorphisms
+    {
+      public:
+
+        ComposedMorphisms(MorphismTZ g, MorphismTY f, X& input):
+          g_{g},
+          f_{f},
+          input_{std::forward<X>(input)}
+        {}
+
+        ComposedMorphisms(MorphismTZ g, MorphismTY f, X&& input):
+          g_{g},
+          f_{f},
+          input_{std::forward<X>(input)}
+        {}
+
+        template <typename State>
+        auto operator()(State&& state)
+        {
+          auto fxs = f_(input_)(std::forward<State>(state));
+          return g_(fxs.second)(fxs.first);
+        }
+
+        template <typename State>
+        auto operator()(State& state)
+        {
+          auto fxs = f_(input_)(std::forward<State>(state));
+          return g_(fxs.second)(fxs.first);
+        }
+
+      private:
+
+        MorphismTZ g_;
+        MorphismTY f_;
+        X input_;
+    };
+
+    template <typename X>
+    ComposedMorphisms<X> operator()(X input)
+    {
+      return ComposedMorphisms<X>{g_, f_, input};
+    }
+
+  private:
+
+    MorphismTZ g_;
+    MorphismTY f_;
+};
+
 namespace AsLambdas
 {
 
