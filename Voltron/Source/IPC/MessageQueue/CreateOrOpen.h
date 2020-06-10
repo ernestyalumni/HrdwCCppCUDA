@@ -110,6 +110,16 @@ class CreateOrOpen
     using OptionalAttributes = std::optional<Attributes>;
     using OptionalMqd = std::optional<mqd_t>;
 
+    //--------------------------------------------------------------------------
+    /// \ref http://man7.org/linux/man-pages/man2/mq_open.2.html
+    /// \details mqd_t mq_open(const char* name, int oflag, mode_t mode,
+    /// struct mq_attr* attr)
+    /// oflag is exactly 1 of the following, O_RDONLY, O_WRONLY, O_RDWR
+    /// and 0 or more additional flags.
+    /// mode specifies permissions to be placed on new queue, as for ::open 
+    /// (symbolic definitions for permissions bits can be obtained by including
+    /// <sys/stat.h>.) Permissions settings are masked against process umask.
+    //--------------------------------------------------------------------------
     CreateOrOpen(const OpenConfiguration& configuration, const mode_t mode);
 
     //--------------------------------------------------------------------------
