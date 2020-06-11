@@ -32,12 +32,12 @@ using IPC::MessageQueue::ModePermissions;
 using IPC::MessageQueue::OpenConfiguration;
 using IPC::MessageQueue::OperationFlags;
 using IPC::MessageQueue::Send;
-
+using IPC::MessageQueue::Unlink;
+///*
 int main()
 {
-  // cf. https://www.cs.auckland.ac.nz/references/unix/digital/APS33DTE/DOCU_011.HTM#que-ex1
-  // Author was wrong to define mode as 0666; ::mq_open will error.
-  //constexpr mode_t p_mode {0666};
+
+  constexpr mode_t p_mode {0666};
 
   constexpr std::size_t P4IPC_MSGSIZE {128};
 
@@ -49,6 +49,9 @@ int main()
   //const std::string queue_name {current_dir_name_str + "/myipc"};
   const std::string queue_name {"/myipc"};
 
+  // cf. https://stackoverflow.com/questions/25799895/cannot-set-posix-message-queue-attribute
+  const auto unlink_result = Unlink()(queue_name);
+  std::cout << "No queue existed before: " << static_cast<bool>(unlink_result) << "\n";
 
   // Set the flags for the open of the queue.
   // Make it a blocking open on the queue, meaning it will block if this process
@@ -65,17 +68,17 @@ int main()
   // \ref http://www-users.mat.umk.pl/~jb/PS/PS1/cwiczenia/linux/posix1b/mqueue.h
   // P4IPC_MSGSIZE - Implementation specified default size in bytes of a
   // message. Used when attr is not specified by the user in mq_open().
-  // Original author was wrong to use 0666 or p_mode for mode permission in
-  // ::mq_open.
-  //CreateOrOpen create_queue {open_config, p_mode, 20, P4IPC_MSGSIZE};
 
+  // number of messages highly dependent on message queue set on OS.
+  CreateOrOpen create_queue {open_config, p_mode, 10, P4IPC_MSGSIZE};
+  /*
   CreateOrOpen create_queue {
     open_config,
-    ModePermissions::user_rwx//,
-//    20,
-  //  P4IPC_MSGSIZE
-  };
-
+    ModePermissions::user_rwx,
+    20,
+    P4IPC_MSGSIZE
+  };*/
+///*
   create_queue.add_additional_permissions(ModePermissions::group_rwx);
 
   std::cout << "\n Has Attributes? " <<
@@ -190,6 +193,7 @@ int main()
 {
 
   constexpr std::size_t P4IPC_MSGSIZE {128};
+//  constexpr std::size_t P4IPC_MSGSIZE {100};
 
 
 int i;
@@ -206,10 +210,13 @@ printf("START OF TEST_SEND \n");
 // */
 /* Fill in attributes for message queue */
 /*
-attr.mq_maxmsg = 20;
-attr.mq_msgsize = P4IPC_MSGSIZE;
+// https://stackoverflow.com/questions/29382550/why-is-errno-set-to-22-mq-open-posix
+// EY: 20200611, for mq_maxmsg = 20, it fails.
+attr.mq_maxmsg = 10;
+attr.mq_msgsize = static_cast<long>(P4IPC_MSGSIZE);
 attr.mq_flags   = 0;
 
+attr.mq_curmsgs = 0;
 
 std::cout << "\n attr.mq_flags : " << attr.mq_flags << "\n";
 std::cout << "\n attr.mq_curmsgs : " << attr.mq_curmsgs << "\n";
@@ -231,8 +238,12 @@ std::cout << "\n attr.mq_curmsgs : " << attr.mq_curmsgs << "\n";
  * already created it.
  */
 /*
-//mqfd = mq_open("/myipc",open_flags,PMODE,&attr);
-mqfd = mq_open("/myipc",open_flags,PMODE,nullptr);
+//https://stackoverflow.com/questions/25799895/cannot-set-posix-message-queue-attribute
+int mq_unlink_result {::mq_unlink("/myipc")};
+std::cout << "\n mq_unlink_result :" << mq_unlink_result << "\n";
+
+mqfd = mq_open("/myipc",open_flags,PMODE,&attr);
+//mqfd = mq_open("/myipc",open_flags,PMODE,nullptr);
 if (mqfd == -1)
     {
     perror("mq_open failure from main");
@@ -254,7 +265,7 @@ msg_buffer[9] = 'a';
 
 num_bytes_to_send = 10;
 priority_of_msg = 1;
-//*/
+
 /* Perform the send 10 times */
 /*for (i=0; i<10; i++)
     {
@@ -274,4 +285,4 @@ printf("About to exit the sending process after closing the queue \n");
 
 ::mq_unlink("/myipc");
 }
-*/
+//*/
