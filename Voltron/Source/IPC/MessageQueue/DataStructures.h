@@ -84,7 +84,8 @@ enum class ModePermissions : mode_t
 //------------------------------------------------------------------------------
 struct Attributes : public ::mq_attr
 {
-  Attributes(const long max_msg, const long max_msg_size)
+  Attributes(const long max_msg, const long max_msg_size):
+    ::mq_attr{}
   {
     this->mq_maxmsg = max_msg;
     this->mq_msgsize = max_msg_size;
@@ -102,7 +103,11 @@ struct Attributes : public ::mq_attr
     ::mq_attr{flags, max_msg, max_msg_size}
   {}
 
-  Attributes() = default;
+  Attributes():
+    ::mq_attr{}
+  {
+    this->mq_flags = 0;
+  }
 
   // Consider using &epoll_event for Epollevent epoll_event, instead.
   const ::mq_attr* to_mq_attr() const

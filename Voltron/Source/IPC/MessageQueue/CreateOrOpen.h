@@ -172,6 +172,11 @@ class CreateOrOpen
       return message_queue_descriptor_;
     }
 
+    OpenConfiguration configuration() const
+    {
+      return configuration_;
+    }
+
     OptionalAttributes attributes() const
     {
       return attributes_;

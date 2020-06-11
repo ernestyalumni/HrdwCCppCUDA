@@ -124,9 +124,9 @@ CreateOrOpen::CreateOrOpen(
   configuration_{configuration},
   attributes_{}
 {
-  Attributes attributes;
-  attributes.maximum_number_of_messages(maximum_number_of_messages);
-  attributes.maximum_message_size(maximum_message_size);
+  Attributes attributes {0, maximum_number_of_messages, maximum_message_size};
+//  attributes.maximum_number_of_messages(maximum_number_of_messages);
+//  attributes.maximum_message_size(maximum_message_size);
   attributes_ = attributes;
 }
 

@@ -121,3 +121,10 @@ ADD_EXECUTABLE(UDP-Sender
 TARGET_LINK_LIBRARIES(UDP-Sender
   IPC
   Utilities)
+
+ADD_EXECUTABLE(MQTestSend
+  IPC/MessageQueue/MainTestSend.cpp)
+
+TARGET_LINK_LIBRARIES(MQTestSend
+  IPC
+  Utilities)

@@ -32,6 +32,10 @@ class MessageQueueDescription
       CloseAndUnlink = 'u'
     };
 
+    //--------------------------------------------------------------------------
+    /// \details Defaults to only closing the message queue descriptor, not to
+    /// unlink the queue, upon destruction.
+    //--------------------------------------------------------------------------
     MessageQueueDescription(
       const mqd_t message_queue_descriptor,
       const std::string& name);

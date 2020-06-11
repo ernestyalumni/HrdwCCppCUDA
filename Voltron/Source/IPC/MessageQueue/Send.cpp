@@ -11,6 +11,7 @@
 #include "MessageQueueDescription.h"
 #include "Utilities/ErrorHandling/ErrorHandling.h"
 
+#include <cstddef> // std::size_t
 #include <mqueue.h> // ::mq_send
 
 using Utilities::ErrorHandling::HandleReturnValuePassively;
@@ -31,6 +32,17 @@ Send::OptionalErrorNumber Send::operator()(
 {
   return operator()(message.data(), message.size(), priority);
 }
+
+/*
+template<std::size_t N>
+Send::OptionalErrorNumber Send::operator()(
+  const std::array<char, N>& message,
+  const std::size_t bytes_to_send,
+  const unsigned int priority)
+{
+  return operator()(message.data(), bytes_to_send, priority);
+}
+*/
 
 Send::OptionalErrorNumber Send::operator()(
   const char* message_ptr,
