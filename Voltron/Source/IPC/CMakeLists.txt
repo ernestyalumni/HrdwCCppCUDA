@@ -1,6 +1,7 @@
 ADD_LIBRARY(IPC
   MessageQueue/CreateOrOpen.cpp
   MessageQueue/MessageQueueDescription.cpp
+  MessageQueue/Send.cpp
   Sockets/Bind.cpp
   Sockets/GetSocketName.cpp
   Sockets/InternetAddress.cpp
