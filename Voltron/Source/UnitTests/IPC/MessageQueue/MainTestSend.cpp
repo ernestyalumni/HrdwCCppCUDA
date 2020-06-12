@@ -36,7 +36,6 @@ using IPC::MessageQueue::Unlink;
 ///*
 int main()
 {
-
   constexpr mode_t p_mode {0666};
 
   constexpr std::size_t P4IPC_MSGSIZE {128};
@@ -50,8 +49,9 @@ int main()
   const std::string queue_name {"/myipc"};
 
   // cf. https://stackoverflow.com/questions/25799895/cannot-set-posix-message-queue-attribute
-  const auto unlink_result = Unlink()(queue_name);
-  std::cout << "No queue existed before: " << static_cast<bool>(unlink_result) << "\n";
+  //const auto unlink_result = Unlink()(queue_name);
+  //std::cout << "No queue existed before: " << static_cast<bool>(unlink_result)
+  //  << "\n";
 
   // Set the flags for the open of the queue.
   // Make it a blocking open on the queue, meaning it will block if this process
@@ -125,8 +125,8 @@ int main()
 
   MessageQueueDescription description {
     *create_result.second,
-    queue_name,
-    MessageQueueDescription::Finish::CloseAndUnlink};
+    queue_name};
+//    MessageQueueDescription::Finish::CloseAndUnlink};
 
   // Uncomment this out for the actual, closes only, MessageQueueDescription
   // that'll be used in production code.

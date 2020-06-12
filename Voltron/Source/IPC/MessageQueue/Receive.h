@@ -14,6 +14,7 @@
 #include <array>
 #include <cstddef> // std::size_t
 #include <mqueue.h>
+#include <string>
 #include <utility>
 
 namespace IPC
@@ -62,6 +63,11 @@ class Receive
           return buffer_.data();
         }
 
+        std::string buffer_string() const
+        {
+          return std::string{std::begin(buffer_), std::end(buffer_)};
+        }
+
         unsigned int& priority_reference()
         {
           return priority_;
@@ -83,10 +89,45 @@ class Receive
     Receive(const MessageQueueDescription& description);
 
     template <std::size_t N>
-    std::pair<OptionalErrorNumber, ReceivedMessage<N>> receive_message();
+    std::pair<OptionalErrorNumber, ReceivedMessage<N>> receive_message()
+    {
+      ReceivedMessage<N> received_message;
+
+      const ssize_t return_value {
+        ::mq_receive(
+          message_queue_descriptor_,
+          received_message.buffer_data(),
+          N,
+          &received_message.priority_reference())};
+
+      OptionalErrorNumber error_number {HandleMqReceive()(return_value)};
+
+      if (error_number)
+      {
+        return std::make_pair<OptionalErrorNumber, ReceivedMessage<N>>(
+          std::move(error_number),
+          std::move(received_message));
+      }
+      else
+      {
+        return std::make_pair<OptionalErrorNumber, ReceivedMessage<N>>(
+          std::nullopt,
+          std::move(received_message));
+      }
+    }
 
     template <std::size_t N>
-    OptionalErrorNumber receive_message(ReceivedMessage<N>& ready_message);
+    OptionalErrorNumber receive_message(ReceivedMessage<N>& ready_message)
+    {
+      const ssize_t return_value {
+        ::mq_receive(
+          message_queue_descriptor_,
+          ready_message.buffer_data(),
+          N,
+          &ready_message.priority_reference())};
+
+      return HandleMqReceive()(return_value);      
+    }
 
   private:
 

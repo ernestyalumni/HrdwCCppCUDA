@@ -27,7 +27,7 @@ Receive::Receive(const MessageQueueDescription& description):
   message_queue_descriptor_{description.message_queue_descriptor()}
 {}
 
-
+/*
 template<std::size_t N>
 std::pair<Receive::OptionalErrorNumber, Receive::ReceivedMessage<N>>
   Receive::receive_message()
@@ -70,6 +70,7 @@ Receive::OptionalErrorNumber Receive::receive_message(
 
   return HandleMqReceive()(return_value);
 }
+*/
 
 Receive::OptionalErrorNumber Receive::HandleMqReceive::operator()(
   const ssize_t return_value)
