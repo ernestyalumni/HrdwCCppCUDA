@@ -10,6 +10,7 @@
 #define UNIT_TESTS_TOOLS_CONTAINS_H
 
 #include <boost/algorithm/string.hpp>
+#include <exception>
 #include <string>
 
 namespace UnitTests
@@ -27,6 +28,28 @@ auto error_contains = [](const std::string& substring)
 	{
 		return boost::algorithm::contains(std::string{err.what()}, substring);
 	};
+};
+
+//------------------------------------------------------------------------------
+/// \brief Function object to determine if substring is contained in a given
+/// string.
+//------------------------------------------------------------------------------
+class Contains
+{
+  public:
+
+    explicit Contains(const std::string& given_string);
+
+    bool operator()(const std::string& substring);
+
+    bool operator()(const std::exception& e);
+
+    // Move constructor and move assignment default to delete because the class
+    // data member is const.
+
+  private:
+
+    const std::string given_string_;
 };
 
 } // namespace Tools

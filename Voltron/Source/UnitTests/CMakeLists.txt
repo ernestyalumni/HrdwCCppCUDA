@@ -89,6 +89,9 @@ ADD_EXECUTABLE(CommandLineArguments
 ADD_EXECUTABLE(TClapping
   MainTClap.cpp)
 
+ADD_LIBRARY(UnitTestTools
+  Tools/Contains.cpp)
+
 TARGET_LINK_LIBRARIES(Check
   Algorithms
   #Cpp
@@ -97,6 +100,7 @@ TARGET_LINK_LIBRARIES(Check
   IO
   IPC
   Tools
+  UnitTestTools
   Utilities
   # cf. https://stackoverflow.com/questions/1620918/cmake-and-libpthread
   ${CMAKE_THREAD_LIBS_INIT}
