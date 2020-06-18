@@ -39,8 +39,10 @@ ADD_EXECUTABLE(Check
   Cpp/IO/IO_tests.cpp
   Cpp/Operations_test.cpp
   Cpp/Std/Algorithm/Algorithms_tests.cpp
+  Cpp/Std/Algorithm/EqualAndMismatch_tests.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Std/Pointers_tests.cpp
+  Cpp/Std/Span_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
