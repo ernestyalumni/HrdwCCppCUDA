@@ -18,6 +18,14 @@ cmake -DCMAKE_CXX_COMPILER=g++ ../Source
 ```
 (Just follow how to ["Generate a Project Buildsystem"](https://cmake.org/cmake/help/latest/manual/cmake.1.html#generate-a-project-buildsystem))
 
+#### For Clang,
+
+```
+cmake -DCMAKE_CXX_COMPILER=clang++ ../Source
+```
+(Remember, `clang` is the *C* compiler, not the *C++* compiler of the Clang's).
+
+
 ### [`cmake(1)`](https://cmake.org/cmake/help/latest/manual/cmake.1.html)
 
 ```

@@ -8,6 +8,13 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
+// https://en.cppreference.com/w/cpp/feature_test
+#ifdef __has_include
+#if __has_include(<version>)
+#include <version>
+#endif
+#endif
+
 // https://en.cppreference.com/w/cpp/preprocessor/include
 // Since C++17, use __has_include, preprocessor constant expression that
 // evaluates to 1 if filename found, 0 if not. Program is ill-formed if argument
@@ -38,6 +45,8 @@ BOOST_AUTO_TEST_SUITE(Span_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(StdSpanConstructsWithCharArrays)
 {
+  std::cout << "\n Has span: have_span: " << have_span << "\n";
+
   const char* kings[] = {"Antigonus", "Seleucus", "Ptolemy"};  
 
   const auto kings_span = std::span{kings};

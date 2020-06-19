@@ -28,10 +28,16 @@ class WithLog
 {
   public:
 
-    WithLog(T value, std::string& log = std::string{}) :
+    WithLog(T value, std::string& log):
       value_{value},
       log_{log}
     {}
+
+    explicit WithLog(T value):
+      value_{value},
+      log_{}
+    {}
+
 
     T value() const
     {
