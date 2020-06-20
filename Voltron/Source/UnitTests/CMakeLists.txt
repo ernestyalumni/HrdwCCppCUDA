@@ -51,6 +51,7 @@ ADD_EXECUTABLE(Check
   Cpp/Templates/TypeUtilities_tests.cpp
   Cpp/Threads/Future_tests.cpp
   Cpp/Utilities/Memory/PointerWrappers_tests.cpp
+  Cpp/Utilities/Memory/StdToAddress_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp

@@ -81,7 +81,6 @@ BOOST_AUTO_TEST_CASE(LinkNewResetsManagedObjectToTargetObject)
 	BOOST_TEST(u_ptr2.get_object() == 42);
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // PointerWrappers_tests
 BOOST_AUTO_TEST_SUITE_END() // Memory
 BOOST_AUTO_TEST_SUITE_END() // Utilities

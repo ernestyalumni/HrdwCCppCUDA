@@ -8,6 +8,19 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
+// cf. https://docs.microsoft.com/en-us/cpp/preprocessor/hash-ifdef-and-hash-ifndef-directives-c-cpp?view=vs-2019
+#ifdef __cpp_lib_span
+
+#include <span>
+
+#define included_span 1
+
+#else
+
+#define included_span 0
+
+#endif
+
 // https://en.cppreference.com/w/cpp/feature_test
 #ifdef __has_include
 #if __has_include(<version>)
@@ -47,6 +60,9 @@ BOOST_AUTO_TEST_CASE(StdSpanConstructsWithCharArrays)
 {
   std::cout << "\n Has span: have_span: " << have_span << "\n";
 
+  std::cout << "\n #ifdef __cpp_lib_span true, included_span: " <<
+    included_span << "\n";
+
   const char* kings[] = {"Antigonus", "Seleucus", "Ptolemy"};  
 
   const auto kings_span = std::span{kings};
@@ -59,6 +75,9 @@ BOOST_AUTO_TEST_CASE(StdSpanConstructsWithCharArrays)
 BOOST_AUTO_TEST_CASE(DoesNotHaveSpan)
 {
   std::cout << "\n Does not have span; have_span: " << have_span << "\n";
+
+  std::cout << "\n #ifdef __cpp_lib_span false, included_span: " <<
+    included_span << "\n";
 
   BOOST_TEST(true);  
 }
