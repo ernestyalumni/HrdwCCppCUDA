@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 /// \file Entrevue_tests.cpp
 ///
-/// \ref cf. https://www.bogotobogo.com/cplusplus/functors.php
+/// \brief Blank unit tests for doing interview questions on the fly.
 //------------------------------------------------------------------------------
 
 #include <boost/test/unit_test.hpp>
@@ -33,6 +33,5 @@ BOOST_AUTO_TEST_CASE(FinDemonstrate)
   }
 }
 
-
-BOOST_AUTO_TEST_SUITE_END() // Functions_tests
-BOOST_AUTO_TEST_SUITE_END() // Cpp
+BOOST_AUTO_TEST_SUITE_END() // Entrevue_tests
+BOOST_AUTO_TEST_SUITE_END() // Entrevue

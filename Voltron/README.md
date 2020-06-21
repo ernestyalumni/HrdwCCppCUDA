@@ -129,8 +129,6 @@ The `CMakelists.txt` file in the specified source directory will be processed im
 If `EXCLUDE_FROM_ALL` argument is provided, then targets in subdirectory won't be included in the `ALL` target of parent directory by default, and will be excluded from IDE project files.
 
 
-
-
 ### [`CheckCXXCompilerFlag`](https://cmake.org/cmake/help/v3.14/module/CheckCXXCompilerFlag.html)
 
 Check whether the CXX compiler supports a given flag.
@@ -242,3 +240,16 @@ find_package(Boost
   [COMPONENTS <libs>...] # Boost libraries by their canonical name
   ) # e.g. "date_time" for "libboost_date_time"
 ```
+
+# Unit tests
+
+## Running only specified unit tests.
+
+cf. https://www.boost.org/doc/libs/1_45_0/libs/test/doc/html/utf/user-guide/runtime-config/run-by-name.html
+
+An example of running a particular Boost unit test suite and its nested tests:
+
+```
+./Check --run_test="Entrevue"
+```
+Do this in your local build directory with the executable `Check`.

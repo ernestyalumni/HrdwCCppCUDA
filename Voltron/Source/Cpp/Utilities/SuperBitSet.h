@@ -24,6 +24,7 @@ constexpr std::size_t number_of_bits_in_a_byte = CHAR_BIT;
 
 } // anonymous namespace
 
+// N = number of bits
 template <std::size_t N = sizeof(unsigned long long) * number_of_bits_in_a_byte>
 class SuperBitSet : public std::bitset<N>
 {

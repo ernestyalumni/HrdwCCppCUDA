@@ -11,6 +11,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 ADD_EXECUTABLE(Check
   Main.cpp
+  Algorithms/Bits/Radix_tests.cpp
   Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp
   Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
   Algorithms/Permutations_tests.cpp
@@ -34,6 +35,7 @@ ADD_EXECUTABLE(Check
   Cpp/Functions_tests.cpp
   Cpp/Keywords_tests.cpp
   Cpp/MainCommandLineArguments_tests.cpp
+  Cpp/Numerics/BitCast_tests.cpp
   Cpp/PointersArraysReferences_tests.cpp
   Cpp/Recursion_tests.cpp
   Cpp/IO/IO_tests.cpp
