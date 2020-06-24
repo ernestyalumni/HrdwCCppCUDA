@@ -16,7 +16,6 @@ BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Monoidal)
 BOOST_AUTO_TEST_SUITE(Monoid_tests)
 
-
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(StdTransformExamples)

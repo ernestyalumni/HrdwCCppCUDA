@@ -2,7 +2,6 @@
 // \file Closure_tests.cpp
 //------------------------------------------------------------------------------
 
-
 #include <boost/test/unit_test.hpp>
 #include <algorithm> // std::for_each
 #include <functional>

@@ -58,6 +58,58 @@ BOOST_AUTO_TEST_CASE(BinaryRepresentation)
 
 }
 
+// cf. https://en.cppreference.com/w/cpp/language/integer_literal
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IntegerLiteralBitsAsChars)
+{
+  {
+    const uint8_t au {0b00};
+    BOOST_TEST_REQUIRE(au == 0);
+
+    SuperBitSet<8> bits8 {au};
+    BOOST_TEST(bits8.to_string() == "00000000");
+
+    const char ac {0b00};
+    SuperBitSet<8> cbits8 {ac};
+    BOOST_TEST(cbits8.to_string() == "00000000");
+  } 
+  {
+    const uint8_t au {0b01};
+    BOOST_TEST_REQUIRE(au == 1);
+
+    SuperBitSet<8> bits8 {au};
+    BOOST_TEST(bits8.to_string() == "00000001");
+
+    const char ac {0b01};
+    SuperBitSet<8> cbits8 {ac};
+    BOOST_TEST(cbits8.to_string() == "00000001");
+  } 
+  {
+    const uint8_t au {0b10};
+    BOOST_TEST_REQUIRE(au == 2);
+
+    SuperBitSet<8> bits8 {au};
+    BOOST_TEST(bits8.to_string() == "00000010");
+
+    const char ac {0b10};
+    SuperBitSet<8> cbits8 {ac};
+    BOOST_TEST(cbits8.to_string() == "00000010");
+  } 
+  {
+    const uint8_t au {0b11};
+    BOOST_TEST_REQUIRE(au == 3);
+
+    SuperBitSet<8> bits8 {au};
+    BOOST_TEST(bits8.to_string() == "00000011");
+
+    const char ac {0b11};
+    SuperBitSet<8> cbits8 {ac};
+    BOOST_TEST(cbits8.to_string() == "00000011");
+  } 
+}
+
+
 BOOST_AUTO_TEST_SUITE_END() // Radix_tests
 BOOST_AUTO_TEST_SUITE_END() // Bits
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
