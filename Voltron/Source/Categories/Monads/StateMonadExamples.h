@@ -48,9 +48,38 @@ class GarageCounterMorphism
 {
 	public:
 
+		class InternalHom
+		{
+			public:
+
+				InternalHom(const InputPorts& input_ports);
+
+				std::pair<unsigned int, unsigned int> operator()(const unsigned int state);
+
+				// Accessors
+
+				InputPorts inputs() const
+				{
+					return inputs_;
+				}
+
+			private:
+
+				InputPorts inputs_;
+
+		};
+
+		InternalHom operator()(const InputPorts& input_ports);
+};
+
+// Old, draft, version.
+class GarageCounterMorphism1
+{
+	public:
+
 		//using OptionalCount = std::optional<unsigned int>;
 
-		GarageCounterMorphism(const InputPorts& input_ports);
+		GarageCounterMorphism1(const InputPorts& input_ports);
 
 		std::pair<unsigned int, unsigned int> operator()(const unsigned int state);
 
@@ -67,6 +96,45 @@ class GarageCounterMorphism
 };
 
 } // namespace GarageCounter
+
+namespace ModestThermostat
+{
+
+enum class State : char
+{
+	cooling,
+	heating
+};
+
+enum class Output : char
+{
+	heatOn,
+	heatOff
+};
+
+class InternalHom
+{
+	public:
+
+		InternalHom(const double temperature);
+
+		using OptionalOutput = std::optional<Output>;
+
+		std::pair<State, OptionalOutput> operator()(const State state);
+
+	private:
+
+		double temperature_;
+};
+
+class ModestThermostatMorphism
+{
+	public:
+
+		InternalHom operator()(const double temperature);
+};
+
+} // namespace ModestThermostat
 
 } // namespace Examples
 

@@ -23,11 +23,50 @@ namespace Examples
 namespace GarageCounter
 {
 
-GarageCounterMorphism::GarageCounterMorphism(const InputPorts& input_ports):
+GarageCounterMorphism::InternalHom::InternalHom(const InputPorts& input_ports):
 	inputs_{input_ports}
 {}
 
-std::pair<unsigned int, unsigned int> GarageCounterMorphism::operator()(
+GarageCounterMorphism::InternalHom GarageCounterMorphism::operator()(
+	const InputPorts& input_ports)
+{
+	return InternalHom{input_ports};
+}
+
+std::pair<unsigned int, unsigned int>
+	GarageCounterMorphism::InternalHom::operator()(const unsigned int state)
+{
+	unsigned int final_state {state};
+	int car_changes {0};
+
+	if (inputs_.up_port_ == SignalPresence::present)
+	{
+		++car_changes;
+	}
+
+	if (inputs_.down_port_ == SignalPresence::present)
+	{
+		--car_changes;
+	}
+
+	if (car_changes < 0 && final_state < 1)
+	{
+		final_state = 0;
+	}
+	else
+	{
+		final_state += car_changes;
+	}
+
+	return std::make_pair<unsigned int, unsigned int>(
+		std::move(final_state), std::move(final_state));
+}
+
+GarageCounterMorphism1::GarageCounterMorphism1(const InputPorts& input_ports):
+	inputs_{input_ports}
+{}
+
+std::pair<unsigned int, unsigned int> GarageCounterMorphism1::operator()(
 	const unsigned int state)
 {
 	unsigned int final_state {state};
