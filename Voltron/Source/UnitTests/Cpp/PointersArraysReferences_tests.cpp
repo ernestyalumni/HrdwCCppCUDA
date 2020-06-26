@@ -244,6 +244,10 @@ BOOST_AUTO_TEST_CASE(NavigateArraysByPointerArithmetic)
   BOOST_TEST("Texas"[3] == 'a');
 }
 
+// Remember, reinterpret_cast is resolved at compile-time; it's nothing more
+// than "look to a pointer that's pointing to type A with eyes of who is
+// looking for type B".
+// https://stackoverflow.com/questions/27309604/do-constant-and-reinterpret-cast-happen-at-compile-time/27309763
 template <typename T>
 int byte_diff(T* p, T* q)
 {

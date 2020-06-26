@@ -40,6 +40,19 @@ BOOST_AUTO_TEST_CASE(ShowHowToUseFunctionTemplateDefinition)
   BOOST_TEST(max1::max(s1, s2) == s1);
 }
 
+// cf. Ch. 3.1 Function Templates, Gottschling. Discovering Modern C++.
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FunctionTemplateDoesFunctionOverloading)
+{
+  BOOST_TEST(max1::max(3, 5) == 5);
+  BOOST_TEST(max1::max(3l, 5l) == 5l);
+  BOOST_TEST(max1::max(3.0, 5.0) == 5.0);
+
+  unsigned u1 {2}, u2 {8};
+  BOOST_TEST(max1::max(u1, u2) == u2);
+  BOOST_TEST(max1::max(u1 * u2, u1 + u2) == u1 * u2);
+}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

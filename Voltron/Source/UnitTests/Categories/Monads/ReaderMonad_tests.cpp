@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// \file StateMonad_tests.cpp
+/// \file ReaderMonad_tests.cpp
 /// \ref Ivan Čukić, Functional Programming in C++,  Manning Publications;
 /// 1st edition (November 19, 2018). ISBN-13: 978-1617293818
 //------------------------------------------------------------------------------

@@ -3037,6 +3037,11 @@ More links:
 
 \url{https://nbviewer.jupyter.org/github/ivanmurashko/articles/blob/master/cattheory/cattheory.pdf}
 \url{https://wiki.ifs.hsr.ch/SemProgAnTr/files/mof_categories_final.pdf}
+
+\section{Actors, Concurrent Systems}
+
+\url{https://sourceforge.net/projects/sobjectizer/}
+\url{https://github.com/Stiffstream/sobjectizer#helloworld-example}
 	
 \part{Technical Interviews}
 
@@ -3055,6 +3060,34 @@ More links:
 \part{Embedded Systems}
 
 Lee and Seshia (2016) \cite{LeSe2016}.
+
+cf. Ch. 3 Discrete Dynamics, Lee and Seshia (2016) \cite{LeSe2016}. 
+
+showed how state machines can be used to model discrete dynamics.
+
+cf. Sec. 3.1., Lee and Seshia (2016) \cite{LeSe2016}. 
+
+pp. 43, Ex. 3.1., Lee and Seshia (2016) \cite{LeSe2016}. e.g. Consider system that counts number of cars that enter and leave parking garage in order to keep track of how many cars are in garage at any time. 
+
+Ignore for now how to design sensors that detect entry or departure of cars.
+
+Assume \texttt{ArrivedDetector} actor produces an event when car arrives, and \texttt{DepartureDetector} actor produces an event when car departs.
+
+\texttt{Counter} actor keeps running count, starting from initial value $i$. 
+
+Each time count changes, it produces an output event that updates display.
+
+Each entry or dedparture modeled as discrete event. Discrete event \textbf{occurs at} an instant of time rather than over time.
+
+Signal $u$ into \texttt{up} input port (from \texttt{ArrivalDetector}, upon arrival) is function of form
+\[
+u : \mathbb{R} \to \lbrace \text{absent}, \text{present} \rbrace, \text{ i.e. }
+\]
+
+\begin{definition}[Signal]
+	Signal is a function of the form $e : \mathbb{R} \to \lbrace \text{absent} \bigcup X, \, X \in \text{Obj}{\mathbf{Set}}$ s.t. \\
+	$\exists \,$ 1-to-1 $f: T \to \mathbb{N}$, s.t. $f$ order preserving, i.e. $\forall \, t_1, t_2 \in T$, if $t_1 \leq t_2$, then $f(t_1) \leq f(t_2)$, where $T = T_{\text{present}} = \lbrace t \in \mathbb{R} | e(t) \neq \text{absent} \rbrace$.
+\end{definition} 
 
 \end{multicols*}
 

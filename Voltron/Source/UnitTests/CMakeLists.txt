@@ -28,6 +28,7 @@ ADD_EXECUTABLE(Check
   #Categories/Monads/ReaderMonad_tests.cpp
   Categories/Monads/OldStateMonad_tests.cpp
   Categories/Monads/StateMonad_tests.cpp
+  Categories/Monads/StateMonadExamples_tests.cpp
   Categories/Monads/WriterMonad_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
@@ -53,6 +54,7 @@ ADD_EXECUTABLE(Check
   Cpp/Templates/Template_Metaprogramming_tests.cpp
   Cpp/Templates/TypeUtilities_tests.cpp
   Cpp/Threads/Future_tests.cpp
+  Cpp/Utilities/FunctionObject_test.cpp
   Cpp/Utilities/Memory/PointerWrappers_tests.cpp
   Cpp/Utilities/Memory/StdToAddress_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
@@ -80,7 +82,6 @@ ADD_EXECUTABLE(Check
   Utilities/Curry_test.cpp
   Utilities/ErrorHandling/ErrorHandling_tests.cpp
   Utilities/FloatingPoint_tests.cpp
-  Utilities/FunctionObject_test.cpp
   Utilities/LazyValuation_tests.cpp
   Utilities/NarrowCast_test.cpp
   Utilities/OnlyOneArgument_test.cpp
@@ -100,6 +101,7 @@ ADD_LIBRARY(UnitTestTools
 
 TARGET_LINK_LIBRARIES(Check
   Algorithms
+  Categories
   #Cpp
   #DataStructures
   Hierarchy

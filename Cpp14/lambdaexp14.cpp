@@ -243,9 +243,4 @@ int main()
 	
 	std::cout << "The number of elements greater than or equal to 5 is : "  
 		<< count_N_gen << std::endl;  
-	
-	
-	
-	 	
-		
 }

@@ -20,6 +20,16 @@ constexpr T&& forward(std::remove_reference_t<T>&& t) noexcept // since C++14
 ```
 Forwards rvalues as rvalues and prohibits forwarding of rvalues as lvalues.
 
+
+cf. Peter Gottschling. **Discovering Modern C++:** An Intensive Course for Scientists, Engineers, and Programmers (C++ In-Depth Series) 1st Edition. Addison-Wesley Professional; 1 edition (December 27, 2015). ISBN-10: 0134383583. ISBN-13: 978-0134383583
+
+- Like `move`, `forward` is a *pure cast* and does not generate a single machine operation.
+
+People have phrased this as: 
+`move` does not move and `forward` does not forward.
+- They rather cast their arguments to be moved or forwarded. 
+
+
 # `std::is_invocable`
 
 ```
