@@ -1349,12 +1349,15 @@ Also, \textbf{modular addition} $(\mathbb{Z}^+_{2^w}, +)$ forms an \textbf{abeli
 
 \section{Two's complement}
 
+cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_3-429h.pdf}{Systems 1 Integers}
+
 Denote the notation for so-called "two's complement" numbers as $\mathbb{Z}_{2^w}$, which is a representation for integers in such a manner:
 
 \begin{equation}
 \begin{gathered}
 \mathbb{Z}_{2^w} \to \mathbb{Z} \\
-(x_0, x_1, \dots x_{w-1}) \mapsto -x_{w-1} \cdot 2^{w-1} + \sum_{i=0}^{w-2} x_i \cdot 2^i
+% (x_0, x_1, \dots x_{w-1}) 
+(x_{w-1}, x_{w-2}, \dots x_0) \mapsto -x_{w-1} \cdot 2^{w-1} + \sum_{i=0}^{w-2} x_i \cdot 2^i
 \end{gathered}
 \end{equation}
 with
@@ -1405,11 +1408,11 @@ In Fussell's notation, Fussell (2011) \cite{Fuss2011},
 \begin{gathered}
 \lbrace 0 ,1, \dots b-1 \rbrace^w \to \mathbb{Z} \text{ or } \mathbb{Z}^+_{2^w} \to \mathbb{Z}^+ \\
 (x_{w-1}, x_{w-2}, \dots x_0) \mapsto c = \sum_{i=0}^{w-1} x_i 2^i, \, x_i < 2
-\end{gathered}
+\end{gathered} \\
 B2U(X) = B2U(x_{w-1}, \dots x_0) = \sum_{i=0}^{w-1} x_i 2^i
 \end{gathered}
 \]
-I will use this notation:
+I will also use this notation:
 \[
 B2U(x_w, x_{w-1}, \dots x_1) = \sum_{i=1}^w x_i 2^{i-1}
 \]

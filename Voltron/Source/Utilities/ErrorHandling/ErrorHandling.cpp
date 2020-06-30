@@ -107,6 +107,5 @@ void HandleRead::operator()(const ssize_t number_of_bytes)
   }
 }
 
-
 } // namespace ErrorHandling
 } // namespace Utilities

@@ -4,8 +4,8 @@
 /// \brief .
 /// \ref 
 ///-----------------------------------------------------------------------------
-#ifndef UTILITIES_HEX_PRINTER_H
-#define UTILITIES_HEX_PRINTER_H
+#ifndef UTILITIES_TO_HEX_STRING_H
+#define UTILITIES_TO_HEX_STRING_H
 
 #include <algorithm> // std::for_each
 #include <iomanip> // std::setfill
@@ -26,20 +26,29 @@ namespace Utilities
 template <typename T>
 struct ToHexString
 {
-  const T value_;
+  T value_;
 
   explicit ToHexString(const T& value);
 
-  std::string operator()(const T& value);
+  //std::string operator()(const T& value);
+  std::string operator()();
 
   std::ostream& as_increasing_addresses(std::ostream& out) const;
   std::ostream& as_decreasing_addresses(std::ostream& out) const;
+
+  std::string as_increasing_addresses() const;
+  std::string as_decreasing_addresses() const;
 
   void increasing_addresses_print() const;
   void decreasing_addresses_print() const;
 
   static std::ostream& insert_sequentially(
     std::ostream& out,
+    const std::list<unsigned int>& list_range,
+    const unsigned char* x_as_uchars);
+
+  static std::ostringstream& insert_sequentially(
+    std::ostringstream& out,
     const std::list<unsigned int>& list_range,
     const unsigned char* x_as_uchars);
 };
@@ -50,18 +59,47 @@ ToHexString<T>::ToHexString(const T& value) :
 {}
 
 template <typename T>
-std::string ToHexString<T>::operator()(const T& value)
+//std::string ToHexString<T>::operator()(const T& value)
+std::string ToHexString<T>::operator()()
 {
-  value_ = value;
+  //value_ = value;
 
-  std::stringstream out;
-  out << to_hex_string(value_);
-  return out.str();
+  return as_increasing_addresses();
+  //out << to_hex_string(value_);
+
+//  return out.str();
 }
 
 template <typename T>
 std::ostream& ToHexString<T>::insert_sequentially(
   std::ostream& out,
+  const std::list<unsigned int>& list_range,
+  const unsigned char* x_as_uchars)
+{
+  std::for_each(
+    list_range.begin(),
+    list_range.end(),
+    [&out, &x_as_uchars](const auto& index)
+    {
+      std::array<char, 1> single_buffer;
+
+      const char* format {"%01x"};
+
+      // Writes results to a character string buffer
+      std::sprintf(
+        &single_buffer[0],
+        format,
+        x_as_uchars[index]);
+
+      out << single_buffer.data();
+    });
+
+  return out;
+}
+
+template <typename T>
+std::ostringstream& ToHexString<T>::insert_sequentially(
+  std::ostringstream& out,
   const std::list<unsigned int>& list_range,
   const unsigned char* x_as_uchars)
 {
@@ -105,6 +143,23 @@ std::ostream& ToHexString<T>::as_increasing_addresses(std::ostream& out) const
   insert_sequentially(out, list_range, x_as_uchars);
 
   return out;
+}
+
+template <typename T>
+std::string ToHexString<T>::as_increasing_addresses() const
+{
+  std::ostringstream out;
+
+  constexpr std::size_t number_of_bytes {sizeof(T)};
+
+  const auto x_as_uchars = reinterpret_cast<const unsigned char*>(&value_);
+
+  std::list<unsigned int> list_range (number_of_bytes);
+  std::iota(list_range.begin(), list_range.end(), 0);
+
+  insert_sequentially(out, list_range, x_as_uchars);
+
+  return out.str();
 }
 
 template <typename T>
@@ -286,4 +341,4 @@ std::ostream& operator<<(std::ostream& out, const ToHexString<T>& rhs)
 
 } // namespace Utilities
 
-#endif // UTILITIES_HEXADECIMAL_PRINT_H
+#endif // UTILITIES_TO_HEX_STRING_H

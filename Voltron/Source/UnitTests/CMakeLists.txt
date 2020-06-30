@@ -12,6 +12,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 ADD_EXECUTABLE(Check
   Main.cpp
   Algorithms/Bits/Radix_tests.cpp
+  Algorithms/HackerRank/BitManipulationLonelyInteger_tests.cpp
   Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp
   Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
   Algorithms/Permutations_tests.cpp
@@ -64,6 +65,7 @@ ADD_EXECUTABLE(Check
   DeskCalculator/Token_tests.cpp
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
+  Entrevue/MiscellaneousQuestions_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
   IO/Epoll/EpollFd_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp

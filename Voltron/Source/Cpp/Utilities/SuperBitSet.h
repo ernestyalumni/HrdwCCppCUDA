@@ -10,6 +10,7 @@
 #include <bitset>
 // cf. https://en.cppreference.com/w/cpp/types/climits
 #include <climits> // CHAR_BIT
+#include <utility> // std::move
 
 namespace Cpp
 {
@@ -47,6 +48,16 @@ class SuperBitSet : public std::bitset<N>
     // starting position pos and length n can be provided, as well as characters
     // denoting alternative values for set (one) and unset (0) bits.
     using std::bitset<N>::bitset;
+
+    SuperBitSet operator=(const SuperBitSet& bit_set)
+    {
+      return SuperBitSet{bit_set.to_string()};
+    }
+
+    SuperBitSet operator=(const std::bitset<N>& bit_set)
+    {
+      return std::move(SuperBitSet{bit_set.to_string()});
+    }
 
     // TODO: Consider adding Copy construction.
 
