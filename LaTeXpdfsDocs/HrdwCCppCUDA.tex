@@ -3055,10 +3055,27 @@ u : \mathbb{R} \to \lbrace \text{absent}, \text{present} \rbrace, \text{ i.e. }
 \]
 
 \begin{definition}[Signal]
-	Signal is a function of the form $e : \mathbb{R} \to \lbrace \text{absent} \bigcup X, \, X \in \text{Obj}{\mathbf{Set}}$ s.t. \\
+	Signal is a function of the form $e : \mathbb{R} \to \lbrace \text{absent} \rbrace \bigcup X, \, X \in \text{Obj}{\mathbf{Set}}$ s.t. \\
 	$\exists \,$ 1-to-1 $f: T \to \mathbb{N}$, s.t. $f$ order preserving, i.e. $\forall \, t_1, t_2 \in T$, if $t_1 \leq t_2$, then $f(t_1) \leq f(t_2)$, where $T = T_{\text{present}} = \lbrace t \in \mathbb{R} | e(t) \neq \text{absent} \rbrace$.
 \end{definition} 
 
+cf. pp. 52 Lee and Seshia (2016) \cite{LeSe2016}
+
+For example, in Figure 3.5, for the thermostat with hysteresis (so that it avoids \textbf{chattering}, heater would turn on and off rapidly when temperature is close to setpoint temperature), the finite state machine (FSM) could be \textbf{event triggered}, like the garage counter, in which case it'll react whenever a \emph{temperature} input is provided.
+
+Alternatively, it could be \textbf{time triggered} - it reacts at regular time intervals.
+
+The definition of FSM doesn't change in these two cases: it's up to the environment in which an FSM operates when it should react.
+
+cf. pp. 52, Sec. 3.3.2 "When a Reaction Occurs", Lee and Seshia (2016) \cite{LeSe2016}
+
+Recall the notion of "reaction": from pp. 48, Sec. 3.2 "The Notion of State", formally define state to be encoding of everything about past that has an effect on system's reaction to current or future inputs. From Sec. 3.3 "Finite-State Machines", 
+\begin{definition}[State Machine, Sec. 3.3 Finite State Machines, Lee and Seshia (2016)\cite{LeSe2016}, pp. 48]
+	\textbf{state machine} is a model of a system with discrete dynamics that at each \emph{reaction} maps valuations of inputs to valuations of outputs, where map may depend on its current state.
+	\textbf{finite-state machine} (FSM) is a state machine where the set \emph{States} of possible states is finite.
+\end{definition}
+
+However, \emph{nothing in the definition of a state machine constrains \textbf{when} it reacts}. The environment determines when machine reacts. Chapters 5, 6 of Lee and Seshia (2016) \cite{LeSe2016} describe a variety of mechanisms and give precise meaning to terms like \textbf{event triggered} and \textbf{time triggered}.
 
 \begin{thebibliography}{9}
 \bibitem{Meye1997}

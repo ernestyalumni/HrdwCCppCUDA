@@ -11,6 +11,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 ADD_EXECUTABLE(Check
   Main.cpp
+  Algorithms/Bits/OnesComplement_tests.cpp
   Algorithms/Bits/Radix_tests.cpp
   Algorithms/HackerRank/BitManipulationLonelyInteger_tests.cpp
   Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp

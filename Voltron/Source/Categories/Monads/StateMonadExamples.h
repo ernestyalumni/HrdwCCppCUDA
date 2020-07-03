@@ -112,18 +112,31 @@ enum class Output : char
 	heatOff
 };
 
+//------------------------------------------------------------------------------
+/// \class InternalHom
+/// \ref pp. 51, 52 3.3 Finite-State Machines, Lee & Seshia, Introduction to
+/// Embedded Systems
+//------------------------------------------------------------------------------
 class InternalHom
 {
 	public:
 
-		InternalHom(const double temperature);
+		InternalHom(
+			const double heat_on_limit,
+			const double heat_off_limit,
+			const double temperature);
 
+		// Output is optional because outputs will only be present only when a
+		// change in status of the heater is needed (i.e., when it's on and needs to
+		// be turned off, or when it's off and needs to be turned on).
 		using OptionalOutput = std::optional<Output>;
 
 		std::pair<State, OptionalOutput> operator()(const State state);
 
 	private:
 
+		const double heat_on_maximum_temperature_;
+		const double heat_off_minimum_temperature_;
 		double temperature_;
 };
 
@@ -131,10 +144,99 @@ class ModestThermostatMorphism
 {
 	public:
 
+		ModestThermostatMorphism(
+			const double heat_on_limit,
+			const double heat_off_limit);
+
 		InternalHom operator()(const double temperature);
+
+	private:
+
+		// temperature <= 18 / heatOn
+		double heat_on_maximum_temperature_;
+
+		// temperature >= 22 / heatOff
+		double heat_off_minimum_temperature_;
 };
 
 } // namespace ModestThermostat
+
+// This is an example of a time-triggered finite state machine.
+// It keeps track of the passage of time.
+
+namespace TrafficLight
+{
+
+// Input.
+enum class Pedestrian : char
+{
+	absent,
+	present
+};
+
+enum class State : char
+{
+	red,
+	green,
+	pending,
+	yellow
+};
+
+// TODO: Create Output struct for OptionalSignal, Optional count reset
+
+// Output.
+enum class Signal : char
+{
+	signal_red,
+	signal_green,
+	signal_yellow
+};
+
+class InternalHom
+{
+	public:
+
+		InternalHom(
+			const unsigned int count,
+			const Pedestrian pedestrian,
+			const unsigned int count_time,
+			const unsigned int yellow_to_red_time);
+
+		// Output.
+		using OptionalSignal = std::optional<Signal>;
+
+		std::pair<State, OptionalSignal> operator()(const State state);
+
+	private:
+
+		unsigned count_;
+		Pedestrian pedestrian_;
+		const unsigned int count_time_;
+		const unsigned int yellow_to_red_time_;
+};
+
+
+//------------------------------------------------------------------------------
+/// \class InternalHom
+/// \ref pp. 62, Figure 3.10, Lee & Seshia, Introduction to Embedded Systems
+/// (2016)
+//------------------------------------------------------------------------------
+
+class TrafficLightMorphism
+{
+	public:
+
+		TrafficLightMorphism(
+			const unsigned int count_time,
+			const unsigned int yellow_to_red_time);
+
+	private:
+
+		unsigned int count_time_;
+		unsigned int yellow_to_red_time_;
+};
+
+} // namespace TrafficLight
 
 } // namespace Examples
 

@@ -97,6 +97,146 @@ std::pair<unsigned int, unsigned int> GarageCounterMorphism1::operator()(
 
 } // namespace GarageCounter
 
+namespace ModestThermostat
+{
+
+InternalHom::InternalHom(
+	const double heat_on_limit,
+	const double heat_off_limit,
+	const double temperature
+	):
+	heat_on_maximum_temperature_{heat_on_limit},
+	heat_off_minimum_temperature_{heat_off_limit},
+	temperature_{temperature}
+{}
+
+std::pair<State, InternalHom::OptionalOutput> InternalHom::operator()(
+	const State state)
+{
+	State final_state {state};
+	// Avoids chattering, where heater would turn on and off rapidly when
+	// temperature is close to setpoint temperature.
+	//if (temperature_ > heat_on_maximum_temperature_) ||
+	//	(temperature_ < heat_off_minimum_temperature_)
+	//{
+	//	return std::make_pair<State, OptionalOutput>(state, std::nullopt);
+	//}
+
+	if ((temperature_ <= heat_on_maximum_temperature_) &&
+		(state == State::cooling))
+	{
+		return std::make_pair<State, OptionalOutput>(
+			State::heating,
+			std::make_optional<Output>(Output::heatOn));
+	}
+
+	if ((temperature_ >= heat_off_minimum_temperature_) &&
+		(state == State::heating))
+	{
+		return std::make_pair<State, OptionalOutput>(
+			State::cooling,
+			std::make_optional<Output>(Output::heatOff));
+	}
+
+	return std::make_pair<State, OptionalOutput>(
+		//std::forward<State>(state),
+		std::move(final_state),
+		std::nullopt);
+}
+
+ModestThermostatMorphism::ModestThermostatMorphism(
+	const double heat_on_limit,
+	const double heat_off_limit
+	):
+	heat_on_maximum_temperature_{heat_on_limit},
+	heat_off_minimum_temperature_{heat_off_limit}
+{}
+
+InternalHom ModestThermostatMorphism::operator()(const double temperature)
+{
+	return InternalHom{
+		heat_on_maximum_temperature_,
+		heat_off_minimum_temperature_,
+		temperature};
+}
+
+} // namespace ModestThermostat
+
+namespace TrafficLight
+{
+
+InternalHom::InternalHom(
+	const unsigned int count,
+	const Pedestrian pedestrian,
+	const unsigned int count_time,
+	const unsigned int yellow_to_red_time
+	):
+	count_{count},
+	pedestrian_{pedestrian},
+	count_time_{count_time},
+	yellow_to_red_time_{yellow_to_red_time}
+{}
+
+std::pair<State, InternalHom::OptionalSignal> InternalHom::operator()(
+	const State state)
+{
+	State final_state {state};
+
+	// It starts in red state and counts for 60 seconds.
+	if ((state == State::red) && (count_ >= count_time_))
+	{
+		return std::make_pair<State, OptionalSignal>(
+			State::green,
+			std::make_optional<Signal>(Signal::signal_green));
+	}
+	else
+	{
+		return std::make_pair<State, OptionalSignal>(
+			std::move(final_state),
+			std::nullopt);
+	}
+
+	// It had transitioned to green, where it'll remain until pure input
+	// pedestrian is present.
+
+	if ((state == State::green) && (pedestrian_ == Pedestrian::present))
+	{
+
+		// When pedestrian is present, machine transitions to yellow if it has been
+		// in state green for at least 60 seconds.
+		if (count_ >= count_time_)
+		{
+			final_state = State::yellow;
+
+			return std::make_pair<State, OptionalSignal>(
+				std::move(final_state),
+				std::make_optional<Signal>(Signal::signal_yellow));
+		}
+		// Otherwise, it transitions to pending, where it stays for remainder of 
+		// 60 seconds.
+		else
+		{
+			final_state = State::pending;
+
+			return std::make_pair<State, OptionalSignal>(
+				std::move(final_state),
+				std::nullopt);
+		}
+	}
+
+	//if ((state == State ))
+}
+
+TrafficLightMorphism::TrafficLightMorphism(
+	const unsigned int count_time,
+	const unsigned int yellow_to_red_time
+	):
+	count_time_{count_time},
+	yellow_to_red_time_{yellow_to_red_time}
+{}
+
+} // namespace TrafficLight
+
 } // namespace Examples
 
 } // namespace StateMonad
