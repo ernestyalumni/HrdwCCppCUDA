@@ -177,7 +177,7 @@ InternalHom::InternalHom(
 	yellow_to_red_time_{yellow_to_red_time}
 {}
 
-std::pair<State, InternalHom::OptionalSignal> InternalHom::operator()(
+std::pair<State, Output> InternalHom::operator()(
 	const State state)
 {
 	State final_state {state};
@@ -185,15 +185,11 @@ std::pair<State, InternalHom::OptionalSignal> InternalHom::operator()(
 	// It starts in red state and counts for 60 seconds.
 	if ((state == State::red) && (count_ >= count_time_))
 	{
-		return std::make_pair<State, OptionalSignal>(
+		Output output {std::make_optional<Signal>(Signal::signal_green), true};
+
+		return std::make_pair<State, Output>(
 			State::green,
-			std::make_optional<Signal>(Signal::signal_green));
-	}
-	else
-	{
-		return std::make_pair<State, OptionalSignal>(
-			std::move(final_state),
-			std::nullopt);
+			std::move(output));
 	}
 
 	// It had transitioned to green, where it'll remain until pure input
@@ -208,9 +204,11 @@ std::pair<State, InternalHom::OptionalSignal> InternalHom::operator()(
 		{
 			final_state = State::yellow;
 
-			return std::make_pair<State, OptionalSignal>(
+			Output output {std::make_optional<Signal>(Signal::signal_yellow), true};
+
+			return std::make_pair<State, Output>(
 				std::move(final_state),
-				std::make_optional<Signal>(Signal::signal_yellow));
+				std::move(output));
 		}
 		// Otherwise, it transitions to pending, where it stays for remainder of 
 		// 60 seconds.
@@ -218,11 +216,41 @@ std::pair<State, InternalHom::OptionalSignal> InternalHom::operator()(
 		{
 			final_state = State::pending;
 
-			return std::make_pair<State, OptionalSignal>(
+			Output output {std::nullopt, false};
+
+			return std::make_pair<State, Output>(
 				std::move(final_state),
-				std::nullopt);
+				std::move(output));
 		}
 	}
+
+	if ((state == State::pending) && (count_ >= count_time_))
+	{
+		Output output {std::make_optional<Signal>(Signal::signal_yellow), true};
+
+		return std::make_pair<State, Output>(State::yellow, std::move(output));
+	}
+
+	if ((state == State::yellow) && (count_ >= yellow_to_red_time_))
+	{
+		Output output {std::make_optional<Signal>(Signal::signal_red), true};
+
+		return std::make_pair<State, Output>(State::red, std::move(output));
+	}
+
+	// Lee and Seshia (2016), pp. 62, Fig. 3.10 failed to address this case:
+	if ((state == State::green) && (count_ >= count_time_))
+	{
+		Output output {std::make_optional<Signal>(Signal::signal_yellow), true};
+
+		return std::make_pair<State, Output>(State::yellow, std::move(output));
+	}
+
+	Output output {std::nullopt, false};
+
+	return std::make_pair<State, Output>(
+		std::move(final_state),
+		std::move(output));
 
 	//if ((state == State ))
 }
@@ -234,6 +262,18 @@ TrafficLightMorphism::TrafficLightMorphism(
 	count_time_{count_time},
 	yellow_to_red_time_{yellow_to_red_time}
 {}
+
+InternalHom TrafficLightMorphism::operator()(
+	const unsigned int count,
+	const Pedestrian pedestrian)
+{
+	return InternalHom{
+		count,
+		pedestrian,
+		count_time_,
+		yellow_to_red_time_
+	};
+}
 
 } // namespace TrafficLight
 

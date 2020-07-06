@@ -42,7 +42,6 @@ T clear_bit(const T x, const std::size_t position)
   return (x & ~(1 << position));
 }
 
-
 } // namespace Bits
 } // namespace Algorithms
 

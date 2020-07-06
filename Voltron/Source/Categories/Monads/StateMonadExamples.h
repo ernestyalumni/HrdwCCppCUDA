@@ -182,14 +182,21 @@ enum class State : char
 	yellow
 };
 
-// TODO: Create Output struct for OptionalSignal, Optional count reset
-
 // Output.
 enum class Signal : char
 {
 	signal_red,
 	signal_green,
 	signal_yellow
+};
+
+// Create Output struct for OptionalSignal, Optional count reset
+struct Output
+{
+	using OptionalSignal = std::optional<Signal>;
+
+	OptionalSignal signal_;
+	bool reset_count_;
 };
 
 class InternalHom
@@ -202,10 +209,7 @@ class InternalHom
 			const unsigned int count_time,
 			const unsigned int yellow_to_red_time);
 
-		// Output.
-		using OptionalSignal = std::optional<Signal>;
-
-		std::pair<State, OptionalSignal> operator()(const State state);
+		std::pair<State, Output> operator()(const State state);
 
 	private:
 
@@ -229,6 +233,10 @@ class TrafficLightMorphism
 		TrafficLightMorphism(
 			const unsigned int count_time,
 			const unsigned int yellow_to_red_time);
+
+		InternalHom operator()(
+			const unsigned int count,
+			const Pedestrian pedestrian);
 
 	private:
 

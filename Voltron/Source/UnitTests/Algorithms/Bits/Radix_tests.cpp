@@ -49,12 +49,13 @@ BOOST_AUTO_TEST_CASE(BinaryRepresentation)
 
     std::cout << "std::numeric_limits<uint8_t>::max(): " <<
       static_cast<unsigned int>(std::numeric_limits<uint8_t>::max()) << "\n";
+        // 255
     std::cout << "std::numeric_limits<uint16_t>::max(): " <<
-      std::numeric_limits<uint16_t>::max() << "\n";
+      std::numeric_limits<uint16_t>::max() << "\n"; // 65535
     std::cout << "std::numeric_limits<uint32_t>::max(): " <<
-      std::numeric_limits<uint32_t>::max() << "\n";
+      std::numeric_limits<uint32_t>::max() << "\n"; // 4294967295
     std::cout << "std::numeric_limits<uint64_t>::max(): " <<
-      std::numeric_limits<uint64_t>::max() << "\n";
+      std::numeric_limits<uint64_t>::max() << "\n"; // 18446744073709551615
 
     std::cout << "\n FloatingPoint limits \n";
 
@@ -62,6 +63,30 @@ BOOST_AUTO_TEST_CASE(BinaryRepresentation)
       std::numeric_limits<float>::max() << "\n";
     std::cout << "std::numeric_limits<double>::max(): " <<
       std::numeric_limits<double>::max() << "\n";
+  }
+
+  {
+    std::cout << "\n\n Signed limits \n";
+
+    std::cout << "std::numeric_limits<int8_t>::max(): " <<
+      static_cast<unsigned int>(std::numeric_limits<int8_t>::max()) << "\n";
+        // 127
+    std::cout << "std::numeric_limits<int16_t>::max(): " <<
+      std::numeric_limits<int16_t>::max() << "\n"; // 32767
+    std::cout << "std::numeric_limits<int32_t>::max(): " <<
+      std::numeric_limits<int32_t>::max() << "\n"; // 2147483647
+    std::cout << "std::numeric_limits<int64_t>::max(): " <<
+      std::numeric_limits<int64_t>::max() << "\n"; // 18446744073709551615
+
+    std::cout << "std::numeric_limits<int8_t>::min(): " <<
+      static_cast<int>(std::numeric_limits<int8_t>::min()) << "\n";
+        // -128
+    std::cout << "std::numeric_limits<int16_t>::min(): " <<
+      std::numeric_limits<int16_t>::min() << "\n"; // -32768
+    std::cout << "std::numeric_limits<int32_t>::min(): " <<
+      std::numeric_limits<int32_t>::min() << "\n"; // -2147483648
+    std::cout << "std::numeric_limits<int64_t>::min(): " <<
+      std::numeric_limits<int64_t>::min() << "\n"; // 18446744073709551615
   }
 
   // Examples
@@ -178,6 +203,64 @@ BOOST_AUTO_TEST_CASE(TwosComplement)
     SuperBitSet<8> aubits8 {au};
     // Sign bit is 0 for positive.
     BOOST_TEST(aubits8.to_string() == "11101110");
+  }
+}
+
+// cf. http://sandbox.mc.edu/~bennet/cs110/tc/add.html
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(
+  TwosComplementBinaryAdditionWhenSumIsNotArithemticallyCorrect)
+{
+  // Overflow, no carryout (at sign bit). Sum is not correct.
+  {
+    const int8_t x {104};
+    const SuperBitSet<8> xbits8 {x};
+    BOOST_TEST(xbits8.to_string() == "01101000");
+    ToHexString<int8_t> xh {x};
+    BOOST_TEST(xh() == "68");
+
+    const int8_t y {45};
+    const SuperBitSet<8> ybits8 {y};
+    BOOST_TEST(ybits8.to_string() == "00101101");
+    ToHexString<int8_t> yh {y};
+    BOOST_TEST(yh() == "2d");
+
+    const auto z = x + y;
+    BOOST_TEST(sizeof(z) == 4);
+    const SuperBitSet<8> zbits8 {z};
+    BOOST_TEST(zbits8.to_string() == "10010101");
+    BOOST_TEST(zbits8.to_ulong() == 149);
+
+    // "Wraps around" to -128 and "up".
+    const int8_t z8 {-107};
+    const SuperBitSet<8> z8bits8 {bit_cast<uint8_t>(z8)};
+    BOOST_TEST(z8bits8.to_string() == "10010101");
+  }
+  // Overflow, with incidental carryout. Sum is not correct.
+  {
+    const int8_t x {-103};
+    const SuperBitSet<8> xbits8 {bit_cast<uint8_t>(x)};
+    BOOST_TEST(xbits8.to_string() == "10011001");
+    ToHexString<int8_t> xh {x};
+    BOOST_TEST(xh() == "99");
+
+    const int8_t y {-69};
+    const SuperBitSet<8> ybits8 {bit_cast<uint8_t>(y)};
+    BOOST_TEST(ybits8.to_string() == "10111011");
+    ToHexString<int8_t> yh {y};
+    BOOST_TEST(yh() == "bb");
+
+    const auto z = x + y;
+    BOOST_TEST(sizeof(z) == 4);
+    const SuperBitSet<32> zbits32 {bit_cast<uint32_t>(z)};
+    BOOST_TEST(zbits32.to_string() == "11111111111111111111111101010100");
+    BOOST_TEST(z == -172);
+
+    // "Wraps around" to -128 and "up".
+    const int8_t z8 {84};
+    const SuperBitSet<8> z8bits8 {bit_cast<uint8_t>(z8)};
+    BOOST_TEST(z8bits8.to_string() == "01010100");
   }
 }
 

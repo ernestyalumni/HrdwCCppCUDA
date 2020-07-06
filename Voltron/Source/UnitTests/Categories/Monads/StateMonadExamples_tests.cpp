@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_SUITE_END() // GarageCounter_tests
 BOOST_AUTO_TEST_SUITE(ModestThermostatMorphism_tests)
 
 //------------------------------------------------------------------------------
-/// \ref pp .51, Lee and Seshia, Introduction to Embedded Systems, Figure 3.5:
+/// \ref pp. 51, Lee and Seshia, Introduction to Embedded Systems, Figure 3.5:
 /// A model of a thermostat with hysteresis.
 //------------------------------------------------------------------------------
 ModestThermostat::ModestThermostatMorphism thermostat {18, 22};
@@ -173,6 +173,145 @@ BOOST_AUTO_TEST_CASE(BeginsCoolingIfTemperatureIsAboveALimitAndHadBeenHeating)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ModestThermostatMorphism_tests
+
+BOOST_AUTO_TEST_SUITE(TrafficLight_tests)
+
+//------------------------------------------------------------------------------
+/// \ref pp. 62, Lee and Seshia, Introduction to Embedded Systems, Figure 3.10:
+/// State machine model of traffic light controller that keeps track of passage,
+/// assuming it reacts at regular intervals.
+//------------------------------------------------------------------------------
+constexpr unsigned int count_time {60};
+constexpr unsigned int yellow_to_red_time {5};
+TrafficLight::TrafficLightMorphism traffic_light {
+	count_time,
+	yellow_to_red_time};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(
+	TransitionsFromRedToGreenOnlyWhenCountIsGreaterThanOrEqualToCountTime)
+{
+	{
+		auto transition_function =
+			traffic_light(59, TrafficLight::Pedestrian::present);
+		auto result = transition_function(TrafficLight::State::red);
+		BOOST_TEST((result.first == TrafficLight::State::red));
+		BOOST_TEST(!result.second.signal_);
+		BOOST_TEST(!result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(59, TrafficLight::Pedestrian::absent);
+		auto result = transition_function(TrafficLight::State::red);
+		BOOST_TEST((result.first == TrafficLight::State::red));
+		BOOST_TEST(!result.second.signal_);
+		BOOST_TEST(!result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(60, TrafficLight::Pedestrian::present);
+		auto result = transition_function(TrafficLight::State::red);
+		BOOST_TEST((result.first == TrafficLight::State::green));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_green));
+		BOOST_TEST(result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(61, TrafficLight::Pedestrian::present);
+		auto result = transition_function(TrafficLight::State::red);
+		BOOST_TEST((result.first == TrafficLight::State::green));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_green));
+		BOOST_TEST(result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(60, TrafficLight::Pedestrian::absent);
+		auto result = transition_function(TrafficLight::State::red);
+		BOOST_TEST((result.first == TrafficLight::State::green));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_green));
+		BOOST_TEST(result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(61, TrafficLight::Pedestrian::absent);
+		auto result = transition_function(TrafficLight::State::red);
+		BOOST_TEST((result.first == TrafficLight::State::green));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_green));
+		BOOST_TEST(result.second.reset_count_);
+	}
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GreenToYellowWhenCountIsGreaterThanOrEqualToCountTime)
+{
+	{
+		auto transition_function =
+			traffic_light(59, TrafficLight::Pedestrian::absent);
+		auto result = transition_function(TrafficLight::State::green);
+		BOOST_TEST((result.first == TrafficLight::State::green));
+		BOOST_TEST(!result.second.signal_);
+		BOOST_TEST(!result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(60, TrafficLight::Pedestrian::present);
+		auto result = transition_function(TrafficLight::State::green);
+		BOOST_TEST((result.first == TrafficLight::State::yellow));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_yellow));
+		BOOST_TEST(result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(61, TrafficLight::Pedestrian::present);
+		auto result = transition_function(TrafficLight::State::green);
+		BOOST_TEST((result.first == TrafficLight::State::yellow));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_yellow));
+		BOOST_TEST(result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(60, TrafficLight::Pedestrian::absent);
+		auto result = transition_function(TrafficLight::State::green);
+		BOOST_TEST((result.first == TrafficLight::State::yellow));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_yellow));
+		BOOST_TEST(result.second.reset_count_);
+	}
+	{
+		auto transition_function =
+			traffic_light(61, TrafficLight::Pedestrian::absent);
+		auto result = transition_function(TrafficLight::State::green);
+		BOOST_TEST((result.first == TrafficLight::State::yellow));
+		BOOST_TEST((
+			result.second.signal_.value() == TrafficLight::Signal::signal_yellow));
+		BOOST_TEST(result.second.reset_count_);
+	}
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(
+	YellowToPendingWhenCountIsLessThanCountTimeAndPedestrianPresent)
+{
+	{
+		auto transition_function =
+			traffic_light(59, TrafficLight::Pedestrian::present);
+		auto result = transition_function(TrafficLight::State::green);
+		BOOST_TEST((result.first == TrafficLight::State::pending));
+		BOOST_TEST(!result.second.signal_);
+		BOOST_TEST(!result.second.reset_count_);
+	}
+}
+
+BOOST_AUTO_TEST_SUITE_END() // TrafficLight_tests
 
 BOOST_AUTO_TEST_SUITE_END() // StateMonadExamples_tests
 BOOST_AUTO_TEST_SUITE_END() // Monads

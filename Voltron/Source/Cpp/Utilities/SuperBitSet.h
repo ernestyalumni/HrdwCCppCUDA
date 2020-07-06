@@ -4,8 +4,8 @@
 /// \brief std::bitset extension.
 /// \ref https://en.cppreference.com/w/cpp/utility/bitset
 ///-----------------------------------------------------------------------------
-#ifndef CPP_UTILITIES_BIT_SET_H
-#define CPP_UTILITIES_BIT_SET_H
+#ifndef CPP_UTILITIES_SUPER_BIT_SET_H
+#define CPP_UTILITIES_SUPER_BIT_SET_H
 
 #include <bitset>
 // cf. https://en.cppreference.com/w/cpp/types/climits
@@ -142,8 +142,7 @@ class BitSet2 : public std::bitset<sizeof(T) * number_of_bits_in_a_byte>
   using BitSetT::BitSetT; 
 };
 
-
 } // namespace Utilities
 } // namespace Cpp
 
-#endif // CPP_UTILITIES_BIT_SET_H
+#endif // CPP_UTILITIES_SUPER_BIT_SET_H
