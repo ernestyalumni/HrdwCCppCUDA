@@ -216,6 +216,33 @@ BOOST_AUTO_TEST_CASE(OnesComplementSumOfUint16_t)
   BOOST_TEST(sum_resultbits16.to_string() == "1101101001100000");
 }
 
+// cf. http://kfall.net/ucbpage/EE122/lec06/lec06-outline.pdf
+// http://kfall.net/ucbpage/EE122/lec06/sld023.htm
+// http://kfall.net/ucbpage/EE122/lec06/tsld022.htm
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(OnesComplementSumExample)
+{
+  constexpr uint16_t word_1 {0xe34f};
+  constexpr uint16_t word_2 {0x2396};
+  constexpr uint16_t word_3 {0x4427};
+  constexpr uint16_t word_4 {0x99f3};
+
+  const uint32_t twos_complement_sum {word_1 + word_2 + word_3 + word_4};
+
+  BOOST_TEST(twos_complement_sum == 0x01e4ff);
+
+  std::vector<uint16_t> values;
+  values.emplace_back(word_1);
+  values.emplace_back(word_2);
+  values.emplace_back(word_3);
+  values.emplace_back(word_4);
+
+  const uint16_t sum_result {ones_complement_sum(values)};
+  SuperBitSet<16> sum_resultbits16 {sum_result};
+  BOOST_TEST(sum_resultbits16.to_ulong() == 0x1aff);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // OnesComplementSum_tests
 
 BOOST_AUTO_TEST_SUITE_END() // OnesComplement_tests

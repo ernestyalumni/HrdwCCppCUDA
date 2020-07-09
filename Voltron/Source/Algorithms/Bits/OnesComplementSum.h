@@ -2,7 +2,9 @@
 /// \file OnesComplementSum.h
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
-/// \brief Utilities for bit masks.
+/// \brief Utilities for ones complement sum, useful for computing the Internet
+/// checksum.
+/// \details RFC 1071, Braden, Borman, & Patridge
 /// \ref https://tools.ietf.org/html/rfc1071
 /// http://kfall.net/ucbpage/EE122/lec06/tsld022.htm
 //------------------------------------------------------------------------------

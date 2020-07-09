@@ -50,6 +50,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Pointers_tests.cpp
   Cpp/Std/Span_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
+  Cpp/Strings/StringView_tests.cpp
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
   Cpp/Templates/FunctionT/MoreMax_tests.cpp
@@ -150,3 +151,6 @@ ADD_EXECUTABLE(MQTestSend
 TARGET_LINK_LIBRARIES(MQTestSend
   IPC
   Utilities)
+
+ADD_EXECUTABLE(StringViewAvoidsCopying
+  Cpp/Strings/StringViewAvoidsCopying.cpp)
