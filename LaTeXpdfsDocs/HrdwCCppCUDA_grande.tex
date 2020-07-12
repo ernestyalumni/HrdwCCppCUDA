@@ -3045,6 +3045,28 @@ More links:
 
 \url{https://sourceforge.net/projects/sobjectizer/}
 \url{https://github.com/Stiffstream/sobjectizer#helloworld-example}
+
+\v{C}uki\'{c} (2018) \cite{Cuki2008}
+
+Ch. 12, pp. 250, \v{C}uki\'{c} (2018) \cite{Cuki2008}
+
+Consider that multiple (e.g. person) objects shouldn't have any shared data - real people \emph{share} data by \emph{talking} to each other; they don't have shared variables everyone can access and change.
+
+\textbf{actors} - in actor model, actors are completely isolated entities that share nothing but can send messages to 1 another.
+\begin{itemize}
+	\item actor receives messages and processes them 1 by 1, message $\to$ actor
+	\item reaction to message can be change the actor itself or send message to another actor, actor $\to $ another actor in system
+\end{itemize}
+
+design actors as follows:
+
+\begin{itemize}
+	\item Actors can receive only messages of a signle type, and send messages of a single (not necessarily same) type. If you need to support multiple different types for input or output messages, use \verb|std::variant| or \verb|std::any|, as in Ch. 9, \v{C}uki\'{c} (2018) \cite{Cuki2008}
+	\item Leave choice of whom to send message to external controller so can compose actors in a functional way. External controller will schedule which sources an actor should listen to
+	\item leave it up to external controller to decide which messages should be processed asynchronously and which shouldn't
+\end{itemize}
+
+\url{https://cs.lmu.edu/~ray/notes/messagepassing/} Message passing notes
 	
 \part{Technical Interviews}
 
@@ -3080,17 +3102,105 @@ Assume \texttt{ArrivedDetector} actor produces an event when car arrives, and \t
 
 Each time count changes, it produces an output event that updates display.
 
-Each entry or dedparture modeled as discrete event. Discrete event \textbf{occurs at} an instant of time rather than over time.
+Each entry or departure modeled as \textbf{discrete event}. Discrete event \textbf{occurs at} an instant of time rather than over time.
+
+EY: So there are \emph{3} actors:
+
+\begin{enumerate}
+	\item Arrival Detector $\to$ produces event when car arrives
+	\item Departure Detector $\to$ produces event when car departs
+	\item Counter actor (keeps running count, each time count changes (so it's a FSM)) -> produces output event that updates a display
+\end{enumerate}
 
 Signal $u$ into \texttt{up} input port (from \texttt{ArrivalDetector}, upon arrival) is function of form
 \[
 u : \mathbb{R} \to \lbrace \text{absent}, \text{present} \rbrace, \text{ i.e. }
 \]
 
-\begin{definition}[Signal]
+$\forall \, $ time $t\in \mathbb{R}$, $u(t) $ either absent, i.e. there's no event at that time, or present, meaning there is a \\
+
+\textbf{pure signal} - signal or function of form $u:\mathbb{R} \to \lbrace \text{ absent, present} \rbrace$, carries no value, but instead provides all its information by either being present or absent at any given time. \\
+
+Counter: when \textbf{event} is present at up input port, increment count and produce output of new count value. \\
+When event present at down input, decrements count and produces output new count value. \\
+At other times, produces no output (count output is absent) \\
+
+Hence, 
+\[
+c: \mathbb{R} \to \lbrace \text{ absent } \rbrace \bigcup \mathbb{Z}
+\]
+Counter signal is not pure. \\
+
+Input to counter is pair of discrete signals that at certain times have an event, at other times have no event. Output is also discrete signals. \\
+
+signals $\xrightarrow{ \text{ counter } }$ output signal \\
+
+EY: separate FSM logic from this signal or message passing function.
+
+
+\begin{definition}[Signal and discrete signal]
 	Signal is a function of the form $e : \mathbb{R} \to \lbrace \text{absent}  \rbrace \bigcup X, \, X \in \text{Obj}{\mathbf{Set}}$ s.t. \\
 	$\exists \,$ 1-to-1 $f: T \to \mathbb{N}$, s.t. $f$ order preserving, i.e. $\forall \, t_1, t_2 \in T$, if $t_1 \leq t_2$, then $f(t_1) \leq f(t_2)$, where $T = T_{\text{present}} = \lbrace t \in \mathbb{R} | e(t) \neq \text{absent} \rbrace$.
+
+	$e$ is \textbf{discrete} if $\exists \,$ 1-to-1 $f:T\to \mathbb{N}$ such that $f$ order preserving.
 \end{definition} 
+
+pp. 46, Sec. 3.1 Discrete Systems, Lee and Seshia (2016) \cite{LeSe2016}, \\
+dynamics of discrete system can be described as sequence of steps called \textbf{reactions}. \\
+Assume reactions instantaneous. \\
+reactions of discrete system triggered by environment which discrete system operates. e.g. Fig. 3.1, reactions of counter actor triggered when 1 or more input events present. \\
+$\to$ reactions are \textbf{event-triggered} in this case.
+
+\subsection{Modeling Actors as Functions}
+
+Integrator actor (cf. Sec.2.2, Fig. 3.2):
+\[
+\begin{gathered}
+\begin{aligned}
+& I_i : \mathbb{R}^{\mathbb{R}^+} \to \mathbb{R}^{\mathbb{R}^+}, \, \text{ i.e. } \\
+& I_i : (\mathbb{R}^+ \to \mathbb{R}) \to (\mathbb{R}^+ \to \mathbb{R})
+\end{aligned}\\
+y = I_i(x)
+\end{gathered}
+\]
+
+where $i\equiv $ initial value of integration, $x,y$ are cont.-time signals; \\
+e.g. if $i=0$, and $\forall \, t \in \mathbb{R}^+$, $x(t) = 1$, then 
+\[
+y(t) = i + \int_0^t x(\tau) d\tau = t
+\]
+
+Fig. 3.1, Counter modeled by
+\[
+C_i: (\mathbb{R}^+ \to \lbrace \text{absent}, \text{present} \rbrace)^P \to (\mathbb{R}^+ \to \lbrace \text{absent} \bigcup \mathbb{Z})
+\]
+where $P = $ set of inputs or input ports. \\
+
+Recall $A^B \equiv$ set of all functions from $B$ to $A$. \\
+
+Input to function $C$ is function whose domain is $P$ that $\forall \, $ port $p\in P$ yields function in $(\mathbb{R}^+ \to \lbrace \text{ absent , present } \rbrace )$, i.e.
+
+\[
+C_i: \text{Hom}( \text{Hom}(\mathbb{R}^+ , \lbrace \text{absent, present} \rbrace )) \to \text{Hom}(\mathbb{R}^+, \lbrace \text{ absent } \bigcup \mathbb{Z} )
+\]
+
+Suppose actor has input ports $P = \lbrace p_1, \dots p_N \rbrace$ where $p_i \equiv $ name of $i$th input port. \\
+
+Assume $\forall \, $ input port $p\in P$, set $V_p$ denotes values that may be received on port $p$ when input present; $V_p \equiv$ called \textbf{type} of port $p$. \\
+At reaction, treat each $p \in P$ as variable that takes $p\in V_P \bigcup \lbrace \text{ absent } \rbrace$. \\
+\textbf{valuation} of inputs $P$ is assignment of value in $V_P$\, $\forall \, p \in P$ or assertion that $p$ absent. \\
+If port $p$ receives pure signal, then $V_p = \lbrace \text{ present } \rbrace$. \\
+
+Example 3.2. For garage counter, set of input ports $P = \lbrace \text{ up, down } \rbrace$. Both receive pure signals, so $V_{\text{up}} = V_{\text{down}} = \lbrace \text{ present } \rbrace$. If car is arriving at time $t$ and none departing, then at reaction, $\text{up}(t) = $ present, $\text{down}(t) = $ absent. \\
+
+\subsubsection{Outputs}
+
+output ports $Q = \lbrace q_1, \dots q_M \rbrace$ with types $V_{q_1}, \dots V_{q_m}$. \\
+At each reaction, system assigns value $q\in V_q \bigcup \lbrace \text{absent} \rbrace \, \forall \, q \in Q$, producing a valuation of outputs. \\
+
+Example 3.3. Counter actor, Fig. 3.1, 1 output port named count, so $Q = \lbrace \text{ count } \rbrace$, type $V_{\text{count}} = \mathbb{Z}$, at reaction, count is assigned count of cars in garage.
+
+EY: Lee and Seshia (2016) \cite{LeSe2016} fails to model the Arrival Detector and Departure Detector actors, which should not carry state because state is not required to modeled its behavior. Also, if Lee and Seshia claim that ArrivalDetector and DepartureDetector actors are \emph{event-driven}, as strongly implied by the fact that they produce events when car arrives or departs respectively, and those events become the input signals to Counter, then the inputs into their "ports" aren't necessarily of the form $\lbrace \text{absent, present} \rbrace$, nor $\text{Hom}(\mathbb{R}^+, \lbrace \text{absent, present} \rbrace)$. It could be much simpler. 
 
 cf. pp. 52 Lee and Seshia (2016) \cite{LeSe2016}
 
@@ -3109,6 +3219,24 @@ Recall the notion of "reaction": from pp. 48, Sec. 3.2 "The Notion of State", fo
 \end{definition}
 
 However, \emph{nothing in the definition of a state machine constrains \textbf{when} it reacts}. The environment determines when machine reacts. Chapters 5, 6 of Lee and Seshia (2016) \cite{LeSe2016} describe a variety of mechanisms and give precise meaning to terms like \textbf{event triggered} and \textbf{time triggered}.
+
+cf. Sec. 3.4 Extended State Machines, Lee and Seshia (2016) \cite{LeSe2016}
+
+Pushes problem of large number of states into a variable, and there's only 1 state.
+
+e.g. garage counter of Fig. 3.4, in Fig. 3.8
+
+pp. 62, "Extended state machines can provide a convenient way to keep track of the passage of time." but merely pushes tracking time to input variable. e.g. Ex. 3.9, traffic light, Fig. 3.10. \\
+
+Lee and Seshia mixes extended state machine state with discrete state and variables; but variables act as input.
+
+Sec. 3.5 Nondeterminism, Fig. 3.11 nondeterministic model of pedestrians (as FSM)
+
+state machine nondeterministic if more than 1 initial state (sufficient condition) or \\
+if $\forall \,$ state, $\exists !$ 2 distinct transitions with guards that can evaluate to true in same reaction \\
+
+
+
 
 \end{multicols*}
 
@@ -3157,6 +3285,10 @@ Prof. Donald S. Fussell (Instructor). CS429H (378H) - Systems I (Honors) (Comput
 
 \bibitem{VJG2017}
 David Vandevoorde, Nicolai M. Josuttis, Douglas Gregor. \textbf{C++ Templates: The Complete Guide} (2nd Edition). Addison-Wesley Professional; 2 edition (September 18, 2017). ISBN-13: 978-0321714121
+
+\bibitem{Cuki2018}
+Ivan \v{C}uki\'{c}. \textbf{Functional Programming in C++: How to improve your C++ programs using functional techniques}. 1st Edition. 2018
+
 
 \bibitem{LeSe2016}
 Edward Ashford Lee, Sanjit Arunkumar Seshia. \textbf{Introduction to Embedded Systems: A Cyber-Physical Systems Approach} (The MIT Press) Second Edition. The MIT Press; Second edition (December 30, 2016). ISBN-10: 0262533812. ISBN-13: 978-0262533812

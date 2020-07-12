@@ -3012,6 +3012,32 @@ More links:
 \url{https://nbviewer.jupyter.org/github/ivanmurashko/articles/blob/master/cattheory/cattheory.pdf}
 \url{https://wiki.ifs.hsr.ch/SemProgAnTr/files/mof_categories_final.pdf}
 
+\section{Actors, Concurrent Systems}
+
+\url{https://sourceforge.net/projects/sobjectizer/}
+\url{https://github.com/Stiffstream/sobjectizer#helloworld-example}
+
+\v{C}uki\'{c} (2018) \cite{Cuki2008}
+
+Ch. 12, pp. 250, \v{C}uki\'{c} (2018) \cite{Cuki2008}
+
+Consider that multiple (e.g. person) objects shouldn't have any shared data - real people \emph{share} data by \emph{talking} to each other; they don't have shared variables everyone can access and change.
+
+\textbf{actors} - in actor model, actors are completely isolated entities that share nothing but can send messages to 1 another.
+\begin{itemize}
+	\item actor receives messages and processes them 1 by 1, message $\to$ actor
+	\item reaction to message can be change the actor itself or send message to another actor, actor $\to $ another actor in system
+\end{itemize}
+
+design actors as follows:
+
+\begin{itemize}
+	\item Actors can receive only messages of a signle type, and send messages of a single (not necessarily same) type. If you need to support multiple different types for input or output messages, use \verb|std::variant| or \verb|std::any|, as in Ch. 9, \v{C}uki\'{c} (2018) \cite{Cuki2008}
+	\item Leave choice of whom to send message to external controller so can compose actors in a functional way. External controller will schedule which sources an actor should listen to
+	\item leave it up to external controller to decide which messages should be processed asynchronously and which shouldn't
+\end{itemize}
+
+\url{https://cs.lmu.edu/~ray/notes/messagepassing/} Message passing notes
 	
 \part{Technical Interviews}
 
@@ -3047,16 +3073,49 @@ Assume \texttt{ArrivedDetector} actor produces an event when car arrives, and \t
 
 Each time count changes, it produces an output event that updates display.
 
-Each entry or dedparture modeled as discrete event. Discrete event \textbf{occurs at} an instant of time rather than over time.
+Each entry or departure modeled as \textbf{discrete event}. Discrete event \textbf{occurs at} an instant of time rather than over time.
+
+EY: So there are \emph{3} actors:
+
+\begin{enumerate}
+	\item Arrival Detector $\to$ produces event when car arrives
+	\item Departure Detector $\to$ produces event when car departs
+	\item Counter actor (keeps running count, each time count changes (so it's a FSM)) -> produces output event that updates a display
+\end{enumerate}
+
 
 Signal $u$ into \texttt{up} input port (from \texttt{ArrivalDetector}, upon arrival) is function of form
 \[
 u : \mathbb{R} \to \lbrace \text{absent}, \text{present} \rbrace, \text{ i.e. }
 \]
 
-\begin{definition}[Signal]
+$\forall \, $ time $t\in \mathbb{R}$, $u(t) $ either absent, i.e. there's no event at that time, or present, meaning there is a \\
+
+\textbf{pure signal} - signal or function of form $u:\mathbb{R} \to \lbrace \text{ absent, present} \rbrace$, carries no value, but instead provides all its information by either being present or absent at any given time. \\
+
+Counter: when \textbf{event} is present at up input port, increment count and produce output of new count value. \\
+When event present at down input, decrements count and produces output new count value. \\
+At other times, produces no output (count output is absent) \\
+
+Hence, 
+\[
+c: \mathbb{R} \to \lbrace \text{ absent }\rbrace \bigcup \mathbb{Z}
+	\]
+	Counter signal is not pure. \\
+	
+	Input to counter is pair of discrete signals that at certain times have an event, at other times have no event. Output is also discrete signals. \\
+	
+	signals $\xrightarrow{ \text{ counter } }$ output signal \\
+	
+	EY: separate FSM logic from this signal or message passing function.
+
+
+\begin{definition}[Signal and Discrete Signal]
 	Signal is a function of the form $e : \mathbb{R} \to \lbrace \text{absent} \rbrace \bigcup X, \, X \in \text{Obj}{\mathbf{Set}}$ s.t. \\
 	$\exists \,$ 1-to-1 $f: T \to \mathbb{N}$, s.t. $f$ order preserving, i.e. $\forall \, t_1, t_2 \in T$, if $t_1 \leq t_2$, then $f(t_1) \leq f(t_2)$, where $T = T_{\text{present}} = \lbrace t \in \mathbb{R} | e(t) \neq \text{absent} \rbrace$.
+
+	$e$ is \textbf{discrete} if $\exists \,$ 1-to-1 $f:T\to \mathbb{N}$ such that $f$ order preserving.
+
 \end{definition} 
 
 cf. pp. 52 Lee and Seshia (2016) \cite{LeSe2016}
@@ -3076,6 +3135,64 @@ Recall the notion of "reaction": from pp. 48, Sec. 3.2 "The Notion of State", fo
 \end{definition}
 
 However, \emph{nothing in the definition of a state machine constrains \textbf{when} it reacts}. The environment determines when machine reacts. Chapters 5, 6 of Lee and Seshia (2016) \cite{LeSe2016} describe a variety of mechanisms and give precise meaning to terms like \textbf{event triggered} and \textbf{time triggered}.
+
+cf. Sec. 3.4 Extended State Machines, Lee and Seshia (2016) \cite{LeSe2016}
+
+Pushes problem of large number of states into a variable, and there's only 1 state.
+
+e.g. garage counter of Fig. 3.4, in Fig. 3.8
+
+pp. 62, "Extended state machines can provide a convenient way to keep track of the passage of time." but merely pushes tracking time to input variable. e.g. Ex. 3.9, traffic light, Fig. 3.10. \\
+
+Lee and Seshia mixes extended state machine state with discrete state and variables; but variables act as input.
+
+Sec. 3.5 Nondeterminism, Fig. 3.11, of Lee and Seshia (2016)\cite{LeSe2016} nondeterministic model of pedestrians (as FSM)
+
+state machine nondeterministic if more than 1 initial state (sufficient condition) or \\
+if $\forall \,$ state, $\exists !$ 2 distinct transitions with guards that can evaluate to true in same reaction \\
+
+Sec. 3.6 Behaviors and Traces, Lee and Seshia (2016)\cite{LeSe2016},
+
+Consider port $p$ of state machine with type $V_p$ \\
+Consider sequence of reactions $\in (V_p \bigcup \lbrace \text{ absent })^{\infty}$, represented
+\[
+s_p : \mathbb{N} \to V_p \bigcup \lbrace \text{ absent } \rbrace 
+\]
+This is signal received on that port (if it's an input), or produced on that port (if it's an output). \\
+Behavior may be represented as sequence of valuations called \textbf{observable trace}. \\
+Let $x_i$ represent valuation of input ports, \\
+$y_i$ represent valuation of output ports at reaction $i$\\
+Then observable trace is 
+\[
+((x_0,y_0), (x_1, y_1), \dots)
+\]
+Observable trace is really just another representation of behavior.
+
+Ch. 3. Discrete Dynamics, Exercise 8:
+
+\exercisehead{8} \begin{enumerate}
+	\item[(a)] $x: \mathbb{R} \to \lbrace a, p \rbrace$, $a \equiv $ absent, $p \equiv$ present 
+	\[
+	x(t) = \begin{cases} p & \text{ if } t \in \mathbb{Z}^+ \\ 
+	a & \text{ otherwise, } \forall \, t\in \mathbb{R} \end{cases}
+	\]
+	
+	Recall $T:= \lbrace t\in \mathbb{R} | x(t) \neq a \rbrace$. Let $t_1, t_2 \in T$ s.t. $t_1 \leq t_2$. Then since $t_1, t_2 \in T$, $t_1, t_2 \in \mathbb{Z}^+$ (by def. of given $x$). Let $f:T \to \mathbb{N}$ by identity $t \mapsto t$. Then $f(t_1) = t_1 \leq t_2 = f(t_2)$
+ 	\item[(b)]  Consider pure signal $y : \mathbb{R} \to \lbrace p, a \rbrace$ given by 
+ 	\[
+ 	y(t) = \begin{cases} p  & \text{ if } t = 1 -1/n \, \forall \, n \in \mathbb{Z}^+ \\ 
+ 	a & \text{otherwise } \end{cases} \quad \, \forall \, t \in \mathbb{R} 
+  	\]
+  	Let $T := \lbrace t | y(t) \neq a \rbrace$, let $t_1, t_2 \in T$ s.t. $t_1 \leq t_2$. Consider $t_1 = 1 - \frac{1}{n_1}, \, t_2 =  1 - \frac{1}{n_2}$. 
+  	
+  	Now
+  	\[
+  		1 - \frac{1}{n_1} \leq 1 - \frac{1}{n_2} \text{ or } \frac{-1}{n_1} \leq -\frac{1}{n_2} \text{ or } \frac{1}{n_1} \geq \frac{1}{n_2} \text{ or } n_2 \geq n_1
+  	\]
+  	Let $f(t) = \frac{1}{1-t}$ if $t_1 \leq t_2$.  $f(t_1) = \frac{1}{ 1 - \left( 1 - \frac{1}{n_1} \right) } = n_1 \leq n_2  = \frac{1}{ 1 - t_2 } = f(t_2)$
+	\item Signal $w$ is a merge of $x$ and $y$, i.e. if $w(t) = p$ if either $x$ or $y = p$, $w=a$ otherwise
+\end{enumerate}
+
 
 \begin{thebibliography}{9}
 \bibitem{Meye1997}
@@ -3124,6 +3241,9 @@ Prof. Donald S. Fussell (Instructor). CS429H (378H) - Systems I (Honors) (Comput
 
 \bibitem{VJG2017}
 David Vandevoorde, Nicolai M. Josuttis, Douglas Gregor. \textbf{C++ Templates: The Complete Guide} (2nd Edition). Addison-Wesley Professional; 2 edition (September 18, 2017). ISBN-13: 978-0321714121
+
+\bibitem{Cuki2018}
+Ivan \v{C}uki\'{c}. \textbf{Functional Programming in C++: How to improve your C++ programs using functional techniques}. 1st Edition. 2018
 
 \bibitem{LeSe2016}
 Edward Ashford Lee, Sanjit Arunkumar Seshia. \textbf{Introduction to Embedded Systems: A Cyber-Physical Systems Approach} (The MIT Press) Second Edition. The MIT Press; Second edition (December 30, 2016). ISBN-10: 0262533812. ISBN-13: 978-0262533812
