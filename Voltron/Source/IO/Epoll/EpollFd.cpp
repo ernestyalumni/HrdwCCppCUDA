@@ -22,18 +22,23 @@ namespace IO
 namespace Epoll
 {
 
-EpollFd::EpollFd(int size):
-	fd_{create_epoll_with_size_hint(size)}
+EpollFd::EpollFd(int size, const bool close_upon_destruction):
+	fd_{create_epoll_with_size_hint(size)},
+  close_upon_destruction_{close_upon_destruction}
 {}
 
-EpollFd::EpollFd(const EpollFlags flags):
-	fd_{create_epoll(flags)}
+EpollFd::EpollFd(const EpollFlags flags, const bool close_upon_destruction):
+	fd_{create_epoll(flags)},
+  close_upon_destruction_{close_upon_destruction}
 {}
 
 EpollFd::~EpollFd()
 {
-	int return_value {::close(fd_)};
-	HandleClose()(return_value);
+  if (close_upon_destruction_)
+  {
+  	int return_value {::close(fd_)};
+  	HandleClose()(return_value);
+  }
 }
 
 EpollFd::HandleEpollCreate::HandleEpollCreate() = default;

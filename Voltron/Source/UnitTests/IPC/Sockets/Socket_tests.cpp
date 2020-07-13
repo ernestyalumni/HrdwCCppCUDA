@@ -9,7 +9,6 @@
 #include "UnitTests/Tools/Contains.h"
 
 #include <boost/test/unit_test.hpp>
-#include <iostream>
 #include <sys/socket.h>
 #include <system_error>
 
@@ -33,6 +32,11 @@ BOOST_AUTO_TEST_CASE(SocketConstructsWithSpecialEnumClasses)
 
     // cf. https://www.cs.rutgers.edu/~pxk/417/notes/sockets/demo-udp-01.html
     // std::cout << "\ncreated socket: descriptor: " << socket.fd() << '\n';
+  }
+  {
+    const Socket socket {Domains::unix_, Types::stream};
+    BOOST_TEST(socket.domain() == AF_UNIX);
+    BOOST_TEST(socket.type() == SOCK_STREAM);
   }
 }
 

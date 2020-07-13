@@ -69,6 +69,7 @@ ADD_EXECUTABLE(Check
   Entrevue/Entrevue_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
+  IO/Epoll/ControlInterestList_tests.cpp
   IO/Epoll/EpollFd_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp
   IPC/Sockets/Bind_tests.cpp

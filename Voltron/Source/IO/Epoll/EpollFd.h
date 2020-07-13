@@ -34,9 +34,11 @@ class EpollFd
 {
   public:
 
-  	explicit EpollFd(int size);
+  	explicit EpollFd(int size, const bool close_upon_destruction = true);
 
-  	explicit EpollFd(const EpollFlags flags = EpollFlags::default_value);
+  	explicit EpollFd(
+      const EpollFlags flags = EpollFlags::default_value,
+      const bool close_upon_destruction = true);
 
   	virtual ~EpollFd();
 
@@ -81,6 +83,7 @@ class EpollFd
   private:
 
   	int fd_;
+    bool close_upon_destruction_;
 };
 
 } // namespace Epoll

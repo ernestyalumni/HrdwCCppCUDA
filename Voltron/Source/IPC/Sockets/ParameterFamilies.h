@@ -32,7 +32,7 @@ namespace Sockets
 //------------------------------------------------------------------------------
 enum class Domains : int
 {
-  unix_ = AF_UNIX, // Local communication
+  unix_ = AF_UNIX,
   local = AF_LOCAL, // Local communication
   ipv4 = AF_INET,
   ipv6 = AF_INET6,

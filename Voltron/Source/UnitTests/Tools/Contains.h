@@ -40,7 +40,7 @@ class Contains
 
     explicit Contains(const std::string& given_string);
 
-    bool operator()(const std::string& substring);
+    bool operator()(const std::string& input_string);
 
     bool operator()(const std::exception& e);
 
