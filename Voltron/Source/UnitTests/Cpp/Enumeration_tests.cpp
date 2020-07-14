@@ -31,6 +31,14 @@ enum class DefaultUnsignedChars : unsigned char
 	Quatre
 };
 
+
+inline bool operator&(
+	const DefaultUnsignedChars x,
+	const DefaultUnsignedChars y)
+{
+	return static_cast<bool>(get_underlying_value(x) & get_underlying_value(y));
+};
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(StaticCastToEnumerationType)
@@ -128,6 +136,37 @@ BOOST_AUTO_TEST_CASE(EnumClassValuesCanBeComparedWithBitwiseOperations)
 		get_underlying_value(DefaultUnsignedChars::Quatre) &
 			get_underlying_value(DefaultUnsignedChars::Trois)};
 	BOOST_TEST(!static_cast<bool>(quatre_et_trois));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(EnumClassValuesAndBitwiseAndOperator)
+{
+	// error: no match for ‘operator&’ (operand types are ‘Cpp::Enumeration_tests::DefaultUnsignedChars’ and ‘Cpp::Enumeration_tests::DefaultUnsignedChars’)
+
+	const auto underlying_un = get_underlying_value(DefaultUnsignedChars::Un);
+	BOOST_TEST(sizeof(underlying_un) == 1);
+
+	// cf. https://stackoverflow.com/questions/17489696/bitwise-shift-promotes-unsigned-char-to-int
+	// Because of the standard, language promotes anything smaller than int to int
+	// in bitwise operation.
+	const auto deux_et_trois =
+		get_underlying_value(DefaultUnsignedChars::Deux) &
+			get_underlying_value(DefaultUnsignedChars::Trois);
+
+	BOOST_TEST(sizeof(deux_et_trois) > sizeof(unsigned char));
+	BOOST_TEST(sizeof(deux_et_trois) == sizeof(int));
+
+	BOOST_TEST(!(DefaultUnsignedChars::Zero & DefaultUnsignedChars::Un));
+	BOOST_TEST(!(DefaultUnsignedChars::Zero & DefaultUnsignedChars::Deux));
+	BOOST_TEST(!(DefaultUnsignedChars::Zero & DefaultUnsignedChars::Trois));
+	BOOST_TEST(!(DefaultUnsignedChars::Zero & DefaultUnsignedChars::Quatre));
+	BOOST_TEST(!(DefaultUnsignedChars::Un & DefaultUnsignedChars::Deux));
+	BOOST_TEST((DefaultUnsignedChars::Un & DefaultUnsignedChars::Trois));
+	BOOST_TEST(!(DefaultUnsignedChars::Un & DefaultUnsignedChars::Quatre));
+	BOOST_TEST((DefaultUnsignedChars::Deux & DefaultUnsignedChars::Trois));
+	BOOST_TEST(!(DefaultUnsignedChars::Deux & DefaultUnsignedChars::Quatre));
+	BOOST_TEST(!(DefaultUnsignedChars::Trois & DefaultUnsignedChars::Quatre));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Enumeration_tests
