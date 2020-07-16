@@ -25,7 +25,7 @@ auto get_underlying_value(Enumeration&& enum_value)
   return 
     static_cast<std::underlying_type_t<Enumeration>>(
       std::forward<Enumeration>(enum_value));
-};
+}
 
 template <typename Enumeration>
 auto get_underlying_value(Enumeration& enum_value)
@@ -33,7 +33,7 @@ auto get_underlying_value(Enumeration& enum_value)
   return 
     static_cast<std::underlying_type_t<Enumeration>>(
       std::forward<Enumeration>(enum_value));
-};
+}
 
 
 } // namespace TypeSupport
