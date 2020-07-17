@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 // \file Enumeration_tests.cpp
 //------------------------------------------------------------------------------
+#include "Cpp/ClassAsEnum.h"
 #include "Cpp/Numerics/BitCast.h"
 #include "Cpp/Utilities/SuperBitSet.h"
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
@@ -8,6 +9,8 @@
 #include <boost/test/unit_test.hpp>
 #include <utility>
 
+using Cpp::ClassAsEnum;
+using Cpp::ClassAsEnumClass;
 using Cpp::Numerics::bit_cast;
 using Cpp::Utilities::SuperBitSet;
 using Cpp::Utilities::TypeSupport::get_underlying_value;
@@ -170,4 +173,90 @@ BOOST_AUTO_TEST_CASE(EnumClassValuesAndBitwiseAndOperator)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Enumeration_tests
+
+BOOST_AUTO_TEST_SUITE(ClassAsEnum_tests)
+
+enum AltroEnum : unsigned char
+{
+	Zero,
+	Uno,
+	Due,
+	Tre,
+	Quattro
+};
+
+enum class DalsiEnumClass : unsigned char
+{
+	Nula,
+	Jeden,
+	Dva,
+	Tri,
+	Ctyri
+};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ClassAsEnumBehavesAsEnum)
+{
+	const ClassAsEnum f0 {ClassAsEnum::Zero};
+	const ClassAsEnum f1 {ClassAsEnum::Un};
+
+	BOOST_TEST(f0.est_zero());
+	BOOST_TEST(f1.est_un_o_trois());
+
+	BOOST_TEST(f0 == ClassAsEnum::Zero);
+	BOOST_TEST(f1 == ClassAsEnum::Un);
+
+}
+
+#ifdef FORCE_COMPILE_WARNING
+// Compilation warning:
+// warning: comparison between ‘enum Cpp::ClassAsEnum::Valeur’ and ‘enum Cpp::ClassAsEnum_tests::AltroEnum’
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ClassAsEnumComparesWithOtherEnumValues)
+{
+	ClassAsEnum::Zero == AltroEnum::Zero;
+	ClassAsEnum::Un == AltroEnum::Uno;
+}
+
+#endif // FORCE_COMPILE_WARNING
+
+#ifdef FORCE_COMPILE_ERROR
+// Compilation error: no match for ‘operator==’
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ClassAsEnumDoesNotCompareWithOtherEnumClassValues)
+{
+	ClassAsEnum::Zero == DalsiEnumClass::Nula;
+	ClassAsEnum::Un == DalsiEnumClass::Jeden;
+}
+#endif // FORCE_COMPILE_ERROR
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ClassAsEnumClassConstructs)
+{
+	const ClassAsEnumClass f0 {ClassAsEnumClass::Valeur::Zero};
+	const ClassAsEnumClass f1 {ClassAsEnumClass::Valeur::Un};
+
+	BOOST_TEST(f0.est_zero());
+	BOOST_TEST(f1.est_un_o_trois());
+	BOOST_TEST(!f1.est_deux_o_trois());
+}
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ClassAsEnumClassComparesWithOtherEnumValues)
+{
+	const ClassAsEnumClass f0 {ClassAsEnumClass::Valeur::Zero};
+	const ClassAsEnumClass f1 {ClassAsEnumClass::Valeur::Un};
+
+	//f0 == AltroEnum::Zero;
+}
+
+BOOST_AUTO_TEST_SUITE_END() // ClassAsEnum_tests
+
+
 BOOST_AUTO_TEST_SUITE_END() // Cpp

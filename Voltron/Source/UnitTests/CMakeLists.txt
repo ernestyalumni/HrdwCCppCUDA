@@ -107,7 +107,7 @@ ADD_LIBRARY(UnitTestTools
 TARGET_LINK_LIBRARIES(Check
   Algorithms
   Categories
-  #Cpp
+  Cpp
   #DataStructures
   Hierarchy
   IO
