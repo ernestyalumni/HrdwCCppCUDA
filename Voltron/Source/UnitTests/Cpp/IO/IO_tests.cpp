@@ -18,6 +18,8 @@ BOOST_AUTO_TEST_SUITE(IO_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(IfstreamExamples)
 {
+  std::cout << "\n IfstreamExamples \n";
+
   // cf. https://en.cppreference.com/w/cpp/io/basic_ifstream
   TemporaryDirectory temp_dir {"/temp"};  
   std::string filename {"Test.b"};

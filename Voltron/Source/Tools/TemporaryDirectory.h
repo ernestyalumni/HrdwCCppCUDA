@@ -23,7 +23,8 @@ class TemporaryDirectory
     /// \param directory_name_prefix
     /// e.g. "Temp" or i.e. /Temp
     //--------------------------------------------------------------------------
-    TemporaryDirectory(const std::string& directory_name_prefix = "Temp");
+    explicit TemporaryDirectory(
+      const std::string& directory_name_prefix = "Temp");
 
     ~TemporaryDirectory();
 

@@ -18,6 +18,9 @@ namespace Tools
 //------------------------------------------------------------------------------
 /// \fn create_temporary_file_and_file_descriptor
 /// \param directory_path e.g. "base/username/tempdir"
+/// \return std::pair of the template string and the file descriptor as an
+/// integer. Example of the template string:
+/// /Voltron/BuildGcc/Temp0vsqP1/tempVkNj51
 //------------------------------------------------------------------------------ 
 decltype(auto) create_temporary_file_and_file_descriptor =
   [](
