@@ -30,6 +30,13 @@ class Node
 			next_{nullptr}
 		{}
 
+		// Without this constructor, lvalues cannot be inputted.
+		explicit Node(T& value):
+			value_{std::forward<T>(value)},
+			next_{nullptr}
+		{}
+
+
 		Node(T&& value, std::unique_ptr<Node<T>> next):
 			value_{std::forward<T>(value)},
 			next_{std::move(next)}
