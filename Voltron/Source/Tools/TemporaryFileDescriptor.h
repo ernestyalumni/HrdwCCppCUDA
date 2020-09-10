@@ -2,8 +2,8 @@
 /// \file TemporaryFileDescriptor.h
 /// \brief Temporary file (with file name) and file descriptor.
 ///-----------------------------------------------------------------------------
-#ifndef _TOOLS_TEMPORARY_FILE_DESCRIPTOR_H_
-#define _TOOLS_TEMPORARY_FILE_DESCRIPTOR_H_
+#ifndef TOOLS_TEMPORARY_FILE_DESCRIPTOR_H
+#define TOOLS_TEMPORARY_FILE_DESCRIPTOR_H
 
 #include <stdlib.h>
 #include <string>
@@ -20,7 +20,9 @@ namespace Tools
 /// \param directory_path e.g. "base/username/tempdir"
 /// \return std::pair of the template string and the file descriptor as an
 /// integer. Example of the template string:
+///
 /// /Voltron/BuildGcc/Temp0vsqP1/tempVkNj51
+///
 //------------------------------------------------------------------------------ 
 decltype(auto) create_temporary_file_and_file_descriptor =
   [](
@@ -37,7 +39,6 @@ decltype(auto) create_temporary_file_and_file_descriptor =
   };
 
 
-
 } // namespace Tools
 
-#endif // _TOOLS_TEMPORARY_FILE_DESCRIPTOR_H_
+#endif // TOOLS_TEMPORARY_FILE_DESCRIPTOR_H
