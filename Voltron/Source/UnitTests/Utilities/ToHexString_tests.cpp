@@ -9,6 +9,7 @@
 #include <cstdio> // printf
 #include <iostream>
 #include <sstream> // std::stringstream
+#include <string>
 #include <vector>
 
 using Utilities::ToHexString;
@@ -149,6 +150,25 @@ BOOST_AUTO_TEST_CASE(DecreasingAddressesPrintWorks)
 
   BOOST_TEST(true);
 }
+
+BOOST_AUTO_TEST_SUITE(RepresentingStrings_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StringsAsHex)
+{
+  std::stringstream out;
+
+  //char input[6] {"12345"};
+  //std::string input {"12345"};
+  const ToHexString hex_string {std::string{"12345"}};
+  // Only gets the pointer address.
+  //BOOST_TEST(hex_string.as_increasing_addresses() ==
+  //  "b03c9fb3fd7f005000000031323334350000a6ce5188dd518");
+}
+
+
+BOOST_AUTO_TEST_SUITE_END() // RepresentingStrings_tests
 
 BOOST_AUTO_TEST_SUITE_END() // ToHexString_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities

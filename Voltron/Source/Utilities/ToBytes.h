@@ -23,6 +23,8 @@ class ToBytes
 
     ToBytes(T& x);
 
+    ToBytes(T&& x);
+
     // TODO: deal with references vs. values
 //    ToBytes(T x);
 
@@ -45,6 +47,12 @@ template <typename T>
 ToBytes<T>::ToBytes(T& x):
   x_{x}
 {}
+
+template <typename T>
+ToBytes<T>::ToBytes(T&& x):
+  x_{x}
+{}
+
 
 //template <typename T>
 //ToBytes<T>::ToBytes(T x):

@@ -15,6 +15,7 @@
 #include <sstream> // std::stringstream
 #include <string>
 #include <type_traits> // std::enable_if_t
+#include <utility>
 
 static_assert(
   std::numeric_limits<float>::is_iec559,
@@ -29,6 +30,8 @@ struct ToHexString
   T value_;
 
   explicit ToHexString(const T& value);
+
+  explicit ToHexString(T&& value);
 
   //std::string operator()(const T& value);
   std::string operator()();
@@ -57,6 +60,12 @@ template <typename T>
 ToHexString<T>::ToHexString(const T& value) :
   value_{value}
 {}
+
+template <typename T>
+ToHexString<T>::ToHexString(T&& value) :
+  value_{std::move(value)}
+{}
+
 
 template <typename T>
 //std::string ToHexString<T>::operator()(const T& value)

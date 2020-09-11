@@ -8,6 +8,7 @@
 #include <cstdio> // printf
 #include <iostream>
 #include <limits>
+#include <string>
 
 using Utilities::ToBytes;
 
@@ -226,6 +227,30 @@ BOOST_AUTO_TEST_CASE(DecreasingAddressesHexWorks)
   const std::string y_str {to_bytes_y.decreasing_addresses_hex()};
   BOOST_TEST(y_str == "c493");
 }
+
+BOOST_AUTO_TEST_SUITE(RepresentingStrings_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StringToByteGetsPointer)
+{
+  const std::string input {"12345"};
+  const ToBytes input_in_bytes {input};
+
+  //BOOST_TEST(input_in_bytes.decreasing_addresses_hex() ==
+  //  "0000040ad14000353433323100000005007ffdc68e6e10 ");
+
+  const ToBytes input_as_char_in_bytes {input.data()};
+
+  //BOOST_TEST(input_as_char_in_bytes.decreasing_addresses_hex() ==
+  //  "007ffd70befdb0 ");
+
+  //const ToBytes r_input {"12345"};
+
+  BOOST_TEST(true);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // RepresentingStrings_tests
 
 BOOST_AUTO_TEST_SUITE_END() // ToBytes_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities
