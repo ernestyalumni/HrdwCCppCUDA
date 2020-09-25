@@ -9,6 +9,8 @@ FIND_PACKAGE(Boost COMPONENTS filesystem system unit_test_framework REQUIRED)
 # Build unit tests
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
+ADD_SUBDIRECTORY(Systems)
+
 ADD_EXECUTABLE(Check
   Main.cpp
   Algorithms/Bits/OnesComplement_tests.cpp
