@@ -10,7 +10,6 @@
 #include <limits>
 #include <string>
 // https://stackoverflow.com/questions/20731/how-do-you-clear-a-stringstream-variable
-#include <sstream>
 
 using Cpp::Utilities::SuperBitSet;
 using Utilities::BitsStream;

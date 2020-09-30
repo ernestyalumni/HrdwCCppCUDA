@@ -9,7 +9,6 @@
 #include <forward_list>
 #include <list>
 #include <memory>
-#include <sstream>
 #include <string>
 #include <type_traits>
 #include <utility>

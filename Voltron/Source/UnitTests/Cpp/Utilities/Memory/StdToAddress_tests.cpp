@@ -5,6 +5,8 @@
 /// \ref https://en.cppreference.com/w/cpp/memory/to_address
 /// https://en.cppreference.com/w/cpp/utility/feature_test
 //------------------------------------------------------------------------------
+#include "Cpp/Utilities/Memory/StdToAddress.h"
+
 #include <boost/test/unit_test.hpp>
 #include <memory>
 #include <iostream>
@@ -32,6 +34,8 @@ BOOST_AUTO_TEST_CASE(HasToAddress)
 
   BOOST_TEST(true);
 }
+
+using Cpp::Utilities::Memory::to_address;
 
 BOOST_AUTO_TEST_SUITE_END() // ToAddress_tests
 BOOST_AUTO_TEST_SUITE_END() // Memory

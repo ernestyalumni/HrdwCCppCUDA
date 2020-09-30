@@ -54,6 +54,11 @@ struct ToHexString
     std::ostringstream& out,
     const std::list<unsigned int>& list_range,
     const unsigned char* x_as_uchars);
+
+  T value() const
+  {
+    return value_;
+  }
 };
 
 template <typename T>

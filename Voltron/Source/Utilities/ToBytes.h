@@ -4,8 +4,8 @@
 /// \brief .
 /// \ref 
 ///-----------------------------------------------------------------------------
-#ifndef _UTILITIES_TO_BYTES_H_
-#define _UTILITIES_TO_BYTES_H_
+#ifndef UTILITIES_TO_BYTES_H
+#define UTILITIES_TO_BYTES_H
 
 #include <cstddef> // std::size_t
 #include <cstdio> // printf
@@ -37,6 +37,11 @@ class ToBytes
     std::string decreasing_addresses_hex() const;
 
     void set(T& x);
+
+    T data() const
+    {
+      return x_;
+    }
 
   private:
 
@@ -159,4 +164,4 @@ void ToBytes<T>::set(T& x)
 
 } // namespace Utilities
 
-#endif // _UTILITIES_TO_BYTES_H_
+#endif // UTILITIES_TO_BYTES_H
