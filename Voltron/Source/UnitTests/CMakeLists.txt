@@ -92,6 +92,7 @@ ADD_EXECUTABLE(Check
   Utilities/Curry_test.cpp
   Utilities/ErrorHandling/ErrorHandling_tests.cpp
   Utilities/FloatingPoint_tests.cpp
+  Utilities/FromAddress_tests.cpp
   Utilities/LazyValuation_tests.cpp
   Utilities/NarrowCast_test.cpp
   Utilities/OnlyOneArgument_test.cpp

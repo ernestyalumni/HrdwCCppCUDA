@@ -9,7 +9,6 @@
 #include <iostream>
 #include <vector>
 
-
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Functions_tests)
 

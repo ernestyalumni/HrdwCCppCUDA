@@ -42,7 +42,6 @@ class BitsStream
     std::byte* const data_;
 };
 
-
 } // namespace Utilities
 
 #endif // UTILITIES_BITS_STREAM_H
