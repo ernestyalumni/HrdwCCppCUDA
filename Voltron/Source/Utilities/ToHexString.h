@@ -200,6 +200,7 @@ std::ostream& ToHexString<T>::as_decreasing_addresses(std::ostream& out) const
   return out;
 }
 
+
 template <typename T>
 std::string ToHexString<T>::as_increasing_addresses() const
 {
@@ -209,6 +210,7 @@ std::string ToHexString<T>::as_increasing_addresses() const
 
   return string_stream.str();
 }
+
 
 template <typename T>
 std::string ToHexString<T>::as_decreasing_addresses() const
