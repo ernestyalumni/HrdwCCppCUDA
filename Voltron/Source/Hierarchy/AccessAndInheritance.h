@@ -3,8 +3,12 @@
 /// \author Ernest Yeung
 /// \brief Classes demonstrating access specifiers.
 ///-----------------------------------------------------------------------------
-#ifndef _HIERARCHY_ACCESS_AND_INHERITANCE_H_
-#define _HIERARCHY_ACCESS_AND_INHERITANCE_H_
+#ifndef HIERARCHY_ACCESS_AND_INHERITANCE_H
+#define HIERARCHY_ACCESS_AND_INHERITANCE_H
+
+#include <iostream>
+#include <string>
+#include <sstream>
 
 namespace Hierarchy
 {
@@ -186,6 +190,150 @@ class PrivateAccessS
 };
 
 } // namespace Access
+
+namespace Inheritance
+{
+
+// cf. https://www.geeksforgeeks.org/multiple-inheritance-in-c/
+// Geeks for Geeks Multiple Inheritance in C++
+
+class A
+{
+  public:
+
+    const std::string construction_message {"A's constructor called"};
+
+    A()
+    {
+      std::cout << construction_message << std::endl;            
+    }
+
+    explicit A(std::stringstream& string_stream)
+    {
+      string_stream << construction_message << std::endl;
+    }
+};
+
+class B
+{
+  public:
+
+    const std::string construction_message {"B's constructor called"};
+
+    B()
+    {
+      std::cout << construction_message << std::endl;
+    }
+
+    explicit B(std::stringstream& string_stream)
+    {
+      string_stream << construction_message << std::endl;
+    }
+};
+
+class C : public B, public A // Note the order
+{
+  public:
+
+    const std::string construction_message {"C's constructor called"};
+
+    C()
+    {
+      std::cout << construction_message << std::endl;
+    }
+
+    explicit C(std::stringstream& string_stream)
+    {
+      string_stream << construction_message << std::endl;
+    }
+};
+
+namespace DiamondProblem
+{
+
+class A1
+{
+  // Data members of A1
+    const std::string A1_construction_message_ {"A1::A1(int ) called"};
+
+  public:
+
+    explicit A1(const int x)
+    {
+      std::cout << A1_construction_message_ << std::endl;
+    }
+
+    A1(const int x, std::stringstream& string_stream)
+    {
+      string_stream << A1_construction_message_ << std::endl;
+    }
+};
+
+class B1 : public A1
+{
+  // Data members of B1
+    const std::string B1_construction_message_ {"B1::B1(int ) called"};
+
+  public:
+
+    explicit B1(const int x):
+      A1{x}
+    {
+      std::cout << B1_construction_message_<< std::endl;
+    }
+
+    B1(const int x, std::stringstream& string_stream):
+      A1{x, string_stream}
+    {
+      string_stream << B1_construction_message_ << std::endl;
+    }
+};
+
+class B2 : public A1
+{
+  // Data members of B1
+    const std::string B2_construction_message_ {"B2::B2(int ) called"};
+
+  public:
+
+    explicit B2(const int x):
+      A1{x}
+    {
+      std::cout << B2_construction_message_ << std::endl;
+    }
+
+    B2(const int x, std::stringstream& string_stream):
+      A1{x, string_stream}
+    {
+      string_stream << B2_construction_message_ << std::endl;
+    }
+};
+
+class C1 : public B1, public B2
+{
+    const std::string C1_construction_message_ {"C1::C1(int ) called"};
+
+  public:
+
+    C1(const int x):
+      B2{x},
+      B1{x}
+    {
+      std::cout << C1_construction_message_ << std::endl;
+    }
+
+    C1(const int x, std::stringstream& string_stream):
+      B2{x, string_stream},
+      B1{x, string_stream}
+    {
+      string_stream << C1_construction_message_ << std::endl;
+    }
+};
+
+} // DiamondProblem
+
+} // namespace Inheritance
+
 } // namespace Hierarchy
 
-#endif // _HIERARCHY_ACCESS_AND_INHERITANCE_H_
+#endif // HIERARCHY_ACCESS_AND_INHERITANCE_H

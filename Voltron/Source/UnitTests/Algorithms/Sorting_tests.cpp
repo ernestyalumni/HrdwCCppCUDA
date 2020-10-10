@@ -2,6 +2,7 @@
 // \file Sorting_tests.cpp
 //------------------------------------------------------------------------------
 #include "Algorithms/BubbleSort.h"
+#include "Algorithms/InsertionSort.h"
 #include "Algorithms/MergeSort.h"
 #include "Algorithms/QuickSort.h"
 #include "Cpp/Std/TypeTraitsProperties.h"
@@ -17,18 +18,60 @@
 using Algorithms::Sorting::Details::naive_single_pass;
 using Algorithms::Sorting::Details::single_pass;
 using Algorithms::Sorting::Details::single_swap;
+using Algorithms::Sorting::InsertionSort::binary_insertion_sort;
+using Algorithms::Sorting::InsertionSort::insertion;
+using Algorithms::Sorting::InsertionSort::insertion_sort;
 using Algorithms::Sorting::QuickSort::Details::partition_from_first;
-using Algorithms::Sorting::bubble_sort;
-using Algorithms::Sorting::merge_sort;
-using Algorithms::Sorting::naive_bubble_sort;
 using Algorithms::Sorting::QuickSort::Details::quick_sort_from_first;
 using Algorithms::Sorting::QuickSort::quick_sort_from_first;
 using Algorithms::Sorting::QuickSort::quick_sort_from_last;
+using Algorithms::Sorting::bubble_sort;
+using Algorithms::Sorting::merge_sort;
+using Algorithms::Sorting::naive_bubble_sort;
 using Std::CompositeTypeTraits;
 using Std::PrimaryTypeTraits;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Sorting_tests)
+
+BOOST_AUTO_TEST_SUITE(InsertionSort_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortsCStyleIntArrays)
+{
+  int arr[] {12, 11, 13, 5, 6};
+  const int n {sizeof(arr) / sizeof(arr[0])};  
+
+  insertion_sort(arr, n);
+  BOOST_TEST(arr[0] == 5);
+  BOOST_TEST(arr[1] == 6);
+  BOOST_TEST(arr[2] == 11);
+  BOOST_TEST(arr[3] == 12);
+  BOOST_TEST(arr[4] == 13);
+}
+
+BOOST_AUTO_TEST_SUITE(BinaryInsertionSort_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortsStdArrays)
+{
+  constexpr int N {5};
+  std::array<int, N> arr {12, 11, 13, 5, 6};
+
+  binary_insertion_sort(arr);
+
+  BOOST_TEST(arr[0] == 5);
+  BOOST_TEST(arr[1] == 6);
+  BOOST_TEST(arr[2] == 11);
+  BOOST_TEST(arr[3] == 12);
+  BOOST_TEST(arr[4] == 13);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // BinaryInsertionSort_tests
+
+BOOST_AUTO_TEST_SUITE_END() // InsertionSort_tests
 
 BOOST_AUTO_TEST_SUITE(BubbleSort_tests)
 

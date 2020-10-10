@@ -5,15 +5,18 @@
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
+#include <sstream>
 
 using Hierarchy::Access::ExPrivateVirtualMethod;
 using Hierarchy::Access::ExPublicUsing;
 using Hierarchy::Access::ExPublicVirtualMethod;
 using Hierarchy::Access::ExPublicVsPrivate;
+using Hierarchy::Inheritance::A;
+using Hierarchy::Inheritance::B;
+using Hierarchy::Inheritance::C;
 
-BOOST_AUTO_TEST_SUITE(Utilities)
+BOOST_AUTO_TEST_SUITE(Hierarchy)
 BOOST_AUTO_TEST_SUITE(Access_tests)
-
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -155,7 +158,28 @@ BOOST_AUTO_TEST_CASE(PrivateAccessInheritance)
 }
 #endif // FORCE_COMPILE_ERRORS
 
-
-
 BOOST_AUTO_TEST_SUITE_END() // Access_tests
-BOOST_AUTO_TEST_SUITE_END() // Utilities
+
+BOOST_AUTO_TEST_SUITE(Inheritance_tests)
+
+// cf. https://www.geeksforgeeks.org/multiple-inheritance-in-c/
+// Geeks for Geeks. Multiple Inheritance in C++
+
+BOOST_AUTO_TEST_SUITE(OrderOfConstruction)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PublicVsPrivateAccessCheckedAtCompileTime)
+{
+  std::stringstream string_stream;
+  // B's constructor called
+  // A's constructor called
+  C c {string_stream};
+  BOOST_TEST(string_stream.str() == c.construction_message + "\n");
+}
+
+BOOST_AUTO_TEST_SUITE_END() // OrderOfConstruction
+
+BOOST_AUTO_TEST_SUITE_END() // Inheritance_tests
+
+BOOST_AUTO_TEST_SUITE_END() // Hierarchy

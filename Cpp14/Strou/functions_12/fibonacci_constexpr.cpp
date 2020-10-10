@@ -37,14 +37,14 @@
  * */
 constexpr int fib_recursive(int n)
 {
-    return (n < 2) ? 1 : (fib_recursive(n-1) + fib_recursive(n-2));
+  return (n < 2) ? 1 : (fib_recursive(n-1) + fib_recursive(n-2));
 }
 
 constexpr int ftbl[] { 1, 2, 3, 4, 5, 8, 13};
 
 constexpr int fib(int n)
 {
-    return (n < sizeof(ftbl) / sizeof(*ftbl)) ? ftbl[n] : fib(n-2) + fib(n-1);
+  return (n < sizeof(ftbl) / sizeof(*ftbl)) ? ftbl[n] : fib(n-2) + fib(n-1);
 }
 
 int main(int argc, char* argv[])

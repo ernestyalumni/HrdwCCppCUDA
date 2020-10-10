@@ -18,6 +18,7 @@ using Algorithms::Search::Details::calculate_midpoint;
 using Algorithms::Search::Details::compare_partition;
 using Algorithms::Search::Details::binary_search_iteration;
 using Algorithms::Search::binary_search;
+using Algorithms::Search::binary_search_inclusive;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Search_tests)
@@ -123,6 +124,81 @@ BOOST_AUTO_TEST_CASE(DemonstrateBinarySearch)
     const auto result = binary_search(sorted_vector, 29);
     BOOST_TEST(result.has_value());
     BOOST_TEST(result.value() == 6);
+  }
+}
+
+// cf. https://web2.qatar.cmu.edu/~mhhammou/15122-s16/lectures/06-binsearch.pdf
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SearchOnSortedIntArray)
+{ 
+  int A[] {5, 7, 11, 19, 34, 42, 65, 65, 89, 123};
+  constexpr int N {10};
+
+  {
+    const auto result = binary_search(5, A, N);
+    BOOST_TEST(*result == 0);
+  }
+  {
+    const auto result = binary_search(123, A, N);
+    BOOST_TEST(*result == N - 1);
+  }
+  {
+    const auto result = binary_search(4, A, N);
+    BOOST_TEST(!result.has_value());
+  }
+  {
+    const auto result = binary_search(124, A, N);
+    BOOST_TEST(!result.has_value());
+  }
+  {
+    const auto result = binary_search(18, A, N);
+    BOOST_TEST(!result.has_value());
+  }
+  {
+    const auto result = binary_search(19, A, N);
+    BOOST_TEST(*result == 3);
+  }
+  {
+    const auto result = binary_search(65, A, N);
+    BOOST_TEST(*result == 7);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SameResultsWithBinarySearchInclusive)
+{ 
+  std::vector<int> a {5, 7, 11, 19, 34, 42, 65, 65, 89, 123};
+
+  {
+    const auto result = binary_search_inclusive(a, 5);
+    BOOST_TEST(*result == 0);
+  }
+  {
+    const auto result = binary_search_inclusive(a, 123);
+    BOOST_TEST(*result == a.size() - 1);
+  }
+  {
+    const auto result = binary_search_inclusive(a, 4);
+    BOOST_TEST(!result.has_value());
+  }
+  {
+    const auto result = binary_search_inclusive(a, 124);
+    BOOST_TEST(!result.has_value());
+  }
+  {
+    const auto result = binary_search_inclusive(a, 18);
+    BOOST_TEST(!result.has_value());
+  }
+  {
+    const auto result = binary_search_inclusive(a, 19);
+    BOOST_TEST(*result == 3);
+  }
+  {
+    const auto result = binary_search_inclusive(a, 65);
+    BOOST_TEST(*result == 7);
   }
 }
 

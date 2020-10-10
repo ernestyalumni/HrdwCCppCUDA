@@ -1101,6 +1101,18 @@ If we use \verb|std::shared_ptr|, there'd be no need to declare destructor in \v
 
 Difference stems from differing ways smart pointers support custom deleters.  For \verb|std::unique_ptr|, type of deleter is part of type of smart pointer, and this makes it possible for compilers to generate smaller runtime data structures and faster runtime code.  A consequence of this greater efficiency is that pointed-to types must be complete when compiler-generated special functions (e.g. destructors or move operations) are used.  For \verb|std::shared_ptr|, type of deleter is not part of the type of smart pointer.  This necessitates larger runtime data structures and somewhat slower code, but pointed-to types need not be complete when compiler-generated special functions are employed.  
 
+\section{Class Hierarchies}
+
+\subsection{Inheritance}
+
+Ctors of inherited classes are called in same order in which they're inherited. Dtors are called in reverse order of ctors.
+
+\subsubsection{Diamond Problem}
+
+cf. \href{https://www.geeksforgeeks.org/multiple-inheritance-in-c/}{Geeks for Geeks, "Multiple Inheritance in C++"}.
+
+Diamond problem occurs when 2 superclasses of a class have a common base class. The class gets 2 copies of all attributes of common base class, causing ambiguities.
+
 \part{Integers, numeric encodings, number representation, binary representation, hexidecimal representation}
 
 \section{Introduction: \texttt{int} $\neq \mathbb{Z}$, \texttt{float} $\neq \mathbb{R}$}
@@ -2389,6 +2401,26 @@ If $x> a(m_j)$, consider $a_i$ s.t. $i=m_j+1, \dots N-1$
 
 Stop when $L_j=0$.
 
+cf. \href{https://web2.qatar.cmu.edu/~mhhammou/15122-s16/lectures/06-binsearch.pdf}{Pfenning (2016)}
+
+Given array $A$ of $N$ elements, $a_0, a_1, \dots a_{N-1}$, sorted, s.t. $a_0 \leq a_1 \leq \dots \leq a_{N-1}$, target value $T$, \\
+Pfenning (2016) defines variables $l$ (\texttt{lo}), $h$ (\texttt{hi}) s.t. subinterval in array to consider is from $l$ to $h-1$. (i.e. subarray includes $l$ and excludes $h$). $l\leq 0 $, $h\leq N$ and $l <h$ (if $l\geq h$, contradiction since for $l=h$, $l$ is included but $h$ is excluded).
+
+Given $l\geq 0$, $h\leq N$, $l<h$ (so subarray to consider is nonzero size).
+
+Calculate midpoint, for $m\in \mathbb{Z}$, $m = l + \frac{h-l}{2}$.  We don't use $n = \frac{h+l}{2}$ because of \textbf{possible overflow}. \\
+
+$h-l =$ size of subarray to consider. \\
+if $h-l$ even (i.e. $h-l = 2L_{h,l}$), $m$ is the "left most" element of the "right" half. \\
+if $h-l$ odd (i.e. $h-l = 2L_{h,l}$), $m$ is the middle. \\
+
+Suppose $\forall \, i = 0, 1, \dots l -1$, $a_i <T$, and $\forall \, i = h, h+1, \dots N-1$, $a_i >T$ i.e. $a_{l-1} < T$, and $a_h > T$. 
+
+Be careful, when accessing element of an array, \emph{access must be in bounds}!
+
+If $a_m < T$, let $l= m + 1$, if $a_m > T$, let $h=m$.
+
+
 \subsection{Breadth-first search (BFS)}
 
 \url{https://en.wikipedia.org/wiki/Breadth-first_search}
@@ -2567,8 +2599,99 @@ e.g. $\begin{aligned} & \quad \\
 	$\forall \, n > 1, \, n \in \mathbb{Z}$, $\text{Fib}(n) := \text{Fib}(n-1) + \text{Fib}(n-2) = f(\text{Fib}(n-1), \text{Fib}(n-2))$
 \end{theorem} 
 
+cf. \href{https://ncatlab.org/nlab/show/recursion}{NCatlab}
+
+Let $\mathbb{N}$ be (parametrizable) natural number object in category with finite products with zero $0 : 1 \to \mathbb{N}$, and successor $s: \mathbb{N} \to \mathbb{N}$. \\
+$\forall \, $ morphism $f_0 : Y \to Z$, ($Y, Z$ are sets i.e. $Y,Z \in \textbf{Sets}$), and $\forall \, $ morphism $h: \mathbb{N} \times Y \times Z \to Z$, \\
+$\exists \, !$ morphism $f: \mathbb{N} \times Y \to Z$ s.t.
+\begin{equation}
+\begin{aligned} 
+& f(0, -) = f_0 \text{ and } \\
+& f(s(x), y) = h(s(x), y, f(x,y))
+\end{aligned}
+\end{equation}
+
+where $x: \mathbb{N} \times Y \to \mathbb{N}$ is the first projection and \\
+\phantom{where } $y : \mathbb{N} \times Y \to Y$ is the 2nd. projection.  \\
+
+From \href{https://en.wikipedia.org/wiki/Recursive_definition}{wikipedia on "Recursive" definition}, \\
+Let set $A$, $a_0 \in A$. \\
+If $\rho : f \to A$ s.t. \\
+\phantom{If $\rho $ } $f: $ nonempty section of positive integers $\to A$ \\
+the $\exists \, ! h : \mathbb{Z}^+ \to A$ s.t. \\
+\begin{equation}
+\begin{aligned}
+& h(1) = a_0 \\ 
+& h(i) = \rho( \left. h \right|_{\lbrace 1, 2, \dots i -1 \rbrace }) \quad \, \text{ for } i > 1
+\end{aligned}
+\end{equation}
+
+
+cf. Neagole (2020) \cite{Neag2020}, "Algorithms:Recursion" - 151 Recursion Introduction, 
+
+
+
 
 \section{Sorting}
+
+cf. Harder (2018) \cite{Hard2018}
+
+8.1 Sorting algorithms. 
+
+\begin{definition}[Sorting]
+	\textbf{sorting}
+	\begin{equation}
+	(a_0, a_1, \dots a_{n-1}) \mapsto (a'_0, a'_1, \dots a'_{n-1}) \text{ s.t. } a'_0 \leq a'_1 \leq \dots \leq a'_{n-1}
+	\end{equation}
+\end{definition}
+Seldom will we sort isolated values. \\
+Usually we sort a number of records containing a number of fields based on a \emph{key}. \\
+
+
+\subsection{Insertion Sort, Straight Insertion Sort}
+
+cf. Dietzfelbinger (2019) \cite{Diet2019}
+
+Softieralgorithmen. \\
+
+Input $x = (a_1, \dots a_n)$ von Objekten $a_i$ mit Schl\"{u}ssel-(key) und Datenteil ("data") $\forall \, i$, \\
+\quad \quad \, $a_i .$ key, $a_i . $ data \\
+
+Gegeben Array $A[1,\dots n]$ oder lineare Liste (linear list).
+
+Schongesehen: Sortieralgorithmus Straight Insertion Sort \\
+Sortierverfahren heisst stabil.
+
+4. wenn dieser nur $O(1)$, also von $n$ unabh\"{a}ngig, ist: Algorithmus arbeitet "int situ" oder "in-place".
+
+Straight Insertion Sort: \\
+
+Schlechtester Fall: $\frac{1}{2}n(n-1) \approx \frac{n^2}{2}$ \quad \, Vergleiche, Zeit $\Theta(n^2)$, \\
+$\frac{1}{2} n (n-1) = \sum_{i=1}^{n-1} i $ i.e. \\
+
+For $n-1$ iterations for input array of size $n$, \\
+$k = 1, \dots n-1$, \\
+for each sorted list of length $k$, \\
+consider, in the \emph{worst case} (Schlechtester Fall), $k$ comparisons to find correct position to insert: 
+\[
+\Longrightarrow \sum_{k=1}^{n-1} k = \frac{1}{2} n ( n -1) \approx \Theta(n^2)
+\]cf. 8.2 Harder (2011) \cite{Hard2018}. \\
+
+
+Bester Fall: $n-1$ \, Vergleiche, Zeit $\Theta(n)$ \\ Very few inversions, $d= O(n)$ or already sorted, so do $n$ insertions. cf. 8.2.3 Harder (2018), "Insertion sort, Consequences of Our Analysis" \cite{Hard2018}. 
+
+Durchschnittlicher Fall, alle Eingabereihenfolgen gleich Wahrscheinlich: Zeit $\Theta(n^2)$ \\
+
+Average $O(d+n)$, slow if $d= \omega(n)$.
+
+Stabil, in situ.
+
+cf. Harder (2018) \cite{Hard2018}.
+
+List with 1 element is sorted $(a_0)$ (trivial proof). \\
+
+If list of size $k-1$ sorted, insert $k$th new object, by starting from back, and swap adjacent values until find location for it.
+
 
 \subsection{Bubble Sort, $O(N^2)$ in time, $O(1)$ in space}
 
@@ -3317,6 +3440,12 @@ Stanley B. Lippman, Jos\'{e}e Lajoie, Barbara E. Moo. \textbf{C++ Primer} (5th E
 
 \bibitem{ScMe2014}
 Scott Meyers.  \textbf{Effective Modern C++: 42 Specific Ways to Improve Your Use of C++11 and C++14}. 1st Edition.  O'Reilly Media; 1 edition (December 5, 2014)  ISBN-13: 978-1491903995
+
+\bibitem{Hard2018}
+Douglas Wilhelm Harder, M.Math. LEL. ECE 250 \emph{Algorithms and Data Structures}. Waterloo Engineering. Department of Electrical and Computer Engineering. University of Waterloo. Waterloo, Ontario, Canada. \url{https://ece.uwaterloo.ca/~dwharder/aads/Lecture_materials/#introduction-and-reveiew}
+
+\bibitem{Diet2019}
+Martin Dietzfelbinger. Algorithmen und Datenstrukturen 1 - WS 19/20. FG KtuEA, TU Ilmenau. Oktober 2019. Technische Universit\"{a}t Ilmenau. Fakult\"{a}t f\"{u}r Informatik und Automatisierung. \href{https://www.tu-ilmenau.de/en/institute-of-theoretical-computer-science/lehre/lehre-ws-20192020/aud-1/}{Algorithmen und Datenstrukturen 1, WS 19/20}
 
 \bibitem{Neag2020}
 \href{https://www.udemy.com/course/master-the-coding-interview-data-structures-algorithms/#instructor-1}{Andrei Neagole}. Master the Coding Interview: Data Structures $+$ Algorithms. 

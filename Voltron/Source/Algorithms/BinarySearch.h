@@ -106,6 +106,91 @@ std::optional<std::size_t>
   }
 }
 
+// cf. https://web2.qatar.cmu.edu/~mhhammou/15122-s16/lectures/06-binsearch.pdf
+// Pfenning (2016).
+
+template <typename T, typename SizeT>
+std::optional<SizeT> binary_search(T x, T* a, SizeT n)
+{
+  // assert 0 <= n && require n <= sizeof A / sizeof A[0]
+  // assert is_sorted(A, 0, n)
+  // ensure nullopt && !is_in(x, A, 0, n) || (0 <= result < n) && A[result] == x
+
+  // Subarray to consider is indexed from low to high - 1
+  // (i.e. subarray includes low and excludes high)
+  
+  SizeT low {0};
+  SizeT high {n};
+
+  // if low == high, then the subarray to consider is of size 0 since by
+  // contradiction the subarray must include low and exclude high.
+  while (low < high)
+  {
+    // Calculate midpoint.
+    const SizeT m {low + (high - low) / 2};
+
+    if (a[m] == x)
+    {
+      return m;
+    }
+
+    if (a[m] < x)
+    {
+      low = m  + 1;
+    }
+    // a[m] > x
+    else
+    {
+      high = m;
+    }
+  }
+
+  return std::nullopt;
+}
+
+template <typename ContainerT, typename T>
+std::optional<std::size_t> binary_search_inclusive(
+  const ContainerT& a,
+  const T target_value)
+{
+  std::size_t l {0};
+  std::size_t r {a.size() - 1}; 
+
+  // if l > r, subarray contains no elements.
+  // 0 <= l <= r <= N - 1 < N 
+  while (l <= r)
+  {
+    // Calculate midpoint. (floor of (high + low) / 2)
+    // l <= m <= r
+    const std::size_t m {l + (r - l + 1) / 2};
+
+    if (a[m] == target_value)
+    {
+      return m;
+    }
+
+    if (a[m] > target_value)
+    {
+      // std::size_t type forces value to be non-negative.
+      if (m > 0)
+      {
+        r = m - 1;
+      }
+      else
+      {
+        return std::nullopt;
+      }
+    }
+    // a[m] < target_value
+    else
+    {
+      l = m + 1;
+    }
+  }
+
+  return std::nullopt;
+}
+
 } // namespace Search
 } // namespace Algorithms
 
