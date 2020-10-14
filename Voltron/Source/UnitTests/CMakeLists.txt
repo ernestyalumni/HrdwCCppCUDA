@@ -161,3 +161,12 @@ TARGET_LINK_LIBRARIES(MQTestSend
 
 ADD_EXECUTABLE(StringViewAvoidsCopying
   Cpp/Strings/StringViewAvoidsCopying.cpp)
+
+# LeetCode
+
+ADD_EXECUTABLE(LeetCodePlayground
+  Entrevue/LeetCode/LeetCodePlayground.cpp)
+
+SET_TARGET_PROPERTIES(LeetCodePlayground
+  PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/LeetCode/")
