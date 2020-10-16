@@ -126,7 +126,8 @@ std::optional<SizeT> binary_search(T x, T* a, SizeT n)
   // contradiction the subarray must include low and exclude high.
   while (low < high)
   {
-    // Calculate midpoint.
+    // Calculate midpoint. For (high - low) being even, this will land you to
+    // the start of the "right half", "second" partition/half. 
     const SizeT m {low + (high - low) / 2};
 
     if (a[m] == x)
@@ -136,7 +137,7 @@ std::optional<SizeT> binary_search(T x, T* a, SizeT n)
 
     if (a[m] < x)
     {
-      low = m  + 1;
+      low = m + 1;
     }
     // a[m] > x
     else

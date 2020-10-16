@@ -5,4 +5,5 @@ ADD_LIBRARY(Algorithms
   Bits/OnesComplementSum.cpp
   Bits/PrintBytes.cpp
   Permutations.cpp
+  Recursion.cpp
   QuickSort.cpp)

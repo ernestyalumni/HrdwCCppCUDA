@@ -1,33 +1,23 @@
 //------------------------------------------------------------------------------
-/// \file LeetCodePlayground.cpp
+/// \file SplitString.cpp
 /// \author
 /// \brief .
-/// \ref 
-/// 2020/10/14 23:29 Start.
+/// \ref https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 ///-----------------------------------------------------------------------------
+#include "SplitString.h"
 
-// https://leetcode.com/problems/reorder-data-in-log-files/
-#include <array>
 #include <cstddef> // std::size_t
-#include <iostream>
-#include <iterator> // std::distance
-#include <numeric> // std::accumulate
 #include <string>
-#include <unordered_set>
-#include <utility> // std::swap
 #include <vector>
 
-using std::accumulate;
-using std::array;
-using std::cout;
-using std::distance;
-//using std::stack;
 using std::size_t;
 using std::string;
-using std::swap; // also with algorithm
 using std::vector;
 
-vector<string> split_string(string& s, string& delimiter)
+namespace Utilities
+{
+
+vector<string> split_string(string& s, const string& delimiter)
 {
   size_t position {0};
   vector<string> split_strings;
@@ -49,8 +39,12 @@ vector<string> split_string(string& s, string& delimiter)
   return split_strings;
 }
 
-int main()
+vector<string> split_string(const string& s, const string& delimiter)
 {
-  //cout << recursive_step_permutations(0) << "\n"; // 0
+  string modifiable_s {s};
 
+  return split_string(modifiable_s, delimiter);
 }
+
+} // namespace Utilities
+

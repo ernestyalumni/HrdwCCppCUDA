@@ -84,7 +84,7 @@ bool is_vowel(char &c)
   }
 }
 
-string reverse_vowels_from_ends(string s)
+string reverse_vowels_from_ends(string& s)
 {
   /*
   const size_t N {s.size()};

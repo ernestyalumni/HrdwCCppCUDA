@@ -20,6 +20,7 @@ ADD_EXECUTABLE(Check
   Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp
   Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
   Algorithms/Permutations_tests.cpp
+  Algorithms/Recursion_tests.cpp
   Algorithms/Search_tests.cpp
   Algorithms/Sorting_tests.cpp
   Categories/AlgebraicDataTypes/ProgramStateExample_tests.cpp
@@ -66,6 +67,7 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/Memory/StdAddressOf_tests.cpp
   Cpp/Utilities/Memory/StdToAddress_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
+  DataStructures/Arrays_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists_tests.cpp
@@ -114,7 +116,7 @@ TARGET_LINK_LIBRARIES(Check
   Algorithms
   Categories
   Cpp
-  #DataStructures
+  DataStructures
   Hierarchy
   IO
   IPC

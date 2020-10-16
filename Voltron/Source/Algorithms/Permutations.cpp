@@ -61,7 +61,7 @@ void print_permutations(std::string& a, std::size_t l, std::size_t r)
     // backtrack.
     single_swap(a, l, index);
 
-    //std::cout << " Second swap : " << a << ' ';
+    std::cout << " Second swap : " << a << ' ';
   }
 }
 

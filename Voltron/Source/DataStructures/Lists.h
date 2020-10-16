@@ -87,5 +87,4 @@ class Node
 
 } // namespace DataStructures
 
-
 #endif // DATA_STRUCTURES_LISTS_LISTS_H

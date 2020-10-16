@@ -255,6 +255,5 @@ BOOST_AUTO_TEST_CASE(DemonstrateStdDeque)
 
 BOOST_AUTO_TEST_SUITE_END() // StdDeque_tests
 
-
 BOOST_AUTO_TEST_SUITE_END() // DataStructures_tests
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

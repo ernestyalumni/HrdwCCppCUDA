@@ -1,2 +1,3 @@
-#ADD_LIBRARY(DataStructures
+ADD_LIBRARY(DataStructures
+  Arrays.cpp)
 #  Lists.cpp)
