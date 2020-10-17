@@ -1,3 +1,4 @@
 ADD_LIBRARY(DataStructures
-  Arrays.cpp)
+  Arrays.cpp
+  BinarySearchTrees.cpp)
 #  Lists.cpp)

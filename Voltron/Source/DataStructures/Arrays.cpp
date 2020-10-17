@@ -7,12 +7,13 @@
 //-----------------------------------------------------------------------------
 #include "Arrays.h"
 
-#include <algorithm> // std::find
+#include <algorithm> // std::find, std::max;
 #include <cstddef> // std::size_t
 #include <vector>
 #include <utility> // std::swap, also in <algorithm>
 
 using std::find;
+using std::max;
 using std::swap;
 using std::vector;
 
@@ -356,6 +357,159 @@ double find_sorted_arrays_median(vector<int>& nums1, vector<int>& nums2)
 
   return calculate_median(nums1);
 }
+
+double fastest_find_sorted_arrays_median(vector<int>& nums1, vector<int>& nums2)
+{
+  const size_t N1 {nums1.size()};
+  const size_t N2 {nums2.size()};
+
+  const size_t N {N1 + N2};
+  // If N even, then k is the starting index of the "right" half/partition of
+  // the total N elements; if N odd, k is the starting index of the "right"
+  // half/partition of the total N elements.
+  const size_t K {N % 2 == 0 ? N / 2 : N / 2 + 1};        
+        
+  size_t low {0};
+  size_t high {K};
+  // midpoint is the literal midpoint if (high - low) = k is odd; otherwise, it
+  // is the starting index of the "right" half/partition of the total k
+  // elements.
+  size_t midpoint {low + (high - low) / 2};
+              
+  while (low != high)
+  {
+    size_t i, j;
+
+    if (midpoint > N1)
+    {
+      i = N1 - 1;
+      j = K - N1 - 1;
+    }
+    else if (K - midpoint > N2)
+    {
+      j = N2 - 1;
+      i = K - N2 - 1;
+    }
+    else
+    {
+      i = midpoint - 1;
+      j = K - midpoint - 1;
+    }
+
+    if (i == -1)
+    {
+      // We're done.
+      if (nums1.empty() || nums1.at(0) >= nums2.at(j))
+      {
+        break;
+      }
+      else
+      {
+        // Take less of nums2
+        low = midpoint + 1;
+        midpoint = low + (high - low) / 2;
+      }
+    }
+    else if (j == -1)
+    {
+      // We're done
+      if (nums2.empty() || nums2[0] >= nums1[i])
+      {
+        break;
+      }
+      else
+      {
+        // Take less of nums1
+        high = midpoint - 1;
+        midpoint = low + (high -low) / 2;
+      }
+    }
+    // Which array has largest end?
+    else if (nums1[i] > nums2[j])
+    {
+      // We're done
+      if (j == N2 - 1 || nums2[j + 1] >= nums1[i])
+      {
+        break;
+      }
+      else
+      {
+        // Take less of nums1
+        high = midpoint - 1;
+        midpoint = low + (high - low) / 2;
+      }
+    }
+    else
+    {
+      // We're done
+      if (i = N1 - 1 || nums1[i + 1] >= nums2[j])
+      {
+        break;
+      }
+      else
+      {
+        // Take less of nums2
+        low = midpoint + 1;
+        midpoint = low + (high - low) / 2;
+      }
+    }
+  }
+
+  {
+    int i, j;
+    if (midpoint > N1)
+    {
+      i = N1 - 1;
+      j = K - N1 - 1;
+    }
+    else if (K - midpoint > N2)
+    {
+      j = N2 - 1;
+      i = K - N2 - 1;
+    }
+    else
+    {
+      i = midpoint - 1;
+      j = K - midpoint - 1;
+    }
+
+    double median1 {static_cast<double>(
+      max(i == - 1 ? -1 : nums1[i], j == -1 ? -1 : nums2[j]))};
+
+    if (N % 2)
+    {
+      return median1;
+    }
+
+    // One extra step
+    double result {0.5 * median1};
+
+    int lastEl2;
+    // One more if necessary
+
+    if (j == N2 - 1)
+    {
+      result += 0.5 * nums1[i + 1];
+    }
+    else if (i == N1 - 1)
+    {
+      result += 0.5 * nums2[j + 1];
+    }
+    else if (nums1[i + 1] <= nums2[j + 1])
+    {
+      result += 0.5 * nums1[i + 1];
+    }
+    else
+    {
+      result += 0.5 * nums2[j + 1];
+    }
+
+    return result;
+  }        
+        
+  return 0;      
+}
+
 
 } // namespace LeetCode
 

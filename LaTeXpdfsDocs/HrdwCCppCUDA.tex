@@ -2407,6 +2407,30 @@ In-order. \\
 check off node once left child is seen. \\
 went left most to right, went through all nodes in order. \\
 
+cf. \href{https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/}{Geeks for Geeks, Tree traversals (Inorder, Preorder and Postorder)}
+
+inorder traversal (left root right) is a depth first traversal. e.g.
+
+\[
+\begin{gathered}
+\begin{matrix}
+& & 1 & \\
+& 2 & & 3 \\
+4 & & 5 & \\
+\end{matrix} \xrightarrow{ \text{ inorder traversal } } 4 \, 2 \, 5 \, 1 \, 3
+\end{gathered}
+\]
+
+Algorithm for Inorder (tree)
+\begin{enumerate}
+	\item Traverse the left subtree, i.e., call Inorder(left-subtree)
+	\item Visit the root.
+	\item Traverse the right subtree, i.e., call Inorder(right-subtree)
+\end{enumerate}
+
+\subsubsection{Uses of Inorder} In case of binary search trees (BST), inorder traversal gives nodes in non-decreasing order. To get nodes of BST in non-increasing order, variation of Inorder traversal where Inorder traversal is reversed can be used.
+
+
 Post-order. \\
 Check off leaf, don't check off parent, check right child. \\
 
@@ -2423,6 +2447,13 @@ Binary Search tree has the condition that $\forall \, x$,
 \[
 v(l(x)) \leq v(x) \leq v(r(x))
 \]
+
+i.e., cf. \href{https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/}{LeetCode Binary Search Tree Overview, Introduction}, value $\forall \, $ node must be greater than (or equal to) any values in its left subtree; but less than (or equal to) any value in its right subtree.
+
+Like a normal binary tree, traverse binary search tree (BST) in preorder, inorder, postorder, level-order. Note, most frequently used is \textbf{inorder traversal} for BST. 
+
+cf. \href{https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/140/introduction-to-a-bst/1017/}{LeetCode, Binary Search Tree, Introduction to BST, Definition of the Binary Search Tree}.
+
 
 Given search value $y$, \\
 if $v(x) = y$, done, \\
