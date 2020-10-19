@@ -8,12 +8,14 @@
 #include <vector>
 
 using DataStructures::BinarySearchTrees::InorderBstIterator;
+using DataStructures::BinarySearchTrees::NodeWithCounter;
 using DataStructures::BinarySearchTrees::TreeNode;
+using DataStructures::BinarySearchTrees::TreeWithCounter;
 using DataStructures::BinarySearchTrees::inorder_traversal;
+using DataStructures::BinarySearchTrees::insert_into_bst;
 using DataStructures::BinarySearchTrees::is_valid_binary_search_tree;
 using DataStructures::BinarySearchTrees::iterative_validate_binary_search_tree;
 using DataStructures::BinarySearchTrees::search_bst;
-using DataStructures::BinarySearchTrees::insert_into_bst;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
@@ -227,10 +229,185 @@ BOOST_AUTO_TEST_CASE(InsertIntoBst)
     BOOST_TEST(iter.has_next());
     //BOOST_TEST(iter.next() == 5);
     //BOOST_TEST(iter.has_next());
-
   }
+}
+
+BOOST_AUTO_TEST_SUITE(TreeWithCounter_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DefaultConstructs)
+{
+  TreeWithCounter tree {};
+  BOOST_TEST(tree.root_ptr() == nullptr);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertNewValueCreatesRootForEmptyTree)
+{
+  // Works
+  TreeWithCounter* tree_ptr {new TreeWithCounter()};
+  BOOST_TEST(tree_ptr->root_ptr() == nullptr);
+  tree_ptr->insert_new_value(5);
+
+  // Doesn't work.
+//  BOOST_TEST(tree_ptr->root_ptr()->value_ == 5);
+
+  // Does not work.
+  //TreeWithCounter tree {};
+  //BOOST_TEST(tree.root_ptr() == nullptr);
+  //tree.insert_new_value(5); 
+
+  BOOST_TEST(tree_ptr->is_counter_stack_empty());
+
+  NodeWithCounter* check_root {tree_ptr->root_ptr()};
+
+  BOOST_TEST(check_root->value_ == 5);
+  BOOST_TEST(check_root->counter_ == 0);
+  BOOST_TEST(check_root->left_ == nullptr);
+  BOOST_TEST(check_root->right_ == nullptr);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertNewValuePlacesLessThanValuesToTheLeft)
+{
+  TreeWithCounter* tree_ptr {new TreeWithCounter()};
+  BOOST_TEST(tree_ptr->root_ptr() == nullptr);
+  tree_ptr->insert_new_value(5);
+
+  NodeWithCounter* check_root {tree_ptr->root_ptr()};
+  BOOST_TEST(check_root->value_ == 5);
+
+  tree_ptr->insert_new_value(4);
+
+  BOOST_TEST(tree_ptr->is_counter_stack_empty());
+
+  BOOST_TEST(check_root->value_ == 5);
+  BOOST_TEST(check_root->counter_ == 1);
+  BOOST_TEST(check_root->left_ != nullptr);
+  BOOST_TEST(check_root->left_->value_ == 4);
+  BOOST_TEST(check_root->left_->left_ == nullptr);
+  BOOST_TEST(check_root->left_->right_ == nullptr);
+  BOOST_TEST(check_root->left_->counter_ == 0);
+
+  tree_ptr->insert_new_value(2);
+  BOOST_TEST(tree_ptr->is_counter_stack_empty());
+
+  BOOST_TEST(check_root->value_ == 5);
+  BOOST_TEST(check_root->counter_ == 2);
+  BOOST_TEST(check_root->left_ != nullptr);
+  BOOST_TEST(check_root->left_->value_ == 4);
+  BOOST_TEST(check_root->left_->left_ != nullptr);
+  BOOST_TEST(check_root->left_->right_ == nullptr);
+  BOOST_TEST(check_root->left_->counter_ == 1);
+  BOOST_TEST(check_root->left_->left_->value_ == 2);
+  BOOST_TEST(check_root->left_->left_->counter_ == 0);
+  BOOST_TEST(check_root->left_->left_->left_ == nullptr);
+  BOOST_TEST(check_root->left_->left_->right_ == nullptr);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertNewValuePlacesGreaterThanValuesToTheRight)
+{
+  TreeWithCounter* tree_ptr {new TreeWithCounter()};
+  BOOST_TEST(tree_ptr->root_ptr() == nullptr);
+  tree_ptr->insert_new_value(5);
+
+  NodeWithCounter* check_root {tree_ptr->root_ptr()};
+  BOOST_TEST(check_root->value_ == 5);
+
+  tree_ptr->insert_new_value(6);
+
+  BOOST_TEST(tree_ptr->is_counter_stack_empty());
+
+  BOOST_TEST(check_root->value_ == 5);
+  BOOST_TEST(check_root->counter_ == 1);
+  BOOST_TEST(check_root->right_ != nullptr);
+  BOOST_TEST(check_root->right_->value_ == 6);
+  BOOST_TEST(check_root->right_->left_ == nullptr);
+  BOOST_TEST(check_root->right_->right_ == nullptr);
+  BOOST_TEST(check_root->right_->counter_ == 0);
+
+  tree_ptr->insert_new_value(8);
+  BOOST_TEST(tree_ptr->is_counter_stack_empty());
+
+  BOOST_TEST(check_root->value_ == 5);
+  BOOST_TEST(check_root->counter_ == 2);
+  BOOST_TEST(check_root->right_ != nullptr);
+  BOOST_TEST(check_root->right_->value_ == 6);
+  BOOST_TEST(check_root->right_->left_ == nullptr);
+  BOOST_TEST(check_root->right_->right_ != nullptr);
+  BOOST_TEST(check_root->right_->counter_ == 1);
+  BOOST_TEST(check_root->right_->right_->value_ == 8);
+  BOOST_TEST(check_root->right_->right_->counter_ == 0);
+  BOOST_TEST(check_root->right_->right_->left_ == nullptr);
+  BOOST_TEST(check_root->right_->right_->right_ == nullptr);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithVectorOfIntegers)
+{
+  vector<int> input {5, 2, 6, 1, 7, 4, 3};
+
+  TreeWithCounter* tree_ptr {new TreeWithCounter(input)};
+
+  NodeWithCounter* check_root {tree_ptr->root_ptr()};
+  BOOST_TEST(check_root->value_ == 5);
+  BOOST_TEST(check_root->counter_ == 6);
+
+  // Right subtree.
+  BOOST_TEST(check_root->right_->value_ == 6);
+  BOOST_TEST(check_root->right_->counter_ == 1);
+  BOOST_TEST(check_root->right_->right_->value_ == 7);
+  BOOST_TEST(check_root->right_->right_->counter_ == 0);
+
+  BOOST_TEST(check_root->left_->value_ == 2);
+  BOOST_TEST(check_root->left_->counter_ == 3);
+  BOOST_TEST(check_root->left_->left_->value_ == 1);
+  BOOST_TEST(check_root->left_->left_->counter_ == 0);
+
+  BOOST_TEST(check_root->left_->right_->value_ == 4);
+  BOOST_TEST(check_root->left_->right_->counter_ == 1);
+  BOOST_TEST(check_root->left_->right_->left_->value_ == 3);
+  BOOST_TEST(check_root->left_->right_->left_->counter_ == 0);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindKthLargestElementFindsKthLargestElement)
+{
+  vector<int> input {4, 5, 8, 2};
+
+  TreeWithCounter* tree_ptr {new TreeWithCounter(input)};
+
+  NodeWithCounter* check_root {tree_ptr->root_ptr()};
+  BOOST_TEST(check_root->value_ == 4);
+  BOOST_TEST(check_root->counter_ == 3);
+  BOOST_TEST(check_root->right_->value_ == 5);
+  BOOST_TEST(check_root->right_->counter_ == 1);
+
+  auto check_kth_element = tree_ptr->find_kth_largest_element(3);
+  BOOST_TEST(check_kth_element == 4);
+  //BOOST_TEST(check_kth_element != nullptr);
+//  BOOST_TEST(check_kth_element->counter_ == 3);
+  tree_ptr->insert_new_value(3);
+  BOOST_TEST(tree_ptr->find_kth_largest_element(3) == 4);
+  BOOST_TEST(check_root->counter_ == 4);
+
+  //tree_ptr->insert_new_value(5);
+  //BOOST_TEST(tree_ptr->find_kth_largest_element(3) == 5);
+  //BOOST_TEST(check_root->counter_ == 5);
+
+  tree_ptr->insert_new_value(10);
+  BOOST_TEST(tree_ptr->find_kth_largest_element(3) == 5);
+  BOOST_TEST(check_root->counter_ == 5);
 
 }
 
+BOOST_AUTO_TEST_SUITE_END() // TreeWithCounter_tests
 BOOST_AUTO_TEST_SUITE_END() // BinarySearchTrees_tests
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

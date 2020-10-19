@@ -12,6 +12,7 @@
 
 #include <stack>
 #include <stdexcept> // std::runtime_error
+#include <vector>
 
 namespace DataStructures
 {
@@ -60,6 +61,7 @@ void inorder_traversal(NodeType* node_ptr, F& f)
 /// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/140/introduction-to-a-bst/997/discuss/895234/C++-two-easy-recursive-and-iterative-DFS-solutions
 bool iterative_validate_binary_search_tree(TreeNode* root);
 
+/// \details Uses recursive inorder traversal.
 bool is_valid_binary_search_tree(TreeNode* root);
 
 //-----------------------------------------------------------------------------
@@ -198,6 +200,9 @@ NodeType* insert_into_bst(NodeType* root, T target_value)
   NodeType* current_node_ptr {root};
   NodeType* previous_node_ptr {nullptr};
 
+  // Traverse the tree, starting from the root, with comparison to the
+  // target_value.
+  // Stop when we get to a leaf.
   while (current_node_ptr != nullptr)
   {
     /*
@@ -234,6 +239,7 @@ NodeType* insert_into_bst(NodeType* root, T target_value)
   // cf. https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/141/basic-operations-in-a-bst/1003/
   NodeType* new_node_ptr = new NodeType(target_value);
 
+  // Attach this new node to either the left or right.
   if (previous_node_ptr != nullptr)
   {
     if (target_value < previous_node_ptr->value_)
@@ -461,6 +467,66 @@ class DeleteValue
     std::stack<NodeType*> stack_;
 };
 
+//-----------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1009/
+/// \brief Problem: Design a class to find the kth largest element in a stream.
+///
+/// Given root node of a binary search tree (BST) and a value, find the node in
+/// the BST that the node's value equals the given value.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+/// \brief Definition for a binary tree node with a counter.
+//-----------------------------------------------------------------------------
+
+struct NodeWithCounter
+{
+  int value_;
+  int counter_;
+  NodeWithCounter* left_;
+  NodeWithCounter* right_;
+
+  //----------------------------------------------------------------------------
+  /// \brief Default constructor.
+  //----------------------------------------------------------------------------
+  NodeWithCounter();
+
+  explicit NodeWithCounter(int x);
+
+  NodeWithCounter(int x, NodeWithCounter *left, NodeWithCounter *right);
+};
+
+class TreeWithCounter
+{
+  public:
+
+    TreeWithCounter();
+
+    TreeWithCounter(std::vector<int>& nums);
+
+    ~TreeWithCounter();
+
+    // Take a look at insert_into_bst for this iterative approach.
+    NodeWithCounter* insert_new_value(const int num);
+
+    NodeWithCounter* root_ptr() const
+    {
+      return root_ptr_;
+    }
+
+    bool is_counter_stack_empty() const
+    {
+      return counter_stack_.empty();
+    }
+
+    //NodeWithCounter* find_kth_largest_element(const int k);
+    int find_kth_largest_element(const int k);
+
+  private:
+
+    std::stack<NodeWithCounter*> counter_stack_;
+    NodeWithCounter* root_ptr_;
+};
 
 } // namespace BinarySearchTrees
 } // namespace DataStructures

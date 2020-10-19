@@ -2466,6 +2466,30 @@ delete $O(\log{(N)})$ \\
 
 Unbalanced, distribution of nodes skewed, worse case $O(N)$ search, insert, delete e.g. $5 \to 10 \to 15 \to 20$
 
+Strength of BST is performing, \\
+\textbf{search, insertion, deletion} in $O(h)$ time complexity ($h = $ height of tree) even in \emph{worst case}. \\
+
+e.g. Design a class to find $k$th largest element in a stream. \\
+
+cf. \href{https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1009/}{LeetCode, Introduction to Binary Search Tree - Conclusion}. 
+
+If we use \emph{array}, sort array in descending order and return $k$th element (that's one way).  
+
+But insert new element, must re-sort. Re-sorting required for $O(1)$ search (that's what we originally want).
+
+Time complexity of insertion is $O(N)$ in average. Therefore time complexity will be $O(N^2)$ in total.
+
+$\forall \, $ node, all values in right subtree are larger than value of node itself, while all values in left subtree are smaller than value of node. \\
+Consider node $x$:
+\[
+v(l(x)) < v(x) < v(r(x))
+\]
+So while $v(l(r(x))) < v(r(x))$, but if we insert in accordingly, we could guarantee that $v(x) < v(l(r(x)))$ because $l(r(x))$ would not be the left node of $x$ unless $v(x) < v(l(r(x)))$ was checked first.
+
+If $m$ nodes in the right subtree, node itself is $m+1$ largest for the current tree.
+
+Consider counter $\forall \,$ node to indicate how many nodes there are in subtree rooted at this node.
+
 \subsection{Heaps}
 
 max-heap: parent must always have bigger value than its child. \\
@@ -2639,6 +2663,12 @@ Usually we sort a number of records containing a number of fields based on a \em
 
 
 \subsection{Insertion Sort, Straight Insertion Sort}
+
+\textbf{Best case} (Bester Fall): $O(N)$ comparisons, $O(1)$ swaps. \\
+\textbf{Worst case} (Schlechter Fall): $O(N^2)$ comparisons and swaps (array sorted in reverse order) \\
+\emph{Average}: $O(N^2)$ comparisons and swaps. \\
+
+Worst case \emph{space complexity}: $O(N)$ total, $O(1)$ auxiliary. \\
 
 cf. Dietzfelbinger (2019) \cite{Diet2019}
 
@@ -3226,6 +3256,10 @@ design actors as follows:
 	\item Coding
 	\item Debugging
 \end{itemize}
+
+\section{Suggested questions to ask the interviewer}
+
+What is the job function? Team? (e.g. what is the function of the team), last is SpaceX itself, What role does this team play in SpaceX?
 
 \part{Embedded Systems}
 
