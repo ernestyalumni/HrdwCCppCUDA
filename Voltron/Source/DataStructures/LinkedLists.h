@@ -208,6 +208,79 @@ std::ostream& LinkedList<T>::operator<<(
 }
 */
 
+//------------------------------------------------------------------------------
+/// Nodes as Unique and Shared Poitners.
+//------------------------------------------------------------------------------
+
+template <typename T>
+struct NodeAsUniquePtr
+{
+  T value_;
+  std::unique_ptr<NodeAsUniquePtr<T>> next_;
+
+  NodeAsUniquePtr(T value) :
+    value_{value},
+    next_{nullptr}
+  {}
+
+  NodeAsUniquePtr(T value, std::unique_ptr<NodeAsUniquePtr<T>>& next) :
+    value_{value},
+    next_{next.release()}
+  {}
+};
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/// \brief Definition for singly-linked list.
+//------------------------------------------------------------------------------
+
+struct ListNode
+{
+  int value_;
+  ListNode* next_;
+
+  ListNode();
+
+  ListNode(int x);
+
+  ListNode(int x, ListNode* next);
+};
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
+/// \brief Merge 2 sorted linked lists and return as new sorted list.
+/// \details New list should be made by splicing together nodes of first 2
+/// lists.
+///
+/// Solution
+/// \ref https://youtu.be/GfRQvf7MB3k
+/// Merge 2 Sorted Lists - A Fundamental Merge Sort Subroutine
+/// ("Merge Two Sorted Lists" on LeetCode), Back To Back SWE
+//------------------------------------------------------------------------------
+ListNode* merge_two_sorted_lists_iterative(ListNode* l1, ListNode* l2);
+
+void splice_nodes(ListNode*& ptr1, ListNode*& ptr2);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
+/// \brief Merge 2 sorted linked lists and return as new sorted list.
+/// \details New list should be made by splicing together nodes of first 2
+/// lists.
+//------------------------------------------------------------------------------
+
+ListNode* merge_two_sorted_lists_by_splice(ListNode* l1, ListNode* l2);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/discuss/10065/Clean-simple-O(n%2Bm)-C%2B%2B-Solution-without-dummy-head-and-recurtion
+/// \url https://youtu.be/GfRQvf7MB3k
+/// Zeit Time complexity O(M+N)
+/// O(1) space complexity.
+//------------------------------------------------------------------------------
+ListNode* merge_two_sorted_lists_simple(ListNode* l1, ListNode* l2);
+
 } // namespace LinkedLists
 } // namespace DataStructures
 

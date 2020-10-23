@@ -1073,6 +1073,23 @@ If we use \verb|std::shared_ptr|, there'd be no need to declare destructor in \v
 
 Difference stems from differing ways smart pointers support custom deleters.  For \verb|std::unique_ptr|, type of deleter is part of type of smart pointer, and this makes it possible for compilers to generate smaller runtime data structures and faster runtime code.  A consequence of this greater efficiency is that pointed-to types must be complete when compiler-generated special functions (e.g. destructors or move operations) are used.  For \verb|std::shared_ptr|, type of deleter is not part of the type of smart pointer.  This necessitates larger runtime data structures and somewhat slower code, but pointed-to types need not be complete when compiler-generated special functions are employed.  
 
+\section{Class Hierarchies}
+
+\subsection{Inheritance}
+
+Ctors of inherited classes are called in same order in which they're inherited. Dtors are called in reverse order of ctors.
+
+\subsubsection{Diamond Problem}
+
+cf. \href{https://www.geeksforgeeks.org/multiple-inheritance-in-c/}{Geeks for Geeks, "Multiple Inheritance in C++"}.
+
+Diamond problem occurs when 2 superclasses of a class have a common base class. The class gets 2 copies of all attributes of common base class, causing ambiguities.
+
+\section{Polymorphism}
+
+\textbf{Polymorphism, TODO}
+
+
 \part{Integers, numeric encodings, number representation, binary representation, hexidecimal representation}
 
 \section{Introduction:} 
@@ -2897,6 +2914,141 @@ Huge has values for 4-letter strings \\
 31 \\
 $s(0) 31^{n-1} + s(1) 32^{n-2} + \dots + s(n-1)$
 
+cf. Dietzfelbinger (2019) \cite{Diet2019}
+
+WS19. Algorithmen und Datenstrukturen 1. 5. Kapitel. Martin Dietzfelbinger. Dezember 2019. \textbf{Hashverfahren} ()Hash procedures).
+
+cf. 5.1 Grundbegriffe (First principle) \cite{Diet2019}
+
+Gegeben: Universum $U$ (auch ohne Ordnung) und Wertebereich $R$. (Given collection $U$ without order and range $R$), \\
+Hashverfahren (oder Schl\"{u}sseltransformationsverfahren),
+\begin{equation}
+f:S \to R, \text{ mit } S \subseteq U \text{ endlich }
+\end{equation}
+
+$f$ is a mapping that goes from keys to the desired data.
+
+Ziel: Zeit $O(1)$ pro Operation \\
+
+Gegensatz Suchb\"{a}ume: Zeit $O(\log{(n)})$ pro Operation.
+
+Hashfunktion; to hash (engl): Kleinhacken, Kleinschneiden
+\begin{definition}[Hashfunction, Hashfunktion]
+	\begin{equation}
+	\begin{gathered} 
+	h: U \to [m ] \text{ mit } 
+	U \equiv \text{ Universum der Schl\"{u}ssel  (collection of keys?) } \\
+	[m] = \lbrace 0 , \dots , m-1 \rbrace \quad \, \text{ Indexbereich f\"{u}r Tabelle } T \\
+	S \subseteq U, \, |S| = n
+	\end{gathered} 
+	\end{equation}
+\end{definition}
+
+
+Grundansatz (basic, fundamental approach): Spoichrun von $f: S \to R$ in Tabelle $T[0, \dots m-1]$ \\
+
+Aus Schl\"{u}ssel, $x\in U$ wird ein \\
+Index $h(x) \in [m]$
+
+Idealvorstellung (ideal, concept, ideal conception): \\
+Speichere Paar $(x, f(x))$ in Zelle (cell, booth, element) $T[h(x)] = T[j]$ \\
+
+Example, Beispeil: $U = \lbrace A \dots Z, a\dots z \rbrace^{3 \dots 20}$. \\
+Words of length $l$ s.t. $3\leq l \leq 20$.
+
+\[
+\begin{aligned}
+& h : U \to [m] \\
+& h(c_1c_2 c_3 \dots c_r) = \text{num}(c_3) \mod{ 13}
+\end{aligned}
+\]
+
+Wobei (where) 
+\[
+\begin{aligned}
+& \text{num}{(A)} &= \text{num}{(a)} = 0 \\
+& \text{num}{(A)} &= \text{num}{(a)} = 0 \\
+& \vdots & \vdots 
+& \text{num}{(A)} &= \text{num}{(a)} = 0 
+\end{aligned}
+\]
+
+\[
+\begin{gathered}
+\begin{aligned} 
+x & f(x) (\text{ further desired target data }) & \text{num}(c_3) & h(x) \\
+\text{Ja\textbf{n}uar} & 31 & 13 & 0 \\
+\text{Fe\textbf{b}ruar} & 28 & 1 & 1 \\
+\text{Ma\textbf{e}rz} & 31 & 4 & 4 \\
+\text{Ap\textbf{r}il} & 30 & 17 & 4 \\
+\vdots & \vdots & \vdots & \vdots \\ 
+\text{Ju\textbf{n}i} & 30 & 13 & 0 \\
+\vdots & \vdots & \vdots & \vdots 
+\end{aligned} 
+\quad \quad \, 
+\begin{aligned}
+h(c_1 \dots c_r) & = \text{num}(c_3) \mod{13} \\
+j & (x,f(x)) \text{ mit } h(x) = j \\ 
+0 & (\text{Januar}, 31), (\text{Juni}, 30) \\
+1 & (\text{Februar}, 28) \\
+\vdots & \\
+4 & (\text{Maerz}, 31) 
+\end{aligned}
+\end{gathered}
+\]
+
+Kollisionen (Collision) bei $j= 0,4, \dots  \quad \,$ Kollision $x, y \in S$, $x\neq y$, $h(x) = h(y)$.  \\
+
+\textbf{Beh\"{a}lter}, \textbf{bucket}
+\begin{definition}[Bucket]
+	\begin{equation}
+	B_j := \lbrace x \in S | h(x) = j \rbrace, \, S\subseteq U \text{ for hash function } h : U\to [m] 
+	\end{equation}
+\end{definition}
+
+Fall: $h$ "rein zuf\"{a}llig", $|S| = n$, $S= \lbrace x_1 \dots x_n \rbrace$ \\
+$h : U \to [m]$ \\
+$h: S \subset U \to [m]$; $h(x_1) \dots h(x_n)$ in $[m]^n$ sind rein zuf\"{a}llig".  \\
+
+Jeder der $m^n$ Vectoren $(j_1 \dots J_n) \in [m]^n$ kommt mit derselben Wahrscheinlichkeit $1/m^n$ \\
+als $(h(x_1), \dots h(x_n))$ vor.
+
+e.g. IP Addresses. Suppose we want to associate IP addresses and any corresponding domain names.
+
+\subsubsection{Hashfunctions}
+
+cf. \href{https://leetcode.com/explore/learn/card/hash-table/182/practical-applications/1110/}{LeetCode, Keys to Design a Hash Table}
+
+Hash function $h$ examples:
+
+\begin{center}
+	\begin{tabular}{ c  c  r  l }
+		Key Type & Key range, $S$, & Number of Buckets $m$ & $h$ examples \\ \hline \\
+		integer & $[0, 100000]$ & 1000 & $y = x \mod{1000} $ \\
+		char & 'a' \dots 'z' & 26 & $ y = x - 'a'$ \\ 
+		array of integers & size $< 10, \, \forall \,$ number $\in [0,1]$ & $1024=2^{10}$ & $ y = \sum_{i=0}^9 x_i 2^i$ \\
+		array of integers & size $< 10, \, \forall \, $ number $\in [0,3 ]$ & $1024 = 2^{10}$ & $y = \sum_{i=0}^4 x_i 4^i = \sum_{i=0}^4 x_i 2^{2i}$ 
+	\end{tabular}
+\end{center}
+
+Remember,
+\begin{equation}
+\boxed{
+	\begin{gathered}
+	\begin{aligned}
+	& f:S \to R, \, S \subseteq U \\ 
+	& f:x \mapsto f(x) \\
+	& h:U\to [m] \\ 
+	& h:x \mapsto h(x) = j
+	\end{aligned}
+	\end{gathered} }
+\end{equation}
+Suppose $f= \text{id}: S \to S$, $R=S$ (identity map) \\
+$h:U \mapsto [m] $.
+
+Consider $|S| = N$ large. Consider load balance $N/m $; we still need $m < N$ for a reasonable number of buckets.
+
+
 \section{References for Data Structures and Algorithms}
 
 \url{https://ece.uwaterloo.ca/~dwharder/aads/Lecture_materials/}
@@ -3182,7 +3334,17 @@ This data structure can be created, modified, deleted by 3 system calls: \texttt
 
 \section{Network Time Protocol (NTP), \texttt{ntpq}}
 
-https://www.eecis.udel.edu/~mills/ntp.html
+\url{https://www.eecis.udel.edu/~mills/ntp.html}
+
+\section{IPC: Interprocess Communications}
+
+\subsection{Message Queues}
+
+\textbf{Message Queues: TODO}
+
+\subsection{UDP}
+
+\textbf{UDP: TODO}
 
 
 \section{References and Resources for Linux System Programming}
@@ -3195,6 +3357,8 @@ https://www.eecis.udel.edu/~mills/ntp.html
 \url{https://www.cs.cmu.edu/~srini/15-441/S10/lectures/r01-sockets.pdf}
 
 \url{https://db.in.tum.de/teaching/ss19/c++praktikum/}
+
+
 
 
 \part{C++ Template Metaprogramming}
