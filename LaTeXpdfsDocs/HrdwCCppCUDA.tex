@@ -2661,6 +2661,50 @@ cf. Neagole (2020) \cite{Neag2020}, "Algorithms:Recursion" - 151 Recursion Intro
 
 - \href{https://youtu.be/KEEKn7Me-ms}{HackerRank, "Algorithms: Recursion",  Gayle Laakmann McDowell}
 
+\subsection{Binary Trees and Recursion}
+
+cf. \href{https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/534/}{LeetCode, Solve Problems Recursively}
+
+\subsubsection{"Top-down" Solution}
+
+"Top-down" means that in each recursive call, visit the node first to come up with some value, and pass these values to its children when calling the function recursively. So the "top-down" solution can be considered as a kind of \emph{preorder} traversal.
+
+For recursive function \emph{topDown(root, params)}, it would work something like this:
+
+\begin{enumerate}
+	\item Return specific value for a null node
+	\item Update answer if needed. (answer <- parameters)
+	\item left answer $=$ topDown(root left, left parameters) (left parameters <- root value, parameters)
+	\item right answer $=$ topDown(root right, right parameters) (right parameters <- root value, parameters)
+	\item Return the answer if needed. (answer <- left answer, right answer)
+\end{enumerate}
+
+\subsubsection{"Bottom-up" Solution}
+
+"Bottom-up" - in each recursive call, first call the function recursively for all children nodes and then come up with answer according to the returned values and value of the current node itself. This process can be regarded as a kind of \emph{postorder} traversal.
+
+Typically, a "bottom-up" recursive function \emph{bottomUp(root)} will be something like this:
+
+\begin{enumerate}
+	\item Return specific value for null node.
+	\item left answer $=$ bottomUp(root left) (call function recursively for left child)
+	\item right answer $=$ bottomUp(root right) (call function recursively for right child)
+	\item Return answers (answer <- left answer, right answer, root value)
+\end{enumerate}
+
+When you meet a tree problem, ask yourself 2 questions: 
+\begin{itemize}
+	\item Can you determine some parameters to help the node know its answer?
+	\item Can you use these parameters and the value of the node itself to determine what should be the parameters passed to its children?
+\end{itemize}
+If the answer is yes to both, try to solve this problem using "top-down" recursive solution.
+
+Or,
+\begin{itemize}
+	\item If you know the answer of its children, can you calculate the answer of that node?
+\end{itemize}
+If answer is yes, solve problem recursively using a bottom-up approach.
+
 
 
 \section{Sorting}
