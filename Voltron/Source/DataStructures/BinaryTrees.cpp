@@ -10,13 +10,23 @@
 #include "BinaryTrees.h"
 
 #include <algorithm> // std::max
+#include <cmath> // std::abs
+#include <deque>
 #include <queue>
 #include <stack>
+#include <string> // std::stoi
+#include <utility> // std::make_pair, std::move, std::pair
 #include <vector>
 
+using std::deque;
+using std::make_pair;
 using std::max;
+using std::pair;
 using std::queue;
 using std::stack;
+using std::stoi;
+using std::string;
+using std::to_string;
 using std::vector;
 
 namespace DataStructures
@@ -583,6 +593,114 @@ int max_depth_recursive_step(TreeNode* root)
   return (max(left_depth, right_depth) + 1);
 }
 
+bool is_balanced(TreeNode* root)
+{
+  const auto result = balance_max_height_recursive(root);
+
+  return result.first;
+}
+
+pair<bool, int> balance_max_height_recursive(TreeNode* root)
+{
+  // Base cases.
+
+  if (root == nullptr)
+  {
+    return make_pair<bool, int>(true, -1);
+  }
+
+  // Root node is a leaf.
+  if (root->left_ == nullptr && root->right_ == nullptr)
+  {
+    return make_pair<bool, int>(true, 0);
+  }
+
+  const auto left_result {balance_max_height_recursive(root->left_)};
+  const auto right_result {balance_max_height_recursive(root->right_)};
+
+  int max_height {max(left_result.second, right_result.second)};
+  int height_difference {std::abs(left_result.second - right_result.second)};
+  bool is_balanced {
+    height_difference <= 1 &&
+      left_result.first &&
+        right_result.first};
+
+  return make_pair<bool, int>(std::move(is_balanced), max_height + 1);
+}
+
+bool is_same_recursive(TreeNode* root1, TreeNode* root2)
+{
+  if (root1 == nullptr)
+  {
+    return root2 == nullptr ? true : false;
+  }
+
+  // root1 != nullptr then.
+  if (root2 == nullptr)
+  {
+    return false;
+  }
+
+  const bool is_values_equal {root1->value_ == root2->value_};
+
+  return is_values_equal &&
+    is_same_recursive(root1->left_, root2->left_) &&
+      is_same_recursive(root1->right_, root2->right_);
+}
+
+bool is_symmetric(TreeNode* root)
+{
+  if (root == nullptr)
+  {
+    return true;
+  }
+
+  if (root->left_ == nullptr)
+  {
+    return (root->right_ == nullptr) ? true : false;
+  }
+
+  if (root->right_ == nullptr)
+  {
+    return false;
+  }
+
+  //queue<TreeNode*> node_ptr_stack;
+  return true;
+}
+
+string serialize(TreeNode* root)
+{
+  if (root == nullptr)
+  {
+    return "null";
+  }
+
+  // For a leaf, we don't want to continue further in serialization.
+  //if ((root->left_ == nullptr) && (root->right_ == nullptr))
+  //{
+  //  return to_string(root->value_);   
+  //}
+
+  return to_string(root->value_) +
+    "," +
+    serialize(root->left_) +
+      "," +
+        serialize(root->right_);
+}
+
+int parse_node_value(string& data)
+{
+  const int next_delimiter_position {data.find(",")};
+
+  int value {stoi(data.substr(0, next_delimiter_position))};
+
+  // Remove the parsed out value from the original string.
+  // The range is [next_delimiter_position + 1, ) for only one argument.
+  data = data.substr(next_delimiter_position + 1);
+
+  return value;
+}
 
 } // namespace BinaryTrees
 } // namespace DataStructures
