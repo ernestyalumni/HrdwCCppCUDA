@@ -18,9 +18,12 @@ using QuestionsDEntrevue::LeetCode::count_palindromic_substrings;
 using QuestionsDEntrevue::LeetCode::count_palindromic_substrings_simple;
 using QuestionsDEntrevue::LeetCode::find_even_size_palindromes;
 using QuestionsDEntrevue::LeetCode::find_odd_size_palindromes;
+using QuestionsDEntrevue::LeetCode::find_subrow_max;
 using QuestionsDEntrevue::LeetCode::is_valid_parentheses;
 using QuestionsDEntrevue::LeetCode::longest_valid_parentheses;
 using QuestionsDEntrevue::LeetCode::max_profit;
+using QuestionsDEntrevue::LeetCode::max_subarray;
+using QuestionsDEntrevue::LeetCode::max_sum_submatrix;
 using QuestionsDEntrevue::LeetCode::min_coin_change_recursive_step;
 using std::make_optional;
 using std::nullopt;
@@ -117,6 +120,46 @@ BOOST_AUTO_TEST_CASE(
     BOOST_TEST(longest_valid_parentheses(example) == 2);
   }
 }
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/maximum-subarray/
+/// \name 53. Maximum Subarray.
+/// \brief Given an integer array nums, find the contiguous subarray (containing
+/// at least one number) which has the largest sum and return its sum.
+///
+/// \url https://youtu.be/2MmGzdiKR9Y
+///
+/// \details Easy.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MaxSubArrayReturnsLargestSum)
+{
+  {
+    vector<int> example_1 {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+
+    BOOST_TEST(max_subarray(example_1) == 6);
+  }
+  {
+    vector<int> example_2 {1};
+    BOOST_TEST(max_subarray(example_2) == 1);
+  }
+  {
+    vector<int> example_3 {0};
+    BOOST_TEST(max_subarray(example_3) == 0);
+  }
+  {
+    vector<int> example_4 {-1};
+    BOOST_TEST(max_subarray(example_4) == -1);
+
+  }
+  {
+    vector<int> example_5 {-2147483647};
+    BOOST_TEST(max_subarray(example_5) == -2147483647);
+  }
+}
+
 
 //------------------------------------------------------------------------------
 /// \brief 70. Climbing Stairs.
@@ -293,6 +336,81 @@ BOOST_AUTO_TEST_CASE(MinCoinChangeRecursiveStepReturnsCorrectValueForBaseCases)
         amount) == 2);
   }
 }
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/
+/// \name 363. Max Sum of Rectangle No Larger Than K.
+/// \ref https://www.youtube.com/watch?v=-FgseNO-6Gk
+/// Back To Back SWE, Maximum Sum Rectangle In A 2D Matrix - Kadane's Algorithm
+///
+/// Time complexity:
+/// Brute force O(row^2 * cols^2) because for each  choice of top left corner of
+/// a subrectangle (row * col), choose bottom right corner (row * col choices).
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindSubrowMaxProcessesSingleRow)
+{
+  vector<vector<int>> b2b_example {
+    {6, -5, -7, 4, -4},
+    {-9, 3, -6, 5, 2},
+    {-10, 4, 7, -6, 3},
+    {-8, 9, -3, 3, -7}};
+
+  BOOST_TEST(b2b_example.at(0).at(1) = -5);
+  BOOST_TEST(b2b_example.at(0).at(2) = -7);
+  BOOST_TEST(b2b_example.at(1).at(3) = 5);
+
+  {
+    const auto result = find_subrow_max(b2b_example.at(0));
+    BOOST_TEST(result.first == 6);
+    BOOST_TEST(result.second.first == 0);
+    BOOST_TEST(result.second.second == 0);
+  }
+  {
+    const auto result = find_subrow_max(b2b_example.at(1));
+    BOOST_TEST(result.first == 7);
+    BOOST_TEST(result.second.first == 3);
+    BOOST_TEST(result.second.second == 4);
+  }
+  {
+    const auto result = find_subrow_max(b2b_example.at(2));
+    BOOST_TEST(result.first == 11);
+    BOOST_TEST(result.second.first == 1);
+    BOOST_TEST(result.second.second == 2);
+  }
+  {
+    const auto result = find_subrow_max(b2b_example.at(3));
+    BOOST_TEST(result.first == 9);
+    BOOST_TEST(result.second.first == 1);
+    BOOST_TEST(result.second.second == 1);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MaxSumSubmatrixGetsMaxSum)
+{
+  {
+    vector<vector<int>> b2b_example {
+      {6, -5, -7, 4, -4},
+      {-9, 3, -6, 5, 2},
+      {-10, 4, 7, -6, 3},
+      {-8, 9, -3, 3, -7}};
+
+    BOOST_TEST(b2b_example.at(0).at(1) = -5);
+    BOOST_TEST(b2b_example.at(0).at(2) = -7);
+    BOOST_TEST(b2b_example.at(1).at(3) = 5);
+
+    const size_t M {b2b_example.size()};
+    BOOST_TEST(M == 4);
+
+    BOOST_TEST(max_sum_submatrix(b2b_example) == 17);
+  }
+
+}
+
 
 //------------------------------------------------------------------------------
 /// \brief 647. Palindromic Substrings.

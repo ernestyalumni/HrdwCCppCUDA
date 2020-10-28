@@ -48,6 +48,7 @@ ADD_EXECUTABLE(Check
   Cpp/IO/IO_tests.cpp
   Cpp/IO/Streams_tests.cpp
   Cpp/Enumeration_tests.cpp
+  Cpp/FileIO/CStyleFileIO_tests.cpp
   Cpp/Operations_test.cpp
   Cpp/Std/Algorithm/Algorithms_tests.cpp
   Cpp/Std/Algorithm/EqualAndMismatch_tests.cpp

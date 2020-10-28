@@ -94,6 +94,7 @@ class ResizeableArray
     void ensure_extra_capacity()
     {
       // Then you have no actual space left.
+      // Data Structures: Array vs ArrayList, HackerRank, Sep 20, 2016.
       // 7:01 for https://youtu.be/NLAzwv4D5iI
       // cf. https://stackoverflow.com/questions/37538/how-do-i-determine-the-size-of-my-array-in-c
       //

@@ -18,7 +18,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
-#include <utility> // std::make_pair, std::pair
+#include <utility> // std::make_pair, std::pair, std::move;
 #include <vector>
 #include <stack>
 
@@ -26,16 +26,21 @@ using std::array;
 using std::distance;
 using std::find; // in <algorithm>
 using std::make_optional;
+using std::make_pair;
 using std::map;
 using std::max;
 using std::max_element;
 using std::min;
 using std::min_element;
+using std::move;
 using std::nullopt;
 using std::optional;
+using std::pair;
+using std::plus; // <algorithm>, function opbject effectively calls operator+
 using std::size_t;
 using std::stack;
 using std::string;
+using std::transform;
 using std::unordered_map;
 using std::vector;
 
@@ -187,6 +192,45 @@ int longest_valid_parentheses(string s)
   }
 
   return longest_length;
+}
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/maximum-subarray/
+/// \name 53. Maximum Subarray.
+/// Assume constraint that 1 <= numslength <= 2 * 10^4
+/// \details Runtime: 12 ms, faster than 74.08% of C++ online submissions for
+/// Maximum Subarray. Memory Usage: 13.5 MB, less than 16.45% of C++ online
+/// submissions for Maximum Subarray.
+//------------------------------------------------------------------------------
+int max_subarray(vector<int>& nums)
+{
+  if (nums.size() == 1)
+  {
+    return nums.at(0);
+  }
+
+  int max_sum_at_index {nums.at(0)};
+  int global_max_sum {max_sum_at_index};
+
+  for (int index {1}; index < nums.size(); ++index)
+  {
+    if (max_sum_at_index < 0)
+    {
+      max_sum_at_index = nums.at(index);
+    }
+    else
+    {
+      max_sum_at_index += nums.at(index);
+    }
+
+    // New max sum for a contiguous subarray found.
+    if (max_sum_at_index > global_max_sum)
+    {
+      global_max_sum = max_sum_at_index;
+    }
+  }
+
+  return global_max_sum;
 }
 
 //------------------------------------------------------------------------------
@@ -585,6 +629,135 @@ int coin_change_recursive(std::vector<int>& coins, int amount)
       smallest_coinage,
       min_coins_for_amount,
       amount);
+}
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/
+/// \name 363. Max Sum of Rectangle No Larger Than K.
+/// \ref https://www.youtube.com/watch?v=-FgseNO-6Gk
+/// Back To Back SWE, Maximum Sum Rectangle In A 2D Matrix - Kadane's Algorithm
+//------------------------------------------------------------------------------
+int max_sum_submatrix(vector<vector<int>>& matrix)
+{
+  // (Max) size in row, M.
+  const size_t M {matrix.size()};
+  const size_t N {matrix.at(0).size()};
+
+  if (M == 1 && N == 1)
+  {
+    return matrix.at(0).at(0);
+  }
+
+  //int max_sum_per_row {matrix.at(0).at(0)}; 
+
+  // Includes the max sum for row.
+  //int max_sum_per_column {max_sum_per_row};
+  int global_max_sum {matrix.at(0).at(0)};
+
+  size_t J_column_left {0};
+  // J_column_left <= J_column_right always.
+  size_t J_column_right {J_column_left};
+  size_t I_row_top {0};
+  // I_row_top <= I_row_bottom always.
+  size_t I_row_bottom {I_row_bottom};
+
+  // Running sum of each column; running column sums, i.e. for each j.
+  vector<int> running_column_sum (N, 0);
+
+  // Iterate over a possible whole matrix from I_row_top to I_row_bottom, with
+  // I_row_top <= I_row_bottom.
+
+  for (size_t i_row_top {0}; i_row_top < M; ++i_row_top)
+  {
+    for (size_t i_row_bottom {i_row_top}; i_row_bottom < M; ++i_row_bottom)
+    {
+      if (i_row_bottom == i_row_top)
+      {  
+        running_column_sum = matrix.at(i_row_top);
+      }
+      else
+      {
+        // Add the new row to the running column sum.
+        
+        for (int j {0}; j < N; ++j)
+        {
+          running_column_sum.at(j) += matrix.at(i_row_bottom).at(j);
+        }
+        //transform(
+        //  running_column_sum.begin(),
+        //  running_column_sum.end(),
+        //  matrix.at(i_row_bottom).begin(),
+        //  running_column_sum.end(),
+        //  plus<int>());
+      }
+
+      const auto result = find_subrow_max(running_column_sum);
+
+      if (result.first > global_max_sum)
+      {
+        global_max_sum = result.first;
+
+        I_row_top = i_row_top;
+        I_row_bottom = i_row_bottom;
+        J_column_left = result.second.first;
+        J_column_right = result.second.second;
+      }
+    }
+  }
+
+  return global_max_sum;
+}
+
+// Kadane's algorithm.
+pair<int, pair<size_t, size_t>> find_subrow_max(vector<int>& row)
+{
+  const size_t N {row.size()};
+
+  if (N == 1)
+  {
+    return make_pair<int, pair<size_t, size_t>>(
+      move(row.at(0)),
+      make_pair<size_t, size_t>(0, 0));
+  }
+
+  int max_sum_per_column {row.at(0)};
+  int global_row_sum {max_sum_per_column};
+
+  size_t global_start_index {0};
+  size_t global_end_index {global_start_index};
+
+  size_t start_index {0};
+  size_t end_index {start_index};
+
+  for (size_t j {1}; j < N; ++j)
+  {
+    if (max_sum_per_column < 0)
+    {
+      max_sum_per_column = row.at(j);
+
+      start_index = j;
+      end_index = j;
+    }
+    else
+    {
+      max_sum_per_column += row.at(j);
+      end_index = j;
+    }
+
+    if (global_row_sum < max_sum_per_column)
+    {
+      global_row_sum = max_sum_per_column;
+
+      global_start_index = start_index;
+      global_end_index = end_index;
+    }
+  }
+
+  return make_pair<int, pair<size_t, size_t>>(
+    move(global_row_sum),
+    make_pair<size_t, size_t>(
+      move(global_start_index),
+      move(global_end_index)));
 }
 
 

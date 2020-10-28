@@ -46,6 +46,29 @@ bool is_valid_parentheses(std::string s);
 int longest_valid_parentheses(std::string s);
 
 //------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/maximum-subarray/
+/// \name 53. Maximum Subarray.
+/// \brief Given an integer array nums, find the contiguous subarray (containing
+/// at least one number) which has the largest sum and return its sum.
+///
+/// \details Brute force is O(N^3) or O(N^2) as you check every subarray
+/// starting from I = 0, 1, ... N - 1, and ending at J = 0, 1, ... N- 1.
+/// For all linear array problems, aim to solve in O(N) linear time.
+/// Don't think of tables, think of what is the subproblem?
+/// Key observation, at an element and if at that element, J is index of that
+/// element, what is the max contiguous subarray?
+///
+/// Other key observation is that max contiguous subarray for entire array must
+/// end on a element in the array. That's why we can ask the subproblem, what's
+/// the max contiguous subarray with condition that it ends at index J.
+///
+/// \url https://youtu.be/2MmGzdiKR9Y
+///
+/// Easy.
+//------------------------------------------------------------------------------
+int max_subarray(std::vector<int>& nums);
+
+//------------------------------------------------------------------------------
 /// \url https://leetcode.com/problems/climbing-stairs/description/
 /// \name 70. Climbing Stairs.
 /// \brief You are climbing a stair case. It takes n steps to reach the top.
@@ -62,6 +85,10 @@ int climb_stairs_iterative(const int n);
 /// \brief You are climbing a stair case. It takes n steps to reach the top.
 ///
 /// \details Each time you can either climb 1 or 2 steps.
+///
+/// Traverse from left to get minimum buy prices dependent on time.
+/// Traverse from right to get maximum sell prices dependent on time.
+/// Traverse all 3 to get maximum profit at any time t. Then take max.
 //------------------------------------------------------------------------------
 int max_profit(std::vector<int>& prices);
 
@@ -102,6 +129,17 @@ int min_coin_change_recursive_step(
   int amount);
 
 int coin_change_recursive(std::vector<int>& coins, int amount);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/
+/// \name 363. Max Sum of Rectangle No Larger Than K.
+/// \ref https://www.youtube.com/watch?v=-FgseNO-6Gk
+/// Back To Back SWE, Maximum Sum Rectangle In A 2D Matrix - Kadane's Algorithm
+//------------------------------------------------------------------------------
+int max_sum_submatrix(std::vector<std::vector<int>>& matrix);
+
+std::pair<int, std::pair<std::size_t, std::size_t>> find_subrow_max(
+  std::vector<int>& row);
 
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/
