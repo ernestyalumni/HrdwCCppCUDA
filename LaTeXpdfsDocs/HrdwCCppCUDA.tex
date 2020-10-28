@@ -3465,6 +3465,33 @@ design actors as follows:
 	\item Debugging
 \end{itemize}
 
+\section{Puzzles, Brain-teasers}
+
+\url{http://www.mytechinterviews.com/four-people-on-a-rickety-bridge}
+
+20170525 Cyril Zeller, Nvidia had asked this.
+
+Bridge crossing problem. 4 people on 1 side of a bridge. For each A, B, C, D \\
+A takes 1 minutes \\
+B takes 2 minutes \\
+C takes 5 minutes \\
+D 10 minutes. \\
+
+At night, only 1 flash light.
+
+No more than 2 people can walk together. Minimize time to cross.
+
+\emph{To reduce the amount of time} find a way for C, D to go together; if they cross together then we need another to come back to get the others. So have a "fast person" like A or B already on the other side. \\
+
+A and B go cross. 2 \\
+A or B comes back. 1 \\
+C and D go across. 10 \\
+B or A comes back. 2 \\
+A and B go across (done). \\
+
+Total $ = 2 + 1 + 10 + 2 + 2 = 17$.
+
+
 \section{Suggested questions to ask the interviewer}
 
 What is the job function? Team? (e.g. what is the function of the team), last is SpaceX itself, What role does this team play in SpaceX?

@@ -76,6 +76,7 @@ ADD_EXECUTABLE(Check
   DeskCalculator/Token_tests.cpp
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
+  Entrevue/LeetCode/LeetCode_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
   IO/Epoll/ControlInterestList_tests.cpp
@@ -122,6 +123,7 @@ TARGET_LINK_LIBRARIES(Check
   Hierarchy
   IO
   IPC
+  QuestionsDEntrevue
   Tools
   UnitTestTools
   Utilities

@@ -691,7 +691,7 @@ string serialize(TreeNode* root)
 
 int parse_node_value(string& data)
 {
-  const int next_delimiter_position {data.find(",")};
+  const auto next_delimiter_position = data.find(",");
 
   int value {stoi(data.substr(0, next_delimiter_position))};
 

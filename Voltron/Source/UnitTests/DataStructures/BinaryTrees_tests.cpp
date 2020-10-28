@@ -426,7 +426,7 @@ BOOST_AUTO_TEST_CASE(SerializeSerializesBinaryTree)
 
   const string result {serialize(example_root_ptr)};
 
-  BOOST_TEST(result == "1,2,3,null,null,4,5");
+  BOOST_TEST(result == "1,2,null,null,3,4,null,null,5,null,null");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // BinaryTrees_tests

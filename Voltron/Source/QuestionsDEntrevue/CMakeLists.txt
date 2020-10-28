@@ -11,3 +11,7 @@ ADD_EXECUTABLE(WarmUpChallenges
 SET_TARGET_PROPERTIES(WarmUpChallenges
   PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/")
+
+ADD_LIBRARY(QuestionsDEntrevue
+  LeetCode/LeetCodeQuestions.cpp)
+

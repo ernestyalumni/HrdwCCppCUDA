@@ -8,6 +8,11 @@ Log:
 
 2020/10/14
 1:06 Implementation with stacks.
+
+cf. https://youtu.be/r1MXwyiGi_U
+Top 10 Algorithms for the Coding Interview (for software engineers),
+TechLead, Jun 27, 2019.
+Recommends stack.
 """
 example_input_1 = "()"
 example_input_2 = "()[]{}"

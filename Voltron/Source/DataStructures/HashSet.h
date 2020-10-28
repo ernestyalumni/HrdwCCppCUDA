@@ -14,7 +14,9 @@
 #define DATA_STRUCTURES_HASH_SET_H
 
 #include <algorithm> // std::copy
+#include <array>
 #include <iterator> // std::begin, std::end;
+#include <list>
 #include <stdexcept> // std::runtime_error
 
 namespace DataStructures
@@ -27,6 +29,9 @@ class HashSet
 {
   public:
 
+    // Number of buckets
+    static constexpr int M {10000};
+
     HashSet();
 
     void add(int key);
@@ -38,6 +43,11 @@ class HashSet
     //--------------------------------------------------------------------------
     bool contains(int key);
 
+    int hash(int key);
+
+  private:
+
+    std::array<std::list<int>, M> chained_bucket_array_;
 };
 
 } // namespace HashTables
