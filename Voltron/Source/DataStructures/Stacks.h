@@ -10,6 +10,7 @@
 #ifndef DATA_STRUCTURES_STACKS_STACK_H
 #define DATA_STRUCTURES_STACKS_STACK_H
 
+#include "DataStructures/Arrays.h"
 #include <vector>
 
 namespace DataStructures
@@ -40,7 +41,7 @@ class StackWithVector
     // Get the top item from the queue.
     T top()
     {
-      return data_back();
+      return data_.back();
     }    
 
     // Delete an element from the queue. Return true if the operation is
@@ -67,18 +68,51 @@ class Stack
 {
   public:
 
+    Stack():
+      data_{8}
+    {}
 
-    T peek()
+    void push(T x)
     {
-      if (top_ < 0)
-      {
+      data_.append(x);
+    }
 
+    bool is_empty() const
+    {
+      return (data_.length() == 0);
+    }
+
+    T top() const
+    {
+      if (!is_empty())
+      {
+        return data_.back();
       }
+      else
+      {
+        return static_cast<T>(-1);
+      }
+    }
+
+    bool pop()
+    {
+      if (is_empty())
+      {
+        return false;
+      }
+      data_.pop_back();
+      return true;
+    }
+
+    std::size_t size() const
+    {
+      return data_.length();
     }
 
   private:
 
-    long top_;
+    Arrays::Array<T> data_;
+
 };
 
 } // namespace Stacks
