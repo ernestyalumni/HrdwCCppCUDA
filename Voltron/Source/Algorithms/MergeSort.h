@@ -110,6 +110,104 @@ void merge_sort(TContainer& a)
   Details::merge_sort(a, 0, a.size() - 1);
 }
 
+// https://leetcode.com/problems/sort-an-array/discuss/329672/merge-sort
+// cf. https://www.google.com/search?client=firefox-b-1-d&q=merge+sort+hackerrank#kpvalbx=_gy6eX9eJCPTC0PEP5IefgA024
+// low = 0,
+// high = N - 1
+template <class TContainer, class T>
+void merge_sort(
+  TContainer& a,
+  std::vector<T>& temporary,
+  const std::size_t low,
+  const std::size_t high)
+{
+  // Already sorted - base case.
+  if (low >= high)
+  {
+    return;
+  }
+
+  // If (high - low) even, odd number of elements, mid is exact middle.
+  // If (high - low) odd, even number of elements, mid is farthest right element
+  // in "left" half.
+  // Subtract to avoid overflow.
+  const std::size_t mid {low + (high - low) / 2};
+
+  merge_sort<TContainer, T>(a, temporary, low, mid);
+  merge_sort<TContainer, T>(a, temporary, mid + 1, high);
+
+  merge<TContainer, T>(a, temporary, low, high);
+}
+
+// https://leetcode.com/problems/sort-an-array/discuss/329672/merge-sort
+template <class TContainer, class T>
+void merge(
+  TContainer& a,
+  std::vector<T>& temporary,
+  const std::size_t low,
+  const std::size_t high)
+{
+  // End of the "left" halve
+  std::size_t l_end {low + (high - low) / 2};
+  // Start of the "right" halve
+  std::size_t r_start {l_end + 1};  
+
+  std::size_t l {low};
+  std::size_t r {r_start};
+  // Need an index into the temporary array.
+  std::size_t temp_index {0};
+
+  while (l <= l_end && r <= high)
+  {
+    // Copy over the smaller element.
+    if (a[l] < a[r])
+    {
+      temporary[temp_index] = a[l];
+      ++l;
+    }
+    else
+    {
+      temporary[temp_index] = a[r];
+      ++r;
+    }
+    ++temp_index;
+  }
+  // Copy over remaining elements.
+  if (l <= l_end)
+  {
+    for (std::size_t i {l}; i < (l_end + 1); ++i)
+    {
+      temporary[temp_index] = a[i];
+      ++temp_index;
+    }
+  }
+  else if (r <= high)
+  {
+    for (std::size_t i {r}; i < (high + 1); ++i)
+    {
+      temporary[temp_index] = a[i];
+      ++temp_index;
+    }
+  }
+
+  // Now copy sorted buffer into original array.
+  for (std::size_t i {low}; i <= high; ++i)
+  {
+    a[i] = temporary[i-low];
+  }
+}
+
+template <class TContainer, typename T>
+void merge_sort_with_temp(
+  TContainer& a,
+  const std::size_t low,
+  const std::size_t high)
+{
+  std::vector<T> temporary (sizeof(a) / sizeof(a[0]));
+
+  merge_sort<TContainer, T>(a, temporary, low, high);
+}
+
 } // namespace Sorting
 } // namespace Algorithms
 

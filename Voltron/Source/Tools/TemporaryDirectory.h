@@ -22,6 +22,8 @@ class TemporaryDirectory
     /// the function is called from.
     /// \param directory_name_prefix
     /// e.g. "Temp" or i.e. /Temp
+    ///
+    /// \details Current directory obtained with ::get_current_dir_name
     //--------------------------------------------------------------------------
     explicit TemporaryDirectory(
       const std::string& directory_name_prefix = "Temp");
@@ -34,6 +36,10 @@ class TemporaryDirectory
     }
 
   protected:
+
+    //--------------------------------------------------------------------------
+    /// \details Wraps system call ::mkdtemp
+    //--------------------------------------------------------------------------
 
     std::string make_temporary_directory(
       const std::string& directory_name_prefix,

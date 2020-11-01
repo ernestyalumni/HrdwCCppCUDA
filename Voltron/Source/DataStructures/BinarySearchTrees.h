@@ -6,7 +6,7 @@
 ///
 /// \ref https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/140/introduction-to-a-bst/997/
 /// \ref LeetCode, Binary Search Tree
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef DATA_STRUCTURES_BINARY_SEARCH_TREES_H
 #define DATA_STRUCTURES_BINARY_SEARCH_TREES_H
 
@@ -20,9 +20,9 @@ namespace DataStructures
 namespace BinarySearchTrees
 {
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \brief Definition for a binary tree node.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 struct TreeNode
 {
@@ -64,7 +64,7 @@ bool iterative_validate_binary_search_tree(TreeNode* root);
 /// \details Uses recursive inorder traversal.
 bool is_valid_binary_search_tree(TreeNode* root);
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \class InorderBstIterator
 /// \brief Definition for a binary tree node.
 /// \url https://www.geeksforgeeks.org/inorder-tree-traversal-without-recursion/
@@ -80,7 +80,7 @@ bool is_valid_binary_search_tree(TreeNode* root);
 ///   b) Print the popped item, set current = popped_item->right
 ///   c) Go to step 3.
 /// 5. If current is nullptr, and the stack is empty, then we are done.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 template <typename NodeType, typename T>
 class InorderBstIterator
@@ -138,10 +138,10 @@ class InorderBstIterator
     NodeType* current_node_ptr_;
 };
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \class BSTIterator
 /// \brief Definition for a binary tree node.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /*
 class BstIterator
 {
@@ -159,13 +159,13 @@ class BstIterator
 };
 */
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/141/basic-operations-in-a-bst/1000/
 /// \brief Search in a Binary Search Tree.
 ///
 /// Given root node of a binary search tree (BST) and a value, find the node in
 /// the BST that the node's value equals the given value.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template <typename NodeType, typename T>
 NodeType* search_bst(NodeType* node_ptr, T target_value)
 {
@@ -185,7 +185,7 @@ NodeType* search_bst(NodeType* node_ptr, T target_value)
       search_bst(node_ptr->right_, target_value);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/141/basic-operations-in-a-bst/1003/
 /// \brief Insert in a Binary Search Tree.
 ///
@@ -193,7 +193,8 @@ NodeType* search_bst(NodeType* node_ptr, T target_value)
 /// the BST that the node's value equals the given value.
 ///
 /// Assume that target_value does not exist in the original BST.
-//-----------------------------------------------------------------------------
+/// Iterative.
+//------------------------------------------------------------------------------
 template <typename NodeType, typename T>
 NodeType* insert_into_bst(NodeType* root, T target_value)
 {
@@ -259,9 +260,9 @@ NodeType* insert_into_bst(NodeType* root, T target_value)
   return root ? root : new_node_ptr;
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \brief Deletion in a BST.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 template <typename NodeType, typename T>
 class DeleteValue
 {
@@ -319,7 +320,7 @@ class DeleteValue
 
     NodeType* find_next_inorder_node(NodeType* node_ptr)
     {
-      if (node_ptr->left_)
+      if (node_ptr->left_ != nullptr)
       {
         return find_next_inorder_node(node_ptr->left_);
       }
@@ -467,17 +468,17 @@ class DeleteValue
     std::stack<NodeType*> stack_;
 };
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1009/
 /// \brief Problem: Design a class to find the kth largest element in a stream.
 ///
 /// Given root node of a binary search tree (BST) and a value, find the node in
 /// the BST that the node's value equals the given value.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \brief Definition for a binary tree node with a counter.
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 struct NodeWithCounter
 {
@@ -527,6 +528,29 @@ class TreeWithCounter
     std::stack<NodeWithCounter*> counter_stack_;
     NodeWithCounter* root_ptr_;
 };
+
+int kth_largest_element_reverse_inorder_traversal(
+  TreeNode* root_ptr,
+  int k,
+  int& count);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1018/
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/143/appendix-height-balanced-bst/1015/
+/// \ref https://www.geeksforgeeks.org/convert-normal-bst-balanced-bst/
+//------------------------------------------------------------------------------
+TreeNode* sorted_array_to_BST(std::vector<int>& nums);
+
+TreeNode* sorted_array_to_BST_recursive_step(
+  std::vector<int>& nums,
+  const std::size_t start,
+  const std::size_t end);
+
+TreeNode* sorted_array_to_BST_iterative(std::vector<int>& nums);
 
 } // namespace BinarySearchTrees
 } // namespace DataStructures

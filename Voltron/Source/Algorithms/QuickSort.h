@@ -64,6 +64,27 @@ std::size_t partition_from_last(
   return j;
 }
 
+//------------------------------------------------------------------------------
+/// \url https://www.geeksforgeeks.org/quick-sort/
+//------------------------------------------------------------------------------
+
+// Utility function to swap 2 elements
+template <typename T>
+void swap_basic(T* a, T* b)
+{
+  T temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+template <typename T>
+void swap_basic(T& a, T& b)
+{
+  T temp = a;
+  a = b;
+  b = temp;
+}
+
 void quick_sort_from_first(
   std::vector<int>& a,
   const std::size_t left_index,
@@ -95,6 +116,54 @@ void quick_sort_from_last(TContainer& a)
   Details::quick_sort_from_last(a, 0, a.size() - 1);
 }
 
+template <class TContainer>
+ssize_t partition_from_last_basic(
+  TContainer& a,
+  const ssize_t left_index,
+  const ssize_t right_index)
+{
+  // pivot.
+  const auto pivot {a[right_index]};
+
+  // Need to start position left of left_index, but left_index can be 0.
+  //ssize_t i {static_cast<ssize_t>(left_index) - 1};
+  //ssize_t i {left_index - 1};
+  ssize_t i {left_index};
+
+  for (ssize_t j {left_index}; j < right_index; ++j)
+  {
+    // If current element is smaller than the pivot, swap with what's left.
+    if (a[j] < pivot)
+    {
+      //++i; // increment index of smaller element.
+      Details::swap_basic(a[i], a[j]);
+      ++i;
+    }
+  }
+
+  // Swap the pivot into position such that for all indices less than this
+  // position, all those elements are less than pivot.
+  //Details::swap_basic(a[i + 1], a[right_index]);
+  Details::swap_basic(a[i], a[right_index]);
+
+  //return i + 1;
+  return i;
+}
+
+template <typename TContainer>
+void quick_sort_basic(TContainer& a, const ssize_t l, const ssize_t r)
+{
+  if (l < r)
+  {
+    // pi is partitioning index, a[pi] is now at the right place.
+    ssize_t pi {partition_from_last_basic(a, l, r)};
+
+    // Separately sort elements before the partition about the pivot and after
+    // the pivot.
+    quick_sort_basic(a, l, pi - 1);
+    quick_sort_basic(a, pi + 1, r);
+  }
+}
 
 } // namespace QuickSort
 

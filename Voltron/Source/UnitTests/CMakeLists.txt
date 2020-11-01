@@ -69,11 +69,13 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/Memory/StdToAddress_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/Arrays_tests.cpp
-  DataStructures/BinaryTrees_tests.cpp
   DataStructures/BinarySearchTrees_tests.cpp
+  DataStructures/BinaryTrees_tests.cpp
   DataStructures/DataStructures_tests.cpp
+  DataStructures/HashSet_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists_tests.cpp
+  DataStructures/Queue_tests.cpp
   DeskCalculator/Token_tests.cpp
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp

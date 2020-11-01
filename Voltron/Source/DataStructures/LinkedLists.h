@@ -281,6 +281,353 @@ ListNode* merge_two_sorted_lists_by_splice(ListNode* l1, ListNode* l2);
 //------------------------------------------------------------------------------
 ListNode* merge_two_sorted_lists_simple(ListNode* l1, ListNode* l2);
 
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/linked-list/209/singly-linked-list/1287/
+//------------------------------------------------------------------------------
+template <typename T>
+struct SinglyListNode
+{
+  T value_;
+  SinglyListNode* next_;
+
+  SinglyListNode():
+    value_{},
+    next_{nullptr}
+  {}
+
+  explicit SinglyListNode(T value):
+    value_{value},
+    next_{nullptr}
+  {}
+
+  ~SinglyListNode()
+  {
+    // Recursively delete the rest of the list since it wasn't detached
+    // beforehand.
+    if (next_ != nullptr)
+    {
+      delete next_;
+    }
+  }
+};
+
+template <typename T>
+class SinglyLinkedList
+{
+  public:
+
+    SinglyLinkedList():
+      front_ptr_{nullptr},
+      back_ptr_{nullptr},
+      length_{0}
+    {}
+
+    ~SinglyLinkedList()
+    {
+      if (front_ptr_ != nullptr)
+      {
+        delete front_ptr_;
+      }
+    }
+
+    T get(const std::size_t index)
+    {
+      /*if (front_ptr_ == nullptr)
+      {
+        return -1;
+      }
+
+      if (index >= length_)
+      {
+        return -1;
+      }
+
+      SinglyListNode<T>* current_ptr {front_ptr_};
+
+      std::size_t i {0};
+
+      while (current_ptr != nullptr && i < index)
+      {
+        current_ptr = current_ptr->next_;
+        ++i;
+      }
+
+      if (current_ptr == nullptr)
+      {
+        return -1;
+      }
+
+      return current_ptr->value_;
+      */
+      if (index >= length_)
+      {
+        return -1;
+      }
+
+      SinglyListNode<T>* current_ptr {front_ptr_};
+
+      for (std::size_t i {0}; i < index; ++i)
+      {
+        current_ptr = current_ptr->next_;
+      }
+
+      return current_ptr->value_;
+    }
+
+    // Add a node of value val before the first element of the linked list.
+    // After the insertion, the new node will be the first node of the linked
+    // list.
+    void add_at_head(T val)
+    {
+      /*
+      if (front_ptr_ == nullptr && back_ptr_ == nullptr)
+      {
+        front_ptr_ = new SinglyListNode<T>{val};
+        back_ptr_ = front_ptr_;
+
+        ++length_;
+        return;
+      }
+
+      SinglyListNode<T>* new_head {new SinglyListNode<T>{val}};
+      new_head->next_ = front_ptr_;
+      front_ptr_ = new_head;
+      ++length_;
+      */
+
+      SinglyListNode<T>* new_head {new SinglyListNode<T>(val)};
+
+      if (front_ptr_ == nullptr)
+      {
+        front_ptr_ = new_head;
+
+        ++length_;
+        return;
+      }
+
+      SinglyListNode<T>* current_ptr {front_ptr_};
+      front_ptr_ = new_head;
+      front_ptr_->next_ = current_ptr;
+      ++length_;
+    }
+
+    // Append a node of value val to the last element of the linked list.
+    void add_at_tail(T val)
+    {
+      /*
+      if (front_ptr_ == nullptr && back_ptr_ == nullptr)
+      {
+        front_ptr_ = new SinglyListNode<T>{val};
+        back_ptr_ = front_ptr_;
+        ++length_;
+        return;
+      }
+
+      SinglyListNode<T>* new_tail {new SinglyListNode<T>{val}};
+
+      if (front_ptr_ == back_ptr_)
+      {
+        front_ptr_->next_ = new_tail;
+        back_ptr_ = new_tail;
+      }
+      else
+      {
+        back_ptr_->next_ = new_tail;
+        back_ptr_ = new_tail;
+      }
+
+      ++length_;
+      */
+
+      SinglyListNode<T>* new_tail {new SinglyListNode<T>(val)};
+
+      if (front_ptr_ == nullptr)
+      {
+        front_ptr_ = new_tail;
+
+        ++length_;
+        return;
+      }
+
+      SinglyListNode<T>* current_ptr {front_ptr_};
+
+      while (current_ptr->next_ != nullptr)
+      {
+        current_ptr = current_ptr->next_;
+      }
+
+      current_ptr->next_ = new_tail;
+
+      ++length_;
+      return;
+    }
+
+    // Add a node of value val before the index-th node in the linked list. If
+    // index equals to the length of the linked list, the node will be appended
+    // to the end of linked list.
+    void add_at_index(const std::size_t index, T val)
+    {
+      /*
+      if (length_ < index)
+      {
+        return;
+      }
+
+      if (length_ == index)
+      {
+        add_at_tail(val);
+        return;
+      }
+
+      if (index == 0)
+      {
+        add_at_head(val);
+        return;
+      }
+
+      SinglyListNode<T>* new_node {new SinglyListNode<T>{val}};
+
+      SinglyListNode<T>* current_ptr {front_ptr_};
+
+      std::size_t i {0};
+
+      while (i < (index- 1))
+      {
+        current_ptr = current_ptr->next_;
+        ++i;
+      }
+
+      SinglyListNode<T>* rest_of_list {current_ptr->next_};
+      new_node->next_ = rest_of_list;
+      current_ptr->next_ = new_node;
+      ++length_;
+      */
+
+      if (index > length_)
+      {
+        return;
+      }
+
+      if (length_ == index)
+      {
+        add_at_tail(val);
+        return;
+      }
+
+      if (index == 0)
+      {
+        add_at_head(val);
+        return;
+      }
+
+      SinglyListNode<T>* new_node {new SinglyListNode<T>{val}};
+
+      SinglyListNode<T>* current_ptr {front_ptr_};     
+
+      for (std::size_t i {0}; i < (index- 1); ++i)
+      {
+        current_ptr = current_ptr->next_;
+      }
+
+      SinglyListNode<T>* rest_of_list {current_ptr->next_};
+      current_ptr->next_ = new_node;
+      current_ptr->next_->next_ = rest_of_list;
+      ++length_;
+    }
+
+    // Delete the index-th node in the linked list, if the index is valid.
+    void delete_at_index(const std::size_t index)
+    {
+      /*
+      if (index >= length_)
+      {
+        return;
+      }
+
+      if (index == 0)
+      {
+        SinglyListNode<T>* rest_of_list {front_ptr_->next_};
+        front_ptr_->next_ = nullptr;
+        delete front_ptr_;
+        front_ptr_ = rest_of_list;
+        --length_;
+        return;
+      }
+
+      SinglyListNode<T>* current_ptr {front_ptr_};
+
+      std::size_t i {0};
+
+      while (i < (index - 1))
+      {
+        current_ptr = current_ptr->next_;
+        ++i;
+      }
+
+      SinglyListNode<T>* previous_ptr {current_ptr};
+      current_ptr = current_ptr->next_;
+      previous_ptr->next_ = nullptr;
+      SinglyListNode<T>* rest_of_list {current_ptr->next_};
+      current_ptr->next_ = nullptr;
+      delete current_ptr;
+      previous_ptr->next_ = rest_of_list;
+
+      --length_;
+      */
+      if (index >= length_)
+      {
+        return;
+      }
+
+      if (index == 0)
+      {
+        SinglyListNode<T>* rest_of_list {front_ptr_->next_};
+        front_ptr_->next_ = nullptr;
+        delete front_ptr_;
+        front_ptr_ = rest_of_list;
+        --length_;
+        return;
+      }
+
+      SinglyListNode<T>* current_ptr {front_ptr_};     
+
+      for (std::size_t i {0}; i < (index- 1); ++i)
+      {
+        current_ptr = current_ptr->next_;
+      }
+
+      // Includes element at position index.
+      SinglyListNode<T>* rest_of_list {current_ptr->next_};
+      current_ptr->next_ = rest_of_list->next_;
+      
+      rest_of_list->next_ = nullptr;
+      --length_;
+      // Free the memory of element at position index.
+      delete rest_of_list;
+    }
+
+    SinglyListNode<T>* front_ptr()
+    {
+      return front_ptr_;
+    }
+
+    SinglyListNode<T>* back_ptr()
+    {
+      return back_ptr_;
+    }
+
+    std::size_t length() const
+    {
+      return length_;
+    }
+
+  private:
+
+    SinglyListNode<T>* front_ptr_;
+    SinglyListNode<T>* back_ptr_;
+    std::size_t length_;
+};
+
 } // namespace LinkedLists
 } // namespace DataStructures
 

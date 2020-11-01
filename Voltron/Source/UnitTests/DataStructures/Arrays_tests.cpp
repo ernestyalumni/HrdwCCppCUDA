@@ -7,12 +7,23 @@
 #include <boost/test/unit_test.hpp>
 #include <vector>
 
+using DataStructures::Arrays::Array;
 using DataStructures::Arrays::LeetCode::check_if_double_exists;
+using DataStructures::Arrays::LeetCode::duplicate_zeros;
+using DataStructures::Arrays::LeetCode::duplicate_zeros_linear_time;
+using DataStructures::Arrays::LeetCode::duplicate_zeros_with_shift;
 using DataStructures::Arrays::LeetCode::fastest_find_sorted_arrays_median;
 using DataStructures::Arrays::LeetCode::fastest_replace_with_greatest_on_right;
+using DataStructures::Arrays::LeetCode::find_even_length_numbers;
+using DataStructures::Arrays::LeetCode::find_max_consecutive_ones;
 using DataStructures::Arrays::LeetCode::find_sorted_arrays_median;
 using DataStructures::Arrays::LeetCode::insertion_sort;
+using DataStructures::Arrays::LeetCode::merge_sorted_arrays;
+using DataStructures::Arrays::LeetCode::remove_duplicates;
+using DataStructures::Arrays::LeetCode::remove_element;
 using DataStructures::Arrays::LeetCode::replace_with_greatest_on_right;
+using DataStructures::Arrays::LeetCode::sorted_squares;
+using DataStructures::Arrays::LeetCode::sorted_squares_two_ptrs;
 using DataStructures::Arrays::LeetCode::valid_mountain_array;
 using DataStructures::Arrays::ResizeableArray;
 using DataStructures::Arrays::rotate_left;
@@ -96,6 +107,97 @@ BOOST_AUTO_TEST_CASE(ResizeableArrayResizes)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ResizeableArray_tests
+
+BOOST_AUTO_TEST_SUITE(Array_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(AllocationAndDeallocationOfNewArrays)
+{
+  size_t capacity {2};
+  int* items {new int[capacity]};
+  items[0] = 11;
+  items[1] = 22;
+  BOOST_TEST(items[0] == 11);
+  BOOST_TEST(items[1] == 22);
+
+  int* new_items {new int[capacity * 2]};
+
+  for (int index {0}; index < capacity; ++index)
+  {
+    new_items[index] = items[index];
+  }
+
+  BOOST_TEST(new_items[0] == 11);
+  BOOST_TEST(new_items[1] == 22);
+  new_items[2] = 33;
+  new_items[3] = 44;
+  BOOST_TEST(new_items[2] == 33);
+  BOOST_TEST(new_items[3] == 44);
+
+  delete[] items;
+
+  items = new_items;
+
+  BOOST_TEST(items[0] == 11);
+  BOOST_TEST(items[1] == 22);
+  BOOST_TEST(items[2] == 33);
+  BOOST_TEST(items[3] == 44);
+
+  delete[] items;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructArrayWithSize)
+{
+  Array<int> a {5};
+  BOOST_TEST(a.length() == 0);
+  BOOST_TEST(a.capacity() == 5);
+
+  for (int i {0}; i < a.capacity(); ++i)
+  {
+    a.insert(i * 11, i);
+    BOOST_TEST(a.length() == i + 1);
+  }
+
+  BOOST_TEST(a.length() == a.capacity());
+
+  for (int i {0}; i < a.capacity(); ++i)
+  {
+    BOOST_TEST(a[i] == i * 11);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(AddAndDeleteElementsAndCheck)
+{
+  Array<int> a {7};
+  BOOST_TEST(a.length() == 0);
+  BOOST_TEST(a.capacity() == 7);
+
+  for (int i {0}; i < a.capacity(); ++i)
+  {
+    a.insert(i * 11, i);
+    BOOST_TEST(a.length() == i + 1);
+  }
+
+  BOOST_TEST(a.length() == a.capacity());
+
+  a.delete_at_index(3);
+  BOOST_TEST(a.length() == a.capacity() - 1);
+  for (int i {0}; i < 3; ++i)
+  {
+    BOOST_TEST(a[i] == i * 11);
+  }
+  for (int i {3}; i < a.length(); ++i)
+  {
+    BOOST_TEST(a[i] == ((i + 1) * 11));
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // Array_tests
 
 BOOST_AUTO_TEST_SUITE(RotateLeft)
 
@@ -186,6 +288,130 @@ BOOST_AUTO_TEST_CASE(RotateLeftRotatesLeft)
 BOOST_AUTO_TEST_SUITE_END() // RotateLeft
 
 BOOST_AUTO_TEST_SUITE(LeetCode)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindMaxConsecutiveOnesFindsMaxLength)
+{
+  vector<int> example_1 {1, 1, 0, 1, 1, 1};
+
+  BOOST_TEST(find_max_consecutive_ones(example_1) == 3);
+
+  vector<int> run_code_example {1, 0, 1, 1, 0, 1};
+  BOOST_TEST(find_max_consecutive_ones(run_code_example) == 2);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindEvenLengthNumbersReturnsCorrectTotal)
+{
+  vector<int> nums1 {12, 345, 2, 6, 7896};
+
+  vector<int> nums2 {555, 901, 482, 1771};
+
+  BOOST_TEST(find_even_length_numbers(nums1) == 2);
+  BOOST_TEST(find_even_length_numbers(nums2) == 1);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortedSquaresSortsSquareOfArrayInPlace)
+{
+  vector<int> example_1_input {-4, -1, 0, 3, 10};
+  vector<int> example_2_input {-7, -3, 2, 3, 11};
+
+  BOOST_TEST((sorted_squares(example_1_input) ==
+    vector<int>{0, 1, 9, 16, 100}));
+  BOOST_TEST((sorted_squares(example_2_input) ==
+    vector<int>{4, 9, 9, 49, 121}));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortedSquaresTwoPtrsSortsSquareOfArrayInPlace)
+{
+  vector<int> example_1_input {-4, -1, 0, 3, 10};
+  vector<int> example_2_input {-7, -3, 2, 3, 11};
+
+  BOOST_TEST((sorted_squares_two_ptrs(example_1_input) ==
+    vector<int>{0, 1, 9, 16, 100}));
+  BOOST_TEST((sorted_squares_two_ptrs(example_2_input) ==
+    vector<int>{4, 9, 9, 49, 121}));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DuplicateZerosShiftsToRightAndDuplicateZeros)
+{
+  vector<int> example_1_input {1, 0, 2, 3, 0, 4, 5, 0};
+  vector<int> example_2_input {1, 2, 3};
+
+  duplicate_zeros(example_1_input);
+  duplicate_zeros(example_2_input);
+
+  BOOST_TEST((example_1_input == vector<int>{1, 0, 0, 2, 3, 0, 0, 4}));
+  BOOST_TEST((example_2_input == vector<int>{1, 2, 3}));
+
+  vector<int> test_case_a {0, 4, 1, 0, 0, 8, 0, 0, 3};
+  duplicate_zeros(test_case_a);
+  BOOST_TEST((test_case_a == vector<int>{0, 0, 4, 1, 0, 0, 0, 0, 8}));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DuplicateZerosLinearTimeShiftsToRightAndDuplicateZeros)
+{
+  vector<int> example_1_input {1, 0, 2, 3, 0, 4, 5, 0};
+  vector<int> example_2_input {1, 2, 3};
+
+  duplicate_zeros_linear_time(example_1_input);
+  duplicate_zeros_linear_time(example_2_input);
+
+  BOOST_TEST((example_1_input == vector<int>{1, 0, 0, 2, 3, 0, 0, 4}));
+  BOOST_TEST((example_2_input == vector<int>{1, 2, 3}));
+
+  vector<int> test_case_a {0, 4, 1, 0, 0, 8, 0, 0, 3};
+  duplicate_zeros_linear_time(test_case_a);
+  BOOST_TEST((test_case_a == vector<int>{0, 0, 4, 1, 0, 0, 0, 0, 8}));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DuplicateZerosWithShiftShiftsToRightAndDuplicateZeros)
+{
+  vector<int> example_1_input {1, 0, 2, 3, 0, 4, 5, 0};
+  vector<int> example_2_input {1, 2, 3};
+
+  duplicate_zeros_with_shift(example_1_input);
+  duplicate_zeros_with_shift(example_2_input);
+
+  BOOST_TEST((example_1_input == vector<int>{1, 0, 0, 2, 3, 0, 0, 4, 5, 0, 0}));
+  BOOST_TEST((example_2_input == vector<int>{1, 2, 3}));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MergeSortedArraysFromReverse)
+{
+  vector<int> example_nums1 {1, 2, 3, 0, 0, 0};
+  vector<int> example_nums2 {2, 5, 6};
+
+  merge_sorted_arrays(example_nums1, 3, example_nums2, 3);
+
+  BOOST_TEST((example_nums1 == vector<int>{1, 2, 2, 3, 5, 6}));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RemoveElementRemovesElementFromArray)
+{
+  vector<int> example_1_nums {3, 2, 2, 3};
+  vector<int> example_2_nums {0, 1, 2, 2, 3, 0, 4, 2};
+
+  BOOST_TEST(remove_element(example_1_nums, 3) == 2);
+  BOOST_TEST(remove_element(example_2_nums, 2) == 5);
+
+}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -344,6 +570,20 @@ BOOST_AUTO_TEST_CASE(
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RemoveDuplicatesWithTwoPointers)
+{
+  vector<int> example_1_nums {1, 1, 2};
+  vector<int> example_2_nums {0, 0, 1, 1, 1, 2, 2, 3, 3, 4};
+
+  BOOST_TEST(remove_duplicates(example_1_nums) == 2);
+  BOOST_TEST((example_1_nums == vector<int>{1, 2, 2}));
+
+  BOOST_TEST(remove_duplicates(example_2_nums) == 5);
+  BOOST_TEST((example_2_nums == vector<int>{0, 1, 2, 3, 4, 2, 2, 3, 3, 4}));
+
+}
 
 BOOST_AUTO_TEST_SUITE_END() // LeetCode
 

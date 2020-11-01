@@ -10,6 +10,8 @@
 #define DATA_STRUCTURES_ARRAYS_RESIZEABLE_ARRAY_H
 
 #include <algorithm> // std::copy
+#include <cstddef> // std::size_t
+#include <cstdlib> // EXIT_FAILURE // implementation defined.
 #include <iterator> // std::begin, std::end;
 #include <stdexcept> // std::runtime_error
 
@@ -110,6 +112,9 @@ class ResizeableArray
         //
         // C++11 way.
         //std::copy(std::begin(items_), std::end(items_), std::begin(new_copy));
+        
+        delete[] items_;
+
         // Items should now point to new_copy.
         items_ = new_copy;
 
@@ -121,6 +126,140 @@ class ResizeableArray
     int size_;
     int capacity_;
     //T items_[];
+};
+
+template <typename T>
+class Array
+{
+  public:
+
+    explicit Array(const std::size_t L):
+      items_{new T[L]},
+      length_{0},
+      capacity_{L}
+    {}
+
+    ~Array()
+    {
+      delete[] items_;
+    }
+
+    //--------------------------------------------------------------------------
+    /// \details Implementation of [] operator. This function must return a
+    /// reference as array element can be put on left side.
+    //--------------------------------------------------------------------------
+
+    T& operator[](const std::size_t index)
+    {
+      if (index >= length_)
+      {
+        throw std::runtime_error("Array index out of bound");
+        //return EXIT_FAILURE;
+      }
+
+      return items_[index];
+    }
+
+    T& at(const std::size_t index)
+    {
+      if (index >= length_)
+      {
+        throw std::runtime_error("Array index out of bound");
+      }
+      return items_[index];
+    }
+
+    void append(T item)
+    {
+      ensure_extra_capacity();
+      items_[length_] = item;
+      // Adding item to the end has grown the array by size 1.
+      ++length_;
+    }
+
+    void insert(T item, const std::size_t index)
+    {
+      if (index > length_)
+      {
+        throw std::runtime_error("Array index out of bound");
+      }
+
+      ensure_extra_capacity();
+
+      // Shift to the right.
+
+      // reverse_index = L, L - 1, ... 0 for index = 0, 1, ... L - 1, L.
+      std::size_t reverse_index {length_ - index};
+
+      for (std::size_t reverse_i {0}; reverse_i < reverse_index; ++reverse_i)
+      {
+        const std::size_t target_index {length_ - reverse_i};
+
+        items_[target_index] = items_[target_index - 1];
+      }
+
+      items_[index] = item;
+
+      // Inserting an item has grown the array by size 1.
+      ++length_;
+    }
+
+    void delete_at_index(const std::size_t index)
+    {
+      if (index >= length_)
+      {
+        throw std::runtime_error("Array index out of bound");
+      }
+
+      // Starting at index, shift each element 1 position to the left.
+      for (size_t i {index}; i < (length_ - 1); ++i)
+      {
+        items_[i] = items_[i + 1];
+      }
+
+      // Note that it's important to reduce the length of the array by 1.
+      // Otherwise, we'll lose consistency of the size. This length variable
+      // is the only thing controlling where new elements might get added.
+      --length_;
+    }
+
+    std::size_t length() const
+    {
+      return length_;
+    }
+
+    std::size_t capacity() const
+    {
+      return capacity_;
+    }
+
+  private:
+
+    void ensure_extra_capacity()
+    {
+      // Double the capacity once the number of elements, length_ filled up
+      // capacity.
+      if (length_ == capacity_)
+      {
+        T* new_items {new T[2 * capacity_]};
+
+        // Possible implementation of std::copy is similar.
+        for (size_t index {0}; index < length_; ++index)
+        {
+          new_items[index] = items_[index];
+        }
+
+        delete[] items_;
+
+        items_ = new_items;
+
+        capacity_ = 2 * capacity_;
+      }
+    }
+
+    T* items_;
+    std::size_t length_;
+    std::size_t capacity_;
 };
 
 // Left Rotations
@@ -137,6 +276,74 @@ std::vector<int> rotate_left(std::vector<int>& a, const int d);
 
 namespace LeetCode
 {
+
+//------------------------------------------------------------------------------
+/// \name Max Consecutive Ones
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/521/introduction/3238/
+/// \brief Given a binary array, find the maximum number of consecutive 1s in
+/// this array.
+//------------------------------------------------------------------------------
+int find_max_consecutive_ones(std::vector<int>& nums);
+
+//------------------------------------------------------------------------------
+/// \name Find Numbers with Even Number of Digits
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/521/introduction/3240/
+/// \brief Given an array of integers A sorted in non-decreasing order, return
+/// an array of squares of each number, also in sorted non-decreasing order.
+//------------------------------------------------------------------------------
+int find_even_length_numbers(std::vector<int>& nums);
+
+//------------------------------------------------------------------------------
+/// \name Squares of a Sorted Array
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/521/introduction/3237/
+/// \brief Given an array nums of integers, return how many of them contain an
+/// even number of digits.
+//------------------------------------------------------------------------------
+std::vector<int> sorted_squares(std::vector<int>& A);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/squares-of-a-sorted-array/solution/
+/// \brief Two pointer approach.
+/// \details Strategy: iterate over negative part in reverse, and positive part
+/// in forward direction. Then build a merged array from two sorted arrays by
+/// comparing element by element.
+//------------------------------------------------------------------------------
+std::vector<int> sorted_squares_two_ptrs(std::vector<int>& A);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/525/inserting-items-into-an-array/3245/
+/// \brief Duplicate Zeros.
+/// \details Given fixed length array arr of integers, duplicate each occurrence
+/// of zero, shifting remaining elements to right.
+//------------------------------------------------------------------------------
+void duplicate_zeros(std::vector<int>& arr);
+
+//------------------------------------------------------------------------------
+/// \date Oct 30, 03:30
+//------------------------------------------------------------------------------
+void duplicate_zeros_linear_time(std::vector<int>& arr);
+
+
+void duplicate_zeros_with_shift(std::vector<int>& arr);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/525/inserting-items-into-an-array/3253/
+/// \brief Merge Sorted Array.
+/// \details Given 2 sorted integer arrays nums1 and nums2, merge nums2 into
+/// nums2 as 1 sorted array.
+/// \date Oct 30, 07:46
+//------------------------------------------------------------------------------
+void merge_sorted_arrays(
+  std::vector<int>& nums1,
+  int m,
+  std::vector<int>& nums2,
+  int n);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/526/deleting-items-from-an-array/3247/
+/// \brief Remove Element.
+//------------------------------------------------------------------------------
+int remove_element(std::vector<int>& nums, int val);
 
 // cf. https://www.geeksforgeeks.org/insertion-sort/
 template <typename T>
@@ -160,22 +367,31 @@ void insertion_sort(std::vector<T>& v)
   }
 }
 
+//------------------------------------------------------------------------------
+/// \details Hint: On each step of loop, check if we've seen a double of the
+/// element, or half the element.
+//------------------------------------------------------------------------------
+
 bool check_if_double_exists(const std::vector<int>& arr);
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /// \details Important point:
 /// Linear search.
 ///
 /// \ref Array 101, Searching for items in an Array.
 /// Check If N and Its Double Exist. LeetCode.
 /// \url https://leetcode.com/explore/learn/card/fun-with-arrays/527/searching-for-items-in-an-array/3250/
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 class CheckIfDoubleExists
 {
   public:
 
     CheckIfDoubleExists();
 
+    //--------------------------------------------------------------------------
+    /// \details Fastest - do a double for loop, for loop over i and over j;
+    /// check all possible pairs for a double.
+    //--------------------------------------------------------------------------
     bool checkIfExist(std::vector<int>& arr);
 
   private:  
@@ -201,6 +417,14 @@ double find_sorted_arrays_median(
 double fastest_find_sorted_arrays_median(
   std::vector<int>& nums1,
   std::vector<int>& nums2);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/fun-with-arrays/526/deleting-items-from-an-array/3248/
+/// \brief Remove Duplicates from Sorted Array
+//------------------------------------------------------------------------------
+
+int remove_duplicates(std::vector<int>& nums);
+
 
 } // namespace LeetCode
 

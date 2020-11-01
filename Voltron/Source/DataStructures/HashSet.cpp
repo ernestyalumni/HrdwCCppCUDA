@@ -16,6 +16,9 @@ namespace DataStructures
 namespace HashTables
 {
 
+namespace HashSet
+{
+
 HashSet::HashSet() = default;
 
 void HashSet::add(int key)
@@ -54,7 +57,6 @@ int HashSet::hash(int key)
   return key % M;
 }
 
-
-
+} // namespace HashSet
 } // namespace HashTables
 } // namespace DataStructures

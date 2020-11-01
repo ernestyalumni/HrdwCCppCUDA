@@ -19,6 +19,11 @@ namespace Search
 namespace Details
 {
 
+//------------------------------------------------------------------------------
+/// \details If l - r odd so that total number of elements is even, midpoint is
+/// the position of the "farthest right" element in the "left" half.
+//------------------------------------------------------------------------------
+
 std::optional<std::size_t> calculate_midpoint(
   const std::size_t l,
   const std::size_t r);
@@ -149,6 +154,8 @@ std::optional<SizeT> binary_search(T x, T* a, SizeT n)
   return std::nullopt;
 }
 
+/// Runtime: 72 ms
+/// Memory Usage: 27.9 MB
 template <typename ContainerT, typename T>
 std::optional<std::size_t> binary_search_inclusive(
   const ContainerT& a,
@@ -191,6 +198,12 @@ std::optional<std::size_t> binary_search_inclusive(
 
   return std::nullopt;
 }
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/binary-search/125/template-i/950/
+//------------------------------------------------------------------------------
+
+int square_root(int x);
 
 } // namespace Search
 } // namespace Algorithms

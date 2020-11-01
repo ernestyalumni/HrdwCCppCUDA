@@ -386,6 +386,167 @@ int TreeWithCounter::find_kth_largest_element(const int k)
   */
 }
 
+// https://afteracademy.com/blog/kth-largest-element-in-a-bst
+int kth_largest_element_reverse_inorder_traversal(
+  TreeNode* node_ptr,
+  int k,
+  int& count)
+{
+  if (node_ptr == nullptr || count >= k)
+  {
+    return -1;
+  }
+  
+  // Traverse the right subtree first.
+  kth_largest_element_reverse_inorder_traversal(node_ptr->right_, k, count);
+
+  // Keep track of count of nodes visited so far in reverse inorder traversal.
+  ++count;
+
+  // Come back here, after traversing the right subtree, and visit the "root".
+  // We know that node_ptr is nonempty from above.
+  if (count == k)
+  {
+    return node_ptr->value_;
+  }
+
+  // Traverse the left subtree.
+  kth_largest_element_reverse_inorder_traversal(node_ptr->left_, k, count);
+}
+
+
+//------------------------------------------------------------------------------
+/// \name sorted_array_to_BST
+//------------------------------------------------------------------------------
+// cf. https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/143/appendix-height-balanced-bst/1015/discuss/35246/Accepted-C++-recursive-solution-within-a-single-method
+TreeNode* sorted_array_to_BST(std::vector<int>& nums)
+{
+  // Base cases.
+
+  if (nums.size() == 0)
+  {
+    return nullptr;
+  }
+
+  if (nums.size() == 1)
+  {
+    return new TreeNode(nums.at(0));
+  }
+
+  // If size is odd, then middle will be the index of the exact middle.
+  // If size is even, then middle will be the index of the first element on the
+  // "right" half.
+  const size_t middle {nums.size() / 2};
+
+  TreeNode* root_ptr {new TreeNode{nums.at(middle)}};
+
+  vector<int> left_integers {nums.begin(), nums.begin() + middle};
+  vector<int> right_integers {nums.begin() + middle + 1, nums.end()};
+
+  root_ptr->left_ = sorted_array_to_BST(left_integers);
+  root_ptr->right_ = sorted_array_to_BST(right_integers);
+
+  return root_ptr;
+}
+
+
+TreeNode* sorted_array_to_BST_recursive_step(
+  vector<int>& nums,
+  const size_t start,
+  const size_t end)
+{
+  // Base case
+  // Happens on "left" side when index end comes before start (still valid when
+  // start = end).
+  if (start > end)
+  {
+    return nullptr;
+  }
+
+  // Get the middle element and make it root.
+  // If (start + end) is odd, then mid is the most "right" element in "left"
+  // half.
+  // Total number of elements is even.
+  // If (start + end) is even, then mid is the index of the exact middle
+  // element.
+  // Total number of elements is odd.
+  size_t mid = (start + end) / 2; 
+
+  TreeNode* root {new TreeNode{nums.at(mid)}};
+
+  // Using index in inorder traversal, construct left and right subtrees.
+  root->left_ = sorted_array_to_BST_recursive_step(nums, start, mid - 1);
+  root->right_ = sorted_array_to_BST_recursive_step(nums, mid + 1, end);
+
+  return root;
+}
+
+// https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/143/appendix-height-balanced-bst/1015/discuss/35218/Java-Iterative-Solution
+TreeNode* sorted_array_to_BST_iterative(vector<int>& nums)
+{
+  if (nums.size() == 0)
+  {
+    return nullptr;
+  }
+
+  if (nums.size() == 1)
+  {
+    return new TreeNode(nums.at(0));
+  }
+
+  // 0 as a placeholder.
+  //TreeNode* root_ptr {new TreeNode{0}}
+  TreeNode* root_ptr {new TreeNode{}};
+
+  stack<TreeNode*> node_ptr_stack;
+  node_ptr_stack.push(root_ptr);
+  stack<size_t> left_index_stack;
+  left_index_stack.push(0); // beginning index of nums
+  stack<size_t> right_index_stack;
+  right_index_stack.push(nums.size());
+
+  while (!node_ptr_stack.empty())
+  {
+    TreeNode* current_node_ptr {node_ptr_stack.top()};
+    node_ptr_stack.pop();
+    size_t l {left_index_stack.top()};
+    left_index_stack.pop();
+    size_t r {right_index_stack.top()};
+    right_index_stack.pop();
+    // If r is the index of the "right" most element, and l is the index of the
+    // "left most" element,
+    // if r - l is even, total number of elements is odd, mid is index of
+    // exactly the middle element.
+    // If r - l odd, total number of elements is even, mid is the most "right"
+    // element of the "left" half.
+    size_t mid {l + (r- l) / 2}; // Avoid overflow.
+
+    current_node_ptr->value_ = nums.at(mid);
+
+    // Fails only when l = mid, when there are no more indices to consider in
+    // the next step.
+    if (l <= mid - 1)
+    {
+      current_node_ptr->left_ = new TreeNode{0};
+
+      node_ptr_stack.push(current_node_ptr->left_);
+      left_index_stack.push(l);
+      right_index_stack.push(mid - 1);
+    }
+
+    if (mid + 1 <= r)
+    {
+      current_node_ptr->right_ = new TreeNode{0};
+
+      node_ptr_stack.push(current_node_ptr->right_);
+      left_index_stack.push(mid + 1);
+      right_index_stack.push(r);
+    }
+  }
+
+  return root_ptr;
+}
+
 } // namespace BinarySearchTrees
 } // namespace DataStructures
 

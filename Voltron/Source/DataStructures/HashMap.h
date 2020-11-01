@@ -1,24 +1,22 @@
 //------------------------------------------------------------------------------
-/// \file HashSet.h
+/// \file HashMap.h
 /// \author Ernest Yeung
-/// \brief Classes and functions demonstrating Hash Set
-/// \details Hash set is 1 of the 2 different kinds of hash tables (other is
-/// hash map.)
+/// \brief Classes and functions demonstrating Hash Table
+/// \details Hash Map is 1 of the 2 different kinds of hash tables (other is
+/// hash set.)
 ///
-/// 1 of the implementations of a set data structure to store no repeated
-/// values.
-///
-/// \ref https://leetcode.com/explore/learn/card/hash-table/182/practical-applications/1139/
-//-----------------------------------------------------------------------------
-#ifndef DATA_STRUCTURES_HASH_TABLE_HASH_SET_H
-#define DATA_STRUCTURES_HASH_TABLE_HASH_SET_H
+//------------------------------------------------------------------------------
+#ifndef DATA_STRUCTURES_HASH_TABLES_HASH_MAP_H
+#define DATA_STRUCTURES_HASH_TABLES_HASH_MAP_H
 
 #include <algorithm> // std::copy
 #include <array>
+#include <cstddef> // std::size_t
 #include <iterator> // std::begin, std::end;
 #include <list>
 #include <memory>
 #include <stdexcept> // std::runtime_error
+#include <utility> // std::pair
 
 namespace DataStructures
 {
@@ -26,17 +24,134 @@ namespace DataStructures
 namespace HashTables
 {
 
-namespace HashSet
+namespace HashMap
 {
 
-class HashSet
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/learn/card/hash-table/182/practical-applications/1140/discuss/161483/C++-solution-using-vector-of-lists
+//------------------------------------------------------------------------------
+
+class HashMapListVector
+{
+  public:
+
+    static constexpr std::size_t default_length_ {10000};
+
+    // Initialize your data structure here.
+    HashMapListVector();
+
+    explicit HashMapListVector(const std::size_t bucket_number);
+
+    // Value will always be non-negative.
+    void put(int key, int value);
+
+    int hash_function(int key);
+
+    // Returns the value to which the specified key is mapped, or -1 if this map
+    // contains no mapping for the key.
+    int get(int key);
+
+    // Removes the mapping of the specified value key if this map contains a
+    // mapping for the key.
+    void remove(int key);
+
+  private:
+
+    std::vector<std::list<std::pair<int, int>>> buckets_;
+    std::size_t length_;
+};
+
+/*
+template<typename Entry, typename Key, typename Value>
+class HashMap
+{
+  public:
+
+    static constexpr std::size_t default_buckets_{10000};
+
+    // Initialize your data structure here.
+    HashMap():
+      buckets_(default_buckets_),
+      capacity_{default_buckets_},
+      length_{0}
+    {}
+
+    std::size_t length() const
+    {
+      return length_;
+    }
+
+    bool is_empty() const
+    {
+      return length() == 0;
+    }
+
+    // Value will always be non-negative.
+    void put(Key key, Value value)
+    {
+      std::size_t bucket_index {get_access_index(key)};
+      Entry<Key, Value> head {buckets.at(bucket_index)};
+
+      // If we can find the entry, update it. If we cannot find it, perform the
+      // insertion into the bucket.
+
+      Entry<Key, Value>* bucket_entry_found_ptr {
+        get_reference_if_key_exists(head, key)};
+
+      // Not found.
+      if (bucket_entry_found_ptr == nullptr)
+      {
+        Entry<Key, Value> new_entry {new Entry<Key, Value>(key, value)};
+
+        new_entry.next_ = &head;
+
+        buckets.at(bucketIndex) = new_entry;
+        ++length_;
+      }
+      else
+      {
+        bucket_entry_found_ptr->value_ = value;
+      }
+
+      // Here, we would have provision for resizing according to load factor.
+    }
+
+    Value get(Key key)
+    {
+      std::size_t bucket_index {get_access_index(key)};
+
+
+    }
+
+
+      std::vector<Entry<Key, Value>> buckets (default_buckets),
+
+
+
+    // Returns the value to which the specified key is mapped, or -1 if this map
+    // contains no mapping for the key.
+    Value get(Key key);
+
+    // Removes the mapping of the specified value key if this map contains a
+    // mapping for the key.
+    void remove(Key key);
+
+
+  private:
+
+
+};
+*/
+
+
+class HashMap
 {
   public:
 
     // Number of buckets
-    static constexpr int M {10000};
+    static constexpr int default_M {10000};
 
-    HashSet();
+    HashMap();
 
     void add(int key);
 
@@ -51,7 +166,7 @@ class HashSet
 
   private:
 
-    std::array<std::list<int>, M> chained_bucket_array_;
+    std::array<std::list<int>, default_M> chained_bucket_array_;
 };
 
 // cf. https://leetcode.com/explore/learn/card/hash-table/182/practical-applications/1139/discuss/179164/C++-97.97-without-a-massive-array-or-using-a-map-BST
@@ -379,8 +494,8 @@ class HashSetT
 
 };
 
-} // namespace HashSet
+} // namespace HashMap
 } // namespace HashTables
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_HASH_TABLE_HASH_SET_H
+#endif // DATA_STRUCTURES_HASH_TABLES_HASH_MAP_H

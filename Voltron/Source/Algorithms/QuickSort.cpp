@@ -41,7 +41,9 @@ std::size_t partition_from_first(
   {
     if (a.at(j) <= pivot_value)
     {
-      i++;
+      // Originally,
+      //i++;
+      ++i;
       // Swap a at i and j.
       std::swap(a[i], a[j]);
     }

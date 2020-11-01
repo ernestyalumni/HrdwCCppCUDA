@@ -14,11 +14,13 @@
 #include <string>
 #include <vector>
 
+using Algorithms::Search::Details::binary_search_iteration;
 using Algorithms::Search::Details::calculate_midpoint;
 using Algorithms::Search::Details::compare_partition;
-using Algorithms::Search::Details::binary_search_iteration;
 using Algorithms::Search::binary_search;
 using Algorithms::Search::binary_search_inclusive;
+using Algorithms::Search::square_root;
+using std::size_t;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Search_tests)
@@ -45,6 +47,14 @@ BOOST_AUTO_TEST_CASE(DemonstrateCalculateMidpoint)
     const auto result = calculate_midpoint(l, r);
     BOOST_TEST(result.has_value());
     BOOST_TEST(result.value() == 4);
+  }
+  {
+    size_t r {7};
+    size_t l {4};
+
+    const auto result = calculate_midpoint(l, r);
+    BOOST_TEST(result.has_value());
+    BOOST_TEST(result.value() == 5);
   }
 }
 
@@ -201,6 +211,18 @@ BOOST_AUTO_TEST_CASE(SameResultsWithBinarySearchInclusive)
     BOOST_TEST(*result == 7);
   }
 }
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareRootSearchesForAnswerInSearchSpace)
+{
+  BOOST_TEST(square_root(4) == 2);
+  BOOST_TEST(square_root(8) == 2);
+  BOOST_TEST(square_root(3) == 1);
+  BOOST_TEST(square_root(2) == 1);
+  BOOST_TEST(square_root(1024) == 32);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // Binary_Search_tests
 BOOST_AUTO_TEST_SUITE_END() // Search_tests
