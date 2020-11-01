@@ -1,5 +1,8 @@
 //------------------------------------------------------------------------------
 /// \file CStyleFileIO_main.cpp
+/// \details
+/// Example Compilation:
+/// g++ --std=2a CStyleFileIO_main.cpp -o CStyleFileIO_main
 //------------------------------------------------------------------------------
 
 #include <cstdio> // std::FILE, std::fopen, std::remove
@@ -10,6 +13,8 @@ using std::FILE;
 using std::fopen;
 using std::remove;
 using std::string;
+using std::fclose;
+
 
 int main()
 {
