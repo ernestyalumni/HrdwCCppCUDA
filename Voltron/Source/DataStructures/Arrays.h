@@ -139,6 +139,33 @@ class Array
       capacity_{L}
     {}
 
+    explicit Array(const std::size_t L, const std::size_t l):
+      items_{new T[L]},
+      length_{l},
+      capacity_{L}
+    {
+      if (l > L)
+      {
+        throw std::runtime_error("Array length Out of Bounds Exception");
+      }
+    }
+
+    explicit Array(const std::size_t L, const std::size_t l, T initial_value):
+      items_{new T[L]},
+      length_{l},
+      capacity_{L}
+    {
+      if (l > L)
+      {
+        throw std::runtime_error("Array length Out of Bounds Exception");
+      }
+
+      for (std::size_t i {0}; i < length_; ++i)
+      {
+        items_[i] = initial_value;
+      }
+    }
+
     ~Array()
     {
       delete[] items_;
@@ -175,6 +202,16 @@ class Array
       items_[length_] = item;
       // Adding item to the end has grown the array by size 1.
       ++length_;
+    }
+
+    T back() const
+    {
+      return items_[length() - 1];
+    }    
+
+    void pop_back()
+    {
+      --length_;
     }
 
     void insert(T item, const std::size_t index)
