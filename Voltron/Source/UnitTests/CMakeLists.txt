@@ -57,6 +57,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Span_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
   Cpp/Strings/StringView_tests.cpp
+  Cpp/Templates/FoldExpressions_tests.cpp
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
   Cpp/Templates/FunctionT/MoreMax_tests.cpp

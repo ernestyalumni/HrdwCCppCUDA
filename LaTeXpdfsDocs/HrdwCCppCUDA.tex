@@ -726,6 +726,13 @@ Programs \verb|./Cmemory/heapstack/Memleak.c| deliberately leaks memory by losin
 
 Note, generally, the OS delays real memory allocation until something is written into it, so program ends when virtual addresses run out of bounds (per process limits).  
 
+\subsection{Segmentation Fault}
+cf. \url{https://en.wikipedia.org/wiki/Segmentation_fault}
+Failure condition (i.e. fault) that software attempted to access restricted area of memory (memory access violation).
+
+"Segmentation" in this context refers to address space of a \emph{program}.
+
+
 \subsection{More Segmentation Faults}  
 
 The operating system (OS) is running the program (its instructions).  Only from the hardware, with \href{https://en.wikipedia.org/wiki/Memory_protection}{memory protection}, with the OS be signaled to a memory access violation, such as writing to read-only memory or writing outside of allotted-to-the-program memory, i.e. data segments.  On \verb|x86_64| computers, this \href{https://en.wikipedia.org/wiki/General_protection_fault}{general protection fault} is initiated by protection mechanisms from the hardware (processor).  From there, OS can signal the fault to the (running) process, and stop it (abnormal termination) and sometimes core dump. 
