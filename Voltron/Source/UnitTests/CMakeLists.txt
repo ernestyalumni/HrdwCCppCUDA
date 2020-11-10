@@ -66,6 +66,7 @@ ADD_EXECUTABLE(Check
   Cpp/Threads/Future_tests.cpp
   Cpp/Utilities/FunctionObject_test.cpp
   Cpp/Utilities/Memory/PointerWrappers_tests.cpp
+  Cpp/Utilities/Memory/SmartPointers_tests.cpp
   Cpp/Utilities/Memory/StdAddressOf_tests.cpp
   Cpp/Utilities/Memory/StdToAddress_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
