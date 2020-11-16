@@ -11,7 +11,9 @@
 #include <string>
 
 using Tools::TemporaryDirectory;
+using std::isprint;
 using std::snprintf;
+using std::string;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(IO)
@@ -97,12 +99,29 @@ BOOST_AUTO_TEST_SUITE_END() // CStyleStringReview
 /// the data.
 /// Format string consists of ordinary multibyte chars (except %), which are
 /// copied unchanged into output stream, and conversion specifications.
+///
+/// https://en.cppreference.com/w/cpp/io/c/fprintf
+/// Expected Argument Type, Length modifier, hh unsigned char, h unsigned short.
+/// x, X converts unsigned int into hexadecimal representation hhhh.
+/// For x conversion letters abcdef are used.
+/// For X conversion letters ABCDEF are used.
+/// Precision specifies min number of digits to appear. Default precision is 1.
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(SnPrintfWritesResultsToCharacterStringBuffer)
 {
+  const string saying {"Please believe it, if the mind can conceive it"};
+  string copy_saying {};
+  copy_saying.reserve(saying.size());
+
+  for (auto c : saying)
+  {
+    
+  }
+  
+
 }
 
 BOOST_AUTO_TEST_SUITE_END() // CStyleIO_tests 
