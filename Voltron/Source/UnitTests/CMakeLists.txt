@@ -53,6 +53,7 @@ ADD_EXECUTABLE(Check
   Cpp/Std/Algorithm/Algorithms_tests.cpp
   Cpp/Std/Algorithm/EqualAndMismatch_tests.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
+  Cpp/Std/Containers/SpanView_tests.cpp
   Cpp/Std/Pointers_tests.cpp
   Cpp/Std/Span_tests.cpp
   Cpp/Std/Utilities/Optional_tests.cpp
