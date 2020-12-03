@@ -19,6 +19,7 @@ ADD_EXECUTABLE(Check
   Algorithms/HackerRank/BitManipulationLonelyInteger_tests.cpp
   Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp
   Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
+  Algorithms/PeakFinding_tests.cpp
   Algorithms/Permutations_tests.cpp
   Algorithms/Recursion_tests.cpp
   Algorithms/Search_tests.cpp

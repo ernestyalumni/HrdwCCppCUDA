@@ -2,6 +2,14 @@
 @file test_with_pytest.py
 
 @ref https://realpython.com/pytest-python-testing/
+
+@details
+
+EXAMPLE USAGE:
+
+pytest ./test_with_pytest.py
+or
+pytest test_with_pytest.py
 """
 
 import pytest

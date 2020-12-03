@@ -1846,6 +1846,210 @@ They include the following cases:
 
 \part{Complexity, Data Structures, Algorithms}
 
+\section{Peak finding}
+
+cf. Demaine and Devadas (2011) \cite{DeDe2001}, \href{https://youtu.be/HtSuA80QTyo}{1. Algorithmic Thinking, Peak Finding, MIT OCW MIT 6.006 Introduction to Algorithms, Fall 2011}. 
+
+\subsection{1-dim. version of peak finding}
+
+Given an array $a= a_i$, $i=0, \dots N-1$, $a_i \in \mathbb{Z}$ ($a_i$ are numbers). Position $\alpha$ is a peak if $a_{\alpha} \geq a_{\alpha-1}$ and $a_{\alpha} \geq a_{\alpha + 1}$ \\
+
+In the case of the edges, look only to one side, e.g. $a_{N-1}$ is a peak iff $a_{N-2} \leq a_{N-1}$. \\
+
+\textbf{Problem}: Find \emph{a} peak if it exists. \\
+
+\subsubsection{Straightforward algorithm (peak finding, 1-dim.)}
+
+Start from left. \\
+
+In case of $\geq$, then, homework, argue that $\exists \,$ peak, always. (true). \\
+If case of $>$ can you make this argument? No. \\
+
+EY (20201201)
+\begin{proof}
+	\emph{Claim}: $\exists \, \alpha$ s.t. $a_{\alpha} \geq a_{\alpha - 1}$, and $a_{\alpha} \geq a_{\alpha + 1}$. \\
+	
+	Suppose, otherwise, $\forall  i$, $a_i < a_{i-1}$ or $a_i < a_{i+1}$. \\
+	If $a_0 \geq a_1$, then $i=0$ is where a peak is. Then $a_0 < a_1$, and $a_0$ cannot be a peak. \\
+	For $i=1$, since $a_1 > a_0$, then $a_1 <a_2$ (otherwise $i-1$ is where a peak is). \\
+
+	Suppose for $i - 1<n-1$, $a_{i-1} < a_i$. \\
+	Then $a_i < a_{i+1}$, otherwise $i$ is where a peak is. \\
+	Let $i= n-2$, $a_{n-2} < a_{n-1}$. Then $i = n-1$ is where $\exists \, $ a peak. \\
+	If $\nexists$ peak in $i< n-1$, then $\exists \, $ peak at $i=n-1$. 
+	
+	In the case of $a_0 = a_1 = \dots = a_{n-1}$, and definition of a peak was changed to the $>$ case, then $\nexists $ peak.
+\end{proof}
+
+You want to create algorithms that are general, so if problem definition changes on you, still have a starting point to attack 2nd. version of the problem.\\
+
+If peak at $n/2$, look at $n/2$ elements. \\
+Likewise, worst-case complexity $\theta(n)$. (you have to start from the left and go all the way to the right). \\
+(Big $O$ is upper bound) \\
+
+Try break up array into smaller arrays, divide and conquer. \\
+Divide \& conquer: Given array $a_i, \, i = 1, 2, \dots n$ \\
+Look at $n/2$ position. \\
+If $a[n/2] < a[n/2 - 1]$ then only look at left half $1\dots n/2 - 1$ to look for a peak. \\
+Else if $a[n/2] < a[n/2 + 1]$, then $\dots n/2 + 1 \dots n$ for a peak. \\
+else $n/2$ position is a peak. \\
+(Write an argument that this algorithm is correct). \\
+
+If we define $T(n) \equiv$ work this algorithm does on input of size $n$, then for this divide and conquer algorithm, 
+\[
+\begin{gathered}
+T(n) = T(n/2) + \theta(1) \\
+\theta(1) \text{ work of 2 comparisons looking left and right }
+\end{gathered}
+\]
+
+Base case: $T(1) = \theta(1)$
+\[
+\begin{gathered}
+T(n) = \underbrace{\theta(1) + \dots + \theta(1)}_{\log_2{n} \text{ times } } = \theta(\log_2{n})
+\end{gathered}
+\]
+
+\subsection{2-dim. version of peak finding}
+
+For $n$ rows, $m$ columns, $a_{ij}$ is a 2-dim. peak iff 
+\[
+a_{ij} \geq a_{ij-1}, a_{ij} \geq a_{ij+1}, a_{ij} \geq a_{i-1j}, a_{ij} \geq a_{i+1j}
+\]
+(Devadas originally wrote $a$ is a 2D peak iff)
+\[
+a \geq b, a \geq d, a\geq c, a\geq e
+\]
+
+
+\subsubsection{Greedy ascent algorithm} (picks a direction, and follows that direction to find peak)
+
+For any starting direction, starting pt. (e.g. middle), could touch many elements. 
+
+From worst case analysis, $O(nm)$ complexity.
+
+If we pick the middle column $j = m/2$. \\
+Find a 1D peak at $(i, j)$, \\
+Use $(i, j)$ as a start to find a 1D peak on row $i$, this is\\
+Incorrect. EY: might not have the "column" peak. \\
+Problem: 2D peak may not exist on row $i$.\\
+
+\subsubsection{Recursive version, Attempt 2}
+
+Pick middle column $j =m/2$. \\
+Find global max on column $j$ at $(i, j)$. \\
+Compare $(i, j -1), (i, j), (i, j +1)$. \\
+Pick left columns if $(i,j-1) > (i,j)$. Similarly for right column. \\
+
+If $(i,j) \geq (i,j-1)$, $(i, j+1) \Longrightarrow (i,j)$ is a 2D peak. \\
+Solve the new problem with half the number of columns. \\
+When you have a single oclumn, find the global max. $\Longleftarrow$ done. \\
+
+$T(n,m) = T(n,m/2) + \theta(n)$ $\Longleftarrow $ max: finding the global max. is for $\theta(n)$. \\
+$T(n, 1) = \theta(n)$ \\
+$T(n, m)  = \underbrace{\theta(n) + \dots + \theta(n)}_{\log_2{m} } = \theta(n\log_2{m})$ \\
+
+\section{Models of Computation, Document Distance}
+
+cf. \href{https://youtu.be/Zc54gFhdpLA}{2. Models of Computation, Document Distance}, MIT OCW, MIT 6.006 Introduction to Algorithms, Fall 2011.
+
+\subsection{Model of computation}
+
+Specifies \\
+- what operations an algorithm is allowed \\
+- cost (time, ...) of each operation. \\
+EY: When you add up all the costs of all operations, you get the running time.
+
+\subsubsection{Random Access Machine}
+
+cf. 1. Random Access Machine.
+
+EY: computer is to model of computation. \\
+Random Access Memory (RAM) is to Random Access Machine (RAM). \\
+RAM (memory) is essentially a giant array, access somewhere in constant time. \\
+-Random Access Memory (RAM) modeled by big array.  
+
+\begin{table}
+	\begin{tabular}{ l|l}
+		& word \\ \hline
+	0	&   \\ \hline
+	1	&   \\ \hline
+	2	&   \\ \hline
+	\vdots	&  \vdots \\  \hline
+	\end{tabular}
+\end{table}
+
+-in $\theta(1)$ time, can \\
+\begin{itemize}
+	\item load $O(1)$ words 
+	\item do $O(1)$ computations
+	\item start $O(1)$ words
+\end{itemize}
+-$O(1)$ registers.
+
+- \textbf{word} : $w$ bits (e.g. $w = 32$ or 64 bits).
+
+EY: If you can manipulate/compare words (e.g. peak finding), you can do comparisons in constant time $\theta(1)$. 
+
+$w$ should be \\
+$\log{(\text{ size of memory })}$ \\
+in order to specify index of the array. \\
+
+EY: $N \equiv$ size of memory. 
+\[
+\log_2{N} = y; 2^y = N
+\]
+If $y=1$, $0,1$ (total) indices to specify 2 addresses. $y=2$, specify 4 addresses. So $y$ bits, $y=\log_2{N}$ to specify $N$ addresses.
+
+\subsubsection{Pointer Machine}
+
+cf. 2. \textbf{Pointer Machine}.
+
+EY: in RAM, there's no dynamic allocation.
+
+Pointer Machine analogous to OOP. (object oriented programming)
+
+\begin{itemize}
+	\item dynamically allocated objects 
+	\item \emph{object} has $O(1)$ \emph{fields}
+	\item \emph{field} $=$ \emph{word} (e.g. \texttt{int}) \\
+	or \textbf{pointer} to object or null (None)
+\end{itemize}
+
+e.g. Linked Lists: \\
+
+val \\
+prev \\
+next \\
+
+where \\
+val $\equiv $ value \\
+prev $\equiv $ pointer to some previous node \\
+next $\equiv $ pointer to some next node \\
+
+
+\begin{tikzpicture}
+\matrix (m) [matrix of math nodes, row sep=0.8em, column sep=3.8em, minimum width=1.2em]
+{
+	\texttt{head} & & & \\
+	& N_1 & N_2 & \\
+	\texttt{null} & \texttt{prev} & \texttt{prev} & \\
+	& \texttt{next} & \texttt{next} & \texttt{null} \\
+};
+\path[->]
+(m-1-1) edge node [left] {} (m-2-2)
+(m-3-2) edge node [left] {} (m-3-1)
+(m-4-2) edge node [left] {} (m-2-3)
+(m-3-3) edge node [left] {} (m-2-2)
+(m-4-3) edge node [left] {} (m-4-4)
+;
+\end{tikzpicture} 
+
+
+You can implement this in the RAM model. A pointer becomes an index into this giant table. In C, do pointer arithmetic to get next element in RAM array.
+
+In this model (pointer machine) you can only follow pointers (costs constant time).
+
 \section{Complexity, Big-$O$}
 
 Also note, let $N = $ number of elements in a collection.
@@ -3541,6 +3745,9 @@ Total $ = 2 + 1 + 10 + 2 + 2 = 17$.
 
 What is the job function? Team? (e.g. what is the function of the team), last is SpaceX itself, What role does this team play in SpaceX?
 
+\section{How to do Code Review}
+
+cf. \href{https://ocw.mit.edu/ans7870/6/6.005/s16/classes/04-code-review/index.html}{6.005, Software Construction, MIT OCW, Reading 4: Code Review}
 
 \part{Embedded Systems}
 
@@ -3743,6 +3950,9 @@ Stanley B. Lippman, Jos\'{e}e Lajoie, Barbara E. Moo. \textbf{C++ Primer} (5th E
 
 \bibitem{ScMe2014}
 Scott Meyers.  \textbf{Effective Modern C++: 42 Specific Ways to Improve Your Use of C++11 and C++14}. 1st Edition.  O'Reilly Media; 1 edition (December 5, 2014)  ISBN-13: 978-1491903995
+
+\bibitem{DeDe2001}
+Erik Demaine, and Srini Devadas. 6.006 Introduction to Algorithms. Fall 2011. Massachusetts Institute of Technology: MIT OpenCourseWare, \url{https://ocw.mit.edu}. License: Creative Commons BY-NC-SA.
 
 \bibitem{Hard2018}
 Douglas Wilhelm Harder, M.Math. LEL. ECE 250 \emph{Algorithms and Data Structures}. Waterloo Engineering. Department of Electrical and Computer Engineering. University of Waterloo. Waterloo, Ontario, Canada. \url{https://ece.uwaterloo.ca/~dwharder/aads/Lecture_materials/#introduction-and-reveiew}
