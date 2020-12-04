@@ -12,6 +12,7 @@
 #include <algorithm> // std::copy
 #include <cstddef> // std::size_t
 #include <cstdlib> // EXIT_FAILURE // implementation defined.
+#include <initializer_list>
 #include <iterator> // std::begin, std::end;
 #include <stdexcept> // std::runtime_error
 
@@ -20,6 +21,60 @@ namespace DataStructures
 
 namespace Arrays
 {
+
+template <typename T>
+class CStyleDynamicArray
+{
+  public:
+
+    explicit CStyleDynamicArray(const std::size_t N):
+      data_{new T[N]{}},
+      size_{N}
+    {}
+
+    explicit CStyleDynamicArray(const std::initializer_list<T> list):
+      data_{new T[list.size()]},
+      size_{list.size()}
+    {
+      T* data_ptr {data_};
+
+      for (auto x : list)
+      {
+        *data_ptr = x;
+        ++data_ptr;
+      }
+    }
+
+    ~CStyleDynamicArray()
+    {
+      delete[] data_;
+    }
+
+    T operator[](const std::size_t index)
+    {
+      return data_[index];
+    }
+
+    //--------------------------------------------------------------------------
+    /// If an object instance is constructed as const, then this function
+    /// overload must be used (otherwise, the element can be accessed and set,
+    /// contradicting that it's const).
+    //--------------------------------------------------------------------------
+    T operator[](const std::size_t index) const
+    {
+      return data_[index];
+    }
+
+    std::size_t size() const
+    {
+      return size_;
+    }
+
+  private:
+
+    T* data_;
+    std::size_t size_;
+};
 
 //-----------------------------------------------------------------------------
 /// new and delete operators allocate memory for objects from a pool called

@@ -7,6 +7,7 @@
 #ifndef ALGORITHMS_PEAK_FINDING_H
 #define ALGORITHMS_PEAK_FINDING_H
 
+#include <cassert>
 #include <cstddef> // std::size_t
 #include <utility> // std::make_pair
 
@@ -42,6 +43,93 @@ std::size_t straightforward_search(ContainerT a)
 
   return -1;
 }
+
+/*
+template <typename ContainerT>
+std::size_t binary_search_iterative(
+  ContainerT a,
+  const std::size_t midpoint_index,
+  const std::size_t N)
+{
+  if (midpoint_index == 0)
+  {
+    return (a[midpoint_index] >= a[midpoint_index + 1]) ?
+      midpoint_index : midpoint_index + 1;
+  }
+
+  if (midpoint_index == N - 1)
+  {
+    return (a[midpoint_index] >= a[midpoint_index - 1]) ?
+      midpoint_index : midpoint_index - 1;
+  }
+
+  if (a[midpoint_index] >= a[midpoint_index - 1]) &&
+    (a[midpoint_index] >= a[midpoint_index + 1])
+  {
+    return midpoint_index;
+  }
+  else if (a[midpoint_index] < a[midpoint_index - 1])
+  {
+    return midpoint_index / 2;
+  }
+  // a[midpoint_index] < a[midpoint_index + 1]
+  else
+  {
+    // (N - midpoint_index - 1) is the number of elements to consider
+    return (N)
+  }
+}
+*/
+
+template <typename ContainerT>
+std::size_t binary_search_recursive(
+  ContainerT a,
+  const std::size_t start_index,
+  const std::size_t end_index,
+  const std::size_t N)
+{
+  assert(start_index <= end_index);
+  assert(start_index < N && end_index < N);
+
+  if (start_index == 0 && end_index == 1)
+  {
+    return a[start_index] >= a[end_index] ? start_index :
+      end_index < N ? end_index : -1;
+  }
+
+  if (start_index == N - 2 && end_index == N - 1)
+  {
+    return a[start_index] >= a[end_index] ? start_index : end_index;
+  }
+
+  const std::size_t midpoint_index {
+    (end_index - start_index) / 2 + start_index};
+
+  if (a[midpoint_index] >= a[midpoint_index - 1] &&
+    a[midpoint_index] >= a[midpoint_index + 1])
+  {
+    return midpoint_index;
+  }
+  else if (a[midpoint_index] < a[midpoint_index - 1])
+  {
+    return binary_search_recursive<ContainerT>(
+      a,
+      start_index,
+      midpoint_index - 1,
+      N);
+  }
+  // a[midpoint_index] < a[midpoint_index + 1]
+  else
+  {
+    return binary_search_recursive<ContainerT>(
+      a,
+      midpoint_index + 1,
+      end_index,
+      N);
+  }
+}
+
+
 
 } // namespace OneDim
 } // namespace PeakFinding

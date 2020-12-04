@@ -1895,6 +1895,22 @@ $T(n,m) = T(n,m/2) + \theta(n)$ $\Longleftarrow $ max: finding the global max. i
 $T(n, 1) = \theta(n)$ \\
 $T(n, m)  = \underbrace{\theta(n) + \dots + \theta(n)}_{\log_2{m} } = \theta(n\log_2{m})$ \\
 
+\section{Zero-based numbering vs. One-based numbering}
+
+0-based numbering vs. 1-based numbering \\
+Let $N=$ total number of elements \\
+
+$0,1, \dots N-1$ vs. $1, 2, \dots N$ \\
+$N = 2M$ if $N$ even, $N = 2M+1$, $M=0,1, \dots $ if $N$ odd. \\
+$\frac{N}{2} = M$ if $N$ even. \\
+$\frac{N}{2}$ is the first element of the "right" half in $0$-based numbering. \\
+$\frac{N}{2}$ is the "last", most "right" element of the "left" half in 1-based numbering. \\
+
+$\frac{N}{2} = M$ if $N$ odd as well, in both cases. \\
+$\frac{N}{2} = M$ is the middle element in 0-based numbering. \\
+$\frac{N}{2} = M$ is the "left" adjacent element to the middle in 1-based counting.
+
+
 \section{Models of Computation, Document Distance}
 
 cf. \href{https://youtu.be/Zc54gFhdpLA}{2. Models of Computation, Document Distance}, MIT OCW, MIT 6.006 Introduction to Algorithms, Fall 2011.
@@ -1921,9 +1937,11 @@ RAM (memory) is essentially a giant array, access somewhere in constant time. \\
 		0	&   \\ \hline
 		1	&   \\ \hline
 		2	&   \\ \hline
-		\vdots	&  \vdots \\  \hline
+		$\vdots$	&  $\vdots$ \\  \hline
 	\end{tabular}
 \end{table}
+
+
 
 -in $\theta(1)$ time, can \\
 \begin{itemize}
@@ -1995,6 +2013,73 @@ next $\equiv $ pointer to some next node \\
 You can implement this in the RAM model. A pointer becomes an index into this giant table. In C, do pointer arithmetic to get next element in RAM array.
 
 In this model (pointer machine) you can only follow pointers (costs constant time).
+
+Demaine: RAM model and pointer model are simple, load, store, follow pointer operations take $O(1)$ constant time.
+
+\subsubsection{Python Model}
+
+1. "list" $=$ array (list in Python is an array in RAM).
+
+\begin{verbatim}
+L[i] = L[j] + 5	
+\end{verbatim}
+(takes $O(1)$ time (in Python it's constant time, O(N) for access in a linked list)
+
+2. Object with O(1) attributes
+
+If object has 3 things or 10 things, constant time O(1) operations.
+
+e.g. \verb|x = x.next| is $\Longrightarrow$ O(1) time.
+
+For appending to a list \emph{in Python},
+
+\verb|L.append(x)|
+
+$\Longrightarrow$ \emph{table doubling} (lecture 9) (Python uses an algorithm called table doubling to do appending to a list) \\
+$\Longrightarrow$ it's O(1) time 
+
+Demaine: There's a lot more 
+
+\verb|L = L1 + L2| (concatenate 2 lists)
+
+$\equiv $ \verb| L = [] | \\
+
+\verb|for x in L1:| \quad \quad \, O(L1) time \\
+\verb|  L.append(x) // O(1) time|
+\verb|for x in L2:| \quad \quad \, O(L2) time \\
+\verb|  L.append(x) // O(1) time|
+
+In total, O(|L1| + |L2|) time.
+
+Demaine: don't think addition operation sign $+$ means O(1); L1, L2 are large data structures, not words.
+
+\verb|x in L| operation in Python is O(N) worse case is testing every element. \\
+
+\verb|len(L)| O(1): Python stores length of list in beginning. \\
+
+\verb|L.sort()| $\Longrightarrow$ $O(|L| \log{ |L|}) * $ time to compare 2 times.  (Lecture 3; Python uses comparison sort) \\
+
+Python dictionaries, \textbf{dict}.
+
+\verb|D[key]| $=$ val $\Longrightarrow$ O(1) (it's a hash table, lectures 8-10)
+
+Also, alternative syntax: \verb|key in D| \\
+
+Note from Demaine: it's constant time with high probability w.h.p. \\
+
+Demaine: \emph{If you write any code today, use dictionaries to solve problems.} \\
+
+\textbf{long} long integers in Python 3 version 2 (lecture 11) \\
+
+How long does it take to add longs? \\
+$x+ y$ \quad \, O(|x| + |y|) \quad \, (EY: think of addition in arithmetic and digit by digit addition)  \\
+
+$x * y$ \quad \, $O((|x| + |y|)^{\log_2{3}})$  Demaine's notation $lg \equiv \log_2$. Now $\lg{3} \approx 1.6$.
+
+\textbf{heapq} heap. Lecture 4.
+
+Demaine: There are more data structures online on the online notes.
+
 
 \section{Complexity, Big-$O$}
 
@@ -3684,6 +3769,196 @@ Total $ = 2 + 1 + 10 + 2 + 2 = 17$.
 \section{Suggested questions to ask the interviewer}
 
 What is the job function? Team? (e.g. what is the function of the team), last is SpaceX itself, What role does this team play in SpaceX?
+
+\section{How to do Code Review}
+
+cf. \href{https://ocw.mit.edu/ans7870/6/6.005/s16/classes/04-code-review/index.html}{6.005, Software Construction, MIT OCW, Reading 4: Code Review}
+
+Core review has 2 purposes:
+\begin{itemize}
+	\item \textbf{Improving the code}:
+	\begin{itemize}
+		\item Finding bugs,
+		\item anticipating possible bugs,
+		\item check clarity of the code,
+		\item check consistency with project's style standards
+	\end{itemize}
+	\item \textbf{Improving the programmer}: It's an important way programmers learn and teach each other, about new language features, changes in design of the project or its coding standards, and new techniques
+\end{itemize}
+
+Further \href{https://ocw.mit.edu/ans7870/6/6.005/s16/general/code-review.html}{Code review guidelines} for the MIT OCW 6.005 class:
+
+\subsection{Benefits of Code Review}
+
+\begin{itemize}
+	\item \emph{Reviewing helps find bugs}, complimentary to other techniques (static checking, testing, assertions, reasoning)
+	\item uncovers code that's confusing, poorly documented, unsafe, or otherwise not ready for maintenance or future change
+	\item spreads knowledge, allowing developers to learn from each other by explicit feedback and example 
+\end{itemize}
+
+\subsection{What to look for}
+
+\textbf{Bugs or potential bugs}
+\begin{itemize}
+	\item Repetitive code (remember DRY, Don't Repeat Yourself)
+	\item Disagreement between code and specification
+	\item Off-by-one erros
+	\item Global variables, and other too-large variable scopes
+	\item optimistic, undefensive programming
+	\item magic numberes
+	\item \dots (other)
+\end{itemize}
+
+\textbf{Unclear, messy code}
+\begin{itemize}
+	\item Bad variable or method names, 
+	\item Inconsistent indentation
+	\item Convoluted control flow (if and while statements) that could be simplified
+	\item Packing too much into one line of code, or too much into 1 method
+	\item Failing to comment obscure code.
+	\item Having too many trivial comments that are simply redundant with the code
+	\item Variables used for more than 1 purpose.
+	\item \dots (other)
+\end{itemize}
+
+\textbf{Misusing (or failing to use) essential design concepts}
+\begin{itemize}
+	\item Incomplete or incorrect specification for a method or class,
+	\item representation exposure for a data abstraction,
+	\item Immutable datatypes that expose themselves to change,
+	\item invariants that aren't really invariant, or aren't even stated
+\end{itemize}
+
+Positive comments are good; don't be afraid to make comments about things you really like, e.g.:
+\begin{itemize}
+	\item \textbf{Unusually elegant code}
+	\item \textbf{Creative solutions}
+	\item \textbf{Great design}
+\end{itemize}
+
+\subsubsection{Respect in Code Review}
+\textbf{Be polite}. \\
+\textbf{Be constructive}. Don't just criticize, but be helpful: point the way toward solutions.
+
+\subsubsection{Further FAQ}
+
+\textbf{I don't feel like I know anything. How can I possibly review other people's code?} You know more than you think you do. You can read for clarity, comment on places where the code is confusing, look for problems we read about, know about, talked about, etc.
+
+\textbf{What if I can't find anything wrong?} You can write a specific positive comment about something good.
+
+
+\subsubsection{On Style, Style Standards}
+
+cf. \href{https://ocw.mit.edu/ans7870/6/6.005/s16/classes/04-code-review/index.html}{Reading 4: Code Review, Software in 6.005}
+
+It's \emph{very} important to follow the conventions of the project. For instance, if you're the programmer who reformats every module you touch to match your personal style, your teammates will hate you, and rightly so. Be a team player.
+
+\subsubsection{Smelly Example 1}
+
+Programmers often describe bad code as having a "bad smell" that needs to be removed.
+
+\begin{verbatim}
+public static int dayOfYear(int month, int dayOfMonth, int year) {
+if (month == 2) {
+dayOfMonth += 31;
+} else if (month == 3) {
+dayOfMonth += 59;
+} else if (month == 4) {
+dayOfMonth += 90;
+} else if (month == 5) {
+dayOfMonth += 31 + 28 + 31 + 30;
+} else if (month == 6) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31;
+} else if (month == 7) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31 + 30;
+} else if (month == 8) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31 + 30 + 31;
+} else if (month == 9) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31;
+} else if (month == 10) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30;
+} else if (month == 11) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31;
+} else if (month == 12) {
+dayOfMonth += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 31;
+}
+return dayOfMonth;
+}
+\end{verbatim}
+
+\subsubsection{Don't Repeat Yourself}
+
+Duplicated code is a risk to safety. If you have identical or very similar code in 2 places, then the fundamental risk is there's a bug in both copies, and some maintainer fixes the bug in 1 place, but not the other.
+
+EY: If you're doing the same computation, with small change, consider defining it in another place.
+
+\subsubsection{Comments Where Needed}
+
+Good comments should make code easier to understand, safer from bugs (because important assumptions have been documented), and ready for change.
+
+One kind of crucial comment is a \emph{specification}, which appears above a method or above a class and documents the behavior of the method or class.
+
+Specifications document assumptions. 
+
+Another crucial comment is one that specifies the provenance or source of a piece of code that was copied or adapted from elsewhere. 
+
+For example,
+
+\begin{verbatim}
+// read a web page into a string
+// see http://stackoverflow.com/questions/4328711/read-url-to-string-in-few-lines-of-java-code
+String mitHomepage = new Scanner(new URL("http://www.mit.edu").openStream(), "UTF-8").useDelimiter("\\A").next();
+\end{verbatim}
+
+One reason for documenting sources is to avoid copyright violations. Also another is that code can fall out of date; a Stack Overflow answer from which code came from could have evolved significantly since the years it was first answered.
+
+Some comments are bad and unnecessary. For instance, direct transliterations of code into English do nothing to improve understanding., e.g.
+
+\begin{verbatim}
+while (n != 1) { // test whether n is 1   (don't write comments like this!)
+++i; // increment i
+l.add(n); // add n to l
+}
+\end{verbatim}
+
+But obscure code should get a comment:
+\begin{verbatim}
+sendMessage("as you wish"); // this basically says "I love you"
+\end{verbatim}
+
+\subsubsection{Fail Fast}
+
+\emph{Failing fast} means code should reveal its bugs as early as possible. 
+
+For instance, static checking fails faster than dynamic checking, and dynamic checking fails faster than producing a wrong answer that may corrupt subsequent computation.
+
+In the \verb|dayOfYear| example, there should be static checking of input arguments, because if you pass arguments in wrong order, it'll quietly return the wrong answer.
+
+\subsubsection{Avoid Magic Numbers}
+
+\subsubsection{Don't Use Global Variables}
+
+Avoid global variables.
+
+In Java, \verb|static| means there's a single instance of the variable.
+
+In general, change global variables into parameters and return values, or put them inside objects that you're calling methods on.
+
+
+\subsection{Summary for Code Review}
+
+\begin{itemize}
+	\item Don't Repeat Yourself (DRY)
+	\item Comments where needed
+	\item Fail fast
+	\item Avoid magic numbers
+	\item One purpose for each variable
+	\item Use good names
+	\item No global variables
+	\item Use whitespace for readability
+\end{itemize}
+
+
 
 \part{Embedded Systems}
 

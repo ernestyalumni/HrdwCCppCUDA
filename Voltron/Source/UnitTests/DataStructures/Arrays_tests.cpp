@@ -5,9 +5,11 @@
 #include "DataStructures/Arrays.h"
 
 #include <boost/test/unit_test.hpp>
+#include <cstddef> // std::size_t
 #include <vector>
 
 using DataStructures::Arrays::Array;
+using DataStructures::Arrays::CStyleDynamicArray;
 using DataStructures::Arrays::LeetCode::check_if_double_exists;
 using DataStructures::Arrays::LeetCode::duplicate_zeros;
 using DataStructures::Arrays::LeetCode::duplicate_zeros_linear_time;
@@ -27,10 +29,57 @@ using DataStructures::Arrays::LeetCode::sorted_squares_two_ptrs;
 using DataStructures::Arrays::LeetCode::valid_mountain_array;
 using DataStructures::Arrays::ResizeableArray;
 using DataStructures::Arrays::rotate_left;
+using std::size_t;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Arrays_tests)
+
+BOOST_AUTO_TEST_SUITE(CStyleDynamicArray_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithTotalNumberOfElementsUsingParentheses)
+{
+  constexpr size_t N {5};
+  CStyleDynamicArray<int> array (N);
+
+  BOOST_TEST(array.size() == N);
+
+  // Test that the ctor initializes all elements to 0; this is because the empty
+  // initializer list induces this.
+  for (size_t i {0}; i < N; ++i)
+  {
+    BOOST_TEST(array[i] == 0);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithInitializerListOf1Element)
+{
+  const CStyleDynamicArray<int> array {5};
+  BOOST_TEST(array.size() == 1);
+  BOOST_TEST(array[0] = 5);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithInitializerListOfMultipleElements)
+{
+  const CStyleDynamicArray<int> array {5, 2, 8, 4, 9, 1};
+  BOOST_TEST(array.size() == 6);
+  BOOST_TEST(array[0] = 5);
+  BOOST_TEST(array[1] = 2);
+  BOOST_TEST(array[2] = 8);
+  BOOST_TEST(array[3] = 4);
+  BOOST_TEST(array[4] = 9);
+  BOOST_TEST(array[5] = 1);
+}
+
+
+BOOST_AUTO_TEST_SUITE_END() // CStyleDynamicArray_tests
+
 BOOST_AUTO_TEST_SUITE(ResizeableArray_tests)
 
 //------------------------------------------------------------------------------

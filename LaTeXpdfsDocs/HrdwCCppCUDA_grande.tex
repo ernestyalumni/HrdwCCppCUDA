@@ -1949,6 +1949,21 @@ $T(n,m) = T(n,m/2) + \theta(n)$ $\Longleftarrow $ max: finding the global max. i
 $T(n, 1) = \theta(n)$ \\
 $T(n, m)  = \underbrace{\theta(n) + \dots + \theta(n)}_{\log_2{m} } = \theta(n\log_2{m})$ \\
 
+\section{Zero-based numbering vs. One-based numbering}
+
+0-based numbering vs. 1-based numbering \\
+Let $N=$ total number of elements \\
+
+$0,1, \dots N-1$ vs. $1, 2, \dots N$ \\
+$N = 2M$ if $N$ even, $N = 2M+1$, $M=0,1, \dots $ if $N$ odd. \\
+$\frac{N}{2} = M$ if $N$ even. \\
+$\frac{N}{2}$ is the first element of the "right" half in $0$-based numbering. \\
+$\frac{N}{2}$ is the "last", most "right" element of the "left" half in 1-based numbering. \\
+
+$\frac{N}{2} = M$ if $N$ odd as well, in both cases. \\
+$\frac{N}{2} = M$ is the middle element in 0-based numbering. \\
+$\frac{N}{2} = M$ is the "left" adjacent element to the middle in 1-based counting.
+
 \section{Models of Computation, Document Distance}
 
 cf. \href{https://youtu.be/Zc54gFhdpLA}{2. Models of Computation, Document Distance}, MIT OCW, MIT 6.006 Introduction to Algorithms, Fall 2011.
@@ -2049,6 +2064,72 @@ next $\equiv $ pointer to some next node \\
 You can implement this in the RAM model. A pointer becomes an index into this giant table. In C, do pointer arithmetic to get next element in RAM array.
 
 In this model (pointer machine) you can only follow pointers (costs constant time).
+
+Demaine: RAM model and pointer model are simple, load, store, follow pointer operations take $O(1)$ constant time.
+
+\subsubsection{Python Model}
+
+1. "list" $=$ array (list in Python is an array in RAM).
+
+\begin{verbatim}
+L[i] = L[j] + 5	
+\end{verbatim}
+(takes $O(1)$ time (in Python it's constant time, O(N) for access in a linked list)
+
+2. Object with O(1) attributes
+
+If object has 3 things or 10 things, constant time O(1) operations.
+
+e.g. \verb|x = x.next| is $\Longrightarrow$ O(1) time.
+
+For appending to a list \emph{in Python},
+
+\verb|L.append(x)|
+
+$\Longrightarrow$ \emph{table doubling} (lecture 9) (Python uses an algorithm called table doubling to do appending to a list) \\
+$\Longrightarrow$ it's O(1) time 
+
+Demaine: There's a lot more 
+
+\verb|L = L1 + L2| (concatenate 2 lists)
+
+$\equiv $ \verb| L = [] | \\
+
+\verb|for x in L1:| \quad \quad \, O(L1) time \\
+\verb|  L.append(x) // O(1) time|
+\verb|for x in L2:| \quad \quad \, O(L2) time \\
+\verb|  L.append(x) // O(1) time|
+
+In total, O(|L1| + |L2|) time.
+
+Demaine: don't think addition operation sign $+$ means O(1); L1, L2 are large data structures, not words.
+
+\verb|x in L| operation in Python is O(N) worse case is testing every element. \\
+
+\verb|len(L)| O(1): Python stores length of list in beginning. \\
+
+\verb|L.sort()| $\Longrightarrow$ $O(|L| \log{ |L|}) * $ time to compare 2 times.  (Lecture 3; Python uses comparison sort) \\
+
+Python dictionaries, \textbf{dict}.
+
+\verb|D[key]| $=$ val $\Longrightarrow$ O(1) (it's a hash table, lectures 8-10)
+
+Also, alternative syntax: \verb|key in D| \\
+
+Note from Demaine: it's constant time with high probability w.h.p. \\
+
+Demaine: \emph{If you write any code today, use dictionaries to solve problems.} \\
+
+\textbf{long} long integers in Python 3 version 2 (lecture 11) \\
+
+How long does it take to add longs? \\
+$x+ y$ \quad \, O(|x| + |y|) \quad \, (EY: think of addition in arithmetic and digit by digit addition)  \\
+
+$x * y$ \quad \, $O((|x| + |y|)^{\log_2{3}})$  Demaine's notation $lg \equiv \log_2$. Now $\lg{3} \approx 1.6$.
+
+\textbf{heapq} heap. Lecture 4.
+
+Demaine: There are more data structures online on the online notes.
 
 \section{Complexity, Big-$O$}
 
