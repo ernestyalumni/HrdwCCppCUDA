@@ -223,7 +223,6 @@ BOOST_AUTO_TEST_CASE(SquareRootSearchesForAnswerInSearchSpace)
   BOOST_TEST(square_root(1024) == 32);
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // Binary_Search_tests
 BOOST_AUTO_TEST_SUITE_END() // Search_tests
 BOOST_AUTO_TEST_SUITE_END() // Algorithms

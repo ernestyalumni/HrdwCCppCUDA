@@ -36,6 +36,20 @@ class PeakProblem(object):
         self.number_of_rows = number_of_rows
         self.number_of_columns = number_of_columns
 
+    def get(self, location):
+        """
+        @brief Returns value of the array at the given location, offset by the
+        coordinates (start_row, start_column).
+
+        RUNTIME: O(1)
+        """
+
+        (r, c) = location
+        if not (0 <= r and r < self.number_of_rows):
+            return 0
+        if not (0 <= c and c < self.number_of_columns):
+            return 0
+        return self.array[self.start_row + r][self.start_column + c]
 
 
 ################################################################################
