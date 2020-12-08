@@ -68,6 +68,8 @@ ADD_EXECUTABLE(Check
   Cpp/Templates/TypeUtilities_tests.cpp
   Cpp/Threads/Future_tests.cpp
   Cpp/Utilities/FunctionObject_test.cpp
+  Cpp/Utilities/FunctionObjects/Invoke_tests.cpp
+  Cpp/Utilities/FunctionObjects/References_tests.cpp
   Cpp/Utilities/Memory/PointerWrappers_tests.cpp
   Cpp/Utilities/Memory/SmartPointers_tests.cpp
   Cpp/Utilities/Memory/StdAddressOf_tests.cpp
@@ -88,6 +90,7 @@ ADD_EXECUTABLE(Check
   Entrevue/LeetCode/LeetCode_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
+  Hierarchy/RuleOf5_tests.cpp
   IO/Epoll/ControlInterestList_tests.cpp
   IO/Epoll/EpollFd_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp
