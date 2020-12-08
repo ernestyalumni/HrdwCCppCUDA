@@ -10,10 +10,13 @@
 #include <string>
 
 using Tools::TemporaryDirectory;
+using Tools::create_temporary_filename;
 using std::FILE;
 using std::fopen;
 using std::remove;
 using std::string;
+
+#include <iostream>
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(FileIO)
@@ -43,7 +46,9 @@ BOOST_AUTO_TEST_CASE(FopenOpensFileForWriting)
 {
   TemporaryDirectory temp_dir {"Temp"};
 
-  string test_full_path {temp_dir.path() + "test.txt"};
+  string test_full_path {create_temporary_filename(temp_dir, "test.txt")};
+
+  std::cout << "\n\n\n Fopen " << test_full_path << "\n\n\n";
 
   // "w", write, Create file for writing, if already exists, destroy contents,
   // if file doesn't exist, create new.

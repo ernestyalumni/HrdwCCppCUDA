@@ -103,6 +103,7 @@ ADD_EXECUTABLE(Check
   IPC/Sockets/Socket_tests.cpp
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
+  Tools/CaptureCout_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
   Utilities/BitsStream_tests.cpp
   Utilities/BooleanAlgebra_tests.cpp

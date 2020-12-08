@@ -75,7 +75,6 @@ BOOST_AUTO_TEST_CASE(ShowIntPrintsBytesToOutput)
   auto filename_and_fd =
     create_temporary_file_and_file_descriptor(temp_dir.path(), "temp");
 
-
   // cf. https://stackoverflow.com/questions/11110300/how-to-capture-output-of-printf
   std::fflush(stdout);
   int stdout_fd {::dup(STDOUT_FILENO)};

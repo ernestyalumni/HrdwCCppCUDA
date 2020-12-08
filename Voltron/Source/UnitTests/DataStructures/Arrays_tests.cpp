@@ -6,6 +6,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <cstddef> // std::size_t
+#include <iterator>
 #include <vector>
 
 using DataStructures::Arrays::Array;
@@ -29,6 +30,7 @@ using DataStructures::Arrays::LeetCode::sorted_squares_two_ptrs;
 using DataStructures::Arrays::LeetCode::valid_mountain_array;
 using DataStructures::Arrays::ResizeableArray;
 using DataStructures::Arrays::rotate_left;
+using std::begin;
 using std::size_t;
 using std::vector;
 
@@ -77,6 +79,33 @@ BOOST_AUTO_TEST_CASE(ConstructsWithInitializerListOfMultipleElements)
   BOOST_TEST(array[5] = 1);
 }
 
+#ifdef FORCE_COMPILE_ERRORS
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// cf. https://stackoverflow.com/questions/1164266/why-are-arrays-of-references-illegal
+// C++ Standard §8.3.2/4:
+// There shall be no references to references, no arrays of references, and no
+// pointers to references.
+// 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StoreReferencesInsideCStyleDynamicArray)
+{
+  CStyleDynamicArray<int&> x (10);
+
+  BOOST_TEST(true);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StdBeginCannotMakeAnIterator)
+{
+  CStyleDynamicArray<int> array {5, 2, 8, 4, 9, 1};
+
+  auto iter = begin(array);
+}
+
+#endif // FORCE_COMPILE_ERRORS
 
 BOOST_AUTO_TEST_SUITE_END() // CStyleDynamicArray_tests
 

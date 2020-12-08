@@ -49,4 +49,12 @@ std::string TemporaryDirectory::make_temporary_directory(
   return modified_template;
 }
 
+string create_temporary_filename(
+  const TemporaryDirectory& temp_dir,
+  const string& filename)
+{
+  return temp_dir.path() + "/" + filename;
+}
+
+
 } // namespace Tools

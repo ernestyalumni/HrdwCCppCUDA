@@ -6,8 +6,8 @@
 /// \ref https://youtu.be/NLAzwv4D5iI
 /// \ref HackerRank Data Structures: Array vs ArrayList
 //-----------------------------------------------------------------------------
-#ifndef DATA_STRUCTURES_ARRAYS_RESIZEABLE_ARRAY_H
-#define DATA_STRUCTURES_ARRAYS_RESIZEABLE_ARRAY_H
+#ifndef DATA_STRUCTURES_ARRAYS_H
+#define DATA_STRUCTURES_ARRAYS_H
 
 #include <algorithm> // std::copy
 #include <cstddef> // std::size_t
@@ -523,4 +523,4 @@ int remove_duplicates(std::vector<int>& nums);
 } // namespace Arrays
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_ARRAYS_RESIZEABLE_ARRAY_H
+#endif // DATA_STRUCTURES_ARRAYS_H

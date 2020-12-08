@@ -1,4 +1,5 @@
 ADD_LIBRARY(Tools
+  CaptureCout.cpp
   TemporaryDirectory.cpp)
 
 TARGET_LINK_LIBRARIES(Tools
