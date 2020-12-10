@@ -48,8 +48,6 @@ BOOST_AUTO_TEST_CASE(FopenOpensFileForWriting)
 
   string test_full_path {create_temporary_filename(temp_dir, "test.txt")};
 
-  std::cout << "\n\n\n Fopen " << test_full_path << "\n\n\n";
-
   // "w", write, Create file for writing, if already exists, destroy contents,
   // if file doesn't exist, create new.
   FILE* fp {fopen(test_full_path.data(), "w")};

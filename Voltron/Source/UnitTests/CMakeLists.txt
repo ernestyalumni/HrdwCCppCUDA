@@ -105,6 +105,7 @@ ADD_EXECUTABLE(Check
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
   Tools/CaptureCout_tests.cpp
+  Tools/Filepaths_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
   Utilities/BitsStream_tests.cpp
   Utilities/BooleanAlgebra_tests.cpp
