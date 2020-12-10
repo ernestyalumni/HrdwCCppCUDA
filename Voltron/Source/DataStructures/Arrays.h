@@ -70,6 +70,18 @@ class CStyleDynamicArray
       return size_;
     }
 
+    // Returns an iterator to the beginning.
+    constexpr T* begin()
+    {
+      return data_;
+    }
+
+    // Returns an iterator to the end.
+    constexpr T* end()
+    {
+      return data_ + size_;
+    }
+
   private:
 
     T* data_;
