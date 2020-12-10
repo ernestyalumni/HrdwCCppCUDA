@@ -1127,6 +1127,11 @@ Diamond problem occurs when 2 superclasses of a class have a common base class. 
 
 \textbf{Polymorphism, TODO}
 
+cf. Vandevoorde, Josuttis, and Gregor (2017) \cite{VJG2017}, Ch. 22, pp. 517
+
+Ch. 18 had described static polymorphism (templates), and dynamic polymorphism (inheritance, virtual functions). Tradeoffs: static polymorphism provides same performance as nonpolymorphic code, but set of types that can be used at run time is fixed at compile time. Dynamic polymorphism via inheritance allows a single version of the polymorphic function to work with types not known at time it's compiled, but it's less flexible because types must inherit from a common base class.
+
+Ch. 22 - how to have smaller executable code size and (almost) entirely compiled nature of dynamic polymorphism, along with interface flexibility of static polymorphism that allows, for example, built-in types to work seemlessly.
 
 
 

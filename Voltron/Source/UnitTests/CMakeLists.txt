@@ -40,17 +40,18 @@ ADD_EXECUTABLE(Check
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
   Cpp/Closure_tests.cpp
+  Cpp/Enumeration_tests.cpp
+  Cpp/FileIO/CStyleFileIO_tests.cpp
+  Cpp/FileIO/GetCurrentDirectory_tests.cpp
   Cpp/Functions_tests.cpp
+  Cpp/IO/IO_tests.cpp
+  Cpp/IO/Streams_tests.cpp
   Cpp/Keywords_tests.cpp
   Cpp/MainCommandLineArguments_tests.cpp
   Cpp/Numerics/BitCast_tests.cpp
+  Cpp/Operations_test.cpp
   Cpp/PointersArraysReferences_tests.cpp
   Cpp/Recursion_tests.cpp
-  Cpp/IO/IO_tests.cpp
-  Cpp/IO/Streams_tests.cpp
-  Cpp/Enumeration_tests.cpp
-  Cpp/FileIO/CStyleFileIO_tests.cpp
-  Cpp/Operations_test.cpp
   Cpp/Std/Algorithm/Algorithms_tests.cpp
   Cpp/Std/Algorithm/EqualAndMismatch_tests.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
