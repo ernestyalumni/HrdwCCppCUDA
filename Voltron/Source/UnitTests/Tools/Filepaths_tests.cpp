@@ -2,12 +2,14 @@
 /// \file Filepaths_tests.cpp
 //------------------------------------------------------------------------------
 #include "Tools/Filepaths.h"
+#include "Tools/TemporaryDirectory.h"
 
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
 
 namespace fs = std::filesystem;
 
+using Tools::TemporaryDirectory;
 using Tools::get_source_directory;
 using Tools::get_data_directory;
 
@@ -46,6 +48,8 @@ BOOST_AUTO_TEST_CASE(GetDataDirectoryGetsDataDirectory)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(PathCanBeUsedToCheckFileExistence)
 {
+  TemporaryDirectory temp_dir {"/temp"};
+  
 
 }
 

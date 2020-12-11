@@ -1,30 +1,35 @@
 //------------------------------------------------------------------------------
-/// \file PeakFinding_tests.cpp
+/// \file LoadPeakProblem_tests.cpp
+/// \brief Load and parse peak problem tests.
 //------------------------------------------------------------------------------
-#include "Algorithms/PeakFinding.h"
+#include "Tools/Filepaths.h"
 
 #include <boost/test/unit_test.hpp>
-#include <vector>
+#include <fstream>
 
-using Algorithms::PeakFinding::OneDim::straightforward_search;
-using std::vector;
+using Tools::get_data_directory;
+using std::ifstream;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
-BOOST_AUTO_TEST_SUITE(PeakFinding_tests)
-BOOST_AUTO_TEST_SUITE(OneDim_tests)
+BOOST_AUTO_TEST_SUITE(PeakFinding)
+BOOST_AUTO_TEST_SUITE(LoadPeakProblem_tests)
 
 // cf. https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/lecture-videos/MIT6_006F11_lec01.pdf
 
-const vector<int> a {6, 7, 4, 3, 2, 1, 4, 5};
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DemonstrateStraightforwardAlgorithm)
+BOOST_AUTO_TEST_CASE(PutProblemFileIntoInputFileStream)
 {
-  BOOST_TEST(straightforward_search(a.data(), a.size()) == a.size() - 1);
-  BOOST_TEST(straightforward_search(a) == a.size() - 1); 
+  const auto file_path = get_data_directory().concat(
+    "/Algorithms/PeakFinding/problem.py");
+
+  ifstream input_file_stream {file_path};
+
+  BOOST_TEST(true);
+
 }
 
-BOOST_AUTO_TEST_SUITE_END() // OneDim_tests
-BOOST_AUTO_TEST_SUITE_END() // PeakFinding_tests
+BOOST_AUTO_TEST_SUITE_END() // LoadPeakProblem_tests
+BOOST_AUTO_TEST_SUITE_END() // PeakFinding
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
