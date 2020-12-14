@@ -1,4 +1,5 @@
 ADD_SUBDIRECTORY(Bits)
+ADD_SUBDIRECTORY(PeakFinding)
 
 ADD_LIBRARY(Algorithms
   BinarySearch.cpp
