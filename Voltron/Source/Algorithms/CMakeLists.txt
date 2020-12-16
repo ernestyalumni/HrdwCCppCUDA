@@ -6,6 +6,7 @@ ADD_LIBRARY(Algorithms
   Bits/OnesComplementSum.cpp
   Bits/PrintBytes.cpp
   PeakFinding.cpp
+  PeakFinding/LoadPeakProblem.cpp
   Permutations.cpp
   Recursion.cpp
   QuickSort.cpp)

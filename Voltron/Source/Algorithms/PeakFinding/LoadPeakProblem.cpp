@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-/// \file LoadPeakProblem.h
+/// \file LoadPeakProblem.cpp
 /// \author Ernest Yeung
 /// \email  ernestyalumni@gmail.com
 /// \brief Load the 2-dim. problem for peak finding of Problem Set 1, MIT 6.006.
