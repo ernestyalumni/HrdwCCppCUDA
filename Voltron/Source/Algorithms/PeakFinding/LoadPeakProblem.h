@@ -8,8 +8,9 @@
 #ifndef ALGORITHMS_PEAK_FINDING_LOAD_PEAK_PROBLEM_H
 #define ALGORITHMS_PEAK_FINDING_LOAD_PEAK_PROBLEM_H
 
-#include <cstdint>
-#include <vector>
+#include <cstddef> // std::size_t
+#include <optional>
+#include <string>
 
 namespace Algorithms
 {
@@ -22,10 +23,16 @@ class LoadPeakProblem
 
     LoadPeakProblem();
 
+    bool first_equal_sign_found() const
+    {
+    	return first_equal_sign_found_;
+    }
+
   protected:
 
     //parse_equal_sign
 
+  	std::optional<std::size_t> parse_first_equal_sign(const std::string& input_line);
 
   private:
 

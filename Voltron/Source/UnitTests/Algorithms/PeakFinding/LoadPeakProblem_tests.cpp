@@ -3,6 +3,7 @@
 /// \brief Load and parse peak problem tests.
 //------------------------------------------------------------------------------
 #include "Tools/Filepaths.h"
+#include "Algorithms/PeakFinding/LoadPeakProblem.h"
 
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
@@ -13,9 +14,16 @@
 
 namespace fs = std::filesystem;
 
+using Algorithms::PeakFinding::LoadPeakProblem;
 using Tools::get_data_directory;
 using std::ifstream;
 using std::string;
+
+class TestLoadPeakProblem : public LoadPeakProblem
+{
+  public:
+    using LoadPeakProblem::parse_first_equal_sign;
+};
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(PeakFinding)
@@ -30,6 +38,8 @@ const string problem_path {"/Algorithms/PeakFinding/problem.py"};
 BOOST_AUTO_TEST_CASE(PutProblemFileIntoInputFileStream)
 {
   const auto file_path = get_data_directory().concat(problem_path);
+
+  TestLoadPeakProblem loader;
 
   if (fs::exists(fs::path(file_path)))
   {
@@ -57,7 +67,14 @@ BOOST_AUTO_TEST_CASE(PutProblemFileIntoInputFileStream)
     {
       std::cout << " temp_line: " << temp_line << "\n";
 
-      std::cout << temp_line.find('=') << "\n";
+      const auto result = loader.parse_first_equal_sign(temp_line);
+
+      if (result)
+      {
+        std::cout << *result << "\n";
+      }
+
+
 
     }
 
