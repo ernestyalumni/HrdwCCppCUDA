@@ -1,0 +1,22 @@
+# @file .gitignore
+# cf. https://www.pluralsight.com/guides/how-to-use-gitignore-file
+
+# Literal File Names
+# ignore any files named .DS_Store
+.DS_Store
+
+# Python
+# https://github.com/github/gitignore/blob/master/Python.gitignore
+
+# Byte-compiled / optimized / DLL files
+
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.venv
+venv/
+
