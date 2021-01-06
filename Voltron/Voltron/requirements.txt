@@ -1,0 +1,7 @@
+###### Requirements without Version Specifiers ######
+
+numpy
+pytest
+
+###### Requirements with Version Specifiers ######
+
