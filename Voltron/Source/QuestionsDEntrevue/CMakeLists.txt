@@ -13,5 +13,6 @@ SET_TARGET_PROPERTIES(WarmUpChallenges
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/")
 
 ADD_LIBRARY(QuestionsDEntrevue
-  LeetCode/LeetCodeQuestions.cpp)
+  LeetCode/LeetCodeQuestions.cpp
+  PassionneDordinateurRang.cpp)
 

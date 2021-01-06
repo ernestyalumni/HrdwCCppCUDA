@@ -22,7 +22,9 @@ using std::string;
 class TestLoadPeakProblem : public LoadPeakProblem
 {
   public:
+    using LoadPeakProblem::get_row_boundaries;
     using LoadPeakProblem::parse_first_equal_sign;
+    using LoadPeakProblem::simple_parse_row;
 };
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
@@ -46,6 +48,8 @@ BOOST_AUTO_TEST_CASE(PutProblemFileIntoInputFileStream)
     ifstream input_file_stream {file_path};
 
     BOOST_TEST_REQUIRE(static_cast<bool>(input_file_stream));
+
+    /*
 
     string line;
 
@@ -74,16 +78,43 @@ BOOST_AUTO_TEST_CASE(PutProblemFileIntoInputFileStream)
         std::cout << *result << "\n";
       }
 
+      if (!result)
+      {
+        const auto resulting_boundaries = loader.get_row_boundaries(temp_line);
 
+        if (resulting_boundaries)
+        {
+          const auto parsed_result =
+            loader.simple_parse_row(temp_line, *resulting_boundaries);
 
+          for (auto ij : parsed_result)
+          {
+            std::cout << ij;
+          }
+
+          std::cout << "\n";
+        }
+      }
     }
+    */
 
+    loader.parse(input_file_stream);
 
+    BOOST_TEST(loader.number_of_rows() == 11);
+    BOOST_TEST(loader.ith_row_size(0) == 11);
+
+    BOOST_TEST(loader.get(0, 0) == 4);
+    BOOST_TEST(loader.get(0, 1) == 5);
+    BOOST_TEST(loader.get(0, 2) == 6);
+    BOOST_TEST(loader.get(1, 0) == 5);
+    BOOST_TEST(loader.get(1, 1) == 6);
+    BOOST_TEST(loader.get(1, 2) == 7);
+    BOOST_TEST(loader.get(2, 0) == 6);
+    BOOST_TEST(loader.get(2, 1) == 7);
+    BOOST_TEST(loader.get(2, 2) == 8);
   }
 
-
   BOOST_TEST(true);
-
 }
 
 BOOST_AUTO_TEST_SUITE_END() // LoadPeakProblem_tests
