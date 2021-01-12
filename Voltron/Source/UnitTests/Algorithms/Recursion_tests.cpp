@@ -8,6 +8,7 @@
 
 using Algorithms::Recursion::Fibonacci::fib_recursive;
 using Algorithms::Recursion::Fibonacci::fib_with_table;
+using Algorithms::Recursion::TowersOfHanoi::towers;
 using Algorithms::Recursion::HackerRank::CrosswordPuzzle::split_string;
 using
   Algorithms::Recursion::HackerRank::DavisStaircases::
@@ -35,6 +36,20 @@ BOOST_AUTO_TEST_CASE(FibonacciFunctionsComputeFibonacciNumbers)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Fibonacci_tests
+
+BOOST_AUTO_TEST_SUITE(TowersOfHanoi_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TowersReturnsStringOfMoves)
+{ 
+  const string result {towers(2, "P1", "P2", "P3")};  
+
+  BOOST_TEST(
+    result == "move from P1 to P3move from P1 to P2move from P3 to P2");
+}
+
+BOOST_AUTO_TEST_SUITE_END() // TowersOfHanoi_tests
 
 BOOST_AUTO_TEST_SUITE(HackerRank_tests)
 

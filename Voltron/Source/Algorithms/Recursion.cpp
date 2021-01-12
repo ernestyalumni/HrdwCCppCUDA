@@ -7,6 +7,7 @@
 #include "Recursion.h"
 
 #include <array>
+#include <cassert>
 #include <cstddef> // std::size_t
 #include <numeric> // std::accumulate
 #include <string>
@@ -25,6 +26,40 @@ namespace Algorithms
 {
 namespace Recursion
 {
+
+namespace TowersOfHanoi
+{
+
+string print_move(const string& frm, const string& to)
+{
+  return "move from " + frm + " to " + to;
+}
+
+string towers(
+  const int n,
+  const string& frm,
+  const string& to,
+  const string& spare)
+{
+  assert(n >= 1);
+
+  string result;
+
+  if (n == 1)
+  {
+    return print_move(frm, to);
+  }
+  else
+  {
+    result += towers(n - 1, frm, spare, to);
+    result += towers(1, frm, to, spare);
+    result += towers(n - 1, spare, to, frm);
+  }
+
+  return result;
+}
+
+} // namespace TowersOfHanoi
 
 namespace HackerRank
 {

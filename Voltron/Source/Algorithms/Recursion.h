@@ -61,6 +61,24 @@ constexpr int fib_with_table(int n)
 /// 2020/10/14 17:44 Start.
 /// 19:20 Started up non-recursive solution. Took break for dinner, rest ~30mins
 
+namespace TowersOfHanoi
+{
+
+//------------------------------------------------------------------------------
+/// \url https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/lecture-slides-code/
+/// \details Ses #6 Recursion, Dictionaries, MIT OCW 6.0001, Fall 2016
+//------------------------------------------------------------------------------
+
+std::string print_move(const std::string& frm, const std::string& to);
+
+std::string towers(
+  const int n,
+  const std::string& frm,
+  const std::string& to,
+  const std::string& spare);
+
+} // namespace TowersOfHanoi
+
 namespace HackerRank
 {
 
