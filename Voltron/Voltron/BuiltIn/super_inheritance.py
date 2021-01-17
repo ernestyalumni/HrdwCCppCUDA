@@ -114,6 +114,9 @@ super() in Multiple Inheritance
 Python supports multiple inheritance, in which a
 subclass can inherit from multiple superclasses that don't necessarily
 inherit from each other (aka sibling classes)
+
+TODO: Consider using a class member to keep track of when a class gets
+initialized. cf. https://stackoverflow.com/questions/40457599/how-to-check-if-an-object-has-been-initialized-in-python/40458701
 """
 
 class Triangle:

@@ -3,6 +3,10 @@
 @url https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/lecture-slides-code/lec1.py
 """
 
+import math # ps3
+import random # ps3
+import string # ps3
+
 """
 Problem Set 0
 
@@ -365,3 +369,91 @@ class MonthlySavingsGoal:
 				return (lower_bound, iterative_steps)
 
 		return ((lower_bound, upper_bound), iterative_steps)
+
+
+
+"""
+Problem Set 3: The 6.00/6.0001 Word Game
+
+@details Introduce you to using control flow in Python and formulating a
+computational solution to a problem.
+"""
+class WordGameConstants:
+		Vowels = 'aeiou'
+		Consonants = 'bcdfghjklmnpqrstvwxyz'
+
+		# TODO: Speed up this look up by calculating the index to look up.
+		Scrabble_Letter_Values = {
+    		'a': 1,
+    		'b': 3,
+    		'c': 3,
+    		'd': 2,
+    		'e': 1,
+    		'f': 4,
+    		'g': 2,
+    		'h': 4,
+    		'i': 1,
+    		'j': 8,
+    		'k': 5,
+    		'l': 1,
+    		'm': 3,
+    		'n': 1,
+    		'o': 1,
+    		'p': 3,
+    		'q': 10,
+    		'r': 1,
+    		's': 1,
+    		't': 1,
+    		'u': 1,
+    		'v': 4,
+    		'w': 4,
+    		'x': 8,
+    		'y': 4,
+    		'z': 10
+    }
+
+    Wordlist_Filename = "words.txt"
+
+
+# -----------------------------------
+# Helper code
+# (you don't need to understand this helper code)
+
+class WordGameGivenHelperCode:
+
+		@staticmethod
+		def load_words():
+				"""
+				Returns a list of valid words. Words are strings of lowercase letters.
+		
+				Depending on the size of the word list, this function may take a while
+				to finish.
+				"""
+
+				print("Loading word list from file...")
+				# inFile: file
+				inFile = open(WordGameConstants.Wordlist_Filename, 'r')
+				# wordlist: list of strings
+				wordlist = []
+				for line in inFile:
+						wordlist.append(line.strip().lower())
+				print("  ", len(wordlist), "words loaded")
+				return wordlist
+
+		@staticmethod
+		def get_frequency_dict(sequence):
+				"""
+				Returns a dictionary where the keys are elements of the sequence and
+				the values are integer counts, for the number of times that an element
+				is repeated in the sequence.
+
+				sequence: string or list
+				return: dictionary
+				"""
+				freq = {}
+
+				return freq
+
+# (end of helper code)
+# -----------------------------------
+
