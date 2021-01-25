@@ -457,3 +457,15 @@ class WordGameGivenHelperCode:
 # (end of helper code)
 # -----------------------------------
 
+# ps3.py
+# Problem #1: Scoring a word
+#
+
+class PS3Problem1:
+
+	@staticmethod
+	def get_word_score(word, n):
+		"""
+
+		"""
+		pass # TO DO... Remove this line when you implement this function
