@@ -2,10 +2,16 @@
  * @url https://www.youtube.com/playlist?list=PL9IEJIKnBJjG5H0ylFAzpzs9gSmW_eICB
  * @ref Jacob Sorber. Beginner C Videos
  * @details
- * Example Usage:
+ * Example Compiling:
  * gcc hello.c
  * gcc hello.c -o hello
  * gcc sorber_beginner_c.c -o sorber_beginner_c
+ *
+ * Example Usage.
+ * ./sorber_beginner_c
+ * ./sorber_beginner_c Hello
+ * ./sorber_beginner_c Hello My name is Jacob
+ * ./sorber_beginner_c "Hello, my name is Jacob."
  */
 
 // Preprocessor Directive
@@ -64,9 +70,21 @@ void copy_string(char *from, char *to)
   to[offset] = 0; // make sure it's NULL terminated.
 }
 
-// Function Definition
-// main is where your program will start, main is special.
-int main() {
+/* Function Definition
+* main is where your program will start, main is special.
+ *
+ * cf. Jacob Sorber. Getting Command-Line Arguments in C
+ * https://youtu.be/6Dk8s0F2gow
+ * argc, c - count
+ * name of the executable, name of the "program", gets passed as one of the
+ * arguments, and so for 
+ * ./hello argc = 1
+ * ./hello Hello argc = 2
+ * ./hello Hello My name is Jacob argc = 6
+ *
+ * char **argv, double character pointer. Basically an array of strings.
+ */
+int main(int argc, char **argv) {
 
   /*
    * @url https://youtu.be/SC8uWXmDJs4
@@ -341,6 +359,25 @@ int main() {
      *
      * Homework. String reverse. e.g. "future video"
      */
+  }
+
+
+  /* @brief Jacob Sorber. Getting Command-Line Arguments in C
+   * @url https://youtu.be/6Dk8s0F2gow
+   * @details 
+   *
+   * For command line arguments, if you want to include spaces in a single
+   * string, put them in double quotes (""), e.g.:
+   *
+   * ./hello "Hello, my name is Jacob."
+   * ./sorber_beginner_c "Hello, my name is Jacob"
+   */
+  {
+    printf("Hello World - %d\n", argc);
+
+    for (int i=0; i < argc; i++) {
+      printf("arg %d - %s\n",i,argv[i]);
+    }    
   }
 
   return 0;
