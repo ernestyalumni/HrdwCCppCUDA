@@ -18,6 +18,12 @@
  */
 #include <stdint.h>
 
+/* Strings in C
+ * Jacob Sorber
+ * @url https://youtu.be/5TzFNouc0PE
+ */
+#include <string.h> // strlen
+
 /* cf. Learn C in minutes (lesson 0)
  * @url https://youtu.be/SC8uWXmDJs4
  */
@@ -33,6 +39,30 @@ struct person {
   int height_in_inches;
 };
 
+
+/* cf. Jacob Sorber. Strings in C
+ * @url https://youtu.be/5TzFNouc0PE
+ */
+
+int get_string_length(char* str)
+{
+  int offset = 0;
+  while (str[offset] != 0) {
+    offset++;
+  }
+
+  return offset;
+}
+
+void copy_string(char *from, char *to)
+{
+  int offset = 0;
+  while (from[offset] != 0) {
+    to[offset] = from[offset];
+    offset++;
+  }
+  to[offset] = 0; // make sure it's NULL terminated.
+}
 
 // Function Definition
 // main is where your program will start, main is special.
@@ -197,13 +227,121 @@ int main() {
     {
       printf("v[%i] = %i\n", counter, v[counter]);
     }
-
   }
 
   /* @brief Jacob Sorber. Comments and Commenting in C
    * @url https://youtu.be/PP03QAsIij8
    */
 
+  /* @brief Jacob Sorber. A Tour of C's Many Operators
+   * @url https://youtu.be/PLnmboUvqq8
+   */
+
+  {
+    int y;
+    int x = 0;
+    // Get value before x was changed.
+    y = x++;
+    printf("y= %i \n", y); // expect to be 0.
+    // Get value after x was changed.
+    y = ++x;
+    printf("y= %i \n", y); // expect to be 2.
+
+    // Bitwise operator.
+    {
+      int x = 5; // 0b101
+      int y = 9;
+
+      // 1001 (9), 0101 (5) & -> 0001
+      int result = y & x;
+      // 04x -> 0 - left pads number with zeroes (0) instead of spaces, where
+      // padding is specified.
+      // 4 (width) - min. number of characters to be printed.
+      printf("result = %i %04x\n", result, result);
+
+      // 1001 (9) | 0101 (5) -> 1101
+      result = y | x;
+      printf("result = %i %04x\n", result, result); // 13
+
+      // XOR. Produces 1 if exactly 1 of the bits is 1.
+      // 1001 (9) ^ 0101 (5) -> 1100
+      result = y^x;
+      printf("result = %i %04x\n", result, result); // 13
+
+      // 1001 (9) ~ -> 0110 (6)
+      result = ~y;
+      printf("result = %i %04x\n", result, result); // 6
+
+      // "Lose" 2 bits from the right.
+      // Can think of it as divide by 2^2 = 4.
+      result = y >> 2;
+      printf("result = %i %04x\n", result, result); // 2
+
+      result = y << 2;
+      printf("result = %i %04x\n", result, result); // 36
+    }
+  }
+
+  /* @brief Jacob Sorber. Strings in C
+   * @url https://youtu.be/5TzFNouc0PE
+   * @details Store a length, or some way to tell it's an end.
+   * In C, it's 0, null character. Without, it goes on forever.
+   */
+  {
+    // TODO: do gdb to show that this text inside double quotes gets stored
+    // in a string, as .asciz
+    printf("Hello World!\n");
+
+    // Pointers and arrays are the same.
+    // Size of these strings are 13 bytes (for "Hello World!") because must
+    // count null-terminating character.
+    char *str1 = "Hello World! I'm string 1";
+    char str2[] = "Hello World!";
+
+    printf("%s",str1);
+    printf("%s",str2);
+
+    /* In lookup table (e.g. www.lookupTables.com), characters under decimal 32
+     * are control characters, equal and above decimal 32 are printable
+     * characters.
+     */
+
+    // Use Octal 012 not Decimal 10 because you need octal here, to specify new
+    // line. 12 is the character code, but in octal. 10 dec = 12 oct.
+    printf("s\12",str1);
+    printf("s\12",str2);
+
+    printf("%s\xA",str1);
+    printf("%s\xA",str2);
+
+    printf("%s\n",str1);
+    printf("%s\n",str2);
+    printf("Print a backslash \\ \n");
+
+    // String manipulation. We're working with arrays with numbers.
+    
+    printf("%s has length %d bytes\n", str1, get_string_length(str1));
+    printf("%s has length %d bytes\n", str1, strlen(str1));
+
+    char newstring[500];
+    copy_string(str1, newstring);
+    printf("%s\n",newstring);
+
+    char newstring2[500];
+    // sorry strcpy's args go the other way.
+    strcpy(newstring2, str1);
+    printf("%s\n",newstring2);
+
+
+    /* Lesson one, if you type 
+     * 
+     * man string
+     *
+     * in the command prompt you get list of all string functions to use.
+     *
+     * Homework. String reverse. e.g. "future video"
+     */
+  }
 
   return 0;
 }
