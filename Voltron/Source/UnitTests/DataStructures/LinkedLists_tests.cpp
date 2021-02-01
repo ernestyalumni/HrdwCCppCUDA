@@ -16,15 +16,21 @@
 
 using DataStructures::LinkedLists::Element;
 using DataStructures::LinkedLists::LinkedList;
-using DataStructures::LinkedLists::ListNode;
 using DataStructures::LinkedLists::Node;
 using DataStructures::LinkedLists::NodeAsUniquePtr;
 using DataStructures::LinkedLists::SinglyLinkedList;
 using DataStructures::LinkedLists::SinglyListNode;
-using DataStructures::LinkedLists::merge_two_sorted_lists_by_splice;
-using DataStructures::LinkedLists::merge_two_sorted_lists_iterative;
-using DataStructures::LinkedLists::merge_two_sorted_lists_simple;
-using DataStructures::LinkedLists::splice_nodes;
+using DataStructures::LinkedLists::UsingPointers::ListNode;
+using DataStructures::LinkedLists::UsingPointers::clean_up_ListNode_setup;
+using DataStructures::LinkedLists::UsingPointers::get_size;
+using DataStructures::LinkedLists::UsingPointers::get_tail;
+using DataStructures::LinkedLists::UsingPointers::
+  merge_two_sorted_lists_by_splice;
+using DataStructures::LinkedLists::UsingPointers::
+  merge_two_sorted_lists_iterative;
+using DataStructures::LinkedLists::UsingPointers::merge_two_sorted_lists_simple;
+using DataStructures::LinkedLists::UsingPointers::setup_ListNode_linked_list;
+using DataStructures::LinkedLists::UsingPointers::splice_nodes;
 using std::make_unique;
 using std::unique_ptr;
 
@@ -219,6 +225,84 @@ BOOST_AUTO_TEST_CASE(CanCreatePointersToMoveAcrossLinkedListAndSplice)
   BOOST_TEST(l21.next_->next_->next_->value_ == 4);
 }
 
+BOOST_AUTO_TEST_SUITE(SetupListNode_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InitializerListSetsUpListNodes)
+{
+  ListNode** lnl {setup_ListNode_linked_list({2, 6, 4})};
+  BOOST_TEST(lnl[0]->value_ == 2);
+  BOOST_TEST(lnl[1]->value_ == 6);
+  BOOST_TEST(lnl[2]->value_ == 4);
+
+  BOOST_TEST(lnl[0]->next_->value_ == 6);
+  BOOST_TEST(lnl[0]->next_->next_->value_ == 4);
+
+  delete lnl[0];
+  delete lnl[1];
+  delete lnl[2];
+  delete lnl;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CleanUpListNodeSetupDeletesDynamicallyAllocatedNodes)
+{
+  ListNode** lnl {setup_ListNode_linked_list({5, 3, 7, 8})};
+
+  clean_up_ListNode_setup(lnl, 4);
+
+  BOOST_TEST(true);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(VariadicArgumentsSetsUpListNodes)
+{
+  ListNode** lnl {setup_ListNode_linked_list(4, 4, 2, 1, 3)};
+  BOOST_TEST(lnl[0]->value_ == 4);
+  BOOST_TEST(lnl[1]->value_ == 2);
+  BOOST_TEST(lnl[2]->value_ == 1);
+  BOOST_TEST(lnl[3]->value_ == 3);
+
+  BOOST_TEST(lnl[0]->next_->value_ == 2);
+  BOOST_TEST(lnl[0]->next_->next_->value_ == 1);
+  BOOST_TEST(lnl[0]->next_->next_->next_->value_ == 3);
+  BOOST_TEST(lnl[0]->next_->next_->next_->next_ == nullptr);
+
+  clean_up_ListNode_setup(lnl, 4);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // SetupListNode_tests
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GetSizeGetsSize)
+{
+  ListNode** lnl {setup_ListNode_linked_list({5, 3, 7, 8, -23})};
+
+  BOOST_TEST(get_size(lnl[0]) == 5);
+  BOOST_TEST(get_size(lnl[1]) == 4);
+  BOOST_TEST(get_size(lnl[3]) == 2);
+
+  clean_up_ListNode_setup(lnl, 5);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GetTailGetsTail)
+{
+  ListNode** lnl {setup_ListNode_linked_list({5, 3, 7, 8, -23})};
+
+  ListNode* tail {get_tail(lnl[0])};
+
+  BOOST_TEST(tail->next_ == nullptr);
+  BOOST_TEST(tail->value_ == -23);
+
+  clean_up_ListNode_setup(lnl, 5);
+}
+
 BOOST_AUTO_TEST_SUITE(MergeTwoSortedLists_tests)
 
 //------------------------------------------------------------------------------
@@ -297,11 +381,6 @@ BOOST_AUTO_TEST_CASE(SpliceNodesSplicesNodes)
   BOOST_TEST(l21.next_->next_->next_->next_->value_ == 4);
   BOOST_TEST(l21.next_->next_->next_->next_->next_->value_ == 4);
   BOOST_TEST(l21.next_->next_->next_->next_->next_->next_ == nullptr);
-
-  {
-
-  }
-
 }
 
 //------------------------------------------------------------------------------
@@ -398,7 +477,6 @@ BOOST_AUTO_TEST_CASE(ReturnsSortedListWithMergedSortedListIterative)
   // changed from above.
   BOOST_TEST(merged_list->next_->next_->next_->next_->next_->next_ == nullptr);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // MergeTwoSortedLists_tests
 

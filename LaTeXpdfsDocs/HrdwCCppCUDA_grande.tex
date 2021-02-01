@@ -2021,6 +2021,21 @@ EY: $N \equiv$ size of memory.
 \]
 If $y=1$, $0,1$ (total) indices to specify 2 addresses. $y=2$, specify 4 addresses. So $y$ bits, $y=\log_2{N}$ to specify $N$ addresses.
 
+From 2.2 Analyzing algorithms, pp. 23 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}, in the RAM model, instructions are executed one after another, with no concurrent (EY: parallel?) operations.
+
+The RAM model should contain instructions commonly found in real computers: arithmetic (add, subtract, multiply, divide, remainder, floor, ceiling), \textbf{data movement} (\emph{load, store, copy}), and control (conditional and unconditional branch, subroutine call and return). Each such instruction takes constant amount of time $O(1)$.
+
+Assume a limit on the size of each word $w$ of data. For example, when working with inputs of size $n$, we typically assume that integers are represented by $c\lg{n}$ bits for some constant $c\geq 1$. Require $c\geq 1$ so that each word can hold the value of $n$, enabling us to index individual input elements, and restrict $c$ to be constant so that word size doesn't grow arbitrarily. (If word size could grow arbitrarily, we could store huge amounts of data in 1 word and operate on it all in constant time - clearly unrealistic!)
+
+\[
+c \log{n} =  y \quad \, \text{ e.g. } y = 64 \, \text{ bits }
+\]
+
+$b^{y/c} = n$. $n$ is size of the input. If $n$ is the max. value of (unsigned) integer, will need $y$ bits for base $b$ to represent input uniquely on RAM model.
+
+To define "size of input" carefully, note that the best notion for \textbf{input size} depends on problem being studied. For many problems, such as sorting or computing discrete Fourier transforms, use the \emph{number of items in the input} - for example array of size $n$ for sorting. Sometimes, if input to algorithm is a graph, input size can be described by numbers of vertices and edges in the graph (2 or more numbers, instead of 1).
+
+
 \subsubsection{Pointer Machine}
 
 cf. 2. \textbf{Pointer Machine}.
@@ -3132,7 +3147,9 @@ List with 1 element is sorted $(a_0)$ (trivial proof). \\
 
 If list of size $k-1$ sorted, insert $k$th new object, by starting from back, and swap adjacent values until find location for it.
 
+In analyzing insertion sort, from pp. 27, 2.2 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}, \textbf{worst-case running time} gives upper bound on running time for any input. Also, for some algorithms, worst case occurs fairly often. And the "average case" is often roughly as bad as the worst case.
 
+One simplifying abstraction, \textbf{rate of growth} or \textbf{order of growth} just means to consider only the leading term of a formula for large values of $n$.
 
 
 

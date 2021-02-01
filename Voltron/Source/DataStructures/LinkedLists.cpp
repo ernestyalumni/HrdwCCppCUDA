@@ -6,9 +6,25 @@
 ///-----------------------------------------------------------------------------
 #include "LinkedLists.h"
 
+// Values of variadic arguments may be accessed using facilities from here.
+#include <cstdarg>
+
+#include <cstddef> // std::size_t
+#include <initializer_list>
+
+using std::initializer_list;
+using std::size_t;
+
+// va_list is a complete object type suitable for holding information needed by
+// va_start, va_copy, va_arg, va_end.
+using std::va_list;
+
 namespace DataStructures
 {
 namespace LinkedLists
+{
+
+namespace UsingPointers
 {
 
 ListNode::ListNode():
@@ -25,6 +41,112 @@ ListNode::ListNode(int x, ListNode* next):
   value_{x},
   next_{next}
 {}
+
+size_t get_size(ListNode* ln)
+{
+  size_t counter {0};
+  ListNode* ln_ptr {ln};
+  while (ln_ptr)
+  {
+    ln_ptr = ln_ptr->next_;
+    ++counter;
+  }
+
+  return counter;
+}
+
+ListNode* get_tail(ListNode* head)
+{
+  ListNode* tail {head};
+  ListNode* after_tail {head->next_};
+
+  while (after_tail)
+  {
+    tail = after_tail;
+    after_tail = after_tail->next_;
+  }
+
+  return tail;
+}
+
+// TODO: Implement variadic arguments base case.
+// Also consider the warning in one of the solution about using variadic:
+// https://stackoverflow.com/questions/1657883/variable-number-of-arguments-in-c
+ListNode** setup_ListNode_linked_list(const int values, ...)
+{
+  va_list args;
+  
+  // va_start - Enables access to variable arguments.
+  // Initializes va_list args to retrieve additional arguments after parameter
+  // values. Arguments extracted by subsequent calls to va_arg are those after
+  // values.
+  va_start(args, values);
+
+  ListNode** list_node_ptr_array = new ListNode*[values];
+  ListNode* ln_ptr {nullptr};
+
+  for (size_t counter {0}; counter < values; ++counter)
+  {
+    const int value {va_arg(args, int)};
+
+    ListNode* list_node_ptr = new ListNode(value);
+    list_node_ptr_array[counter] = list_node_ptr;
+
+    if (counter == 0)
+    {
+      ln_ptr = list_node_ptr;
+    }
+    else
+    {
+      ln_ptr->next_ = list_node_ptr;
+      ln_ptr = list_node_ptr;
+    }
+  }
+
+  va_end(args);
+
+  return list_node_ptr_array;
+}
+
+
+ListNode** setup_ListNode_linked_list(const initializer_list<int> l)
+{
+  ListNode** list_node_ptr_array = new ListNode*[l.size()];
+  size_t counter {0};
+
+  ListNode* ln_ptr {nullptr};
+
+  for (int element : l)
+  {
+    ListNode* list_node_ptr = new ListNode(element);
+    list_node_ptr_array[counter] = list_node_ptr;
+
+    if (counter == 0)
+    {
+      ln_ptr = list_node_ptr;
+    }
+    else
+    {
+      ln_ptr->next_ = list_node_ptr;
+      ln_ptr = list_node_ptr;
+    }
+
+    ++counter;
+  }
+
+  return list_node_ptr_array;
+}
+
+void clean_up_ListNode_setup(ListNode** l, size_t N)
+{
+  for (size_t index {0}; index < N; ++index)
+  {
+    delete l[index];
+  }
+
+  delete l;
+}
+
 
 // cf. https://stackoverflow.com/questions/823426/passing-references-to-pointers-in-c
 void splice_nodes(ListNode*& ptr1, ListNode*& ptr2)
@@ -300,6 +422,8 @@ ListNode* merge_two_sorted_lists_simple(ListNode* l1, ListNode* l2)
 
   return new_head;
 }
+
+} // namespace UsingPointers
 
 } // namespace LinkedLists
 } // namespace DataStructures

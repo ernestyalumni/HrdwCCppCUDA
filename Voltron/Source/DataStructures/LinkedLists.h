@@ -7,6 +7,8 @@
 #ifndef DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H
 #define DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H
 
+#include <cstddef> // std::size_t
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -15,6 +17,82 @@ namespace DataStructures
 {
 namespace LinkedLists
 {
+
+namespace UsingPointers
+{
+
+//------------------------------------------------------------------------------
+/// \brief Definition for singly-linked list.
+/// \details Used in Leetcode.
+//------------------------------------------------------------------------------
+
+struct ListNode
+{
+  int value_;
+  ListNode* next_;
+
+  ListNode();
+
+  ListNode(int x);
+
+  ListNode(int x, ListNode* next);
+};
+
+std::size_t get_size(ListNode* ln);
+
+ListNode* get_tail(ListNode* head);
+
+//------------------------------------------------------------------------------
+/// \brief Setup a linked list with a collection of ListNodes.
+//------------------------------------------------------------------------------
+// TODO: Implement variadic arguments base case.
+// Because of how va_start get initialized, this doesn't work as expected:
+//ListNode** setup_ListNode_linked_list(const std::size_t N, const int values...
+//);
+
+ListNode** setup_ListNode_linked_list(const int values...);
+
+ListNode** setup_ListNode_linked_list(const std::initializer_list<int> l);
+
+void clean_up_ListNode_setup(ListNode** l, std::size_t N);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
+/// \brief Merge 2 sorted linked lists and return as new sorted list.
+/// \details New list should be made by splicing together nodes of first 2
+/// lists.
+///
+/// Solution
+/// \ref https://youtu.be/GfRQvf7MB3k
+/// Merge 2 Sorted Lists - A Fundamental Merge Sort Subroutine
+/// ("Merge Two Sorted Lists" on LeetCode), Back To Back SWE
+//------------------------------------------------------------------------------
+ListNode* merge_two_sorted_lists_iterative(ListNode* l1, ListNode* l2);
+
+void splice_nodes(ListNode*& ptr1, ListNode*& ptr2);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
+/// \brief Merge 2 sorted linked lists and return as new sorted list.
+/// \details New list should be made by splicing together nodes of first 2
+/// lists.
+//------------------------------------------------------------------------------
+
+ListNode* merge_two_sorted_lists_by_splice(ListNode* l1, ListNode* l2);
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/problems/merge-two-sorted-lists/discuss/10065/Clean-simple-O(n%2Bm)-C%2B%2B-Solution-without-dummy-head-and-recurtion
+/// \url https://youtu.be/GfRQvf7MB3k
+/// Zeit Time complexity O(M+N)
+/// O(1) space complexity.
+//------------------------------------------------------------------------------
+ListNode* merge_two_sorted_lists_simple(ListNode* l1, ListNode* l2);
+
+} // namespace UsingPointers
 
 template <typename T>
 class Element
@@ -229,57 +307,6 @@ struct NodeAsUniquePtr
   {}
 };
 
-//------------------------------------------------------------------------------
-/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-/// \brief Definition for singly-linked list.
-//------------------------------------------------------------------------------
-
-struct ListNode
-{
-  int value_;
-  ListNode* next_;
-
-  ListNode();
-
-  ListNode(int x);
-
-  ListNode(int x, ListNode* next);
-};
-
-//------------------------------------------------------------------------------
-/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
-/// \brief Merge 2 sorted linked lists and return as new sorted list.
-/// \details New list should be made by splicing together nodes of first 2
-/// lists.
-///
-/// Solution
-/// \ref https://youtu.be/GfRQvf7MB3k
-/// Merge 2 Sorted Lists - A Fundamental Merge Sort Subroutine
-/// ("Merge Two Sorted Lists" on LeetCode), Back To Back SWE
-//------------------------------------------------------------------------------
-ListNode* merge_two_sorted_lists_iterative(ListNode* l1, ListNode* l2);
-
-void splice_nodes(ListNode*& ptr1, ListNode*& ptr2);
-
-//------------------------------------------------------------------------------
-/// \url https://leetcode.com/problems/merge-two-sorted-lists/description/
-/// \brief Merge 2 sorted linked lists and return as new sorted list.
-/// \details New list should be made by splicing together nodes of first 2
-/// lists.
-//------------------------------------------------------------------------------
-
-ListNode* merge_two_sorted_lists_by_splice(ListNode* l1, ListNode* l2);
-
-//------------------------------------------------------------------------------
-/// \url https://leetcode.com/problems/merge-two-sorted-lists/discuss/10065/Clean-simple-O(n%2Bm)-C%2B%2B-Solution-without-dummy-head-and-recurtion
-/// \url https://youtu.be/GfRQvf7MB3k
-/// Zeit Time complexity O(M+N)
-/// O(1) space complexity.
-//------------------------------------------------------------------------------
-ListNode* merge_two_sorted_lists_simple(ListNode* l1, ListNode* l2);
 
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/explore/learn/card/linked-list/209/singly-linked-list/1287/

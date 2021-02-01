@@ -6,6 +6,7 @@
 #include "Algorithms/MergeSort.h"
 #include "Algorithms/QuickSort.h"
 #include "Cpp/Std/TypeTraitsProperties.h"
+#include "DataStructures/LinkedLists.h"
 
 #include <array>
 #include <boost/test/unit_test.hpp>
@@ -21,6 +22,7 @@ using Algorithms::Sorting::Details::single_swap;
 using Algorithms::Sorting::InsertionSort::binary_insertion_sort;
 using Algorithms::Sorting::InsertionSort::insertion;
 using Algorithms::Sorting::InsertionSort::insertion_sort;
+using Algorithms::Sorting::InsertionSort::insertion_sort_list;
 using Algorithms::Sorting::QuickSort::Details::partition_from_first;
 using Algorithms::Sorting::QuickSort::Details::quick_sort_from_first;
 using Algorithms::Sorting::QuickSort::partition_from_last_basic;
@@ -31,6 +33,12 @@ using Algorithms::Sorting::bubble_sort;
 using Algorithms::Sorting::merge_sort;
 using Algorithms::Sorting::merge_sort_with_temp;
 using Algorithms::Sorting::naive_bubble_sort;
+using DataStructures::LinkedLists::UsingPointers::ListNode;
+using DataStructures::LinkedLists::UsingPointers::clean_up_ListNode_setup;
+
+using DataStructures::LinkedLists::UsingPointers::get_size;
+
+using DataStructures::LinkedLists::UsingPointers::setup_ListNode_linked_list;
 using Std::CompositeTypeTraits;
 using Std::PrimaryTypeTraits;
 using std::vector;
@@ -53,6 +61,45 @@ BOOST_AUTO_TEST_CASE(SortsCStyleIntArrays)
   BOOST_TEST(arr[2] == 11);
   BOOST_TEST(arr[3] == 12);
   BOOST_TEST(arr[4] == 13);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertionSortLinkedList)
+{
+  {
+    ListNode** lnl {setup_ListNode_linked_list({6,-5})};
+    BOOST_TEST(lnl[0]->value_ == 6);
+    BOOST_TEST(lnl[1]->value_ == -5);
+
+    BOOST_TEST(get_size(lnl[0]) == 2);
+
+    ListNode* new_head {insertion_sort_list(lnl[0])};
+
+    BOOST_TEST(new_head->value_ == -5);
+    BOOST_TEST(new_head->next_->value_ == 6);
+
+    clean_up_ListNode_setup(lnl, 2);
+  }
+  {
+    ListNode** lnl {setup_ListNode_linked_list({6,-5, 4})};
+    ListNode* new_head {insertion_sort_list(lnl[0])};
+
+    BOOST_TEST(new_head->value_ == -5);
+    BOOST_TEST(new_head->next_->value_ == 4);
+    BOOST_TEST(new_head->next_->next_->value_ == 6);
+
+    clean_up_ListNode_setup(lnl, 3);
+  }
+  {
+    ListNode** lnl {setup_ListNode_linked_list({6,5,3,1,8,7,2,4})};
+    BOOST_TEST(lnl[0]->value_ == 6);
+    BOOST_TEST(lnl[1]->value_ == 5);
+    BOOST_TEST(lnl[2]->value_ == 3);
+
+    clean_up_ListNode_setup(lnl, 8);
+  }
+
 }
 
 BOOST_AUTO_TEST_SUITE(BinaryInsertionSort_tests)

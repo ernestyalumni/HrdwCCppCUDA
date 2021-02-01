@@ -253,3 +253,7 @@ An example of running a particular Boost unit test suite and its nested tests:
 ./Check --run_test="Entrevue"
 ```
 Do this in your local build directory with the executable `Check`.
+
+## If you want to ...
+
+Have a library (i.e. subdirectory) you're working on and link it to compile with the objects of another library, use `TARGET_LINK_LIBRARIES`. Example: `/Tools/`

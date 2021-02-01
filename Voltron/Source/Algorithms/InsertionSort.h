@@ -6,6 +6,8 @@
 #ifndef ALGORITHMS_SORTING_INSERTION_SORT_H
 #define ALGORITHMS_SORTING_INSERTION_SORT_H
 
+#include "DataStructures/LinkedLists.h"
+
 #include <algorithm> // std::swap
 #include <vector>
 
@@ -103,6 +105,15 @@ void insertion(T* const array, int const n)
     }
   }
 }
+
+//------------------------------------------------------------------------------
+/// \brief Sort a linked list using insertion sort.
+/// \url https://leetcode.com/problems/insertion-sort-list/
+/// \ref 147. Insertion Sort List.
+///
+//------------------------------------------------------------------------------
+DataStructures::LinkedLists::UsingPointers::ListNode* insertion_sort_list(
+  DataStructures::LinkedLists::UsingPointers::ListNode* head);
 
 namespace Details
 {

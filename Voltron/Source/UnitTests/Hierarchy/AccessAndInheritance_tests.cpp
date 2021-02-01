@@ -85,6 +85,8 @@ BOOST_AUTO_TEST_CASE(InvokePrivateVirtualFunctionFromPublicType)
 
   ExPublicVirtualMethod* ptr = new ExPrivateVirtualMethod;
   BOOST_TEST(ptr->f() == 43);
+
+  delete ptr;
 }
 
 //------------------------------------------------------------------------------
