@@ -2167,6 +2167,173 @@ Also note, let $N = $ number of elements in a collection.
 \end{gathered}
 \]
 
+cf. Ch. 3 Growth of Functions, 3.1 Asymptotic notation of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}.
+
+\subsection{$\Theta$-notation - worst case}
+
+
+Formally, \\
+given function $g(n)$, 
+\begin{equation}
+\Theta(g(n)) := \lbrace f(n) | \exists \, c_1, c_2, n_0 > 0 \text{ s.t. } 0 \leq c_1 g(n) \leq f(n) \leq c_2 g(n) \quad \, \forall \, n \geq n_0 \rbrace 
+\end{equation}
+Formally, \\
+\[
+f(n) \in \Theta (g(n)) \text{ but notation abuse } f(n) = \Theta(g(n))
+\]
+$\Theta$-notation asymptotically bounds function from above and below.
+
+\subsection{O-notation - upper bound}
+
+Use O-notation for \textbf{asymptotic upper bound}.
+
+Given function $g(n)$, 
+\begin{equation}
+O(g(n)) = \lbrace f(n) | \exists \, \text{ positive constants } c, n_0 \text{ s.t. } 0 \leq f(n) \leq c g(n), \quad \, \forall \, n \geq n_0 \rbrace 
+\end{equation}
+Since for given $f(n) \in \Theta(g(n))$ (abuse notation $f(n) = \Theta(g(n))$, 
+\[
+\begin{gathered} 
+\exists \, c_2, n_0 > 0 \text{ s.t. } f(n) \leq c_2 g(n) \quad \, \forall \, n \geq n_0, \\
+f(n) \in O(g(n)) \\
+\Longrightarrow \Theta(g(n)) \supseteq O(g(n))
+\end{gathered}
+\]
+
+$\Omega$-notation, lower bound.
+
+$\Omega$-notation for \textbf{asymptotic lower bound}.
+
+\begin{equation}
+\Omega(g(n)) = \lbrace f(n) | \exists \, c, n_0 >0 \text{ s.t. } 0 \leq cg(n) \leq f(n) \quad \, \forall \, n \geq n_0 \rbrace 
+\end{equation}
+
+Clearly,
+\begin{theorem}[3.1 Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}]
+$\forall \, $ functions $f(n), g(n)$, $f(n) \in \Theta(g(n))$ iff $f(n) \in O(g(n))$, and $f(n) \in \Omega(g(n))$
+\end{theorem}
+
+
+cf. Demaine and Devadas (2011) \cite{DeDe2001}, \href{https://youtu.be/HtSuA80QTyo}{1. Algorithmic Thinking, Peak Finding, MIT OCW MIT 6.006 Introduction to Algorithms, Fall 2011}. Sept. 8, 2011. PS 1.
+
+\problemhead{PS1, 1-1} \textbf{Asymptotic Practice}
+
+\textbf{Group 1:}
+
+$$
+\begin{array}{rcl}
+f_1(n) &=& n^{0.999999} \log n \\
+f_2(n) &=& 10000000 n \\
+f_3(n) &=& 1.000001^n \\
+f_4(n) &=& n^2
+\end{array}
+$$
+
+\textbf{Group 2:}
+
+$$
+\begin{array}{rcl}
+f_1(n) &=& 2^{2^{1000000}} \\
+f_2(n) &=& 2^{100000n} \\
+f_3(n) &=& \displaystyle \binom{n}{2} \\
+f_4(n) &=& n \sqrt{n}
+\end{array}
+$$
+
+\solutionhead{1-1, Group 2}
+
+Now
+\[
+\begin{aligned}
+& f_1(n) = 2^{2^{1000000}} = 2^{2^a} \in O(1) \\
+& f_2(n) = 2^{100000n} = 2^{Bn} = \exp{(Bn\ln{2})} \\
+& f_3(n) = \binom{n}{2} \in O\left( \left( \frac{n}{2} \right)^2 \right) 
+\end{aligned}
+\]
+
+In general 
+\[
+\binom{n}{k} \in O\left( \left( \frac{n}{k} \right)^k \right) 
+\]
+
+\[
+f_4(n) = n \sqrt{n} = n^{3/2} \in O(n^{3/2})
+\]
+
+\[
+\boxed{
+f_1(n) \in O(1) , f_4(n) \in O(n^{3/2}), f_3(n) \in O(n^2) , f_2(n) \in O(2^{Bn})
+}
+\]
+
+
+ \textbf{Group 3:}
+
+$$
+\begin{array}{rcl}
+f_1(n) &=& n^{\sqrt{n}} \\
+f_2(n) &=& 2^n \\
+f_3(n) &=& n^{10} \cdot 2^{n / 2} \\
+f_4(n) &=& \displaystyle\sum_{i = 1}^{n} (i + 1)
+\end{array}
+$$
+
+\[
+\begin{gathered}
+	f_4(n) = \sum_{i=1}^n (i + 1) = \sum_{i=1}^n i + \sum_{i=1}^n 1 = \frac{n(n+1)}{2} + n \in O(n^2)
+\end{gathered}
+\]
+\[
+\begin{gathered}
+	f_1(n) = n^{\sqrt{n}} = n^{n^{1/2}} \\
+	\begin{gathered}
+		y = n^{n^{1/2}} \\
+		\lg{y} = n^{1/2} \lg{n} \\
+	y = 2^{n^{1/2} \lg{n}}
+	\end{gathered} \quad \quad \, \begin{gathered}
+	\ln{y} = n^{1/2} \ln{n} \\ 
+	y = \exp{ (n^{1/2} \ln{n})}
+	\end{gathered}
+\end{gathered}
+\]
+
+\[
+\begin{gathered}
+	f_2(n) = 2^n = \exp{(n\ln{2})}
+\end{gathered}
+\]
+
+In changing the constant of the function in the \emph{exponent is the same as changing the base of the component}, which does affect asymptotic running time.
+
+\[
+\begin{gathered}
+f_3(n) = n^{10} \cdot 2^{n/2} \\
+\begin{gathered}
+y = n^{10} \cdot 2^{n/2} \\
+\lg{y} = 10 \lg{n} + \frac{n}{2} \\
+y = 2^{10 \log{n} + n/2}
+\end{gathered}
+\quad \quad \, \begin{gathered}
+\ln{y} = 10 \ln{n} + \frac{n}{2} \ln{2} \\
+y = \exp{(10 \ln{n} + \frac{ \ln{2}}{2} n )}
+\end{gathered}
+\end{gathered}
+\]
+
+So in order of increasing complexity,
+
+\[
+\boxed{
+\begin{aligned}
+& f_4(n) \in O(n^2) \\
+& f_1(n) \in O(2^{n^{1/2} \lg{n}}) \subset O(2^n) \\
+& f_3(n) \in O(2^{n/2 + 10 \lg{n}}) \subset O(2^{n/2}) \\
+& f_2(n) \in O(2^n)
+\end{aligned}
+}
+\]
+
+
 \subsection{Multi-Part Algorithms: Add vs. Multiply, e.g. $O(A + B)$ vs. $O(A*B)$}
 
 If your algorithm is "do this ($A$), then, when completed, do that ($B$)" then add runtimes: $O(A+B)$.
