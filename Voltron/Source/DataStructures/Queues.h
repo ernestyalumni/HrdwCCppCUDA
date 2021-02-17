@@ -358,9 +358,6 @@ class CircularQueue
     int size_;
 };
 
-
-
-
 } // namespace Queues
 } // namespace DataStructures
 
