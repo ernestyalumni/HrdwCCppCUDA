@@ -20,7 +20,9 @@
 \usepackage{tikz}
 \usetikzlibrary{matrix,arrows,backgrounds}
 
-\usepackage{breqn} % for dmath
+% Causes missing number error in binom:
+% https://tex.stackexchange.com/questions/570899/use-of-amsmath-binom-causes-missing-number-if-breqn-is-used
+%\usepackage{breqn} % for dmath
 
 
 %\usepackage{cancel} % for Feynman slash notation
@@ -1816,6 +1818,22 @@ They include the following cases:
 
 \part{Complexity, Data Structures, Algorithms}
 
+\section{Containers, Relations, Abstract Data Types}
+
+cf. 2. Algorithmic Analysis, \href{https://ece.uwaterloo.ca/~dwharder/aads/Lecture_materials/2.01.Containers_relations_ADTs.pptx}{2.1 Containers, Relations, and abstract data types (ADTs)} Harder (2018) \cite{Hard2018}
+
+\begin{definition}[Simple Containers]
+	\textbf{Simple Containers} - containers that store individual objects.
+\end{definition} 
+e.g. Temperature readings $\Longrightarrow$ \textbf{Circular array}
+
+\begin{definition}[Associative Containers]
+	\textbf{Associative Containers} - Containers that store keys but also store records associated with those keys.
+\end{definition} 
+e.g. ID Number $\Longrightarrow $ Server $\Longrightarrow$ Student Academic Record.
+
+
+
 \section{Peak finding}
 
 cf. Demaine and Devadas (2011) \cite{DeDe2001}, \href{https://youtu.be/HtSuA80QTyo}{1. Algorithmic Thinking, Peak Finding, MIT OCW MIT 6.006 Introduction to Algorithms, Fall 2011}. 
@@ -2188,6 +2206,7 @@ Now
 & f_3(n) = \binom{n}{2} \in O\left( \left( \frac{n}{2} \right)^2 \right) 
 \end{aligned}
 \]
+
 
 In general 
 \[
@@ -3858,11 +3877,137 @@ This data structure can be created, modified, deleted by 3 system calls: \texttt
 
 \url{https://www.eecis.udel.edu/~mills/ntp.html}
 
+\section{Concurrency}
+
+cf. \href{http://web.mit.edu/6.031/www/sp20/classes/20-concurrency/}{Concurrency}, Goldman and Miller, 6.031 Spring 2020 \cite{6dot005and6dot031}. 
+
+There are 2 models for concurrent programming: \emph{shared memory} and \emph{message passing}. 
+
+\subsection{Shared memory concurrency model}
+
+In the shared memory concurrency model, concurrent modules interact by reading and writing shared objects in memory. For example, if A and B are concurrent modules, A and B access the same shared memory space. In "shared" memory, A or B can have private objects (only 1 module can access it). But shared object is shared by both A and B (both modules have reference to it).
+
+Examples of shared-memory model:
+\begin{itemize}
+	\item A and B might be 2 processors or processor cores in same computer, sharing same physical memory.
+	\item A and B might be 2 programs running on same computer, sharing a common filesystem with files they can read and write.
+	\item A and B might be 2 threads in the same Java program, sharing same Java objects.
+\end{itemize}
+
+\subsection{Message passing concurrency model}
+
+Concurrent modules interact by sending messages to each other through a communication channel. Modules send off messages, and incoming messages to each module are queued up for handling.
+
+\subsection{Processes, threads, time-slicing}
+
+Message-passing and shared-memory models are about how concurrent modules communicate. The concurrent modules \emph{themselves} come in 2 different kinds: \emph{processes} and \emph{threads}. \\
+
+\subsubsection{Process}
+
+A process is an instance of a running program that's \emph{isolated} from other processes on the same machine. Particularly, it has its own private section of the machine's memory.
+
+Process abstraction is a \emph{virtual computer}; it makes the program feel like it has the entire machine to itself - like a fresh computer has been created, with fresh memory, just to run that program.
+
+\begin{itemize} 
+	\item Processes normally share no memory between them, e.g. computers connected across a network.
+	\begin{itemize} 
+		\item Process can't access another process's memory or objects at all. \\
+		\begin{itemize}
+			\item Sharing memory between processes is \emph{possible} on most OS, but needs special effort.
+		\end{itemize}
+	\end{itemize} 
+	\item Process is automatically ready for message passing, because it's created with standard input and output streams.
+\end{itemize}
+
+Whenever you start any program on your computer, it starts a fresh process to contain the running program. \\
+
+\subsubsection{Thread}
+
+"A thread is a locus of control inside a running program." (EY: ???). Think of it as a place in the program that is being run, plus the stack of method calls that led to that place (so thread can go back up the stack when it reaches \texttt{return} statements).
+
+Thread abstraction represents a \emph{virtual processor}. Making a new thread simulates making a fresh processor inside virtual computer represented by the process. This new virtual processor runs the same program and shares the same memory as other threads in the process.
+
+\begin{itemize}
+	\item Threads automatically ready for shared memory, because threads share all the memory in the process.
+	\begin{itemize}
+		\item Takes special effort to get "thread-local" memory that's private to a single thread.		
+	\end{itemize}
+	\item Neccessary to set up message-passing explicitly, by creating and using queue data structures.
+\end{itemize}
+
+Whenever you run a Java program, program starts with 1 thread, which calls \verb|main()| as its first step. This thread is referred to as the \emph{main thread}.
+
+\subsubsection{Time slicing}
+
+When there are more threads than processors, concurrency is simulated by \textbf{time slicing}, meaning the processor switches between threads.
+
+On most systems, time slicing happens unpredictably and nondeterministically, meaning that a thread may be paused or resumed at any time.
+
+
 \section{IPC: Interprocess Communications}
+
+
+\subsection{Queues and Message Passing}
+
+cf. \href{http://web.mit.edu/6.031/www/sp20/classes/23-queues/}{Reading 23: Queues and Message-Passing}, Goldman and Miller, 6.031 Spring 2020 \cite{6dot005and6dot031}. 
+
+Recall the \href{http://web.mit.edu/6.031/www/sp20/classes/20-concurrency/#two_models_for_concurrent_programming}{2 models for concurrent programming}: \emph{shared memory} and \emph{message passing}:
+\begin{itemize}
+	\item \emph{shared memory}, concurrent modules interact by reading and writing shared mutable objects in memory. Creating multiple threads inside a single process is a primary example of shared-memory concurrency.
+	\item \emph{message passing}, concurrent modules interact by sending immutable messages to 1 another over a communication channel; that communication channel might connect different computers over a network, e.g. web browsing, instant messaging, etc.
+\end{itemize}
+
+Advantages of message passing model over shared memory model:
+\begin{itemize}
+	\item boils down to greater safety from bugs,
+	\item Message passing shares only immutable objects (the messages) between modules, whereas shared memory \emph{requires} sharing mutable objects, which can be \href{http://web.mit.edu/6.031/www/sp20/classes/08-immutability/#risks_of_mutation}{a source of bugs}.
+\end{itemize}
+
+Consider as an example in the following of implementing message passing within a single process, as opposed to between processes over the network. In the example in the following, use \textbf{blocking queues} (an existing threadsafe type) to implement message passing between threads within a process.
+
+\subsubsection{Message passing with threads}
+
+Previous message passing between processes: \href{http://web.mit.edu/6.005/www/fa15/classes/21-sockets-networking/#network_sockets}{clients and servers communicating over network sockets}. 
+
+We can also use message passing between threads within the same process, and this design is often preferable to shared memory design with locks.
+
+Use a synchronized queue for message passing between threads. \\
+Queue serves same function as buffered network communication channel in client/server message passing.
+
+In ordinary queue (Java's \texttt{Queue}), \\
+\begin{itemize}
+	\item Java's \texttt{add(e)} adds element \texttt{e} to end of queue
+	\item Java's \texttt{remove()} removes and returns element at head of the queue, or throws an exception if queue is empty.
+\end{itemize}
+
+A blocking queue (Java's \verb|BlockingQueue|) extends this interface, additionally supports operations that \\
+wait for queue to become non-empty when retrieving an element, and \\
+wait for space to become available in queue when storing an element. \\
+
+Analogous to client/server pattern for message passing over a network is the \textbf{producer-consumer design pattern} for message passing between threads. 
+\begin{itemize} 
+	\item Producer threads and consumer threads share a synchronized queue
+	\item Producers put data or requests onto the queue, and consumers remove and process them
+	\begin{itemize}
+		\item 1 or more producers and 1 or more consumers might all be adding and removing items from the same queue; this queue must be safe for concurrency
+	\end{itemize}
+\end{itemize} 
+
+Java provides 2 implementations of a blocking queue:
+\begin{itemize}
+	\item \verb|ArrayBlockingQueue| is a fixed-size queue that uses an array representation. \verb|put|ting a new item on queue will block if queue is full.
+	\item \verb|LinkedBlockingQueue| is a growable queue using linked-list representation. If no max. capacity is specified, queue will never fill up, so \verb|put| will never block.
+\end{itemize}
+
+Unlike streams of bytes sent and received by sockets, these synchronized queues (like normal collections classes in Java) can hold objects of an arbitrary type. Instead of designing a wire protocol, we must choose or design a type for messages in the queue. \textbf{It must be an immutable type}. 
+
+
+\subsubsection{Bank account example}
 
 \subsection{Message Queues}
 
-\textbf{Message Queues: TODO}
+cf. Ch. 51, \emph{Introduction to POSIX IPC}, Kerrisk (2010) \cite{Kerr2010}.
+
 
 \subsection{UDP}
 
@@ -4371,6 +4516,11 @@ Martin Dietzfelbinger. Algorithmen und Datenstrukturen 1 - WS 19/20. FG KtuEA, T
 \bibitem{CLRS2009}
 Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein.  \textbf{Introduction to Algorithms}, \emph{Third Edition}. MIT Press; Sept. 1, 2009.  ISBN-13 : 978-0262033848 
 
+\bibitem{Shaf2011}
+Dr. Clifford A. Shaffer. 
+\textbf{Data Structures and Algorithm Analysis in C++}, Third Edition (Dover Books on Computer Science) Third Edition. Dover Publications; (September 14, 2011). ISBN-10 : 048648582X ISBN-13 : 978-0486485829 
+
+
 \bibitem{Neag2020}
 \href{https://www.udemy.com/course/master-the-coding-interview-data-structures-algorithms/#instructor-1}{Andrei Neagole}. Master the Coding Interview: Data Structures $+$ Algorithms. 
 \url{https://www.udemy.com/course/master-the-coding-interview-data-structures-algorithms/}
@@ -4392,10 +4542,15 @@ Edward Ashford Lee, Sanjit Arunkumar Seshia. \textbf{Introduction to Embedded Sy
 \bibitem{Gutt2016}
 John V. Guttag. \textbf{Introduction to Computation and Programming Using Python (With Application to Understanding Data)}. 2nd Edition. 	MIT Press.  ISBN-13 : 978-0262529624 
 
+\bibitem{6dot005and6dot031}
+\textbf{6.005: Software Construction}, \textbf{6.031: Software Construction}. \href{http://web.mit.edu/6.031/www/sp20/}{6.031: Software Construction, Spring 2020}: Max Goldman, Rob Miller.
+
+
 \bibitem{Jack2013}
 Daniel Jackson. \emph{6.170 Software Studio}. Spring 2013. Massachusetts Institute of Technology: MIT OpenCourseWare, \url{https://ocw.mit.edu}. License: Creative Commons BY-NC-SA.\cite{Jack2013}
 
-
+\bibitem{Kerr2010}
+Michael Kerrisk. \textbf{The Linux Programming Interface: A Linux and UNIX System Programming Handbook}. No Starch Press; 1st edition (October 28, 2010). ISBN-10 : 1593272200 ISBN-13 : 978-1593272203 
 
 \end{thebibliography}
 
