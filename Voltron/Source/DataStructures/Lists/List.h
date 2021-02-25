@@ -4,6 +4,7 @@
 /// \brief Classes and functions demonstrating list as an Abstract Data Type.
 /// \ref Data Structures and Algorithm Analysis in C++, 3rd. Ed.. Dr. Clifford
 /// A. Shaffer. Fig. 4.1. The ADT for a list.
+/// \ref https://github.com/OpenDSA/OpenDSA/blob/master/SourceCode/C%2B%2B_Templates/Lists/List.h
 //-----------------------------------------------------------------------------
 #ifndef DATA_STRUCTURES_LISTS_LIST_H
 #define DATA_STRUCTURES_LISTS_LIST_H
@@ -16,7 +17,7 @@ namespace Lists
 //-----------------------------------------------------------------------------
 /// \brief List ADT
 //-----------------------------------------------------------------------------
-template <typename E>
+template <typename T>
 class List
 {
   public:
@@ -30,8 +31,8 @@ class List
     //--------------------------------------------------------------------------
     /// \brief Base constructor.
     //--------------------------------------------------------------------------
-    virtual ~List()
-    {}
+    virtual ~List() = default;
+    // {} // Previous implementation:
 
     //--------------------------------------------------------------------------
     /// \brief Clear contents from the list, to make it empty.
@@ -42,19 +43,19 @@ class List
     /// \brief Insert an element at the current location.
     /// item: The element to be inserted.
     //--------------------------------------------------------------------------
-    virtual void insert(const E& item) = 0;
+    virtual void insert(const T& item) = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Append an element at the end of the list.
     /// item: The element to be appended.
     //--------------------------------------------------------------------------
-    virtual void append(const E& item) = 0;
+    virtual void append(const T& item) = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Remove and return the current element.
     /// \return: the element that was removed.
     //--------------------------------------------------------------------------
-    virtual E remove() = 0;
+    virtual T remove() = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Set the current position to the start of the list.
@@ -92,12 +93,24 @@ class List
     /// \brief Set current position.
     /// pos: The position to make current.
     //--------------------------------------------------------------------------
-    virtual void move_to_position(int position) const = 0;
+    virtual void move_to_position(int position) = 0;
+
+    //--------------------------------------------------------------------------
+    /// \brief Return true if current position is at end of the list.
+    //--------------------------------------------------------------------------
+    //virtual bool is_at_end() = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Return: The current element.
     //--------------------------------------------------------------------------
-    virtual const E& get_value() const = 0;
+    virtual const T& get_value() const = 0;
+
+    //--------------------------------------------------------------------------
+    /// \brief Return: The current element.
+    //--------------------------------------------------------------------------
+    //virtual T get_value() const = 0;
+
+    //virtual bool is_empty() = 0;
 
   private:
 
