@@ -9,7 +9,7 @@
 #ifndef IPC_MESSAGE_QUEUE_CREATE_OR_OPEN_H
 #define IPC_MESSAGE_QUEUE_CREATE_OR_OPEN_H
 
-#include "IPC/MessageQueue/DataStructures.h"
+#include "IPC/MessageQueue/FlagsModesAttributes.h"
 #include "Utilities/ErrorHandling/ErrorHandling.h"
 
 #include <mqueue.h> // ::mqd_t

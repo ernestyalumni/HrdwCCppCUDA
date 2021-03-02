@@ -9,7 +9,7 @@
 #include "CreateOrOpen.h"
 
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
-#include "IPC/MessageQueue/DataStructures.h"
+#include "IPC/MessageQueue/FlagsModesAttributes.h"
 
 #include <mqueue.h> // ::mqd_t
 #include <optional>

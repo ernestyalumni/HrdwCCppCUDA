@@ -5,8 +5,8 @@
 /// \ref http://man7.org/linux/man-pages/man2/mq_open.2.html
 /// \brief Wrapper for message queue flags and attributes.
 //------------------------------------------------------------------------------
-#ifndef IPC_MESSAGE_QUEUE_DATA_STRUCTURES_H
-#define IPC_MESSAGE_QUEUE_DATA_STRUCTURES_H
+#ifndef IPC_MESSAGE_QUEUE_FLAGS_MODES_ATTRIBUTES_H
+#define IPC_MESSAGE_QUEUE_FLAGS_MODES_ATTRIBUTES_H
 
 #include <fcntl.h> // For O_* constants
 #include <mqueue.h> // ::mq_attr
@@ -166,4 +166,4 @@ struct Attributes : public ::mq_attr
 } // namespace MessageQueue
 } // namespace IPC
 
-#endif // IPC_MESSAGE_QUEUE_DATA_STRUCTURES_H
+#endif // IPC_MESSAGE_QUEUE_FLAGS_MODES_ATTRIBUTES_H

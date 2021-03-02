@@ -95,6 +95,7 @@ ADD_EXECUTABLE(Check
   Entrevue/Entrevue_tests.cpp
   Entrevue/LeetCode/LeetCode_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp
+  FileIO/OpenFile_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
   Hierarchy/RuleOf5_tests.cpp
   IO/Epoll/ControlInterestList_tests.cpp
@@ -140,6 +141,7 @@ TARGET_LINK_LIBRARIES(Check
   Categories
   Cpp
   DataStructures
+  FileIO
   Hierarchy
   IO
   IPC

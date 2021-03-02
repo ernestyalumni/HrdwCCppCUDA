@@ -6,7 +6,7 @@
 #include "IPC/MessageQueue/CreateOrOpen.h"
 
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
-#include "IPC/MessageQueue/DataStructures.h"
+#include "IPC/MessageQueue/FlagsModesAttributes.h"
 #include "IPC/MessageQueue/MessageQueueDescription.h"
 #include "Tools/TemporaryDirectory.h"
 

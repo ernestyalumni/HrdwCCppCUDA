@@ -93,6 +93,7 @@ BOOST_AUTO_TEST_CASE(TemporaryDirectoryConstructs)
 {
   TemporaryDirectory temp_dir {"Temp"};
 
+  // /home/topolo/PropD/HrdwCCppCUDA/Voltron/BuildGcc/TemprAkaZg
   std::cout << temp_dir.path() << '\n';
 
   BOOST_TEST(true);
@@ -107,6 +108,7 @@ BOOST_AUTO_TEST_CASE(TemporaryFileAndFileDescriptorWorks)
   auto filename_and_fd =
     create_temporary_file_and_file_descriptor(temp_dir.path(), "temp");
 
+  // /home/topolo/PropD/HrdwCCppCUDA/Voltron/BuildGcc/Temp2qFHCe/tempxHk3cf 4
   std::cout << filename_and_fd.first << ' ' << filename_and_fd.second << '\n';
 }
 
