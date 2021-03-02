@@ -77,6 +77,7 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/Memory/SmartPointers_tests.cpp
   Cpp/Utilities/Memory/StdAddressOf_tests.cpp
   Cpp/Utilities/Memory/StdToAddress_tests.cpp
+  Cpp/Utilities/SignalHandler_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/Arrays_tests.cpp
   DataStructures/BinarySearchTrees_tests.cpp
@@ -84,7 +85,7 @@ ADD_EXECUTABLE(Check
   DataStructures/DataStructures_tests.cpp
   DataStructures/HashSet_tests.cpp
   DataStructures/LinkedLists_tests.cpp
-  DataStructures/Lists/ArrayList_tests.cpp
+# DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists/SingleNode_tests.cpp
   DataStructures/Lists_tests.cpp
   DataStructures/Queues_tests.cpp
