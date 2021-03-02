@@ -85,7 +85,7 @@ ADD_EXECUTABLE(Check
   DataStructures/DataStructures_tests.cpp
   DataStructures/HashSet_tests.cpp
   DataStructures/LinkedLists_tests.cpp
-# DataStructures/Lists/ArrayList_tests.cpp
+  DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists/SingleNode_tests.cpp
   DataStructures/Lists_tests.cpp
   DataStructures/Queues_tests.cpp
