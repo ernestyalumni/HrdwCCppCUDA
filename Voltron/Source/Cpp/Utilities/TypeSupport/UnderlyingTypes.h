@@ -35,7 +35,6 @@ auto get_underlying_value(Enumeration& enum_value)
       std::forward<Enumeration>(enum_value));
 }
 
-
 } // namespace TypeSupport
 } // namespace Utilities
 } // namespace Cpp

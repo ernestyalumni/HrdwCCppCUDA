@@ -9,7 +9,7 @@
 #include <cmath>
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
-using Utilities::ErrorHandling::ErrorNumbers;
+using Utilities::ErrorHandling::ErrorCodeNumber;
 using Utilities::ErrorHandling::HandleReturnValuePassively;
 using OptionalErrorNumber =
 	Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
@@ -17,6 +17,7 @@ using OptionalErrorNumber =
 BOOST_AUTO_TEST_SUITE(Utilities)
 BOOST_AUTO_TEST_SUITE(ErrorHandling_tests)
 
+// cf. https://en.cppreference.com/w/cpp/error/errno
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(HandleReturnValuePassivelyGetsLatestErrno)
@@ -27,7 +28,7 @@ BOOST_AUTO_TEST_CASE(HandleReturnValuePassivelyGetsLatestErrno)
 
 	BOOST_TEST(static_cast<bool>(result));
 	BOOST_TEST((*result).error_number() ==
-		get_underlying_value(ErrorNumbers::edom));
+		get_underlying_value(ErrorCodeNumber::edom));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ErrorHandling_tests

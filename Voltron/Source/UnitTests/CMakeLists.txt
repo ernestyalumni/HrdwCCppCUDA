@@ -116,6 +116,7 @@ ADD_EXECUTABLE(Check
   Utilities/BitsStream_tests.cpp
   Utilities/BooleanAlgebra_tests.cpp
   Utilities/Curry_test.cpp
+  Utilities/ErrorHandling/ErrorNumber_tests.cpp
   Utilities/ErrorHandling/ErrorHandling_tests.cpp
   Utilities/FloatingPoint_tests.cpp
   Utilities/FromAddress_tests.cpp

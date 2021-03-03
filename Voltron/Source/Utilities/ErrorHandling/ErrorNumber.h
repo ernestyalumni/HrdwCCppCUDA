@@ -6,7 +6,7 @@
 /// \ref https://en.cppreference.com/w/cpp/error/errc
 /// https://en.cppreference.com/w/cpp/error/errno_macros
 /// \details Scoped enumeration (enum class) std::errc defines values of
-/// portable error conditions corresponding to POSIX error codes.
+/// portable error conditions corresponding to most of the POSIX error codes.
 //------------------------------------------------------------------------------
 #ifndef UTILITIES_ERROR_HANDLING_ERROR_NUMBER_H
 #define UTILITIES_ERROR_HANDLING_ERROR_NUMBER_H
@@ -22,20 +22,26 @@ namespace ErrorHandling
 {
 
 //------------------------------------------------------------------------------
-/// \class ErrorNumbers
-/// \name ErrorNumbers
+/// \class ErrorCodeNumber
+/// \name ErrorCodeNumber
 /// \brief Wraps POSIX error codes macros.
 /// \details Each of the macros expands to integer constant expressions of type
 /// int, each with positive value, matching most POSIX error codes.
+///
+/// This enum class is defined here in the header since it needs to exposed to
+/// other code when it's including this header .h file.
+///
+/// \ref https://stackoverflow.com/questions/1284529/enums-can-they-do-in-h-or-must-stay-in-cpp
 //------------------------------------------------------------------------------
-//enum class ErrorNumbers;
-enum class ErrorNumbers: int
+enum class ErrorCodeNumber: int
 {
-  e2big = E2BIG, // Argument list too long
-  eacces = EACCES, // Permission defined
-  eaddrinuse = EADDRINUSE, // Address in use
-  eaddrnotavail = EADDRNOTAVAIL, // Address not available
-  eafnosupport = EAFNOSUPPORT, // Address family not supported
+  // TODO: change variable names to follow this:
+  // https://en.cppreference.com/w/cpp/header/system_error
+  argument_list_too_long = E2BIG, // Argument list too long
+  permission_denied = EACCES, // Permission defined
+  address_in_use = EADDRINUSE, // Address in use
+  address_not_available = EADDRNOTAVAIL, // Address not available
+  address_family_not_supported = EAFNOSUPPORT, // Address family not supported
   eagain = EAGAIN, // Resource unavailable, try again
   ealready = EALREADY, // connection already in progress
   ebadf = EBADF, // Bad file descriptor
@@ -57,7 +63,7 @@ enum class ErrorNumbers: int
   eilseq = EILSEQ, // Illegal byte sequence
   einprogress = EINPROGRESS, // Operation in progress
   eintr = EINTR, // Interrupted function
-  einval = EINVAL, // Invalid argument
+  invalid_argument = EINVAL, // Invalid argument
   eio = EIO, // I/O error
   eisconn = EISCONN, // Socket is connected
   eisdir = EISDIR, // Is a directory
@@ -73,7 +79,7 @@ enum class ErrorNumbers: int
   enobufs = ENOBUFS, // No buffer space available
   enodata = ENODATA, // No message is available on the STREAM head read queue
   enodev = ENODEV, // No such device
-  enoent = ENOENT, // No such file or directory
+  no_such_file_or_directory = ENOENT, // No such file or directory
   enoexec = ENOEXEC, // Executable file format error
   enolck = ENOLCK, // No locks available
   enolink = ENOLINK, // Link has been severed
@@ -118,11 +124,20 @@ class ErrorNumber
 {
   public:
 
+    //--------------------------------------------------------------------------
+    /// \brief Default constructor.
+    /// \details Provides important feature of using the preprocessor macro
+    /// errno used for error indication. Library functions and implementation-
+    /// dependent functions are allowed to write positive integers to errno
+    /// whether or not an error occurred.
+    //--------------------------------------------------------------------------
     ErrorNumber();
 
     explicit ErrorNumber(const int error_number);
 
     explicit ErrorNumber(const std::error_code& error_code);
+
+    explicit ErrorNumber(const std::system_error& err);
 
     /// \ref https://en.cppreference.com/w/cpp/error/error_code/error_code
     ErrorNumber(const int error_number, const std::error_category& ecat);
@@ -149,6 +164,13 @@ class ErrorNumber
     std::error_condition error_condition() const
     {
       return error_condition_;
+    }
+
+    static const int to_error_code_value(ErrorCodeNumber error);
+
+    static const ErrorCodeNumber from_error_number(const int error_number)
+    {
+      return static_cast<ErrorCodeNumber>(error_number);
     }
 
   private:
