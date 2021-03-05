@@ -21,6 +21,7 @@ namespace Utilities
 namespace ErrorHandling
 {
 
+/*
 HandleReturnValue::HandleReturnValue() :
   error_number_{}
 {}
@@ -50,6 +51,7 @@ void HandleReturnValue::operator()(
           std::to_string(error_number().error_number()) + '\n');
   }
 }
+*/
 
 HandleReturnValuePassively::HandleReturnValuePassively() = default;
 
@@ -73,6 +75,7 @@ void HandleReturnValuePassively::get_error_number()
   error_number_ = ErrorNumber{};
 }
 
+/*
 std::optional<ErrorNumber> HandleClose::operator()(const int return_value)
 {
   if (return_value < 0)
@@ -88,7 +91,9 @@ std::optional<ErrorNumber> HandleClose::operator()(const int return_value)
 
   return std::nullopt;
 }
+*/
 
+/*
 void HandleRead::operator()(const ssize_t number_of_bytes)
 {
   if (number_of_bytes < 0)
@@ -106,6 +111,7 @@ void HandleRead::operator()(const ssize_t number_of_bytes)
     std::cout << "End of file reached for fd\n";
   }
 }
+*/
 
 } // namespace ErrorHandling
 } // namespace Utilities

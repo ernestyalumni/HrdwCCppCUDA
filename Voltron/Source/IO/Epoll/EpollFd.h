@@ -63,17 +63,18 @@ class EpollFd
     /// reached.
     /// ENOMEM insufficient memory to create kernel object.
     //--------------------------------------------------------------------------
-		class HandleEpollCreate : public Utilities::ErrorHandling::HandleReturnValue
+		class HandleEpollCreate :
+      public Utilities::ErrorHandling::HandleReturnValuePassively
 		{
 			public:
 
 				HandleEpollCreate();
 
-				void operator()(const int result_value);
+				//void operator()(const int result_value);
 
 			private:
 
-				using HandleReturnValue::operator();
+				//using HandleReturnValuePassively::operator();
 		};
 
     int create_epoll_with_size_hint(int size);

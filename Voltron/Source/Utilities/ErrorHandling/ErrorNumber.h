@@ -167,6 +167,19 @@ class ErrorNumber
       return error_condition_;
     }
 
+    // TODO: Doesn't work, see reference:
+    // https://en.cppreference.com/w/cpp/error/error_code/error_code
+    /*
+    template <typename ErrorCodeEnum>
+    std::error_code convert_error_code_enumeration(
+      const ErrorCodeEnum error_code_enum)
+    {
+      error_code_ = std::error_code<ErrorCodeEnum>(error_code_enum);
+
+      return error_code();
+    }
+    */
+
     static const int to_error_code_value(ErrorCodeNumber error);
 
     static const ErrorCodeNumber from_error_number(const int error_number)
@@ -178,8 +191,19 @@ class ErrorNumber
 
     int error_number_;
 
+    //--------------------------------------------------------------------------
+    /// \details class error_code is a platform-dependent error code;
+    /// Each std::error_code holds an error code originating from the operating
+    /// system or some low-level interface and pointer to an object of type
+    /// std::error_category, which corresponds to said interface.
+    //--------------------------------------------------------------------------   
     std::error_code error_code_;
 
+    //--------------------------------------------------------------------------
+    /// \details class error_condition is a platform-independent error code;
+    /// typical implementation holds 1 integer data member (value), and
+    /// pointer to an std::error_category.
+    //--------------------------------------------------------------------------   
     /// \ref https://en.cppreference.com/w/cpp/error/error_condition/error_condition
     std::error_condition error_condition_;
 };

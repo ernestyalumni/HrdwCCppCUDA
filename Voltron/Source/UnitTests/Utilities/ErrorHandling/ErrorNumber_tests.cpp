@@ -52,5 +52,22 @@ BOOST_AUTO_TEST_CASE(DefaultConstructorGetsLatestErrnoValue)
   BOOST_TEST(error_number_1.as_string() == "Numerical argument out of domain");
 }
 
+// TODO: Doesn't work, see reference:
+// https://en.cppreference.com/w/cpp/error/error_code/error_code
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+/*
+BOOST_AUTO_TEST_CASE(ConvertErrorCodeEnumerationWorksOnUserDefinedErrorCodes)
+{
+  ErrorNumber error_number {};
+
+  error_number.convert_error_code_enumeration(ErrorCodeNumber::address_in_use);
+
+  BOOST_TEST(error_number.error_number() ==
+    error_number.to_error_code_value(ErrorCodeNumber::address_in_use));
+}
+*/
+
 BOOST_AUTO_TEST_SUITE_END() // ErrorHandling_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities

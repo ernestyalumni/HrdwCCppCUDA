@@ -85,6 +85,7 @@ class Socket
     /// EPROTONOSUPPORT The protocol type or specified protocol isn't supported
     /// within this domain.
     //--------------------------------------------------------------------------
+    /*
     class HandleSocket : public Utilities::ErrorHandling::HandleReturnValue
     {
       public:
@@ -97,6 +98,7 @@ class Socket
 
         using HandleReturnValue::operator();
     };
+    */
 
     int create_socket(const int domain, const int type, const int protocol);
 

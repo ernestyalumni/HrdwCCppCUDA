@@ -12,7 +12,7 @@
 #include <unistd.h> // ::close
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
-using Utilities::ErrorHandling::HandleClose;
+//using Utilities::ErrorHandling::HandleClose;
 
 namespace IPC
 {
@@ -33,24 +33,26 @@ Socket::Socket(const Domains domain, const Types type, const int protocol):
 Socket::~Socket()
 {
   const int result {::close(fd_)};
-  HandleClose()(result);
+  //HandleClose()(result);
 }
 
 int Socket::create_socket(const int domain, const int type, const int protocol)
 {
   const int result {::socket(domain, type, protocol)};
 
-  HandleSocket()(result);
+  //HandleSocket()(result);
 
   return result;
 }
 
+/*
 Socket::HandleSocket::HandleSocket() = default;
 
 void Socket::HandleSocket::operator()(const int result)
 { 
   this->operator()(result, "create socket file descriptor (::socket)");
 }
+*/
 
 std::ostream& operator<<(std::ostream& os, const Socket& socket)
 {

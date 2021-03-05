@@ -42,6 +42,10 @@ enum class FileFlag : int
   synchronize_writes = O_SYNC,
 };
 
+int to_access_mode_value(AccessMode access_mode);
+
+int to_file_flag_value(AccessMode access_mode);
+
 } // namespace FileIO
 
 #endif // FILE_IO_FILE_FLAGS_MODES_H

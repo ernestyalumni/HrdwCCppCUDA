@@ -19,7 +19,7 @@ namespace Utilities
 {
 namespace ErrorHandling
 {
-
+/*
 //------------------------------------------------------------------------------
 /// \brief Virtual base class for C++ functor for checking the result of a
 /// POSIX Linux system calls, usually when creating a new file descriptor.
@@ -51,6 +51,7 @@ class HandleReturnValue
 
     ErrorNumber error_number_;
 };
+*/
 
 class HandleReturnValuePassively
 {
@@ -81,7 +82,7 @@ class HandleReturnValuePassively
     ErrorNumber error_number_;
 };
 
-
+/*
 //------------------------------------------------------------------------------
 /// \ref http://man7.org/linux/man-pages/man2/close.2.html
 /// \details On error, -1 is returned, and errno is set appropriately.
@@ -133,6 +134,7 @@ class HandleRead : public HandleReturnValue
     //--------------------------------------------------------------------------
     virtual void operator()(const ssize_t number_of_bytes);
 };
+*/
 
 } // namespace ErrorHandling
 } // namespace Utilities

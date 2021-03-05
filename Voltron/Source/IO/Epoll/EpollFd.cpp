@@ -9,13 +9,13 @@
 #include "EpollFd.h"
 
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
-#include "Utilities/ErrorHandling/ErrorHandling.h"
+//#include "Utilities/ErrorHandling/ErrorHandling.h"
 
 #include <sys/epoll.h>
 #include <unistd.h> // ::close
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
-using Utilities::ErrorHandling::HandleClose;
+//using Utilities::ErrorHandling::HandleClose;
 
 namespace IO
 {
@@ -37,18 +37,20 @@ EpollFd::~EpollFd()
   if (close_upon_destruction_)
   {
   	int return_value {::close(fd_)};
-  	HandleClose()(return_value);
+  	//HandleClose()(return_value);
   }
 }
 
 EpollFd::HandleEpollCreate::HandleEpollCreate() = default;
 
+/*
 void EpollFd::HandleEpollCreate::operator()(const int result_value)
 { 
   this->operator()(
   	result_value,
   	"create new epoll instance (::epoll_create or ::epoll_create1)");
 }
+*/
 
 int EpollFd::create_epoll_with_size_hint(int size)
 {
