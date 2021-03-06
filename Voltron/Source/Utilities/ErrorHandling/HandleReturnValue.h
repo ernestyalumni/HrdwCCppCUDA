@@ -23,8 +23,6 @@ class HandleReturnValue : public HandleError
 {
   public:
 
-    using OptionalErrorNumber = std::optional<ErrorNumber>;
-
     HandleReturnValue();
 
     // TODO: Copy this over to the derived classes.
@@ -42,6 +40,20 @@ class HandleReturnValue : public HandleError
     virtual void handle_negative_one_result(const int result);
 };    
 
+class HandleReturnValueWithOptional : public HandleError
+{
+  public:
+
+    using OptionalErrorNumber = std::optional<ErrorNumber>;
+
+    HandleReturnValueWithOptional();
+
+    virtual OptionalErrorNumber operator()(const int result);
+
+  protected:
+
+    virtual OptionalErrorNumber handle_result(const int result);
+};
 
 } // namespace ErrorHandling
 } // namespace Utilities

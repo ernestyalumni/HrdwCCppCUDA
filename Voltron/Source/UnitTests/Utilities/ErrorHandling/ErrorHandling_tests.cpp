@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(HandleReturnValuePassivelyGetsLatestErrno)
 
 	BOOST_TEST(static_cast<bool>(result));
 	BOOST_TEST((*result).error_number() ==
-		get_underlying_value(ErrorCodeNumber::edom));
+		get_underlying_value(ErrorCodeNumber::argument_out_of_domain));
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ErrorHandling_tests

@@ -54,7 +54,8 @@ enum class ErrorCodeNumber: int
   econnreset = ECONNRESET, // Connection reset
   edeadlk = EDEADLK, // Resource deadlock would occur
   edestaddrreq = EDESTADDRREQ, // Destination address required
-  edom = EDOM, // Mathematics argument out of domain of function
+  argument_out_of_domain = EDOM, // Mathematics argument out of domain of
+  // function
   eexist = EEXIST, // File exists
   efault = EFAULT, // Bad address
   efbig = EFBIG, // File too large
