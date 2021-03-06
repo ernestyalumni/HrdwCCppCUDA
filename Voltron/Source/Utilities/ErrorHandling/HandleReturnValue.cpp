@@ -22,7 +22,7 @@ void HandleReturnValue::operator()(const int result)
 
 void HandleReturnValue::handle_negative_one_result(const int result)
 {
-  if (result < -1)
+  if (result < 0)
   {
     get_error_number();
   }

@@ -1,5 +1,7 @@
 #include "Utilities/ErrorHandling/HandleReturnValue.h"
 
+#include "Utilities/ErrorHandling/ErrorNumber.h"
+
 #include "FileIO/FileFlagsModes.h"
 #include "Tools/TemporaryDirectory.h"
 
@@ -7,10 +9,12 @@
 #include <fcntl.h>
 #include <string>
 
-using Tools::TemporaryDirectory;
 using FileIO::AccessMode;
 using FileIO::to_access_mode_value;
+using Tools::TemporaryDirectory;
 using Utilities::ErrorHandling::HandleReturnValue;
+
+using Utilities::ErrorHandling::ErrorNumber;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
 BOOST_AUTO_TEST_SUITE(HandleReturnValue_tests)
@@ -29,11 +33,17 @@ BOOST_AUTO_TEST_CASE(OperatorDetectsErrors)
 
   BOOST_TEST(open_result == -1);
 
+  ErrorNumber expected_error_number;
+
   handle_return_value(open_result);
 
   const auto error_number = handle_return_value.error_number();
 
-//  BOOST_TEST(handle_return_value.error_number().error_number() == 23);
+	BOOST_TEST(error_number.error_number() == 2);
+	BOOST_TEST(error_number.as_string() == "No such file or directory");
+
+	BOOST_TEST(expected_error_number.error_number() == 2);
+	BOOST_TEST(expected_error_number.as_string() == "No such file or directory");
 
 }
 
