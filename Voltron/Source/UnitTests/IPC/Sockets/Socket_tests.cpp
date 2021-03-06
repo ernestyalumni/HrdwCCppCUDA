@@ -12,9 +12,9 @@
 #include <sys/socket.h>
 #include <system_error>
 
-using IPC::Sockets::Domains;
+using IPC::Sockets::Domain;
 using IPC::Sockets::Socket;
-using IPC::Sockets::Types;
+using IPC::Sockets::Type;
 using UnitTests::Tools::error_contains;
 
 BOOST_AUTO_TEST_SUITE(IPC)
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_SUITE(Socket_tests)
 BOOST_AUTO_TEST_CASE(SocketConstructsWithSpecialEnumClasses)
 {
   {
-    const Socket socket {Domains::ipv4, Types::datagram};
+    const Socket socket {Domain::ipv4, Type::datagram};
     BOOST_TEST(socket.domain() == AF_INET);
     BOOST_TEST(socket.type() == SOCK_DGRAM);
 
@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(SocketConstructsWithSpecialEnumClasses)
     // std::cout << "\ncreated socket: descriptor: " << socket.fd() << '\n';
   }
   {
-    const Socket socket {Domains::unix_, Types::stream};
+    const Socket socket {Domain::unix_, Type::stream};
     BOOST_TEST(socket.domain() == AF_UNIX);
     BOOST_TEST(socket.type() == SOCK_STREAM);
   }

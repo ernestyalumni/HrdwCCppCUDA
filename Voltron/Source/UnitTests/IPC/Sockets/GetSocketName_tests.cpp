@@ -15,11 +15,11 @@
 #include <tuple>
 
 using IPC::Sockets::Bind;
-using IPC::Sockets::Domains;
+using IPC::Sockets::Domain;
 using IPC::Sockets::GetSocketName;
 using IPC::Sockets::InternetSocketAddress;
 using IPC::Sockets::Socket;
-using IPC::Sockets::Types;
+using IPC::Sockets::Type;
 
 BOOST_AUTO_TEST_SUITE(IPC)
 BOOST_AUTO_TEST_SUITE(Sockets)
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_SUITE(GetSocketName_tests)
 BOOST_AUTO_TEST_CASE(GetSocketNameGetsInternetAddress)
 {
   {
-    Socket socket {Domains::ipv4, Types::datagram};
+    Socket socket {Domain::ipv4, Type::datagram};
     BOOST_TEST_REQUIRE(socket.domain() == AF_INET);
     BOOST_TEST_REQUIRE(socket.type() == SOCK_DGRAM);
 

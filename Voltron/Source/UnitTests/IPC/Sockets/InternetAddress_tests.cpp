@@ -14,7 +14,7 @@
 #include <string>
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
-using IPC::Sockets::Domains;
+using IPC::Sockets::Domain;
 using IPC::Sockets::InternetAddress;
 using IPC::Sockets::InternetSocketAddress;
 using IPC::Sockets::address_to_network_binary;
@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE(InternetSocketAddressConstructsWithHostByteOrdering)
 	{
 		InternetSocketAddress address;
 		
-		BOOST_TEST(address.sin_family == get_underlying_value(Domains::ipv4));
+		BOOST_TEST(address.sin_family == get_underlying_value(Domain::ipv4));
 
 		const ToBytes to_bytes_sin_family {address.sin_family};
 		const ToBytes to_bytes_sin_port {address.sin_port};

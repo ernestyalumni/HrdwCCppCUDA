@@ -26,7 +26,7 @@ Socket::Socket(const int domain, const int type, const int protocol):
   fd_{create_socket(domain_, type_, protocol_)}
 {}
 
-Socket::Socket(const Domains domain, const Types type, const int protocol):
+Socket::Socket(const Domain domain, const Type type, const int protocol):
   Socket{get_underlying_value(domain), get_underlying_value(type), protocol}
 {}
 

@@ -14,10 +14,10 @@
 #include <optional>
 #include <utility> // std::move
 
-using IPC::Sockets::Domains;
+using IPC::Sockets::Domain;
 using IPC::Sockets::ReceivingOn;
 using IPC::Sockets::Socket;
-using IPC::Sockets::Types;
+using IPC::Sockets::Type;
 using Utilities::ErrorHandling::ErrorNumber;
 
 namespace IPC
@@ -27,8 +27,8 @@ namespace Sockets
 namespace UDP
 {
 
-UdpSocket::UdpSocket(const Domains domain):
-  Socket{domain, Types::datagram}
+UdpSocket::UdpSocket(const Domain domain):
+  Socket{domain, Type::datagram}
 {}
 
 std::pair<

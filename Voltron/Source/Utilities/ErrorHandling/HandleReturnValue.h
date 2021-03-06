@@ -55,7 +55,27 @@ class HandleReturnValueWithOptional : public HandleError
     virtual OptionalErrorNumber handle_result(const int result);
 };
 
+class ThrowSystemErrorOnNegativeReturnValue : public HandleError
+{
+  public:
+
+    ThrowSystemErrorOnNegativeReturnValue();
+
+    ThrowSystemErrorOnNegativeReturnValue(
+      const std::string& custom_error_message);
+
+    virtual void operator()(const int result);
+
+  protected:
+
+    virtual void handle_negative_one_result(const int result);
+
+  private:
+
+    std::string custom_error_message_;
+};
+
 } // namespace ErrorHandling
 } // namespace Utilities
 
-#endif // UTILITIES_ERROR_HANDLING_HANDLE_ERROR_H
+#endif // UTILITIES_ERROR_HANDLING_HANDLE_RETURN_VALUE_H

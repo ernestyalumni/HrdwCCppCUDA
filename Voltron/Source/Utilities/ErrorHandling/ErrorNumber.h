@@ -181,7 +181,7 @@ class ErrorNumber
     }
     */
 
-    static const int to_error_code_value(ErrorCodeNumber error);
+    static const int to_error_code_value(const ErrorCodeNumber error);
 
     static const ErrorCodeNumber from_error_number(const int error_number)
     {

@@ -16,8 +16,8 @@ using IO::Epoll::ControlInterestList;
 using IO::Epoll::Details::EventTypes;
 using IO::Epoll::EpollFd;
 using IPC::Sockets::Socket;
-using IPC::Sockets::Domains;
-using IPC::Sockets::Types;
+using IPC::Sockets::Domain;
+using IPC::Sockets::Type;
 
 BOOST_AUTO_TEST_SUITE(IO)
 BOOST_AUTO_TEST_SUITE(Epoll)
@@ -52,8 +52,8 @@ BOOST_AUTO_TEST_CASE(AddsToInterestList)
   EpollFd epoll_fd {};
   epoll_fd.fd();
 
-  const Socket socket1 {Domains::unix_, Types::stream};
-  const Socket socket2 {Domains::unix_, Types::stream};
+  const Socket socket1 {Domain::unix_, Type::stream};
+  const Socket socket2 {Domain::unix_, Type::stream};
 
   ControlInterestList control_interface {epoll_fd, EventTypes::read};
 

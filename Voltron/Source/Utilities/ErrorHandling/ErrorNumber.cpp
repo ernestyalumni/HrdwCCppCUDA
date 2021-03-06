@@ -54,7 +54,7 @@ ErrorNumber::ErrorNumber(
   error_condition_{error_number, ecat}
 {}
 
-const int ErrorNumber::to_error_code_value(ErrorCodeNumber error)
+const int ErrorNumber::to_error_code_value(const ErrorCodeNumber error)
 {
   return get_underlying_value<ErrorCodeNumber>(error);
 }

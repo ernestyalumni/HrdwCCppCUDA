@@ -46,16 +46,16 @@ std::optional<ErrorNumber> SetSocketOptions::operator()(Socket& socket)
 
 SetReusableSocketAddress::SetReusableSocketAddress():
   SetSocketOptions{
-    get_underlying_value(Levels::socket),
-    get_underlying_value(Options::reuse_address),
+    get_underlying_value(Level::socket),
+    get_underlying_value(Option::reuse_address),
     1}
 {}
 
 SetReusableAddressAndPort::SetReusableAddressAndPort():
   SetSocketOptions{
-    get_underlying_value(Levels::socket),
-    get_underlying_value(Options::reuse_address) ||
-      get_underlying_value(Options::reuse_port),
+    get_underlying_value(Level::socket),
+    get_underlying_value(Option::reuse_address) ||
+      get_underlying_value(Option::reuse_port),
     1}
 {}
 

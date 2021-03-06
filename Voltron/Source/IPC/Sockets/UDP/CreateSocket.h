@@ -15,8 +15,6 @@
 #include <optional>
 #include <utility> // std::pair
 
-using IPC::Sockets::Domains;
-
 namespace IPC
 {
 namespace Sockets
@@ -30,7 +28,7 @@ class UdpSocket : public Socket
 {
 	public:
 		
-		explicit UdpSocket(const Domains domain = Domains::ipv4);
+		explicit UdpSocket(const Domain domain = Domain::ipv4);
 };
 
 //------------------------------------------------------------------------------

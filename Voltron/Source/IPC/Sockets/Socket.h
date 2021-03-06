@@ -37,7 +37,7 @@ class Socket
     //--------------------------------------------------------------------------
     Socket(const int domain, const int type, const int protocol = 0);
 
-    Socket(const Domains domain, const Types, const int protocol = 0);
+    Socket(const Domain domain, const Type, const int protocol = 0);
 
     virtual ~Socket();
 

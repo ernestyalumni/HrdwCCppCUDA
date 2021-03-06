@@ -30,7 +30,7 @@ namespace Sockets
 /// Valid types for AF_UNIX are SOCK_STREAM, for strema-oriented socket, and
 /// SOCK_DGRAM, for datagram-oriented socket that preserves message boundaries.
 //------------------------------------------------------------------------------
-enum class Domains : int
+enum class Domain : int
 {
   unix_ = AF_UNIX,
   local = AF_LOCAL, // Local communication
@@ -49,21 +49,25 @@ enum class Domains : int
 //------------------------------------------------------------------------------
 /// \brief enum class for specifying communication semantics
 //------------------------------------------------------------------------------
-enum class Types : int
+enum class Type : int
 {
   stream = SOCK_STREAM, // Provides sequenced, reliable, 2-way, connection
   datagram = SOCK_DGRAM, // supports datagrams (connectionless, unreliable)
   sequenced_packets = SOCK_SEQPACKET, 
   raw = SOCK_RAW, // provides raw network protocol access.
-  reliable_datagram_layer = SOCK_RDM, // provides reliable datagram layer
-  nonblocking = SOCK_NONBLOCK, 
-  close_on_exec = SOCK_CLOEXEC
+  reliable_datagram_layer = SOCK_RDM // provides reliable datagram layer
+};
+
+enum class BehaviorModifyingValue : int
+{
+  nonblocking = SOCK_NONBLOCK,
+  close_on_exec = SOCK_CLOEXEC  
 };
 
 //------------------------------------------------------------------------------
 // \ref https://www.gnu.org/software/libc/manual/html_node/Socket_002dLevel-Options.html
 //------------------------------------------------------------------------------
-enum class Levels : int
+enum class Level : int
 {
   socket = SOL_SOCKET
 };
@@ -74,7 +78,7 @@ enum class Levels : int
 /// http://man7.org/linux/man-pages/man7/socket.7.html
 /// https://linux.die.net/man/7/socket
 //------------------------------------------------------------------------------
-enum class Options : int
+enum class Option : int
 {
   // Turns on recording of debugging information. Option enables or disabled
   // debugging in underlying protocol modules. Option takes int value. This is

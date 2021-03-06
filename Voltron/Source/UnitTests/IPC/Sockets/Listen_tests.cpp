@@ -13,11 +13,11 @@
 #include <boost/test/unit_test.hpp>
 
 using IPC::Sockets::Bind;
-using IPC::Sockets::Domains;
+using IPC::Sockets::Domain;
 using IPC::Sockets::InternetSocketAddress;
 using IPC::Sockets::MakeListen;
 using IPC::Sockets::Socket;
-using IPC::Sockets::Types;
+using IPC::Sockets::Type;
 
 BOOST_AUTO_TEST_SUITE(IPC)
 BOOST_AUTO_TEST_SUITE(Sockets)
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_SUITE(Listen_tests)
 BOOST_AUTO_TEST_CASE(BindBindsSocketToAnyAvailablePort)
 {
   {
-    Socket socket {Domains::ipv4, Types::stream};
+    Socket socket {Domain::ipv4, Type::stream};
     BOOST_TEST_REQUIRE(socket.domain() == AF_INET);
     BOOST_TEST_REQUIRE(socket.type() == SOCK_STREAM);
 

@@ -102,6 +102,7 @@ ADD_EXECUTABLE(Check
   IO/Epoll/EpollFd_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp
   IPC/Sockets/Bind_tests.cpp
+  IPC/Sockets/CreateSocket_tests.cpp
   IPC/Sockets/GetSocketName_tests.cpp
   IPC/Sockets/InternetAddress_tests.cpp
   IPC/Sockets/Listen_tests.cpp
