@@ -31,7 +31,7 @@ using std::exchange;
 using std::move;
 using std::string;
 
-namespace Hierarchy
+namespace Cpp
 {
 
 namespace RuleOf5
@@ -122,6 +122,5 @@ RuleOf5Object& RuleOf5Object::operator=(RuleOf5Object&& object)
   return *this;
 }
 
-
 } // namespace RuleOf5
-} // namespace Hierarchy
+} // namespace Cpp

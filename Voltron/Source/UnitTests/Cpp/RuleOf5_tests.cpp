@@ -1,12 +1,12 @@
 //------------------------------------------------------------------------------
 // \file RuleOf5_tests.cpp
 //------------------------------------------------------------------------------
-#include "Hierarchy/RuleOf5.h"
+#include "Cpp/RuleOf5.h"
 
 #include <boost/test/unit_test.hpp>
 #include <string>
 
-using Hierarchy::RuleOf5::RuleOf5Object;
+using Cpp::RuleOf5::RuleOf5Object;
 using std::string;
 
 BOOST_AUTO_TEST_SUITE(Hierarchy)

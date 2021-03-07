@@ -6,4 +6,6 @@ ADD_SUBDIRECTORY(Templates/FunctionT)
 ADD_SUBDIRECTORY(Utilities)
 
 ADD_LIBRARY(Cpp
-  ClassAsEnum.cpp)
+  ClassAsEnum.cpp
+  Classes/ConstructorsToDestructors.cpp
+  RuleOf5.cpp)

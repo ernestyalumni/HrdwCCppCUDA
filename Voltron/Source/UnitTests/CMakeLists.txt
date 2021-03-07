@@ -53,6 +53,7 @@ ADD_EXECUTABLE(Check
   Cpp/Operations_test.cpp
   Cpp/PointersArraysReferences_tests.cpp
   Cpp/Recursion_tests.cpp
+  Cpp/RuleOf5_tests.cpp
   Cpp/Std/Algorithm/Algorithms_tests.cpp
   Cpp/Std/Algorithm/EqualAndMismatch_tests.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
@@ -97,7 +98,6 @@ ADD_EXECUTABLE(Check
   Entrevue/MiscellaneousQuestions_tests.cpp
   FileIO/OpenFile_tests.cpp
   Hierarchy/AccessAndInheritance_tests.cpp
-  Hierarchy/RuleOf5_tests.cpp
   IO/Epoll/ControlInterestList_tests.cpp
   IO/Epoll/EpollFd_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp

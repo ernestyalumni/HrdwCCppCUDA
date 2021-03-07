@@ -5,7 +5,7 @@
 /// \email  ernestyalumni@gmail.com
 /// \ref https://en.cppreference.com/w/cpp/utility/functional/reference_wrapper
 //------------------------------------------------------------------------------
-#include "Hierarchy/RuleOf5.h"
+#include "Cpp/RuleOf5.h"
 
 #include <algorithm> // std::copy
 #include <boost/test/unit_test.hpp>
@@ -18,7 +18,7 @@
 #include <streambuf>
 #include <vector>
 
-using Hierarchy::RuleOf5::RuleOf5Object;
+using Cpp::RuleOf5::RuleOf5Object;
 using std::advance;
 using std::begin;
 using std::copy;

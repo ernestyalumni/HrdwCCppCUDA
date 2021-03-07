@@ -4,12 +4,12 @@
 /// \brief Classes demonstrating copy and move constructors, assignments,
 ///   destructors.
 ///-----------------------------------------------------------------------------
-#ifndef HIERARCHY_RULE_OF_5_H
-#define HIERARCHY_RULE_OF_5_H
+#ifndef CPP_RULE_OF_5_H
+#define CPP_RULE_OF_5_H
 
 #include <string>
 
-namespace Hierarchy
+namespace Cpp
 {
 namespace RuleOf5
 {
@@ -97,6 +97,6 @@ class RuleOf5Object
 };
 
 } // namespace RuleOf5
-} // namespace Hierarchy
+} // namespace Cpp
 
-#endif // HIERARCHY_RULE_OF_5_H
+#endif // CPP_RULE_OF_5_H
