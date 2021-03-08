@@ -30,14 +30,36 @@ class SocketFd
       const int protocol,
       const int fd);
 
-    // Copy Constructor.
-    //SocketFd(const SocketFd&) = delete;
+    // Copy constructor.
+    SocketFd(const SocketFd&) = delete;
 
-    // Copy Assignment.
-    //SocketFd& operator=(const SocketFd&) = delete;
+    // Copy assignment.
+    SocketFd& operator=(const SocketFd&) = delete;
 
     // Move constructor.
-    //SocketFd
+    SocketFd(SocketFd&&);
+
+    // Move assignment.
+    SocketFd& operator=(SocketFd&&);
+
+    virtual ~SocketFd();
+
+    int domain() const
+    {
+      return domain_;
+    }
+
+    int type() const
+    {
+      return type_;
+    }
+
+    int protocol() const
+    {
+      return protocol_;
+    }
+
+    static SocketFd extract_from_optional(std::optional<SocketFd>&);
 
   private:
 
@@ -77,7 +99,6 @@ class CreateSocket
 
     void add_behavior_modification(const BehaviorModifyingValue value);
 
-    // TODO: change return type to SocketFd
     //--------------------------------------------------------------------------
     /// \details If it's the case that we want the user to be able to try again
     /// in creating a socket if it fails beforehand, then we do not want to
@@ -109,9 +130,24 @@ class CreateSocket
       return static_cast<BehaviorModifyingValue>(value);
     }
 
+    int domain() const
+    {
+      return domain_;
+    }
+
     int type_value() const
     {
       return type_value_;
+    }
+
+    Type type() const
+    {
+      return type_;
+    }
+
+    int protocol() const
+    {
+      return protocol_;
     }
 
     Utilities::ErrorHandling::ErrorNumber get_error_number() const

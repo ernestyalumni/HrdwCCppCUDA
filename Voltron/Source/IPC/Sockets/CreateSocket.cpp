@@ -8,14 +8,21 @@
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
 #include "IPC/Sockets/ParameterFamilies.h"
 #include "Utilities/ErrorHandling/HandleClose.h"
+#include "Utilities/ErrorHandling/HandleReturnValue.h"
 
+#include <optional>
+#include <string>
 #include <unistd.h> // ::close
 #include <utility> // std::move
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
 using Utilities::ErrorHandling::HandleClose;
+using Utilities::ErrorHandling::ThrowSystemErrorOnNegativeReturnValue;
 using std::make_optional;
+using std::move;
 using std::nullopt;
+using std::optional;
+using std::to_string;
 
 namespace IPC
 {
@@ -32,8 +39,49 @@ SocketFd::SocketFd(
   type_{type},
   protocol_{protocol},
   fd_{fd}
-{}
+{
+  ThrowSystemErrorOnNegativeReturnValue handler {
+    "Invalid input for fd:" + to_string(fd_)};
 
+  handler(fd_);
+}
+
+SocketFd::SocketFd(SocketFd&& other):
+  domain_{other.domain_},
+  type_{other.type_},
+  protocol_{other.protocol_},
+  fd_{other.fd_}
+{
+  other.fd_ = -2;
+}
+
+SocketFd& SocketFd::operator=(SocketFd&& other)
+{
+  domain_ = other.domain_;
+  type_ = other.type_;
+  protocol_ = other.protocol_;
+  fd_ = other.fd_;
+
+  other.fd_ = -3;
+
+  return *this;
+}
+
+SocketFd::~SocketFd()
+{
+  if (fd_ > -1)
+  {
+    HandleClose close_handler;
+
+    const int close_return {::close(fd_)};
+    close_handler(close_return);
+  }
+}
+
+SocketFd SocketFd::extract_from_optional(optional<SocketFd>& optional_socket_fd)
+{
+  return move(*optional_socket_fd);
+}
 
 CreateSocket::CreateSocket(
   const int domain,
@@ -83,7 +131,7 @@ CreateSocket::OptionalSocketFd CreateSocket::operator()()
 
   SocketFd socket_fd {domain_, type_value_, protocol_, return_value};
 
-  return make_optional<SocketFd>(std::move(socket_fd));
+  return make_optional<SocketFd>(move(socket_fd));
 }
 
 const int CreateSocket::to_domain_value(const Domain domain)
