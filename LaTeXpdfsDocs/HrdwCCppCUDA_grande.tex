@@ -827,6 +827,78 @@ cf. 17.1 Introduction of Ch. 17 Construction, Cleanup, Copy, and Move of Stroust
 
 Gottschling (2015) \cite{Gott2015}
 
+\subsection{Constructors and Invariants}
+
+cf. 17.2.1 Constructors and Invariants, pp. 484, Ch. 17, Stroustrup \cite{Stro2013}.
+
+\textbf{class invariant} - something that must hold whenever a member function is called (from outside the class). Typically, class \emph{constructor}'s job is to initialize an object of its class and that initialization must establish the \emph{class invariant}.
+
+For example
+\begin{lstlisting}
+Vector::Vector(int s)
+{
+  if (s<0) throw Bad_size{s};
+  sz = s;
+  elem = new double[s];
+}
+\end{lstlisting}
+
+Constructor must make true that an array size must be non-negative.
+
+Why would you define an invariant?
+\begin{itemize}
+	\item To focus the design effort for the class
+	\item To clarify behavior of the class (e.g., under error conditions)
+	\item To simplify definition of member functions
+	\item To clarify class's management of resources
+	\item To simplify documentation of the class
+\end{itemize}
+
+\subsection{Base and Member Destructors}
+
+cf. 17.2.3 Base and Member Destructors, pp. 486, Stroustrup \cite{Stro2013}.
+
+Ctors and dtors interact correctly with class hierarchies. A constructor builds a class object "from the bottom up":
+\begin{enumerate}
+	\item first, ctor invokes its base class constructors
+	\item then, it invokes the member constructors, and
+	\item finally, it executes its own body
+\end{enumerate}
+A dtor "tears down" an object in reverse order:
+\begin{enumerate}
+	\item first, dtor executes its own body,
+	\item then, it invokes its member dtors, and
+	\item finally, it invokes its base class dtors
+\end{enumerate}
+
+In particular, a \verb|virtual| base is constructed before any base that might use it and destroyed after all such bases - this ordering ensures that a base or member isn't used before it has been initialized or used after it has been destroyed.
+
+\subsection{virtual Destructors}
+
+A dtor can be declared to be \verb|virtual|, and usually should be for a class with a virtual function. The reason we need a \verb|virtual| dtor is that an object usually manipulated through the interface provided by a base class is often also \verb|delete|'d through that interface. It's because a derived class would have its own dtor, and without \verb|virtual|, \verb|delete| would fail to invoke appropriate derived class dtor.
+
+\begin{lstlisting}
+class Shape
+{
+  public:
+    virtual void draw() = 0;
+    virtual ~Shape();
+};
+
+class Circle
+{
+  public:
+	void draw();
+	~Circle(); // overrides ~Shape()
+};
+
+void user(Shape* p)
+{
+  p->draw(); // invoke appropriate draw()
+  delete p; // invoke appropriate dtor
+}
+\end{lstlisting}
+
 
 Difference between \emph{move} and \emph{copy}: after a copy, 2 objects must have same value; whereas after a move, the source of the move isn't required to have its original value.  So moves can be used when source object won't be used again.  
 
