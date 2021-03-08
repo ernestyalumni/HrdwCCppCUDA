@@ -125,10 +125,9 @@ class List
     //--------------------------------------------------------------------------
     List(const List&)
     {}
-
 };
 
 } // namespace Lists
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_LISTS_LISTS_H
+#endif // DATA_STRUCTURES_LISTS_LIST_H

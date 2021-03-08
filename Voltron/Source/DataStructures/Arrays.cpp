@@ -1,5 +1,4 @@
 //------------------------------------------------------------------------------
-/// \file Arrays.h
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating arrays as an Abstract Data
 /// Structure.
