@@ -1,5 +1,4 @@
 //------------------------------------------------------------------------------
-/// \file Array.h
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating array as an Abstract Data Type.
 /// \ref Data Structures and Algorithm Analysis in C++, 3rd. Ed.. Dr. Clifford
@@ -45,7 +44,7 @@ class Array
   	/// \ref https://en.cppreference.com/w/cpp/language/operators
   	/// Array subscript operator.
   	//--------------------------------------------------------------------------
-  	virtual T& operator[](const std::size_t index) = 0 
+  	virtual T& operator[](const std::size_t index) = 0;
   	virtual const T& operator[](const std::size_t index) const = 0;
 
   	virtual std::size_t size() const = 0;
@@ -56,3 +55,8 @@ class Array
 
   	Array() = default;
 };
+
+} // namespace Arrays
+} // namespace DataStructures
+
+#endif // DATA_STRUCTURES_ARRAYS_ARRAY_H

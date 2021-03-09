@@ -528,7 +528,6 @@ double fastest_find_sorted_arrays_median(
 
 int remove_duplicates(std::vector<int>& nums);
 
-
 } // namespace LeetCode
 
 } // namespace Arrays

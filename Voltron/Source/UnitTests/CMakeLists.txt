@@ -81,6 +81,7 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/Memory/StdToAddress_tests.cpp
   Cpp/Utilities/SignalHandler_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
+  DataStructures/Arrays/FixedSizeArrays_tests.cpp
   DataStructures/Arrays_tests.cpp
   DataStructures/BinarySearchTrees_tests.cpp
   DataStructures/BinaryTrees_tests.cpp
