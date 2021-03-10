@@ -268,12 +268,10 @@ class FixedSizeArrayOnStack : Array<T>
 			data_ = data;
 		}
 
-		// TODO: Fill this in.
 		// Copies, Moves.
-		/*
 		// Copy ctor.
-		DynamicFixedSizeArray(const DynamicFixedSizeArray& other):
-			data_{new T[other.size()]},
+		FixedSizeArrayOnStack(const FixedSizeArrayOnStack& other):
+			data_{},
 			size_{other.size_}
 		{
 			for (size_t index {0}; index < size_; ++index)
@@ -283,7 +281,7 @@ class FixedSizeArrayOnStack : Array<T>
 		}
 
 		// Copy assignment.
-		DynamicFixedSizeArray& operator=(const DynamicFixedSizeArray& other)
+		FixedSizeArrayOnStack& operator=(const FixedSizeArrayOnStack& other)
 		{
 			if (this->size() != other.size())
 			{
@@ -303,18 +301,17 @@ class FixedSizeArrayOnStack : Array<T>
 		}
 
 		// Move ctor.
-		DynamicFixedSizeArray(DynamicFixedSizeArray&& other):
+		FixedSizeArrayOnStack(FixedSizeArrayOnStack&& other):
 			data_{other.data_},
 			size_{other.size_}
 		{
 			other.data_ = nullptr;
 
-			// So not to invoke delete in dtor of other.
 			other.size_ = 0;
 		}
 
 		// Move assignment.
-		DynamicFixedSizeArray& operator=(DynamicFixedSizeArray&& other)
+		FixedSizeArrayOnStack& operator=(FixedSizeArrayOnStack&& other)
 		{
 			if (this->size() != other.size())
 			{
@@ -332,13 +329,8 @@ class FixedSizeArrayOnStack : Array<T>
 			return *this;
 		}
 
-		~DynamicFixedSizeArray()
-		{
-			if (size() > 0)
-			{
-				delete[] data_;
-			}
-		}
+		~FixedSizeArrayOnStack()
+		{}
 
 		virtual const T& get_value(const int index) const
 		{
@@ -397,9 +389,8 @@ class FixedSizeArrayOnStack : Array<T>
 
 		virtual size_t alignment_in_bytes() const
 		{
-			return alignof(DynamicFixedSizeArray);
+			return alignof(FixedSizeArrayOnStack);
 		}
-		*/
 
 	private:	
 
