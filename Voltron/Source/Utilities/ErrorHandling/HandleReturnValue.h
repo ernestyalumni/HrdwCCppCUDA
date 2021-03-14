@@ -25,9 +25,6 @@ class HandleReturnValue : public HandleError
 
     HandleReturnValue();
 
-    // TODO: Copy this over to the derived classes.
-    //explicit HandleReturnValue(const std::string& custom_error_string);
-
     //--------------------------------------------------------------------------
     /// \brief Effectively run errno macro and save results in an ErrorNumber.
     //--------------------------------------------------------------------------   

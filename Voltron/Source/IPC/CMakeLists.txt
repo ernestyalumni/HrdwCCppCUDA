@@ -1,5 +1,7 @@
 ADD_LIBRARY(IPC
+  MessageQueue/CreateMessageQueue.cpp
   MessageQueue/CreateOrOpen.cpp
+  MessageQueue/FlagsAndModes.cpp
   MessageQueue/MessageQueueDescription.cpp
   MessageQueue/Receive.cpp
   MessageQueue/Send.cpp
