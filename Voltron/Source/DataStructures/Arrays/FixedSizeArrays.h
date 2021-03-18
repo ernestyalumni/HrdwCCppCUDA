@@ -11,6 +11,7 @@
 #include "Array.h"
 
 #include <cstddef> // std::size_t
+#include <initializer_list>
 #include <stdexcept> // std::out_of_range, std::runtime_error
 #include <string>
 #include <type_traits> // std::enable_if_t
@@ -62,7 +63,7 @@ class DynamicFixedSizeArray : Array<T>
 			}
 		}
 
-		explicit DynamicFixedSizeArray(T* data, const size_t N):
+		explicit DynamicFixedSizeArray(T* const data, const size_t N):
 			data_{new T[N]},
 			size_{N}
 		{
@@ -154,7 +155,7 @@ class DynamicFixedSizeArray : Array<T>
 
 		virtual const T& get_value(const int index) const
 		{
-			if (index >= size_ || index > 0)
+			if (index >= size_ || index < 0)
 			{
 				throw std::out_of_range(
 					"Out of Range, DynamicFixedSizeArray: index input:" +
@@ -168,7 +169,7 @@ class DynamicFixedSizeArray : Array<T>
 
 		virtual void set_value(const int index, const T value)
 		{
-			if (index >= size_ || index > 0)
+			if (index >= size_ || index < 0)
 			{
 				throw std::out_of_range(
 					"Out of Range, DynamicFixedSizeArray: index input:" +
@@ -397,8 +398,6 @@ class FixedSizeArrayOnStack : Array<T>
 		T data_[N];
 		size_t size_;
 };
-
-
 
 } // namespace Arrays
 } // namespace DataStructures

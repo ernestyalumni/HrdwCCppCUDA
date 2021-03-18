@@ -90,8 +90,8 @@ class CStyleDynamicArray
 //-----------------------------------------------------------------------------
 /// new and delete operators allocate memory for objects from a pool called
 /// free store.
+/// TODO: Consider obsoleting this function.
 //-----------------------------------------------------------------------------
-
 /// \date 20201015 15, 17:21 complete
 template <typename T>
 class ResizeableArray
