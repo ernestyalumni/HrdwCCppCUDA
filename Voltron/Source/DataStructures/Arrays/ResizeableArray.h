@@ -81,7 +81,7 @@ class ResizeableArray : Array<T>
     // Copies, Moves.
 
     // Copy ctor.
-    ResizeableArray(const Resizeable& other):
+    ResizeableArray(const ResizeableArray& other):
       data_{new T[other.size()]},
       size_{other.size_},
       capacity_{other.capacity_}
@@ -206,7 +206,7 @@ class ResizeableArray : Array<T>
     void append(T item)
     {
       ensure_extra_capacity();
-      items_[size_] = item;
+      data_[size_] = item;
       size_++;
     }
 

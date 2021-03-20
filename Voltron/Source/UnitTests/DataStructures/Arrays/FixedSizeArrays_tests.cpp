@@ -1,4 +1,3 @@
-
 #include "DataStructures/Arrays/FixedSizeArrays.h"
 
 #include <array>
