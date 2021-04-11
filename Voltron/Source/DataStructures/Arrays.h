@@ -14,6 +14,7 @@
 #include <initializer_list>
 #include <iterator> // std::begin, std::end;
 #include <stdexcept> // std::runtime_error
+#include <vector>
 
 namespace DataStructures
 {

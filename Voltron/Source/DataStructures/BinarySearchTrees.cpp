@@ -412,8 +412,57 @@ int kth_largest_element_reverse_inorder_traversal(
 
   // Traverse the left subtree.
   kth_largest_element_reverse_inorder_traversal(node_ptr->left_, k, count);
+
+  // TODO: finish this
+  return 1;
 }
 
+// https://www.geeksforgeeks.org/find-k-th-smallest-element-in-bst-order-statistics-in-bst/
+TreeNode* kth_smallest_element_recursive_step(TreeNode* node_ptr, int& count)
+{
+  if (node_ptr == nullptr)
+  {
+    return nullptr;
+  }
+
+  // Search in left subtree.
+  TreeNode* left_node_result {
+    kth_smallest_element_recursive_step(node_ptr->left_, count)};
+
+  // If kth smallest is found in left subtree, return it.
+  if (left_node_result != nullptr)
+  {
+    return left_node_result;
+  }
+
+  // Come back here, after traversing the left subtree. Now visit the "root".
+  // We know that node_ptr is nonempty from above.
+  --count;
+
+  if (count == 0)
+  {
+    return node_ptr;
+  }
+
+  // Otherwise, search right subtree.
+  return kth_smallest_element_recursive_step(node_ptr->right_, count);
+}
+
+int kth_smallest_element(TreeNode* root, int k)
+{
+  int k_counter {k};
+
+  TreeNode* result {kth_smallest_element_recursive_step(root, k_counter)};
+
+  if (result == nullptr)
+  {
+    return -1;
+  }
+  else
+  {
+    return result->value_;
+  }
+}
 
 //------------------------------------------------------------------------------
 /// \name sorted_array_to_BST

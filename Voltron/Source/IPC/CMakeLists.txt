@@ -13,6 +13,7 @@ ADD_LIBRARY(IPC
   Sockets/Receive.cpp
   Sockets/SetSocketOptions.cpp
   Sockets/Socket.cpp
+  Sockets/TCP/CreateSocket.cpp
   Sockets/UDP/CreateSocket.cpp
   Sockets/UDP/Receiver.cpp
   Sockets/UDP/Sender.cpp)
@@ -23,5 +24,6 @@ ADD_LIBRARY(IPC
 #ENDIF()
 
 TARGET_LINK_LIBRARIES(IPC
+  FileIO
   Utilities
   -lrt)

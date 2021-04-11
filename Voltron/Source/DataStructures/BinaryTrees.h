@@ -97,6 +97,13 @@ std::vector<int> postorder_traversal_iterative_simple(TreeNode* root);
 //------------------------------------------------------------------------------
 std::vector<std::vector<int>> level_order_traversal(TreeNode* root);
 
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/interview/card/top-interview-questions-medium/108/trees-and-graphs/787/
+/// \brief Binary Tree Zigzag Level Order Traversal.
+/// \details Medium Interview problem.
+//------------------------------------------------------------------------------
+std::vector<std::vector<int>> zigzag_level_order_traversal(TreeNode* root);
+
 int max_depth(TreeNode* root);
 
 int max_depth_recursive_step(TreeNode* root);

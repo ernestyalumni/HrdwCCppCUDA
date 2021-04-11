@@ -531,11 +531,13 @@ vector<vector<int>> level_order_traversal(TreeNode* root)
     {
       level_results.emplace_back(current_ptr->value_);
 
+      // Go left first.
       if (current_ptr->left_ != nullptr)
       {
         node_ptr_queue.push(current_ptr->left_);
       }
 
+      // Then go right next.
       if (current_ptr->right_ != nullptr)
       {
         node_ptr_queue.push(current_ptr->right_);
@@ -561,6 +563,54 @@ vector<vector<int>> level_order_traversal(TreeNode* root)
     result.emplace_back(level_results);
 
     node_ptr_queue.pop();
+  }
+
+  return result;
+}
+
+vector<vector<int>> zigzag_level_order_traversal(TreeNode* root)
+{
+  vector<vector<int>> result;
+
+  if (root == nullptr)
+  {
+    return result;
+  }
+
+  queue<TreeNode*> node_ptr_queue;
+  node_ptr_queue.push(root);
+
+  bool go_left_to_right {true};
+
+  while (!node_ptr_queue.empty())
+  {
+    const int node_queue_size {static_cast<int>(node_ptr_queue.size())};
+    vector<int> row (node_queue_size);
+
+    for (int i {0}; i < node_queue_size; ++i)
+    {
+      TreeNode* current_ptr {node_ptr_queue.front()};
+      node_ptr_queue.pop();
+
+      // Find position to fill node's value
+      int index {(go_left_to_right) ? i : (node_queue_size - 1 - i)};
+
+      row[index] = current_ptr->value_;
+
+      if (current_ptr->left_)
+      {
+        node_ptr_queue.push(current_ptr->left_);
+      }
+
+      if (current_ptr->right_)
+      {
+        node_ptr_queue.push(current_ptr->right_);
+      }
+    }
+
+    // After this level.
+    go_left_to_right = !go_left_to_right;
+    result.push_back(row);
   }
 
   return result;

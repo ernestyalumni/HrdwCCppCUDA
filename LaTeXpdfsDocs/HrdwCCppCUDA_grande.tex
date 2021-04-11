@@ -21,7 +21,7 @@
 \usepackage[table]{xcolor}
 \usepackage{pdfpages}
 \usepackage{tikz}
-\usetikzlibrary{matrix,arrows}
+\usetikzlibrary{matrix,arrows, shapes}
 
 \usepackage{multicol}
 
@@ -4173,7 +4173,50 @@ cf. pp. 1063, Ch 52, \emph{POSIX Message Queues}, Kerrisk (201) \cite{Kerr2010}.
 
 
 
-\subsection{UDP}
+\subsection{TCP, UDP, Unix Network Programming}
+
+When writing programs that communicate across a computer network, one must first invent a \textbf{protocol}, an \emph{agreement} on how those programs will communicate.
+
+% cf. https://texample.net//tikz/examples/simple-flow-chart/
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, circle, fill=red!20, node distance=3cm,
+minimum height=2em]
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+% Place nodes
+\node [block]  (leftwebclient) {Web client (user process)};
+\node [block, below of=leftwebclient] (tcpleft) {TCP (part of protocol stack within kernel)};
+\node [block, below of=tcpleft] (ipleft) {IP (part of protocol stack within kernel)};
+\node [block, below of=ipleft] (ethernetdriverleft) {Ethernet driver};
+\node [block, right of=ethernetdriverleft] (ethernetdriverright) {Ethernet driver (datalink layer)};
+\node [block, above of=ethernetdriverright](ipright) {IP (network layer)};
+\node [block, above of=ipright](tcpright) {TCP (transport layer)};
+\node [block, above of=tcpright](webright) {Web Server (application layer)};
+% Draw edges
+%\path [line] (leftwebclient) -- {application protocol} (webright);
+\path [line] (leftwebclient) -- (tcpleft);
+%\path [line] (tcpleft) -- {TCP protocol} (tcpright);
+\path [line] (tcpleft) -- (ipleft);
+%\path [line] (ipleft) -- {IP protocol} (ipright);
+\path [line] (ipleft) -- (ethernetdriverleft);
+%\path [line] (ethernetdriverleft) -- {Ethernet Protocol} (ethernetdriverright);
+\path [line] (ethernetdriverright) -- (ipright);
+\path [line] (ipright) -- (tcpright);
+\path [line] (tcpright) -- (webright);
+\end{tikzpicture}
+
+\begin{enumerate}
+	
+\end{enumerate}
+
+
+
 
 \textbf{UDP: TODO}
 
@@ -4185,7 +4228,11 @@ cf. pp. 1063, Ch 52, \emph{POSIX Message Queues}, Kerrisk (201) \cite{Kerr2010}.
 \url{http://igm.univ-mlv.fr/~yahya/progsys/linux.pdf} \\
 \url{http://www.cs.fsu.edu/~baker/opsys/examples/forkexec/fork_wait.c} \\
 \url{http://cs241.cs.illinois.edu/coursebook/}
+
+CS556 - Distributed Systems. Tutorial by Eleftherios Kosmas.
 \url{https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf}
+
+
 \url{https://www.cs.rutgers.edu/~pxk/417/notes/content/02r-sockets-programming-slides.pdf}
 \url{https://www.cs.cmu.edu/~srini/15-441/S10/lectures/r01-sockets.pdf}
 
@@ -4734,6 +4781,10 @@ Daniel Jackson. \emph{6.170 Software Studio}. Spring 2013. Massachusetts Institu
 
 \bibitem{Kerr2010}
 Michael Kerrisk. \textbf{The Linux Programming Interface: A Linux and UNIX System Programming Handbook}. No Starch Press; 1st edition (October 28, 2010). ISBN-10 : 1593272200 ISBN-13 : 978-1593272203 
+
+\bibitem{SFR2004}
+W. Richard Stevens, Bill Fenner, Andrew M. Rudoff. \textbf{UNIX Network Programming: The Sockets Networking API}. Volume 1. Third Edition. 2004. ISBN: 0-13-141155-1
+
 
 
 \end{thebibliography}

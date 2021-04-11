@@ -535,6 +535,14 @@ int kth_largest_element_reverse_inorder_traversal(
   int& count);
 
 //------------------------------------------------------------------------------
+/// \url https://leetcode.com/explore/interview/card/top-interview-questions-medium/108/trees-and-graphs/790/
+/// \brief Kth smallest element in a BST
+/// \details Given the root of a binary search tree, and an integer k, return
+/// the kth (1-indexed) smallest element in the tree.
+//------------------------------------------------------------------------------
+int kth_smallest_element(TreeNode* root, int k);
+
+//------------------------------------------------------------------------------
 /// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/142/conclusion/1018/
 //------------------------------------------------------------------------------
 
