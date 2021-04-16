@@ -18,7 +18,7 @@
 \usepackage[table]{xcolor}
 \usepackage{pdfpages}
 \usepackage{tikz}
-\usetikzlibrary{matrix,arrows,backgrounds, shapes}
+\usetikzlibrary{matrix,arrows,backgrounds, positioning, shapes}
 
 % Causes missing number error in binom:
 % https://tex.stackexchange.com/questions/570899/use-of-amsmath-binom-causes-missing-number-if-breqn-is-used
@@ -3270,7 +3270,7 @@ Usually we sort a number of records containing a number of fields based on a \em
 
 \subsection{Loop Invariant}
 
-cf. pp. 18, Sec. 2.1 Insertion Sort of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+cf. pp. 18-20, Sec. 2.1 Insertion Sort of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
 
 \begin{definition}[Loop invariant]
 	At the start of each iteration of a \textbf{for} loop (or other loop), this must hold true.
@@ -3289,7 +3289,7 @@ e.g. \textbf{Maintenance}: move $A[1..j-1]$ to right until finding proper positi
 
 \textbf{Termination} property causes loop to terminate; differs from mathematical induction in which we apply inductive step infinitely.
 
-
+Typically, show Initialization and Maintenance of a Loop Invariant by induction. Use Termination to show the algorithm solves the problem and gives the final solution.
 
 \subsection{Insertion Sort, Straight Insertion Sort}
 
@@ -4084,10 +4084,181 @@ Unlike streams of bytes sent and received by sockets, these synchronized queues 
 
 cf. Ch. 51, \emph{Introduction to POSIX IPC}, Kerrisk (2010) \cite{Kerr2010}.
 
+\emph{Message queues} can be used to pass messages between processes. \\
+As with System V message queues, message boundaries are preserved, so readers and writers communicate in units of messages (as opposed to undelimited byte stream provided by a pipe). \\
+POSIX message queues permit each message to be assigned a priority.
 
-\subsection{UDP}
+cf. \textbf{IPC object names}, Sec. 51.1 API Overview, pp. 1058, Kerrisk (2010) \cite{Kerr2010}.
 
-\textbf{UDP: TODO}
+To access a POSIX IPC object, we must identify it and only portable means that SUSv3 specifies is using a \emph{name consisting of an initial slash}, e.g. \verb|/myobject|.
+
+On Linux, names for POSIX message queue objects (and shared memory) are limited to \verb|NAME_MAX| (255) characters.
+
+Rules for creating IPC object names on some systems are different. e.g. on Tru64 5.1, IPC object names created as names within standard file system, so if caller doesn't have permission to create a file in that directory, then IPC \emph{open} call fails.
+
+cf. pp. 1063, Ch 52, \emph{POSIX Message Queues}, Kerrisk (201) \cite{Kerr2010}.
+
+\begin{itemize}
+	\item POSIX message queues are reference counted - a queue that's marked for deletion is removed only after its closed by all processes that are currently using it.
+	\item POSIX messages have associated priority and messages are always strictly queued (and thus received) in priority order. Each System V message has integer type and messages can be selected in a variety of ways using \verb|msgrcv()|
+	\item POSIX message queues provide feature that allows process to be asynchronously notified when message is available on a queue.
+\end{itemize}
+
+\subsection{TCP, UDP, Unix Network Programming}
+
+cf. Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
+
+When writing programs that communicate across a computer network, one must first invent a \textbf{protocol}, an \emph{agreement} on how those programs will communicate.
+
+For example, a Web server is typically thought of as a long-running program (or \textbf{daemon}) that sends network messages only in response to requests coming in from the network.
+
+Other side of the porotocol is a Web client, e.g. browser, which always \emph{initiates} communication with the server.
+
+Deciding that client always initiates requests tends to simplify protocol - basic client/server model.
+
+Some more complex network applications require \emph{asynchronous callback} communication.
+
+
+% cf. https://texample.net//tikz/examples/simple-flow-chart/
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, circle, fill=red!20, node distance=3cm,
+minimum height=2em]
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+% Place nodes
+\node [block]  (leftwebclient) {Web client (user process)};
+\node [block, below of=leftwebclient] (tcpleft) {TCP (part of protocol stack within kernel)};
+\node [block, below of=tcpleft] (ipleft) {IP (part of protocol stack within kernel)};
+\node [block, below of=ipleft] (ethernetdriverleft) {Ethernet driver};
+\node [block, right of=ethernetdriverleft] (ethernetdriverright) {Ethernet driver (datalink layer)};
+\node [block, above of=ethernetdriverright](ipright) {IP (network layer)};
+\node [block, above of=ipright](tcpright) {TCP (transport layer)};
+\node [block, above of=tcpright](webright) {Web Server (application layer)};
+% Draw edges
+%\path [line] (leftwebclient) -- {application protocol} (webright);
+\path [line] (leftwebclient) -- (tcpleft);
+%\path [line] (tcpleft) -- {TCP protocol} (tcpright);
+\path [line] (tcpleft) -- (ipleft);
+%\path [line] (ipleft) -- {IP protocol} (ipright);
+\path [line] (ipleft) -- (ethernetdriverleft);
+%\path [line] (ethernetdriverleft) -- {Ethernet Protocol} (ethernetdriverright);
+\path [line] (ethernetdriverright) -- (ipright);
+\path [line] (ipright) -- (tcpright);
+\path [line] (tcpright) -- (webright);
+\end{tikzpicture}
+
+\subsubsection{Simple TCP/IP "Daytime" (get the time) client, server}
+
+cf. pp. 6, Ch. 1, Introduction, Sec. 1.2 "A Simple Daytime Client", Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
+
+In "Read and display server's reply", pp. 9, Sec. 1.2 of Stevens, Fenner, Rudolf (2004) \cite{SFR2004}, we must be careful when using TCP because it is a \emph{byte-stream} protocol with no record boundaries. 
+
+Server's reply is normally a 26-byte string.
+
+With byte-stream protocol, these 26-bytes can be returned in numerous ways: \\
+single TCP segment containing all 26 bytes of data, \\
+in 26 TCP segments each containing 1 byte, \\
+any combination that totals to 26 bytes.
+
+Normally, a single segment containing all 26 bytes returned, but with larger data sizes, can't assume server's reply will be returned by single \verb|read|. \\
+Therefore, when reading from TCP socket, we \emph{always} need to code the \verb|read| in a loop and terminate the loop when \verb|read| either returns 0 (i.e. the other end closed connection) or value less than 0 (an error).
+
+In this example and in HTTP 1.0, end of record denoted by server closing connection. \\
+SMTP (Simple Mail Transfer Protocol), marks end of record with 2-byte sequence of an ASCII carriage return (\verb|\r|) followed by ASCII linefeed (\verb|\n|). \\
+RPC (Sun Remote Procedure Call) and Domain Name System (DNS) place binary count containing record length in front of each record that's sent when using TCP.
+
+The important concept here is that TCP itself provides no record markers.
+
+cf. pp. 13, Sec. 1.5 "A Simple Daytime Server", Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
+
+\subsubsection{Bind server's well-known port to socket}
+
+Server's well-known port (13 for daytime service) is bound to socket by filling in an Internet socket address structure and calling \verb|bind|. \\
+Specify IP address as \verb|INADDR_ANY|, which allows server to accept client connection on any interface, in case server host has multiple interfaces.
+
+\subsubsection{Convert socket to listening socket}
+
+By calling \verb|listen|, socket is converted into a listening socket, on which incoming connections from clients will be accepted by the kernel. These 3 steps, \verb|socket, bind, listen| are the normal steps for any TCP server to prepare the \emph{listening descriptor}.
+
+Specify maximum number of client connections kernel will queue for this listening descriptor.
+
+\subsubsection{Accept client connection, send reply}
+
+Normally, server process is put to sleep in call to \verb|accept|, waiting for client connection to arrive and be accepted. A TCP connection uses what's called a \textbf{3-way handshake} to establish connection. When this handshake completes, \verb|accept| returns, and return value from function is a new descriptor (\verb|connfd|) that's called the \emph{connected descriptor}. This new descriptor is used for communication with the new client.
+
+A new descriptor is returned by accept for each client that connects to our server.
+
+\subsubsection{Terminate connection} 
+
+Server closes its connection with client by calling \verb|close|. This initiates the normal TCP connection termination sequence: a FIN is sent in each direction and each FIN is acknowledged by the other end. Sec. 2.6 of Stevens, Fenner, Rudolf (2004) \cite{SFR2004} for more about TCP's 3-way handshake and 4 TCP packets used to terminate a TCP connection.
+
+% TODO: keep reading from here and review code.
+
+
+\begin{tikzpicture}
+
+% Sum shape
+\node[draw,
+circle,
+minimum size=0.6cm] (sum) at (0,0){};
+
+\draw (sum.north east) -- (sum.south west)
+(sum.north west) -- (sum.south east);
+
+\draw (sum.north east) -- (sum.south west)
+(sum.north west) -- (sum.south east);
+
+\node[left=-1pt] at (sum.center){\tiny $+$};
+\node[below] at (sum.center){\tiny $-$};
+
+% Controller
+\node [draw,
+minimum width=2cm,
+minimum height=1.2cm,
+right=1cm of sum
+]  (controller) {$C(s)$};
+
+% System H(s)
+\node [draw,
+minimum width=2cm, 
+minimum height=1.2cm,
+right=1.5cm of controller
+] (system) {$H(s)$};
+
+% Sensor block
+\node [draw,
+minimum width=2cm, 
+minimum height=1.2cm, 
+below right= 1cm and -0.25cm of controller
+]  (sensor) {$G(s)$};
+
+% Arrows with text label
+\draw[-stealth] (sum.east) -- (controller.west)
+node[midway,above]{$e$};
+
+\draw[-stealth] (controller.east) -- (system.west) 
+node[midway,above]{$u$};
+
+\draw[-stealth] (system.east) -- ++ (1.25,0) 
+node[midway](output){}node[midway,above]{$y$};
+
+\draw[-stealth] (output.center) |- (sensor.east);
+
+\draw[-stealth] (sensor.west) -| (sum.south) 
+node[near end,left]{$y_m$};
+
+\draw (sum.west) -- ++(-1,0) 
+node[midway,above]{$y_{ref}$};
+
+
+\end{tikzpicture}
+
 
 
 \section{References and Resources for Linux System Programming}
@@ -4095,11 +4266,16 @@ cf. Ch. 51, \emph{Introduction to POSIX IPC}, Kerrisk (2010) \cite{Kerr2010}.
 \url{http://igm.univ-mlv.fr/~yahya/progsys/linux.pdf} \\
 \url{http://www.cs.fsu.edu/~baker/opsys/examples/forkexec/fork_wait.c} \\
 \url{http://cs241.cs.illinois.edu/coursebook/}
+
+CS556 - Distributed Systems. Tutorial by Eleftherios Kosmas.
 \url{https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf}
+
 \url{https://www.cs.rutgers.edu/~pxk/417/notes/content/02r-sockets-programming-slides.pdf}
 \url{https://www.cs.cmu.edu/~srini/15-441/S10/lectures/r01-sockets.pdf}
 
 \url{https://db.in.tum.de/teaching/ss19/c++praktikum/}
+
+
 
 
 
@@ -4637,6 +4813,10 @@ Daniel Jackson. \emph{6.170 Software Studio}. Spring 2013. Massachusetts Institu
 
 \bibitem{Kerr2010}
 Michael Kerrisk. \textbf{The Linux Programming Interface: A Linux and UNIX System Programming Handbook}. No Starch Press; 1st edition (October 28, 2010). ISBN-10 : 1593272200 ISBN-13 : 978-1593272203 
+
+\bibitem{SFR2004}
+W. Richard Stevens, Bill Fenner, Andrew M. Rudoff. \textbf{UNIX Network Programming: The Sockets Networking API}. Volume 1. Third Edition. 2004. ISBN: 0-13-141155-1
+
 
 \end{thebibliography}
 

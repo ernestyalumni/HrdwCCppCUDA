@@ -21,7 +21,7 @@
 \usepackage[table]{xcolor}
 \usepackage{pdfpages}
 \usepackage{tikz}
-\usetikzlibrary{matrix,arrows, shapes}
+\usetikzlibrary{matrix,arrows, positioning, shapes}
 
 \usepackage{multicol}
 
@@ -3328,7 +3328,7 @@ Usually we sort a number of records containing a number of fields based on a \em
 
 \subsection{Loop Invariant}
 
-Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+cf. pp. 18-20, Sec. 2.1 Insertion Sort of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
 
 \begin{definition}[Loop invariant]
 	At the start of each iteration of a \textbf{for} loop (or other loop), this must hold true.
@@ -3347,6 +3347,7 @@ e.g. \textbf{Maintenance}: move $A[1..j-1]$ to right until finding proper positi
 
 \textbf{Termination} property causes loop to terminate; differs from mathematical induction in which we apply inductive step infinitely.
 
+Typically, show Initialization and Maintenance of a Loop Invariant by induction. Use Termination to show the algorithm solves the problem and gives the final solution.
 
 \subsection{Insertion Sort, Straight Insertion Sort}
 
@@ -4169,7 +4170,17 @@ cf. pp. 1063, Ch 52, \emph{POSIX Message Queues}, Kerrisk (201) \cite{Kerr2010}.
 
 \subsection{TCP, UDP, Unix Network Programming}
 
+cf. Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
+
 When writing programs that communicate across a computer network, one must first invent a \textbf{protocol}, an \emph{agreement} on how those programs will communicate.
+
+For example, a Web server is typically thought of as a long-running program (or \textbf{daemon}) that sends network messages only in response to requests coming in from the network.
+
+Other side of the porotocol is a Web client, e.g. browser, which always \emph{initiates} communication with the server.
+
+Deciding that client always initiates requests tends to simplify protocol - basic client/server model.
+
+Some more complex network applications require \emph{asynchronous callback} communication.
 
 % cf. https://texample.net//tikz/examples/simple-flow-chart/
 
@@ -4205,16 +4216,282 @@ minimum height=2em]
 \path [line] (tcpright) -- (webright);
 \end{tikzpicture}
 
-\begin{enumerate}
-	
-\end{enumerate}
+\subsubsection{Simple TCP/IP "Daytime" (get the time) client, server}
+
+cf. pp. 6, Ch. 1, Introduction, Sec. 1.2 "A Simple Daytime Client", Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
+
+In "Read and display server's reply", pp. 9, Sec. 1.2 of Stevens, Fenner, Rudolf (2004) \cite{SFR2004}, we must be careful when using TCP because it is a \emph{byte-stream} protocol with no record boundaries. 
+
+Server's reply is normally a 26-byte string.
+
+With byte-stream protocol, these 26-bytes can be returned in numerous ways: \\
+single TCP segment containing all 26 bytes of data, \\
+in 26 TCP segments each containing 1 byte, \\
+any combination that totals to 26 bytes.
+
+Normally, a single segment containing all 26 bytes returned, but with larger data sizes, can't assume server's reply will be returned by single \verb|read|. \\
+Therefore, when reading from TCP socket, we \emph{always} need to code the \verb|read| in a loop and terminate the loop when \verb|read| either returns 0 (i.e. the other end closed connection) or value less than 0 (an error).
+
+In this example and in HTTP 1.0, end of record denoted by server closing connection. \\
+SMTP (Simple Mail Transfer Protocol), marks end of record with 2-byte sequence of an ASCII carriage return (\verb|\r|) followed by ASCII linefeed (\verb|\n|). \\
+RPC (Sun Remote Procedure Call) and Domain Name System (DNS) place binary count containing record length in front of each record that's sent when using TCP.
+
+The important concept here is that TCP itself provides no record markers.
+
+cf. pp. 13, Sec. 1.5 "A Simple Daytime Server", Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
+
+\subsubsection{Bind server's well-known port to socket}
+
+Server's well-known port (13 for daytime service) is bound to socket by filling in an Internet socket address structure and calling \verb|bind|. \\
+Specify IP address as \verb|INADDR_ANY|, which allows server to accept client connection on any interface, in case server host has multiple interfaces.
+
+\subsubsection{Convert socket to listening socket}
+
+By calling \verb|listen|, socket is converted into a listening socket, on which incoming connections from clients will be accepted by the kernel. These 3 steps, \verb|socket, bind, listen| are the normal steps for any TCP server to prepare the \emph{listening descriptor}.
+
+Specify maximum number of client connections kernel will queue for this listening descriptor.
+
+\subsubsection{Accept client connection, send reply}
+
+Normally, server process is put to sleep in call to \verb|accept|, waiting for client connection to arrive and be accepted. A TCP connection uses what's called a \textbf{3-way handshake} to establish connection. When this handshake completes, \verb|accept| returns, and return value from function is a new descriptor (\verb|connfd|) that's called the \emph{connected descriptor}. This new descriptor is used for communication with the new client.
+
+A new descriptor is returned by accept for each client that connects to our server.
+
+\subsubsection{Terminate connection} 
+
+Server closes its connection with client by calling \verb|close|. This initiates the normal TCP connection termination sequence: a FIN is sent in each direction and each FIN is acknowledged by the other end. Sec. 2.6 of Stevens, Fenner, Rudolf (2004) \cite{SFR2004} for more about TCP's 3-way handshake and 4 TCP packets used to terminate a TCP connection.
+
+% TODO: keep reading from here and review code.
+
+\subsubsection{Transport Layer: TCP, UDP, SCTP}
+
+Stream Control Transmission Protocol (SCTP), originally designed for transport of telephony signaling across the Internet.
+
+TCP, UDP, SCTP - these transport protocols use network-layer protocol IP, either IPv4, or IPv6. \\
+While it's possible to use IPv4 or IPv6 directly, bypassing transport layer, this technique, \emph{raw sockets}, is used much less frequently. 
+
+UDP is simple, unreliable datagram protocol, while TCP is sophisticated, reliable byte-stream protocol.
+
+cf. Sec. 2.2, The Big Picture, pp. 32, Stevens, Fenner, Rudolf (2004) \cite{SFR2004}
 
 
+% https://latexdraw.com/block-diagram-in-latex-step-by-step-tikz-tutorial/
+\[
+\begin{gathered}
+\begin{tikzpicture}
+%
+% cf. https://latexdraw.com/block-diagram-in-latex-step-by-step-tikz-tutorial/
+%
+% socket, server
+\node [draw,
+minimum width=1.7cm,
+minimum height=0.4cm]  (serverSocket) at (0, 0) {socket()};
+
+% socket, client
+\node [draw,
+minimum width=1.7cm,
+minimum height=0.4cm,
+right=2.2cm of serverSocket]  (clientSocket) {socket()};
+
+% bind, server
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+below=0.4cm of serverSocket
+] (serverBind) {bind()};
+
+% listen, server
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+below=0.4cm of serverBind
+] (serverListen) {listen()};
+
+% accept, server
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+below=0.4cm of serverListen
+] (serverAccept) {accept()};
+
+% connect, client
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+right=2.2cm of serverAccept
+] (clientConnect) {connect()};
+
+% recv, server
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+below=0.4cm of serverAccept
+] (serverRecv) {recv()};
+
+% send, client
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+right=2.2cm of serverRecv
+] (clientSend) {send()};
+
+% send, server
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+below=0.4cm of serverRecv
+] (serverSend) {send()};
+
+% recv, client
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+right=2.2cm of serverSend
+] (clientRecv) {recv()};
 
 
-\textbf{UDP: TODO}
+% close, server
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+below=0.5cm of serverSend
+] (serverClose) {close()};
+
+% close, client
+\node [draw,
+minimum width=1.7cm, 
+minimum height=0.4cm,
+right=2.2cm of serverClose
+] (clientClose) {close()};
+
+% Arrows with text label
+\draw[-stealth] (serverSocket.south) -- (serverBind.north){};
+\draw[-stealth] (serverBind.south) -- (serverListen.north){};
+\draw[-stealth] (serverListen.south) -- (serverAccept.north){};
+\draw[-stealth] (serverAccept.south) -- (serverRecv.north){};
+\draw[-stealth] (serverRecv.south) -- (serverSend.north){};
+\draw[-stealth] (serverSend.south) -- (serverClose.north){};
+
+\draw[-stealth] (clientSocket.south) -- (clientConnect.north){};
+\draw[-stealth] (clientConnect.south) -- (clientSend.north){};
+\draw[-stealth] (clientSend.south) -- (clientRecv.north){};
+\draw[-stealth] (clientRecv.south) -- (clientClose.north){};
+
+\draw[-stealth] (clientSend.west) -- (serverRecv.east){};
+\draw[-stealth] (serverSend.east) -- (clientRecv.west){};
+
+\draw [-stealth](serverSend.west) to [bend left = 30] (serverRecv.west){};
+\draw [-stealth](clientRecv.east) to [bend right = 30] (clientSend.east){};
+
+\draw[stealth-stealth](serverAccept.east) -- (clientConnect.west)
+% cf. https://tex.stackexchange.com/questions/228364/is-it-possible-to-set-a-maximum-node-width-in-tikz
+node[midway,above, text width=2.1cm, align=center]{synchronization point};
+
+\draw (serverSocket.north)  (0, 1) node[anchor=north] {\textbf{Server}};
+\draw (clientSocket.north)  (4, 1) node[anchor=north] {\textbf{Client}};
+
+\draw (serverSocket.north)  (1.5, 1.5) node[anchor=north] {\textbf{Stream (e.g. TCP)}};
+
+\end{tikzpicture}
+\qquad \, 
+\begin{tikzpicture}
+%
+% cf. https://latexdraw.com/block-diagram-in-latex-step-by-step-tikz-tutorial/
+%
+% socket, server
+\node [draw,
+minimum width=1.8cm,
+minimum height=0.4cm]  (serverSocket) at (0, 0) {socket()};
+
+% socket, client
+\node [draw,
+minimum width=1.8cm,
+minimum height=0.4cm,
+right=2.2cm of serverSocket]  (clientSocket) {socket()};
+
+% bind, server
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+below=0.4cm of serverSocket
+] (serverBind) {bind()};
+
+% bind, client
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+right=2.2cm of serverBind
+] (clientBind) {bind()};
+
+% recvfrom, server
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+below=2.4cm of serverBind
+] (serverRecvfrom) {recvfrom()};
+
+% sendto, client
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+right=2.2cm of serverRecvfrom
+] (clientSendto) {sendto()};
+
+% sendto, server
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+below=0.4cm of serverRecvfrom
+] (serverSendto) {sendto()};
+
+% recvfrom, client
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+right=2.2cm of serverSendto
+] (clientRecvfrom) {recvfrom()};
 
 
+% close, server
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+below=0.5cm of serverSendto
+] (serverClose) {close()};
+
+% close, client
+\node [draw,
+minimum width=1.8cm, 
+minimum height=0.4cm,
+right=2.2cm of serverClose
+] (clientClose) {close()};
+
+% Arrows with text label
+\draw[-stealth] (serverSocket.south) -- (serverBind.north){};
+\draw[-stealth] (serverBind.south) -- (serverRecvfrom.north){};
+\draw[-stealth] (serverRecvfrom.south) -- (serverSendto.north){};
+\draw[-stealth] (serverSendto.south) -- (serverClose.north){};
+
+\draw[-stealth] (clientSocket.south) -- (clientBind.north){};
+\draw[-stealth] (clientBind.south) -- (clientSendto.north){};
+\draw[-stealth] (clientSendto.south) -- (clientRecvfrom.north){};
+\draw[-stealth] (clientRecvfrom.south) -- (clientClose.north){};
+
+\draw[-stealth] (clientSendto.west) -- (serverRecvfrom.east){};
+\draw[-stealth] (serverSendto.east) -- (clientRecvfrom.west){};
+
+\draw [-stealth](serverSendto.west) to [bend left = 30] (serverRecvfrom.west){};
+\draw [-stealth](clientRecvfrom.east) to [bend right = 30] (clientSendto.east){};
+
+\draw (serverSocket.north)  (0, 1) node[anchor=north] {\textbf{Server}};
+\draw (clientSocket.north)  (4, 1) node[anchor=north] {\textbf{Client}};
+
+\draw (serverSocket.north)  (1.5, 1.5) node[anchor=north] {\textbf{Datagram (e.g. UDP)}};
+
+\end{tikzpicture}
+\end{gathered} 
+\]
+cf. \href{https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf}{CS556 - Distributed Systems, Tutorial by Eleftherios Kosmas, Introduction to Sockets Programming in C using TCP/IP}
 
 
 \section{References and Resources for Linux System Programming}
@@ -4778,7 +5055,6 @@ Michael Kerrisk. \textbf{The Linux Programming Interface: A Linux and UNIX Syste
 
 \bibitem{SFR2004}
 W. Richard Stevens, Bill Fenner, Andrew M. Rudoff. \textbf{UNIX Network Programming: The Sockets Networking API}. Volume 1. Third Edition. 2004. ISBN: 0-13-141155-1
-
 
 
 \end{thebibliography}
