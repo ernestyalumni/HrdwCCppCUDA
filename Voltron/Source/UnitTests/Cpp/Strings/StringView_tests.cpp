@@ -6,10 +6,10 @@
 ///   refer to a constant contiguous sequence of char-like objects with first
 ///   element of sequence at position 0.
 /// \ref https://en.cppreference.com/w/cpp/string/basic_string_view
-/// 
 //------------------------------------------------------------------------------
 
 #include <boost/test/unit_test.hpp>
+#include <boost/utility/string_view.hpp>
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -17,6 +17,17 @@
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Strings)
 BOOST_AUTO_TEST_SUITE(StringView_tests)
+
+BOOST_AUTO_TEST_SUITE(BoostStringViewProperties)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsFromRvalueStdString)
+{
+
+}
+
+BOOST_AUTO_TEST_SUITE_END() // BoostStringViewProperties
 
 // cf.
 // https://www.learncpp.com/cpp-tutorial/6-6a-an-introduction-to-stdstring_view/
