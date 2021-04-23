@@ -1,4 +1,5 @@
 ADD_LIBRARY(IPC
+  GetReadyAddressInfo.cpp
   MessageQueue/CreateMessageQueue.cpp
   MessageQueue/CreateOrOpen.cpp
   MessageQueue/FlagsAndModes.cpp

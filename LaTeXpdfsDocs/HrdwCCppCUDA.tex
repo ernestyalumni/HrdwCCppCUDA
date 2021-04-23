@@ -3866,13 +3866,20 @@ While it might be tempting to perform all I/O immediately once notification arri
 	\item Furthermore, even with case of level-triggered notifications, an extremely large Write or send call has potential to block.
 \end{itemize}
 
-Multiplexing I/O on fd's.
+\section{Concurrent Programming}
+
+cf. Ch. 12, Concurrent Programming, Bryant and O'Hallaron (2015) \cite{BrOH2016}
+
+
+
+\section{Multiplexing I/O on fds}
 
 In above, we only described how pid handles I/O on a single fd.
 
 Often, pid wants to handle I/O on more than 1 fd.
 
 e.g. program prog needs to log to \texttt{stdout}, \texttt{stderr}, while accept socket connections, and make outgoing RPC connections to other services. 
+
 
 There are several ways of multiplexing I/O on fds.
 \begin{itemize}
@@ -4712,6 +4719,8 @@ cf. Daniel Jackson. 6.170 Software Studio. Spring 2013. Massachusetts Institute 
 Randal E. Bryant, David R. O'Hallaron. \textbf{Computer Systems: A Programmer's Perspective} (3rd Edition). ISBN-13 : 978-0134092669
 ISBN-10 : 013409266X
  Pearson; 3rd Edition (March 12, 2015) 
+\url{https://csapp.cs.cmu.edu/}
+
 
 \bibitem{Meye1997}
 Bertrand Meyer. \textbf{Object-Oriented Software Construction} (Book/CD-ROM) (2nd Edition) 2nd Edition.   Prentice Hall; 2 edition (April 13, 1997).  ISBN-13: 978-0136291558

@@ -3924,6 +3924,28 @@ While it might be tempting to perform all I/O immediately once notification arri
 	\item Furthermore, even with case of level-triggered notifications, an extremely large Write or send call has potential to block.
 \end{itemize}
 
+\section{Concurrent Programming}
+
+cf. Ch. 12, Concurrent Programming, Bryant and O'Hallaron (2015) \cite{BrOH2016}
+
+From Ch. 8, Bryant and O'Hallaron (2015) \cite{BrOH2016}, logical control flows are \textbf{concurrent} if they overlap in time. This general phenomenon, \emph{concurrency}, shows up at many different levels of a computer system, e.g. hardware exception handlers, processes, and Linux signal handlers.
+
+Consider application-level concurrency, not just to the kernel, concurrency a mechanism that the operating system kernel uses to run multiple application programs.
+
+\begin{itemize}
+	\item \emph{Accessing slow I/O devices}. When an application is waiting for data to arrive from a slow I/O device such as a disk, kernel keeps CPU busy by running other processes. Individual applications can exploit concurrency in a similar way by overlapping useful work with I/O requests.
+	\item \emph{Reducing latency by deferring work}. Sometimes, applications can use concurrency to reduce latency of certain operations by deferring other operations and perform them concurrently, (EY?) e.g. dynamic storage allocator might reduce the latency of individual \verb|free| operations by deferring coalescing to a concurrent "coalescing" flow that runs at a lower priority, soaking up spare CPU cycles as they become available
+\end{itemize}
+
+Modern operating systems provide 3 basic approaches for building concurrent programs:
+\begin{itemize}
+	\item \emph{Processes} - each logical control flow is a process that's scheduled and maintained by the kernel \\
+	processes have separate virtual address spaces, flows that want to communicate with each other must use some explicit \emph{interprocess communication} (IPC) mechanism
+	\item \emph{I/O multiplexing} - applications explicitly schedule their own logical flows in the context of a single process. Logical flows are modeled as state machines that the main program explicitly transitions from state to state as a result of data arriving on file descriptors. Since program is a single process, all flows share the same address space
+	\item \emph{Threads} - Threads are logical flows that run in context of a single process, and are scheduled by kernel.
+\end{itemize}
+Use Sec. 11.4.9 concurrent version of iterative echo server from Bryant and O'Hallaron (2015) \cite{BrOH2016} as concrete example.
+
 \section{Multiplexing I/O on fds}
 
 In above, we only described how pid handles I/O on a single fd.
@@ -4954,6 +4976,8 @@ cf. Daniel Jackson. 6.170 Software Studio. Spring 2013. Massachusetts Institute 
 Randal E. Bryant, David R. O'Hallaron. \textbf{Computer Systems: A Programmer's Perspective} (3rd Edition). ISBN-13 : 978-0134092669
 ISBN-10 : 013409266X
  Pearson; 3rd Edition (March 12, 2015) 
+\url{https://csapp.cs.cmu.edu/}
+
 
 \bibitem{Meye1997}
 Bertrand Meyer. \textbf{Object-Oriented Software Construction} (Book/CD-ROM) (2nd Edition) 2nd Edition.   Prentice Hall; 2 edition (April 13, 1997).  ISBN-13: 978-0136291558
