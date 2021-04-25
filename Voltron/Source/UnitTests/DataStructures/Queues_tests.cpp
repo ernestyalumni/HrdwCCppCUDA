@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 
 using DataStructures::Queues::CircularQueue;
-using DataStructures::Queues::Queue;
+using DataStructures::Queues::QueueAsResizeable;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Queue_tests)
@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_SUITE(Queue_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(QueueDefaultConstructs)
 {
-  Queue<int> queue;
+  QueueAsResizeable<int> queue;
 
   BOOST_TEST(queue.size() == 0);
   BOOST_TEST(queue.capacity() == 8);
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(QueueDefaultConstructs)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(EnqueueAddsOneElement)
 {
-  Queue<int> queue;
+  QueueAsResizeable<int> queue;
 
 }
 

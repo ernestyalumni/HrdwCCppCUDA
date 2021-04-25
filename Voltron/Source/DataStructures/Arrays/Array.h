@@ -56,6 +56,49 @@ class Array
   	Array() = default;
 };
 
+namespace CRTP
+{
+
+template <typename T, class Implementation>
+class Array
+{
+  public:
+
+    const T& get_value(const std::size_t index) const
+    {
+      return object()->get_value(index);
+    }
+
+    void set_value(const std::size_t index, const T value)
+    {
+      object()->set_value(index, value);
+    }
+
+    T& operator[](const std::size_t index)
+    {
+      return object()->operator[](index);
+    }
+
+    const T& operator[](const std::size_t index) const
+    {
+      return object()->operator[](index);
+    }
+
+    std::size_t size() const
+    {
+      return object()->size();
+    }
+
+  private:
+
+    Implementation& object()
+    {
+      return static_cast<Implementation&>(*this);
+    }
+};
+
+} // namespace CRTP
+
 } // namespace Arrays
 } // namespace DataStructures
 

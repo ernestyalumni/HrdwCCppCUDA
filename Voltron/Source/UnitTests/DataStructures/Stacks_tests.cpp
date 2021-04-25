@@ -7,11 +7,10 @@
 #include <boost/test/unit_test.hpp>
 
 using DataStructures::Stacks::StackWithVector;
-using DataStructures::Stacks::Stack;
+using DataStructures::Stacks::StackWithArray;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Stack_tests)
-
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -36,9 +35,9 @@ BOOST_AUTO_TEST_CASE(StackWithVectorIsAStack)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(StackIsAStack)
+BOOST_AUTO_TEST_CASE(StackWithArrayIsAStack)
 {
-  Stack<int> stack;
+  StackWithArray<int> stack;
 
   stack.push(1);
   stack.push(2);
@@ -59,10 +58,10 @@ BOOST_AUTO_TEST_CASE(StackIsAStack)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(StackWorksWithFurtherUsageExamples)
+BOOST_AUTO_TEST_CASE(StackWithArrayWorksWithFurtherUsageExamples)
 {
   // 1. Initialize a stack.
-  Stack<int> s;
+  StackWithArray<int> s;
   // 2. Push new element.
   s.push(5);
   s.push(13);

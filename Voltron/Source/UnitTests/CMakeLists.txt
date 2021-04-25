@@ -85,10 +85,12 @@ ADD_EXECUTABLE(Check
   DataStructures/Arrays/FixedSizeArrays_tests.cpp
   DataStructures/Arrays/ResizeableArray_tests.cpp
   DataStructures/Arrays_tests.cpp
+  DataStructures/BagsImplementations_tests.cpp
   DataStructures/BinarySearchTrees_tests.cpp
   DataStructures/BinaryTrees_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/HashSet_tests.cpp
+  DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists/SingleNode_tests.cpp

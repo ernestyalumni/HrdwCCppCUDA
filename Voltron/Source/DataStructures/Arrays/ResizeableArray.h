@@ -28,15 +28,19 @@ class ResizeableArray : Array<T>
 
   public:
 
-    static constexpr int default_size_ {8};
+    static constexpr std::size_t default_size_ {8};
 
+    // TODO: Understand conflict with initializer_list ctor.
+    // If all ctors, the default ctor and ctor with initializer_list in
+    // particular, then checks out.
     ResizeableArray():
       data_{new T[default_size_]},
       size_{default_size_},
       capacity_{default_size_}
     {}
+    
 
-    explicit ResizeableArray(const std::size_t N):
+    ResizeableArray(const std::size_t N):
       data_{new T[N]{}},
       size_{N},
       capacity_{N}
@@ -48,7 +52,12 @@ class ResizeableArray : Array<T>
       }
     }
 
-    explicit ResizeableArray(const std::initializer_list<T> list):
+    //--------------------------------------------------------------------------
+    /// initializer-list-ctor is usually preferred to other ctors, but not if
+    /// a default-ctor is available. In C++14, default ctor is not explicit.
+    /// \ref https://stackoverflow.com/questions/26947704/implicit-conversion-failure-from-initializer-list
+    //--------------------------------------------------------------------------
+    ResizeableArray(std::initializer_list<T> list):
       data_{new T[list.size()]},
       size_{list.size()},
       capacity_{list.size()}
@@ -58,10 +67,10 @@ class ResizeableArray : Array<T>
         std::runtime_error("ResizeableArray ctor: Empty list:");
       }
 
-      std::copy(data_, data_ + size_, list.begin());
+      std::copy(list.begin(), list.end(), data_);
     }
 
-    explicit ResizeableArray(T* const data, const std::size_t N):
+    ResizeableArray(T* const data, const std::size_t N):
       data_{new T[N]},
       size_{N},
       capacity_{N}
@@ -245,6 +254,129 @@ class ResizeableArray : Array<T>
     std::size_t size_;
     std::size_t capacity_;
 };
+
+namespace CRTP
+{
+
+template <typename T>
+class ResizeableArray : public Array<T, ResizeableArray<T>>
+{
+  public:
+
+    static constexpr std::size_t default_size_ {8};
+
+    ResizeableArray() :
+      data_{new T[default_size_]},
+      size_{0},
+      capacity_{default_size_}
+    {}
+
+    ResizeableArray(const std::initializer_list<T> list):
+      data_{new T[list.size()]},
+      size_{list.size()},
+      capacity_{list.size()}
+    {
+      if (list.size() <= 0)
+      {
+        std::runtime_error("ResizeableArray ctor: Empty list:");
+      }
+
+      std::copy(list.begin(), list.end(), data_);
+    }
+
+    ResizeableArray(T* const data, const std::size_t N):
+      data_{new T[N]},
+      size_{N},
+      capacity_{N}
+    {
+      if (N <= 0)
+      {
+        std::runtime_error(
+          "ResizeableArray ctor: Invalid input N:" + std::to_string(N));
+      }
+
+      // Copy the data rather than copy the pointer, in fear of input pointer
+      // data being deleted elsewhere.
+
+      std::copy(data, data + size_, data_);
+    }
+
+    // Copies, Moves.
+
+    // Copy ctor.
+    ResizeableArray(const ResizeableArray& other):
+      data_{new T[other.size()]},
+      size_{other.size_},
+      capacity_{other.capacity_}
+    {
+      std::copy(other.data_, other.data_ + size_, data_);
+    }
+
+    // Copy assignment.
+    ResizeableArray& operator=(const ResizeableArray& other)
+    {
+      delete[] data_;
+      data_ = new T[other.size()];
+      size_ = other.size();
+      capacity_ = other.capacity_;
+
+      std::copy(other.data_, other.data_ + size_, data_);
+
+      return *this;
+    }
+
+    // Move ctor.
+    ResizeableArray(ResizeableArray&& other):
+      data_{other.data_},
+      size_{other.size()},
+      capacity_{other.capacity_}
+    {
+      other.data_ = nullptr;
+
+      // So not to invoke delete in dtor of other.
+      other.size_ = -1;
+    }
+
+    // Move assignment.
+    ResizeableArray& operator=(ResizeableArray&& other)
+    {
+      data_ = other.data_;
+      other.size_ = -1;
+
+      other.data_ = nullptr;
+      return *this;
+    }
+
+    ~ResizeableArray()
+    {
+      if (size_ > -1 || data_ != nullptr)
+      {
+        delete[] data_;
+      }
+    }
+
+    const T& get_value(const std::size_t index) const
+    {
+      if (index >= size_ || index < 0)
+      {
+        throw std::out_of_range(
+          "Out of Range, ResizeableArray: index input:" +
+            std::to_string(index) +
+            " size: " +
+            std::to_string(size_));
+      }
+
+      return data_[index];
+    }
+
+  private:
+
+    T* data_;
+    std::size_t size_;
+    std::size_t capacity_;
+};
+
+} // namespace CRTP
 
 } // namespace Arrays
 } // namespace DataStructures
