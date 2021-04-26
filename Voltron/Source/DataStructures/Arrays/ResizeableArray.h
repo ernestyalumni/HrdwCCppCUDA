@@ -5,7 +5,7 @@
 #ifndef DATA_STRUCTURES_ARRAYS_RESIZEABLE_ARRAY_H
 #define DATA_STRUCTURES_ARRAYS_RESIZEABLE_ARRAY_H
 
-#include "Array.h"
+#include "BaseArray.h"
 
 #include <algorithm> // std::copy, std::fill
 #include <cassert>
@@ -24,7 +24,7 @@ namespace Arrays
 /// called free store.
 //-----------------------------------------------------------------------------
 template <typename T>
-class ResizeableArray : Array<T>
+class ResizeableArray : BaseArray<T>
 {
 
   public:
@@ -271,7 +271,7 @@ namespace CRTP
 {
 
 template <typename T>
-class ResizeableArray : public Array<T, ResizeableArray<T>>
+class ResizeableArray : public BaseArray<T, ResizeableArray<T>>
 {
   public:
 
@@ -288,10 +288,7 @@ class ResizeableArray : public Array<T, ResizeableArray<T>>
       size_{list.size()},
       capacity_{list.size()}
     {
-      if (list.size() <= 0)
-      {
-        std::runtime_error("ResizeableArray ctor: Empty list:");
-      }
+      assert(list.size() > 0);
 
       std::copy(list.begin(), list.end(), data_);
     }
@@ -367,6 +364,21 @@ class ResizeableArray : public Array<T, ResizeableArray<T>>
       }
     }
 
+    std::size_t size() const
+    {
+      return size_;
+    }
+
+    std::size_t capacity() const
+    {
+      return capacity_;
+    }
+
+    bool has_data() const
+    {
+      return data_ != nullptr;
+    }
+
     const T& get_value(const std::size_t index) const
     {
       if (index >= size_ || index < 0)
@@ -381,7 +393,73 @@ class ResizeableArray : public Array<T, ResizeableArray<T>>
       return data_[index];
     }
 
+    void set_value(const int index, const T value)
+    {
+      if (index >= size_ || index < 0)
+      {
+        throw std::out_of_range(
+          "Out of Range, ResizeableArray: index input:" +
+            std::to_string(index) + 
+            " size: " +
+            std::to_string(size_));
+      }
+
+      data_[index] = value;
+    }
+
+    T& operator[](const size_t index)
+    {
+      return data_[index];
+    }
+
+    const T& operator[](const size_t index) const
+    {
+      return data_[index];
+    }
+
+    constexpr T* begin()
+    {
+      return data_;
+    }
+
+    constexpr T* end()
+    {
+      return data_ + size_;
+    }
+
+    void append(T item)
+    {
+      ensure_extra_capacity();
+      data_[size_] = item;
+      size_++;
+    }
+
+    T pop()
+    {
+      const T return_value {data_[size_]};
+
+      size_--;
+
+      return return_value;
+    }
+
   private:
+
+    void ensure_extra_capacity()
+    {
+      if (size_ == capacity_)
+      {
+        T* new_copy {new T[size_ * 2]};
+
+        std::copy(data_, data_ + size_, new_copy);
+
+        delete[] data_;
+
+        data_ = new_copy;
+
+        capacity_ = size_ * 2;
+      }
+    }
 
     T* data_;
     std::size_t size_;

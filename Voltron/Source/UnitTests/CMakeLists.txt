@@ -47,6 +47,7 @@ ADD_EXECUTABLE(Check
   Cpp/FileIO/GetCurrentDirectory_tests.cpp
   Cpp/Functions_tests.cpp
   Cpp/IO/IO_tests.cpp
+  Cpp/IO/StdStringStream_tests.cpp
   Cpp/IO/Streams_tests.cpp
   Cpp/Keywords_tests.cpp
   Cpp/MainCommandLineArguments_tests.cpp
@@ -96,8 +97,10 @@ ADD_EXECUTABLE(Check
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists/SingleNode_tests.cpp
   DataStructures/Lists_tests.cpp
+  DataStructures/QueuesImplementations_tests.cpp
   DataStructures/Queues_tests.cpp
-  DataStructures/Stacks_tests.cpp
+  DataStructures/Stacks/DijkstraExpressionEvaluation_tests.cpp
+  DataStructures/Stacks/Stacks_tests.cpp
   DeskCalculator/Token_tests.cpp
   DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp

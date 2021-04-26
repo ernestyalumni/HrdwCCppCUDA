@@ -5,8 +5,8 @@
 /// A. Shaffer. Fig. 4.1. The ADT for a list.
 /// \ref https://github.com/OpenDSA/OpenDSA/blob/master/SourceCode/C%2B%2B_Templates/Lists/List.h
 //-----------------------------------------------------------------------------
-#ifndef DATA_STRUCTURES_ARRAYS_ARRAY_H
-#define DATA_STRUCTURES_ARRAYS_ARRAY_H
+#ifndef DATA_STRUCTURES_ARRAYS_BASE_ARRAY_H
+#define DATA_STRUCTURES_ARRAYS_BASE_ARRAY_H
 
 #include <cstddef> // std::size_t
 
@@ -20,11 +20,11 @@ namespace Arrays
 /// \details Intended to be a base class.
 //-----------------------------------------------------------------------------
 template <typename T>
-class Array
+class BaseArray
 {
   public:
 
-  	virtual ~Array() = default;
+  	virtual ~BaseArray() = default;
 
   	//--------------------------------------------------------------------------
   	/// \brief Return: element at given index.
@@ -53,14 +53,14 @@ class Array
 
   protected:
 
-  	Array() = default;
+  	BaseArray() = default;
 };
 
 namespace CRTP
 {
 
 template <typename T, class Implementation>
-class Array
+class BaseArray
 {
   public:
 
@@ -102,4 +102,4 @@ class Array
 } // namespace Arrays
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_ARRAYS_ARRAY_H
+#endif // DATA_STRUCTURES_ARRAYS_BASE_ARRAY_H

@@ -2,7 +2,7 @@
 /// \file Stack_tests.cpp
 /// \date 20201101 07:37
 //------------------------------------------------------------------------------
-#include "DataStructures/Stacks.h"
+#include "DataStructures/Stacks/Stacks.h"
 
 #include <boost/test/unit_test.hpp>
 

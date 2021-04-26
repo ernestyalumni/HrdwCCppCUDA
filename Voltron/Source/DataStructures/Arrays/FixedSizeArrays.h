@@ -8,7 +8,7 @@
 #ifndef DATA_STRUCTURES_ARRAYS_FIXED_SIZE_ARRAYS_H
 #define DATA_STRUCTURES_ARRAYS_FIXED_SIZE_ARRAYS_H
 
-#include "Array.h"
+#include "BaseArray.h"
 
 #include <cstddef> // std::size_t
 #include <initializer_list>
@@ -26,7 +26,7 @@ namespace Arrays
 /// \details C-style array underneath.
 //-----------------------------------------------------------------------------
 template <typename T>
-class DynamicFixedSizeArray : Array<T>
+class DynamicFixedSizeArray : BaseArray<T>
 {
 	public:
 
@@ -220,7 +220,7 @@ class DynamicFixedSizeArray : Array<T>
 };
 
 template <std::size_t N, typename T, std::enable_if_t<(N > 0)>* = nullptr>
-class FixedSizeArrayOnStack : Array<T>
+class FixedSizeArrayOnStack : BaseArray<T>
 {
 	public:
 
