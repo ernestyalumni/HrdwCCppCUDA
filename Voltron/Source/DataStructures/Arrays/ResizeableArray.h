@@ -7,7 +7,8 @@
 
 #include "Array.h"
 
-#include <algorithm> // std::copy
+#include <algorithm> // std::copy, std::fill
+#include <cassert>
 #include <cstddef> // std::size_t
 #include <initializer_list>
 #include <stdexcept> // std::out_of_range, std::runtime_error
@@ -35,7 +36,7 @@ class ResizeableArray : Array<T>
     // particular, then checks out.
     ResizeableArray():
       data_{new T[default_size_]},
-      size_{default_size_},
+      size_{0},
       capacity_{default_size_}
     {}
     
@@ -50,6 +51,8 @@ class ResizeableArray : Array<T>
         std::runtime_error(
           "ResizeableArray ctor: Invalid input N:" + std::to_string(N));
       }
+
+      std::fill(data_, data_ + size_, static_cast<T>(0));
     }
 
     //--------------------------------------------------------------------------
@@ -57,15 +60,19 @@ class ResizeableArray : Array<T>
     /// a default-ctor is available. In C++14, default ctor is not explicit.
     /// \ref https://stackoverflow.com/questions/26947704/implicit-conversion-failure-from-initializer-list
     //--------------------------------------------------------------------------
-    ResizeableArray(std::initializer_list<T> list):
+    ResizeableArray(const std::initializer_list<T> list):
       data_{new T[list.size()]},
       size_{list.size()},
       capacity_{list.size()}
     {
+      // It's  not expected to reach this. Thus an assert.
+      /*
       if (list.size() <= 0)
       {
         std::runtime_error("ResizeableArray ctor: Empty list:");
       }
+      */
+      assert(list.size() > 0);
 
       std::copy(list.begin(), list.end(), data_);
     }
@@ -84,7 +91,7 @@ class ResizeableArray : Array<T>
       // Copy the data rather than copy the pointer, in fear of input pointer
       // data being deleted elsewhere.
 
-      std::copy(data_, data_ + size_, data);
+      std::copy(data, data + size_, data_);
     }
 
     // Copies, Moves.
@@ -95,7 +102,7 @@ class ResizeableArray : Array<T>
       size_{other.size_},
       capacity_{other.capacity_}
     {
-      std::copy(data_, data_ + size_, other.data_);
+      std::copy(other.data_, other.data_ + other.size(), data_);
     }
 
     // Copy assignment.
@@ -106,7 +113,7 @@ class ResizeableArray : Array<T>
       size_ = other.size();
       capacity_ = other.capacity_;
 
-      std::copy(data_, data_ + size_, other.data_);
+      std::copy(other.data_, other.data_ + other.size(), data_);
 
       return *this;
     }
@@ -141,7 +148,7 @@ class ResizeableArray : Array<T>
       // statement will only delete first element of array. Using subscript
       // "[]", indicates variable whose memory is being freed is an array and
       // all memory allocated is to be freed.
-      if (size() > 0)
+      if (size() > 0 || data_ != nullptr)
       {
         delete[] data_;
       }
@@ -155,6 +162,11 @@ class ResizeableArray : Array<T>
     std::size_t capacity() const
     {
       return capacity_;
+    }
+
+    bool has_data() const
+    {
+      return data_ != nullptr;
     }
 
 		virtual const T& get_value(const int index) const

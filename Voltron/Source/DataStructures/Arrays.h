@@ -95,19 +95,19 @@ class CStyleDynamicArray
 //-----------------------------------------------------------------------------
 /// \date 20201015 15, 17:21 complete
 template <typename T>
-class ResizeableArray
+class ResizingArray
 {
   public:
 
     static constexpr int default_size_ {8};
 
-    ResizeableArray():
+    ResizingArray():
       items_{new T[default_size_]},
       size_{0},
       capacity_{default_size_}
     {}
 
-    ~ResizeableArray()
+    ~ResizingArray()
     {
       // Release block of memory pointed by items_.
       // cf. https://www.softwaretestinghelp.com/new-delete-operators-in-cpp/

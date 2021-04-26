@@ -28,7 +28,7 @@ using DataStructures::Arrays::LeetCode::replace_with_greatest_on_right;
 using DataStructures::Arrays::LeetCode::sorted_squares;
 using DataStructures::Arrays::LeetCode::sorted_squares_two_ptrs;
 using DataStructures::Arrays::LeetCode::valid_mountain_array;
-using DataStructures::Arrays::ResizeableArray;
+using DataStructures::Arrays::ResizingArray;
 using DataStructures::Arrays::rotate_left;
 using std::begin;
 using std::size_t;
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(StdBeginCannotMakeAnIterator)
 
 BOOST_AUTO_TEST_SUITE_END() // CStyleDynamicArray_tests
 
-BOOST_AUTO_TEST_SUITE(ResizeableArray_tests)
+BOOST_AUTO_TEST_SUITE(ResizingArray_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -153,9 +153,19 @@ BOOST_AUTO_TEST_CASE(GetSizeOfCStyleArrays)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(ResizeableArrayResizes)
+BOOST_AUTO_TEST_CASE(DefaultConstructs)
 {
-  ResizeableArray<int> array;
+  ResizingArray<int> array;
+  BOOST_TEST(array.size() == 0);
+  BOOST_TEST(array.capacity() == array.default_size_);  
+  BOOST_TEST(array.capacity() > array.size());  
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ResizingArrayResizes)
+{
+  ResizingArray<int> array;
   BOOST_TEST(array.size() == 0);
   BOOST_TEST(array.capacity() == array.default_size_);  
   BOOST_TEST(array.capacity() > array.size());  
@@ -184,7 +194,7 @@ BOOST_AUTO_TEST_CASE(ResizeableArrayResizes)
   BOOST_TEST(array.capacity() == array.default_size_ * 2);
 }
 
-BOOST_AUTO_TEST_SUITE_END() // ResizeableArray_tests
+BOOST_AUTO_TEST_SUITE_END() // ResizingArray_tests
 
 BOOST_AUTO_TEST_SUITE(Array_tests)
 

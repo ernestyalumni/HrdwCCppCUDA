@@ -389,7 +389,7 @@ class QueueAsResizeable
 
   private:
 
-    Arrays::ResizeableArray<T> data_;
+    Arrays::ResizingArray<T> data_;
     
     // A "pointer" to indicate the start position.
     ssize_t p_start_;
