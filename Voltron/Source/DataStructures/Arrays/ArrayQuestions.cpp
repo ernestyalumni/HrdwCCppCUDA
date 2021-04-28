@@ -4,6 +4,7 @@
 //-----------------------------------------------------------------------------
 #include "ArrayQuestions.h"
 
+#include <cstring> // std::memset
 #include <vector>
 
 using std::vector;
@@ -14,6 +15,37 @@ namespace Arrays
 {
 namespace ArrayQuestions
 {
+
+namespace CrackingTheCodingInterview
+{
+
+bool is_unique_character_string(const std::string& s)
+{
+  constexpr std::size_t N {256};
+
+  bool first_seen[N];
+
+  std::memset(first_seen, static_cast<int>(false), 256);
+
+  // O(|s|) time complexity.
+  for (char c : s)
+  {
+    const int ascii_decimal {static_cast<int>(c)};
+
+    if (first_seen[ascii_decimal])
+    {
+      return false;
+    }
+    else
+    {
+      first_seen[ascii_decimal] = true;
+    }
+  }
+
+  return true;
+}
+
+} // namespace CrackingTheCodingInterview
 
 namespace LeetCode
 {
