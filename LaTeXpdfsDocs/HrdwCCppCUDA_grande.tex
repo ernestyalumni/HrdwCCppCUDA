@@ -1206,6 +1206,22 @@ Gutman (2016) \cite{Gutt2016}
 
 \part{Integers, numeric encodings, number representation, binary representation, hexidecimal representation}
 
+
+\subsection{Information storage}
+
+cf. Ch. 2, Representing and Manipulating Information, pp. 31, Bryant and O'Hallaron (2015) \cite{BrOH2016}
+
+A machine-level program views memory as a very large array of bytes, referred to as \emph{virtual memory}. Every byte of memory is identified by a unique number, known as \emph{address}, and set of all possible addresses known as \emph{virtual address space}. 
+
+Actual implementation (Ch.9, Bryant and O'Hallaron (2015) \cite{BrOH2016}) uses combination of dynamic random access memory (DRAM), flash memory, disk storage, special hardware, and operation system software to provide program with what appears to be a monolithic byte array.
+
+Bryant and O'Hallaron (2015) \cite{BrOH2016} covers in subsequent chapters how compiler and run-time system partitions this memory space into more manageable units to store the different \emph{program objects}, i.e. program data, instructions, and control information.
+
+C compiler maintains \emph{type} information.
+
+
+
+
 \section{Introduction: \texttt{int} $\neq \mathbb{Z}$, \texttt{float} $\neq \mathbb{R}$}
 
 cf. \href{https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_1-429h.pdf}{Systems 1, Introduction to Computer Systems, Introduction lecture at University of Texas, CS429; Don Fussell}.
@@ -1254,6 +1270,55 @@ Byte $\equiv B$, 1 Byte $ = 8$ bits. Note that $2^8 = 256$
 e.g. Binary $00000000_2$ to $11111111_2$ \\
 Decimal: $0_{10}$ to $255_{10}$ \\
 Hexadecimal: $00_{16}$ to $FF_{16}$
+
+cf. Sec. 2.1.1. Hexadecimal Notation, pp. 37, Bryant and O'Hallaron (2015) \cite{BrOH2016}
+
+A single byte $B$ consists of 8 bits. \\
+$B$ ranges from, in binary notation, $00000000_2$ to $11111111_2$ \\
+$B$ ranges from, in decimal integer, $0_{10}$ to $255_{10}$ \\
+$B$ ranges from, in hexadecimale, $00_{16}$ to ${FF}_{16}$. 
+
+In C, numeric constants starting with $0x$ or $0X$ are interpreted as hexadecimal. Characters 'A' through 'F' may be written in either upper- or lowercase. Even mixing upper- and lowercase (e.g. $0xFa1D37b$).
+
+Digits can be converted by referring to Table \ref{Table:HexadecimaleNotation}. \emph{One simple trick for doing the conversion in your head is to memorize the decimal equivalents of hex digits A, C, and F}.
+
+\begin{center}
+	\label{Table:HexadecimaleNotation}
+	\begin{tabular}{ l | r | r | r | r | r | r | r | r | }
+		\hline
+		Hex digit & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+		Decimal value & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+		Binary value & 0000 & 0001 & 0010 & 0011 & 0100 & 0101 & 0110 & 0111 \\
+		Hex digit 8 & 9 & A & B & C & D & E & F \\
+		Decimal value & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+Hex values B, D, and E can be translated to decimal by computing their values relative to the first 3.
+
+e.g. Given number $0x173A4C$ - convert this to binary format by expanding each hexadecimal digit
+
+\begin{center}
+	\begin{tabular}{ l | r | r | r | r | r | r }
+		Hexadecimal & 1 & 7 & 3 & A & 4 & C \\
+		Binary & 0001 & 0111& 0011 & 1010 & 0100 & 1100 \\
+	\end{tabular}
+\end{center}
+
+This gives binary representation $000101110011101001001100$
+
+Conversely, given a binary number, you convert it to hexadecimal by first splitting into groups of 4 bits each.
+
+However, if total number of bits isn't a multiple of 4, you should make the \emph{leftmost} group be the one with fewer than 4 bits, effectively padding the number with leading zeros. e.g. $1111001010110110110011$
+
+\begin{center}
+	\begin{tabular}{ l | r | r | r | r | r | r }
+		Binary & 11 & 1100 & 1010 & 1101 & 1011 & 0011 \\
+		Hexadecimal & 3 & C & A & D & B & 3 \\
+	\end{tabular}
+\end{center}
+
 
 \subsection{Machine Words}
 

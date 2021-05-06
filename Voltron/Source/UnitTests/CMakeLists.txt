@@ -40,6 +40,7 @@ ADD_EXECUTABLE(Check
   Categories/Monads/WriterMonad_tests.cpp
   Categories/Monoidal/Monad_tests.cpp
   Categories/Monoidal/Monoid_tests.cpp
+  Cpp/Classes/BitField_tests.cpp
   Cpp/Classes/ConstructorsToDestructors_tests.cpp
   Cpp/Closure_tests.cpp
   Cpp/Enumeration_tests.cpp
