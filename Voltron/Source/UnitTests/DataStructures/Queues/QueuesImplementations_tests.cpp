@@ -1,4 +1,4 @@
-#include "DataStructures/QueuesImplementations.h"
+#include "DataStructures/Queues/QueuesImplementations.h"
 
 #include <boost/test/unit_test.hpp>
 

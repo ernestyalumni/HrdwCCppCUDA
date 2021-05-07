@@ -12,20 +12,20 @@ class AbstractStack:
     implements LIFO, last-in, first-out
     """
 
-    def push(x):
+    def push(self, x):
         """
         @ref Cormen, Leiserson, Rivest, and Stein (2009), pp. 232, 101 Stacks
         and queues, pp. 232, Stacks.
         """
         pass
 
-    def pop():
+    def pop(self):
         pass
 
-    def top():
+    def top(self):
         pass
 
-    def size():
+    def size(self):
         pass        
 
 

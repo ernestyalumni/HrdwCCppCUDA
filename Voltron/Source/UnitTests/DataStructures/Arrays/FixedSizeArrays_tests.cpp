@@ -155,15 +155,35 @@ BOOST_AUTO_TEST_SUITE(FixedSizeArrayOnStack_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DefaultConstructsWithBraceInitialization)
+{
+	FixedSizeArrayOnStack<int, 3> a {};
+
+	BOOST_TEST(a.size() == 3);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ConstructsWithInitializerList)
 {
-	FixedSizeArrayOnStack<4, int> a {{42, 69, 420, 101}};
+	FixedSizeArrayOnStack<int, 4> a {{42, 69, 420, 101}};
 
 	BOOST_TEST(a.size() == 4);
 	BOOST_TEST(a[0] == 42);
 	BOOST_TEST(a[1] == 69);
 	BOOST_TEST(a[2] == 420);
 	BOOST_TEST(a[3] == 101);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithInitializerListOfSmallerSize)
+{
+	FixedSizeArrayOnStack<int, 3> a {{42, 69}};
+
+	BOOST_TEST(a.size() == 3);
+	BOOST_TEST(a[0] == 42);
+	BOOST_TEST(a[1] == 69);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // FixedSizeArraysOnStack_tests

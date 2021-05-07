@@ -10,6 +10,8 @@
 
 #include "BaseArray.h"
 
+#include <algorithm> // std::copy, std::fill
+#include <cassert>
 #include <cstddef> // std::size_t
 #include <initializer_list>
 #include <stdexcept> // std::out_of_range, std::runtime_error
@@ -219,7 +221,7 @@ class DynamicFixedSizeArray : BaseArray<T>
 		size_t size_;
 };
 
-template <std::size_t N, typename T, std::enable_if_t<(N > 0)>* = nullptr>
+template <typename T, std::size_t N, std::enable_if_t<(N > 0)>* = nullptr>
 class FixedSizeArrayOnStack : BaseArray<T>
 {
 	public:
@@ -231,6 +233,7 @@ class FixedSizeArrayOnStack : BaseArray<T>
 			size_{N}
 		{}
 
+		/*
 		explicit FixedSizeArrayOnStack(const std::initializer_list<T> list):
 			data_{},
 			size_{list.size()}
@@ -250,6 +253,21 @@ class FixedSizeArrayOnStack : BaseArray<T>
 			{
 				*data_ptr = x;
 				++data_ptr;
+			}
+		}
+		*/
+
+		FixedSizeArrayOnStack(const std::initializer_list<T> list):
+			data_{},
+			size_{N}
+		{
+			if (list.size() <= N)
+			{
+				std::copy(list.begin(), list.end(), data_);
+			}
+			else
+			{
+				std::copy(list.begin(), list.begin() + N, data_);
 			}
 		}
 
@@ -398,6 +416,161 @@ class FixedSizeArrayOnStack : BaseArray<T>
 		T data_[N];
 		size_t size_;
 };
+
+namespace CRTP
+{
+
+template <typename T, std::size_t N>
+class DynamicFixedSizeNArray : public BaseArray<T, DynamicFixedSizeNArray<T, N>>
+{
+	public:
+
+		using size_t = std::size_t;
+
+    DynamicFixedSizeNArray():
+      data_{new T[N]},
+      size_{N}
+    {}
+
+    DynamicFixedSizeNArray(const std::initializer_list<T> list):
+      data_{new T[list.size()]},
+      size_{N}
+    {
+      assert(list.size() > 0);
+
+      std::copy(list.begin(), list.end(), data_);
+    }
+
+    DynamicFixedSizeNArray(T* const data):
+      data_{new T[N]},
+      size_{N}
+    {
+      // Copy the data rather than copy the pointer, in fear of input pointer
+      // data being deleted elsewhere.
+
+      std::copy(data, data + size_, data_);
+    }
+
+    // Copy ctor.
+    DynamicFixedSizeNArray(const DynamicFixedSizeNArray& other):
+      data_{new T[other.size()]},
+      size_{other.size_}
+    {
+      std::copy(other.data_, other.data_ + other.size(), data_);
+    }
+
+    // Copy assignment.
+    DynamicFixedSizeNArray& operator=(const DynamicFixedSizeNArray& other)
+    {
+      delete[] data_;
+      data_ = new T[other.size()];
+      size_ = other.size();
+
+      std::copy(other.data_, other.data_ + other.size(), data_);
+
+      return *this;
+    }
+
+		// Move ctor.
+		DynamicFixedSizeNArray(DynamicFixedSizeNArray&& other):
+			data_{other.data_},
+			size_{other.size_}
+		{
+			other.data_ = nullptr;
+
+			// So not to invoke delete in dtor of other.
+			other.size_ = 0;
+		}
+
+		// Move assignment.
+		DynamicFixedSizeNArray& operator=(DynamicFixedSizeNArray&& other)
+		{
+			if (this->size() != other.size())
+			{
+				std::runtime_error(
+					"Mismatching sizes - this size:" +
+					std::to_string(this->size()) +
+					"other size: " +
+					std::to_string(other.size()));
+			}
+
+			data_ = other.data_;
+			other.size_ = 0;
+
+			other.data_ = nullptr;
+			return *this;
+		}		
+
+		~DynamicFixedSizeNArray()
+		{
+			if (size() > 0)
+			{
+				delete[] data_;
+			}
+		}
+
+		const T& get_value(const size_t index) const
+		{
+			if (index >= size_ || index > 0)
+			{
+				throw std::out_of_range(
+					"Out of Range, DynamicFixedSizeArray: index input:" +
+						std::to_string(index) +
+						" size: " +
+						std::to_string(size_));
+			}
+
+			return data_[index];
+		}
+
+		void set_value(const size_t index, const T value)
+		{
+			if (index >= size_ || index > 0)
+			{
+				throw std::out_of_range(
+					"Out of Range, DynamicFixedSizeArray: index input:" +
+						std::to_string(index) +
+						" size: " +
+						std::to_string(size_));
+			}
+
+			data_[index] = value;
+		}
+
+		T& operator[](const size_t index)
+		{
+			return data_[index];
+		}
+
+		const T& operator[](const size_t index) const
+		{
+			return data_[index];
+		}
+
+		size_t size() const
+		{
+			return size_;
+		}
+
+		// Returns an iterator to the beginning.
+		constexpr T* begin()
+		{
+			return data_;
+		}
+
+		// Returns an iterator to the end.
+		constexpr T* end()
+		{
+			return data_ + size_;
+		}
+
+	private:
+
+		T* data_;
+		size_t size_;
+};
+
+} // namespace CRTP
 
 } // namespace Arrays
 } // namespace DataStructures

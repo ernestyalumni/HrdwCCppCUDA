@@ -98,8 +98,9 @@ ADD_EXECUTABLE(Check
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists/SingleNode_tests.cpp
   DataStructures/Lists_tests.cpp
-  DataStructures/QueuesImplementations_tests.cpp
-  DataStructures/Queues_tests.cpp
+  DataStructures/Queues/QueuesImplementations_tests.cpp
+  DataStructures/Queues/QueuesWithArrays_tests.cpp
+  DataStructures/Queues/Queues_tests.cpp
   DataStructures/Stacks/DijkstraExpressionEvaluation_tests.cpp
   DataStructures/Stacks/Stacks_tests.cpp
   DeskCalculator/Token_tests.cpp

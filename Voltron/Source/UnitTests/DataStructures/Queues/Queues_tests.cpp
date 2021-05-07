@@ -2,7 +2,7 @@
 /// \file Queue_tests.cpp
 /// \date 20201101 04:56
 //------------------------------------------------------------------------------
-#include "DataStructures/Queues.h"
+#include "DataStructures/Queues/Queues.h"
 
 #include <boost/test/unit_test.hpp>
 
