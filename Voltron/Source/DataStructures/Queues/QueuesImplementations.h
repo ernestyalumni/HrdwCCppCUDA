@@ -100,6 +100,12 @@ class QueueWithHeadTail :
       return object().length();
     }
 
+    //--------------------------------------------------------------------------
+    /// \ref pp. 235, Sec. 10.1 Stacks and queues, Introduction to Algorithms.
+    /// \details
+    /// Time Complexity: O(1)
+    /// Space Complexity: O(N), N = array length, O(2) for actual operation.
+    //--------------------------------------------------------------------------
     void enqueue(const Item item)
     {
       const size_t tail_index {tail()};
@@ -116,6 +122,12 @@ class QueueWithHeadTail :
       }
     }
 
+    //--------------------------------------------------------------------------
+    /// \ref pp. 235, Sec. 10.1 Stacks and queues, Introduction to Algorithms.
+    /// \details
+    /// Time Complexity: O(1)
+    /// Space Complexity: O(N), N = array length, O(2) for actual operation.
+    //--------------------------------------------------------------------------
     Item dequeue()
     {
       const size_t head_index {head()};

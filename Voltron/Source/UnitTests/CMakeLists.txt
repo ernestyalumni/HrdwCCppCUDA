@@ -102,6 +102,8 @@ ADD_EXECUTABLE(Check
   DataStructures/Queues/QueuesWithArrays_tests.cpp
   DataStructures/Queues/Queues_tests.cpp
   DataStructures/Stacks/DijkstraExpressionEvaluation_tests.cpp
+  DataStructures/Stacks/StacksImplementations_tests.cpp
+  DataStructures/Stacks/StacksWithArrays_tests.cpp
   DataStructures/Stacks/Stacks_tests.cpp
   DeskCalculator/Token_tests.cpp
   DigitalInts/BitWidth_tests.cpp

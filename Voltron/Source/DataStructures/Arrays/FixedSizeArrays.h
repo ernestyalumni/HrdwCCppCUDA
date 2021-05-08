@@ -273,18 +273,16 @@ class FixedSizeArrayOnStack : BaseArray<T>
 
 		explicit FixedSizeArrayOnStack(T* data, const size_t size):
 			data_{},
-			size_{size}
+			size_{N}
 		{
-			if (N != size)
+			if (N <= size)
 			{
-				std::runtime_error(
-					"FixedSizeArrayOnStack ctor: Invalid input size:" +
-					std::to_string(size) +
-					"N: " +
-					std::to_string(N));
+				std::copy(data, data + N, data_);
 			}
-
-			data_ = data;
+			else
+			{
+				std::copy(data, data + size, data_);
+			}
 		}
 
 		// Copies, Moves.

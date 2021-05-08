@@ -1,5 +1,5 @@
-#ifndef DATA_STRUCTURES_STACKS_IMPLEMENTATIONS_H
-#define DATA_STRUCTURES_STACKS_IMPLEMENTATIONS_H
+#ifndef DATA_STRUCTURES_STACKS_STACKS_IMPLEMENTATIONS_H
+#define DATA_STRUCTURES_STACKS_STACKS_IMPLEMENTATIONS_H
 
 #include "Stacks.h"
 
@@ -17,13 +17,13 @@ namespace CRTP
 {
 
 template <typename Item>
-class StackAsArray : public Stack<Item, StackAsArray<Item>>
+class StackAsResizeableArray : public Stack<Item, StackAsResizeableArray<Item>>
 {
   public:
 
     using ItemArray = DataStructures::Arrays::CRTP::ResizeableArray<Item>;
 
-    StackAsArray() = default;
+    StackAsResizeableArray() = default;
 
     void push(const Item item)
     {
@@ -34,7 +34,7 @@ class StackAsArray : public Stack<Item, StackAsArray<Item>>
     {
       if (is_empty())
       {
-        std::runtime_error("QueueAsArray: queue is empty when dequeuing.");
+        std::runtime_error("StackAsArray: stack is empty when popping.");
       }
 
       // O(1) complexity, but require keeping track with a std::size_t counter, 
@@ -108,4 +108,4 @@ class ArrayStackImplementation : BaseStackImplementation<Item>
 } // namespace Stacks
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_STACKS_IMPLEMENTATIONS_H
+#endif // DATA_STRUCTURES_STACKS_STACKS_IMPLEMENTATIONS_H

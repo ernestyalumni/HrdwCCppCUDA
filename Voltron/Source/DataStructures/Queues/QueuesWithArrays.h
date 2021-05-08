@@ -35,6 +35,11 @@ class QueueWithHeadTailFixedSizeArrayOnStack :
       head_ = index;
     }
 
+    //--------------------------------------------------------------------------
+    /// \details
+    /// Time Complexity: O(1)
+    /// Space Complexity: O(1) (sizeof(size_t))
+    //--------------------------------------------------------------------------
     const size_t tail() const
     {
       return tail_;

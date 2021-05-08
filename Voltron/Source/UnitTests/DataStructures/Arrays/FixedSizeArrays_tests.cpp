@@ -186,6 +186,26 @@ BOOST_AUTO_TEST_CASE(ConstructsWithInitializerListOfSmallerSize)
 	BOOST_TEST(a[1] == 69);
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CanBeIteratedOver)
+{
+	FixedSizeArrayOnStack<int, 5> a;
+	for (int i {0}; i < 5; ++i)
+	{
+		a[i] = 42 + i;
+	}
+
+	int i {0};
+
+	for (auto x : a)
+	{
+		BOOST_TEST(x == 42 + i);
+		i++;
+	}
+
+}
+
 BOOST_AUTO_TEST_SUITE_END() // FixedSizeArraysOnStack_tests
 
 BOOST_AUTO_TEST_SUITE_END() // FixedSizeArrays_tests

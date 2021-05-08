@@ -189,6 +189,17 @@ BOOST_AUTO_TEST_CASE(DemonstrateStdStack)
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TopReferencesOnEmptyStack)
+{
+  std::stack<int> s;
+  const auto& top_reference_on_empty = s.top();
+
+  // Undefined behavior?
+  //BOOST_TEST((&top_reference_on_empty > 0));
+}
+
 BOOST_AUTO_TEST_SUITE_END() // StdStack_tests
 
 BOOST_AUTO_TEST_SUITE(StdDeque_tests)

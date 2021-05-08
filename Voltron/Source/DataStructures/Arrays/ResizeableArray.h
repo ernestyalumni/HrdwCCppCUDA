@@ -436,7 +436,8 @@ class ResizeableArray : public BaseArray<T, ResizeableArray<T>>
 
     T pop()
     {
-      const T return_value {data_[size_]};
+      // Index of the "tail" element is given by the total size - 1.
+      const T return_value {data_[size_ - 1]};
 
       size_--;
 

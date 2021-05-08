@@ -141,6 +141,43 @@ BOOST_AUTO_TEST_CASE(EnqueueWrapsAround)
   BOOST_TEST(queue.size() == 8);
 }
 
+//------------------------------------------------------------------------------
+/// \ref Cormen, Leiserson, Rivest, and Stein (2009), pp. 234, Fig. 10.2.
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DequeueFromHead)
+{
+  Queue<int, 12> queue;
+
+  for (int i {0}; i < 6; ++i)
+  {
+    queue.enqueue(i + 1);
+  }
+
+  queue.enqueue(15);
+  queue.enqueue(6);
+  queue.enqueue(9);
+  queue.enqueue(8);
+  queue.enqueue(4);
+
+  for (int i {0}; i < 6; ++i)
+  {
+    const int item {queue.dequeue()};
+  }
+
+  queue.enqueue(17);
+  queue.enqueue(3);
+  queue.enqueue(5);
+
+  BOOST_TEST(queue.dequeue() == 15);
+  BOOST_TEST(queue.head() == 7);
+  BOOST_TEST(queue.tail() == 2);
+  BOOST_TEST(!queue.is_empty());
+  BOOST_TEST(queue.size() == 7);
+}
+
+
 BOOST_AUTO_TEST_SUITE_END() // QueuesWithHeadTailFixedSizeArrayOnStack_tests
 
 BOOST_AUTO_TEST_SUITE_END() // QueuesWithArrays_tests
