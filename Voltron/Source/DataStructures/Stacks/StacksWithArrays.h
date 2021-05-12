@@ -38,7 +38,14 @@ class TwoStacksOneArray
         std::runtime_error("TwoStacksOneArray: overflow");        
       }
 
-      *top_index_1_ += 1;
+      if (!top_index_1_)
+      {
+        top_index_1_.emplace(0);
+      }
+      else
+      {
+        *top_index_1_ += 1;
+      }
 
       data_[*top_index_1_] = t;
     }
@@ -52,7 +59,14 @@ class TwoStacksOneArray
         std::runtime_error("TwoStacksOneArray: overflow");        
       }
 
-      *top_index_2_ -= 1;
+      if (!top_index_2_)
+      {
+        top_index_2_.emplace(N - 1);
+      }
+      else
+      {
+        *top_index_2_ -= 1;
+      }
 
       data_[*top_index_2_] = t;
     }
@@ -136,6 +150,18 @@ class TwoStacksOneArray
     T top_2() const
     {
       return data_[*top_index_2_];
+    }
+
+  protected:
+
+    optional<size_t> top_index_1() const
+    {
+      return top_index_1_;
+    }
+
+    optional<size_t> top_index_2() const
+    {
+      return top_index_2_;
     }
 
   private:

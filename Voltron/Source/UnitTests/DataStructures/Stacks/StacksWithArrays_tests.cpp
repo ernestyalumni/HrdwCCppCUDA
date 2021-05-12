@@ -14,6 +14,16 @@ BOOST_AUTO_TEST_SUITE(StacksWithArrays_tests)
 
 BOOST_AUTO_TEST_SUITE(TwoStacksOneArray_tests)
 
+template <typename T, size_t N>
+class TestTwoStacksOneArray : public TwoStacksOneArray<T, N>
+{
+  public:
+
+    using TwoStacksOneArray<T, N>::TwoStacksOneArray;
+    using TwoStacksOneArray<T, N>::top_index_1;
+    using TwoStacksOneArray<T, N>::top_index_2;    
+};
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DefaultConstructs)
@@ -23,6 +33,19 @@ BOOST_AUTO_TEST_CASE(DefaultConstructs)
   BOOST_TEST(a.size() == 0);
   BOOST_TEST(a.is_empty_1());
   BOOST_TEST(a.is_empty_2());
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(Stack1NoLongerEmptyAfterFirstPush)
+{
+  TestTwoStacksOneArray<int, 12> a;
+
+  BOOST_TEST_REQUIRE(a.is_empty_1());
+
+  a.push_1(4);
+  BOOST_TEST(!a.is_empty_1());
+  BOOST_TEST(*a.top_index_1() == 0);
 }
 
 //------------------------------------------------------------------------------
@@ -55,6 +78,8 @@ BOOST_AUTO_TEST_CASE(Queue1PushesAndPops)
   BOOST_TEST(a.size() == 0);
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(Queue2PushesAndPops)
 {
   TwoStacksOneArray<int, 12> a;

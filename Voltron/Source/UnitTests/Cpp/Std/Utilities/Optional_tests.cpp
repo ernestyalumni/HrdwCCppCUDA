@@ -99,6 +99,22 @@ BOOST_AUTO_TEST_CASE(ResetRemovesContents)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+/*
+BOOST_AUTO_TEST_CASE(DereferenceOperatorCannotSetValue)
+{
+  optional<int> a;
+
+  BOOST_TEST(!a.has_value());
+
+  // fatal error, std::bad_optional_access
+  *a = 43;
+
+  BOOST_TEST(a.value() == 43);
+}
+*/
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DereferenceOperatorCanChangeValue)
 {
   optional<int> a {42};
@@ -138,6 +154,22 @@ BOOST_AUTO_TEST_CASE(DecrementCanChangeValueWithDereferencing)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+/*
+BOOST_AUTO_TEST_CASE(ValueCannotSetValue)
+{
+  optional<int> a;
+
+  BOOST_TEST_REQUIRE(!a.has_value());
+
+  // fatal error, std::bad_optional_access
+  a.value() = 43;
+
+  BOOST_TEST(a.value() == 43);
+}
+*/
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ValueCanChangeValue)
 {
   optional<int> a {42};
@@ -145,6 +177,19 @@ BOOST_AUTO_TEST_CASE(ValueCanChangeValue)
   BOOST_TEST(a.value() == 42);
 
   a.value() = 43;
+
+  BOOST_TEST(a.value() == 43);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(EmplaceCanSetValue)
+{
+  optional<int> a;
+
+  BOOST_TEST(!a.has_value());
+
+  a.emplace(43);
 
   BOOST_TEST(a.value() == 43);
 }
@@ -161,7 +206,6 @@ BOOST_AUTO_TEST_CASE(EmplaceCanChangeValue)
 
   BOOST_TEST(a.value() == 43);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // Optional_tests
 BOOST_AUTO_TEST_SUITE_END() // Std
