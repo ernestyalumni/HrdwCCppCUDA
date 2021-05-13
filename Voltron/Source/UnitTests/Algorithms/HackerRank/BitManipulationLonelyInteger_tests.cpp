@@ -112,6 +112,6 @@ BOOST_AUTO_TEST_CASE(StdNotfnCreatesCallWrapperToNegationOfCallableObject)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // LonelyInteger_tests
+BOOST_AUTO_TEST_SUITE_END() // BitManipulation
 BOOST_AUTO_TEST_SUITE_END() // HackerRank
-BOOST_AUTO_TEST_SUITE_END() // Bits
 BOOST_AUTO_TEST_SUITE_END() // Algorithms

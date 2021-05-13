@@ -5,6 +5,7 @@ ADD_LIBRARY(Algorithms
   BinarySearch.cpp
   Bits/OnesComplementSum.cpp
   Bits/PrintBytes.cpp
+  HackerRank/BubbleSort.cpp
   InsertionSort.cpp
   PeakFinding.cpp
   PeakFinding/LoadPeakProblem.cpp

@@ -148,7 +148,6 @@ void bubble_sort(TContainer& a)
   }
 }
 
-
 } // namespace Sorting
 } // namespace Algorithms
 
