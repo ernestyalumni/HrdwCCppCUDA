@@ -63,8 +63,6 @@ BOOST_FIXTURE_TEST_CASE(InsertionSort1PrintsSwapsAndInsertionsTestCase2,
 
 	restore_cout();
 
-	std::cout << local_oss_.str();
-
 	string expected {"2 3 4 5 6 7 8 9 10 10 \n"};
 	expected += "2 3 4 5 6 7 8 9 9 10 \n";
 	expected += "2 3 4 5 6 7 8 8 9 10 \n";

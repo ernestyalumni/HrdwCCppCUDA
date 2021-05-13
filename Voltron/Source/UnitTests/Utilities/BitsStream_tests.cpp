@@ -32,9 +32,7 @@ BOOST_AUTO_TEST_CASE(DemonstrateMinus0In1sComplement)
   SuperBitSet<16> bits {BitsStream::minus_0_1s_complement};
   BOOST_TEST(bits.to_string() == "1111111111111111");
   BOOST_TEST(bits.to_ulong() == 65535);
-
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // BitsStream_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities

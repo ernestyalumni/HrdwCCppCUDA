@@ -139,6 +139,7 @@ ADD_EXECUTABLE(Check
   Utilities/ErrorHandling/HandleReturnValue_tests.cpp
   Utilities/FloatingPoint_tests.cpp
   Utilities/FromAddress_tests.cpp
+  Utilities/HexDump_tests.cpp
   Utilities/LazyValuation_tests.cpp
   Utilities/NarrowCast_test.cpp
   Utilities/OnlyOneArgument_test.cpp
