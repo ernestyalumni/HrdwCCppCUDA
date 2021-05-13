@@ -86,5 +86,22 @@ void CaptureCout::restore_cout()
   cout.rdbuf(cout_buffer_ptr_);
 }
 
+CaptureCoutFixture::CaptureCoutFixture():
+  local_oss_{},
+  cout_buffer_ptr_{cout.rdbuf()} // Save previous buffer.
+{
+  capture_locally();
+}
+
+void CaptureCoutFixture::capture_locally()
+{
+  cout.rdbuf(local_oss_.rdbuf());
+}
+
+void CaptureCoutFixture::restore_cout()
+{
+  cout.rdbuf(cout_buffer_ptr_);
+}
+
 } // namespace Tools
 

@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <vector>
 
-using Algorithms::HackerRank::Sorting::count_swaps;
+using Algorithms::HackerRank::Sorting::BubbleSort::count_swaps;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)

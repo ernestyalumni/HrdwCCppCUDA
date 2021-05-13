@@ -38,6 +38,23 @@ class CaptureCout
     std::streambuf* cout_buffer_ptr_;
 };
 
+class CaptureCoutFixture
+{
+  public:
+
+    std::ostringstream local_oss_;
+
+    std::streambuf* cout_buffer_ptr_; // Save previous buffer.
+
+    CaptureCoutFixture();
+
+    void restore_cout();
+
+  protected:
+
+    void capture_locally();
+};
+
 } // namespace Tools
 
 #endif // TOOLS_CAPTURE_COUT_H

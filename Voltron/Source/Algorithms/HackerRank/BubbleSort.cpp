@@ -14,6 +14,9 @@ namespace HackerRank
 namespace Sorting
 {
 
+namespace BubbleSort
+{
+
 int count_swaps(vector<int>& a)
 {
 	int counter {0};
@@ -38,6 +41,7 @@ int count_swaps(vector<int>& a)
 
 void print_count_swaps(std::vector<int>& a);
 
+} // namespace BubbleSort
 } // namespace Sorting
 } // namespace HackerRank
 } // namespace Algorithms

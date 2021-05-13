@@ -7,9 +7,7 @@
 #include <boost/test/unit_test.hpp>
 //#include <functional> // std::functional
 #include <vector>
-#include <sstream> // std::ostringstream;
 
-using std::ostringstream;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
