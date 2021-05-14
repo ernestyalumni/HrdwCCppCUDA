@@ -7,6 +7,7 @@ ADD_LIBRARY(Algorithms
   Bits/PrintBytes.cpp
   HackerRank/BubbleSort.cpp
   HackerRank/InsertionSort.cpp
+  HackerRank/QuickSort.cpp
   InsertionSort.cpp
   PeakFinding.cpp
   PeakFinding/LoadPeakProblem.cpp
