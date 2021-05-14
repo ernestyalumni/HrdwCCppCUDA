@@ -6,6 +6,7 @@ ADD_LIBRARY(Algorithms
   Bits/OnesComplementSum.cpp
   Bits/PrintBytes.cpp
   HackerRank/BubbleSort.cpp
+  HackerRank/CountingSort.cpp
   HackerRank/InsertionSort.cpp
   HackerRank/QuickSort.cpp
   InsertionSort.cpp
