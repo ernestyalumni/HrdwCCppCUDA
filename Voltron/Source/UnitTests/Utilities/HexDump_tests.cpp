@@ -1,13 +1,18 @@
 #include "Utilities/HexDump.h"
 
 #include "Tools/CaptureCout.h"
+#include "Utilities/EndianConversions.h"
+#include "Utilities/ToHexString.h"
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <string>
 
 using Tools::CaptureCoutFixture;
+using Utilities::ToHexString;
 using Utilities::hex_dump;
+using Utilities::to_big_endian;
+using Utilities::to_little_endian;
 using std::cout;
 using std::string;
 
@@ -34,6 +39,66 @@ BOOST_FIXTURE_TEST_CASE(DemonstrateHexDumpPrintOut,
 	expected +=
 		"0010 : eater than 16 ch 65 61 74 65 72 20 74 68 61 6E 20 31 36 20 63 68 \n";
 	expected += "0020 : ars.             61 72 73 00 \n";
+
+  BOOST_TEST(local_oss_.str() == expected);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(IntegersOf16BitCanBeShownHex,
+	CaptureCoutFixture)
+{
+	const int16_t x {15213};
+	ToHexString<int16_t> xh {x};
+	BOOST_TEST(xh.value() == x);
+
+	hex_dump(&x, sizeof(x), cout);
+
+	const string expected {"0000 : m;               6D 3B \n"};
+
+  BOOST_TEST(local_oss_.str() == expected);
+
+	restore_cout();
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(ShowHexOfLittleEndianValue,
+	CaptureCoutFixture)
+{
+	const int16_t x {15213};
+	ToHexString<int16_t> xh {x};
+	BOOST_TEST_REQUIRE(xh.value() == x);
+  ToHexString<int16_t> le_xh {to_little_endian(xh)};
+
+  const int16_t le_x {le_xh.value()};
+
+	hex_dump(&le_x, sizeof(x), cout);
+
+	const string expected {"0000 : m;               6D 3B \n"};
+
+  BOOST_TEST(local_oss_.str() == expected);
+
+	restore_cout();
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(ShowHexOfBigEndianValue,
+	CaptureCoutFixture)
+{
+	const int16_t x {15213};
+	ToHexString<int16_t> xh {x};
+	BOOST_TEST_REQUIRE(xh.value() == x);
+  ToHexString<int16_t> be_xh {to_big_endian(xh)};
+
+  const int16_t be_x {be_xh.value()};
+
+	hex_dump(&be_x, sizeof(x), cout);
+
+	const string expected {"0000 : ;m               3B 6D \n"};
+
+	restore_cout();
 
   BOOST_TEST(local_oss_.str() == expected);
 }
