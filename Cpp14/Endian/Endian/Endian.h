@@ -60,7 +60,6 @@ union DoubleRepresentationUnion
   double x;
 };
 
-
 //------------------------------------------------------------------------------
 /// \details We use a generic function using variable input lengths to turn 
 ///   floating-point numbers into sequences of bits. Note that we need to 
@@ -85,7 +84,6 @@ std::string GetBitSequence(unsigned char* bytes, int len)
   }
   return bits;
 }
-
 
 std::string GetDoubleBitsNice(double val)
 {
@@ -124,13 +122,9 @@ std::string GetDoubleBitsHex(double val)
   return std::string(buf);
 }
 
-
 //------------------------------------------------------------------------------
 /// \brief Define ValueType->IntType mapping for the unified 
 ///   "IntType FromHost (ValueType)" API. The mapping is implemented via"
-
-
-
 
 //------------------------------------------------------------------------------
 /// \brief Utilities to convert numbers between current host's native byte
@@ -164,8 +158,6 @@ class BigEndian
     static void Store(T value, char* p);
 
 }; // BigEndian
-
-
 
 } // namespace Endian
 
