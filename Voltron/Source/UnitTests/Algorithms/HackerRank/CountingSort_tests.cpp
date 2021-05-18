@@ -1,11 +1,17 @@
 /// \ref https://www.hackerrank.com/challenges/countingsort1/problem
 
 #include "Algorithms/HackerRank/CountingSort.h"
+#include "Tools/CaptureCout.h"
 
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <vector>
 
+using Algorithms::HackerRank::Sorting::CountingSort::count_sort;
+using Algorithms::HackerRank::Sorting::CountingSort::counting_sort;
 using Algorithms::HackerRank::Sorting::CountingSort::counting_sort_frequency;
+using Tools::CaptureCoutFixture;
+using std::string;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
@@ -56,6 +62,50 @@ BOOST_AUTO_TEST_CASE(CountingSortFrequencyCountsFrequencies)
 		BOOST_TEST(frequency_result[5] == 1);
 		BOOST_TEST(frequency_result[6] == 1);
 	}
+}
+
+// \ref https://www.hackerrank.com/challenges/countingsort2/problem?h_r=next-challenge&h_v=zen
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CountingSortSorts)
+{
+	// Test case 4
+	{
+		vector<int> arr {19, 10, 12, 10, 24, 25, 22};
+
+		const vector<int> result {counting_sort(arr)};
+
+		BOOST_TEST(result[0] == 10);
+		BOOST_TEST(result[1] == 10);
+		BOOST_TEST(result[2] == 12);
+		BOOST_TEST(result[3] == 19);
+		BOOST_TEST(result[4] == 22);
+		BOOST_TEST(result[5] == 24);
+		BOOST_TEST(result[6] == 25);
+	}
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(CountSortSortsKeyValue, CaptureCoutFixture)
+{
+	vector<vector<string>> arr {
+		{"1", "e"},
+		{"2", "a"},
+		{"1", "b"},
+		{"3", "a"},
+		{"4", "f"},
+		{"1", "f"},
+		{"2", "a"},
+		{"1", "e"},
+		{"1", "b"},
+		{"1", "c"}};
+
+	count_sort(arr);
+
+	restore_cout();
+
+  BOOST_TEST(local_oss_.str() == "- - f e b c - a - - ");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // CountingSort_tests
