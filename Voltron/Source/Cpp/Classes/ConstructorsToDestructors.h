@@ -280,6 +280,117 @@ class MoveOnlyLight
 
 MoveOnlyLight return_rvalue_move_only_light(const int value);
 
+class CustomDestructorLight
+{
+  public:
+
+    CustomDestructorLight() = delete;
+
+    CustomDestructorLight(const int value);
+
+    // Copy ctor.
+    CustomDestructorLight(const CustomDestructorLight&) = delete;
+    // Copy assignment.
+    CustomDestructorLight& operator=(const CustomDestructorLight&) = delete;
+
+    // Move ctor.
+    CustomDestructorLight(CustomDestructorLight&&);
+
+    // Move assignment.
+    CustomDestructorLight& operator=(CustomDestructorLight&&) = delete;
+
+    virtual ~CustomDestructorLight();
+
+    static int move_ctor_counter()
+    {
+      return move_ctor_counter_;
+    }
+
+    static int dtor_counter()
+    {
+      return dtor_counter_;
+    }
+
+    static const std::string move_ctor_message;
+    static const std::string dtor_message;
+
+    int data() const
+    {
+      return data_;
+    }
+
+    void data(const int input)
+    {
+      data_ = input;
+    }
+
+  private:
+
+    int data_;
+
+    static int move_ctor_counter_;
+    static int dtor_counter_;
+};
+
+
+class CustomDestructorEncapsulated
+{
+  public:
+
+    CustomDestructorEncapsulated() = delete;
+
+    CustomDestructorEncapsulated(const int value1, const int value2);
+
+    // Copy ctor.
+    CustomDestructorEncapsulated(const CustomDestructorEncapsulated&) = delete;
+    // Copy assignment.
+    CustomDestructorEncapsulated& operator=(
+      const CustomDestructorEncapsulated&) = delete;
+
+    // Move ctor.
+    CustomDestructorEncapsulated(CustomDestructorEncapsulated&&) = delete;
+
+    // Move assignment.
+    CustomDestructorEncapsulated& operator=(
+      CustomDestructorEncapsulated&&) = delete;
+
+    virtual ~CustomDestructorEncapsulated();
+
+    static int dtor_counter()
+    {
+      return dtor_counter_;
+    }
+
+    static const std::string dtor_message;
+
+    int data() const
+    {
+      return data_.data();
+    }
+
+    void data(const int input)
+    {
+      data_.data(input);
+    }
+
+    int other_data() const
+    {
+      return other_data_;      
+    }
+
+    void other_data(const int input)
+    {
+      other_data_ = input;
+    }
+
+  private:
+
+    CustomDestructorLight data_;
+    int other_data_;
+
+    static int dtor_counter_;
+};
+
 } // namespace Classes
 } // namespace Cpp
 

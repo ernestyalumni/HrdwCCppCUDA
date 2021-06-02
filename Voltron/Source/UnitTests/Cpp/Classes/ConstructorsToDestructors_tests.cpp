@@ -7,6 +7,8 @@
 #include <string>
 #include <utility>
 
+using Cpp::Classes::CustomDestructorEncapsulated;
+using Cpp::Classes::CustomDestructorLight;
 using Cpp::Classes::DefaultConstructs;
 using Cpp::Classes::MoveOnlyLight;
 using Cpp::Classes::NoDefaultConstruction;
@@ -477,6 +479,97 @@ BOOST_FIXTURE_TEST_CASE(FunctionCanReturnRvalue, TestClogSetup)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // MoveOnlyLight_tests
+
+BOOST_AUTO_TEST_SUITE(CustomDestructorEncapsulated_tests)
+
+int custom_destructor_light_move_ctor_counter_start_value {
+  CustomDestructorLight::move_ctor_counter()};
+int custom_destructor_light_dtor_counter_start_value {
+  CustomDestructorLight::dtor_counter()};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(DestructorInvokedWhenOutsideScope, TestClogSetup)
+{
+  BOOST_TEST(CustomDestructorLight::move_ctor_counter() ==
+    custom_destructor_light_move_ctor_counter_start_value);
+  BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+    custom_destructor_light_dtor_counter_start_value);
+
+  int int_var {42};
+
+  {
+    CustomDestructorLight a {int_var};
+
+    BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+      custom_destructor_light_dtor_counter_start_value);
+
+    BOOST_TEST(stream_.str() == "");
+
+    stringstream().swap(stream_); 
+  }
+
+  BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+    custom_destructor_light_dtor_counter_start_value + 1);
+
+  BOOST_TEST(stream_.str() ==
+    "CustomDestructorLight destructs:" +
+    to_string(custom_destructor_light_dtor_counter_start_value + 1) +
+    "data_:" +
+    to_string(int_var));
+}
+
+int custom_destructor_encapsulated_dtor_counter_start_value {
+  CustomDestructorEncapsulated::dtor_counter()};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(DestructorDestroysEncapsulatedObjectInOrder,
+  TestClogSetup)
+{
+  BOOST_TEST(CustomDestructorEncapsulated::dtor_counter() ==
+    custom_destructor_encapsulated_dtor_counter_start_value);
+
+  BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+    custom_destructor_light_dtor_counter_start_value + 1);
+
+  int int_var {42};
+  int int_var2 {43};
+
+  {
+    CustomDestructorEncapsulated a {int_var, int_var2};
+
+    BOOST_TEST(CustomDestructorEncapsulated::dtor_counter() ==
+      custom_destructor_encapsulated_dtor_counter_start_value);
+
+    BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+      custom_destructor_light_dtor_counter_start_value + 1);
+
+    BOOST_TEST(stream_.str() == "");
+
+    stringstream().swap(stream_); 
+  }
+
+  BOOST_TEST(CustomDestructorEncapsulated::dtor_counter() ==
+    custom_destructor_encapsulated_dtor_counter_start_value + 1);
+
+  BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+    custom_destructor_light_dtor_counter_start_value + 2);
+
+  BOOST_TEST(stream_.str() ==
+    "CustomDestructorEncapsulated destructs:" +
+    to_string(custom_destructor_encapsulated_dtor_counter_start_value + 1) +
+    "data_:" +
+    to_string(int_var) +
+    " or " +
+    to_string(int_var2) +
+    "CustomDestructorLight destructs:" +
+    to_string(custom_destructor_light_dtor_counter_start_value + 2) +
+    "data_:" +
+    to_string(int_var));
+}
+
+BOOST_AUTO_TEST_SUITE_END() // CustomDestructorEncapsulated_tests
 
 BOOST_AUTO_TEST_SUITE_END() // ConstructorsToDestructors_tests
 BOOST_AUTO_TEST_SUITE_END() // Classes

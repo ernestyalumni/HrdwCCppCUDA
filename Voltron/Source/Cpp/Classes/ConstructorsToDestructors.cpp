@@ -225,5 +225,96 @@ MoveOnlyLight return_rvalue_move_only_light(const int value)
   return std::move(a);
 }
 
+const string CustomDestructorLight::move_ctor_message {
+  "CustomDestructorLight move constructs"};
+const string CustomDestructorLight::dtor_message {
+  "CustomDestructorLight destructs"};
+
+// cf. https://stackoverflow.com/questions/16284629/undefined-reference-to-static-variable-c
+// Need to provide definition of that data member.
+int CustomDestructorLight::move_ctor_counter_ {0};
+int CustomDestructorLight::dtor_counter_ {0};
+
+CustomDestructorLight::CustomDestructorLight(const int value):
+  data_{value}
+{
+  if (value < 1)
+  {
+    throw std::runtime_error(
+      "Runtime Error; CustomDestructorLight ctor: input value: " +
+      to_string(value) +
+      "less than 1 and thus invalid.");
+  }
+}
+
+CustomDestructorLight::CustomDestructorLight(CustomDestructorLight&& other):
+  data_{other.data_}
+{
+  other.data_ = -1;
+
+  ++move_ctor_counter_; 
+
+  clog <<
+    move_ctor_message <<
+    ":" <<
+    to_string(move_ctor_counter_) <<
+    "data_:" <<
+    to_string(data_) <<
+    "other.data_:" <<
+    to_string(other.data_);
+}
+
+CustomDestructorLight::~CustomDestructorLight()
+{
+  if (data_ < 1)
+  {
+    clog << "CustomDestructorLight destructs for data_:" << to_string(data_);
+  }
+
+  ++dtor_counter_;
+
+  clog << dtor_message << ":" << to_string(dtor_counter_) << "data_:" <<
+    to_string(data_);
+}
+
+
+const string CustomDestructorEncapsulated::dtor_message {
+  "CustomDestructorEncapsulated destructs"};
+
+int CustomDestructorEncapsulated::dtor_counter_ {0};
+
+CustomDestructorEncapsulated::CustomDestructorEncapsulated(
+  const int value1,
+  const int value2
+  ):
+  data_{value1},
+  other_data_{value2}
+{
+  if (value1 < 1 || value2 < 1)
+  {
+    throw std::runtime_error(
+      "Runtime Error; CustomDestructorEncapsulated ctor: input value: " +
+      to_string(value1) +
+      " or " +
+      to_string(value2) +
+      "less than 1 and thus invalid.");
+  }
+}
+
+CustomDestructorEncapsulated::~CustomDestructorEncapsulated()
+{
+  if (data_.data() < 1 || other_data_ < 1)
+  {
+    clog << "CustomDestructorEncapsulated destructs for data_:" <<
+      to_string(data_.data()) << " or " << to_string(other_data_);
+  }
+
+  ++dtor_counter_;
+
+  clog << dtor_message << ":" << to_string(dtor_counter_) << "data_:" <<
+    to_string(data_.data()) << " or " << to_string(other_data_);
+}
+
+
 } // namespace Classes
 } // namespace Cpp
