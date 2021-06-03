@@ -1,6 +1,7 @@
 #ifndef UTILITIES_HEX_DUMP_H
 #define UTILITIES_HEX_DUMP_H
 
+#include <cctype> // std::isprint
 #include <ostream>
 #include <string>
 
@@ -42,11 +43,26 @@ inline void hex_dump(
       {
         char ch {*next};
 
-        switch(pass)
+        switch (pass)
         {
           // Print out the ascii.
           case 1:
-            stream << (ch < 32 ? '.' : ch);
+
+            // cf. https://en.cppreference.com/w/cpp/string/byte/isprint
+            // std::isprint undefined behavior if argument's value is neither
+            // representable as unsigned char nor equal to EOF. To use these
+            // functions safely with plain chars, argument should first be
+            // converted to unsigned char.
+
+            if (std::isprint(static_cast<unsigned char>(ch)))
+            {
+              stream << ch;
+            }
+            else
+            {
+              stream << '.';
+            }
+
             break;
           // Print out the "hex dump" of 16 bytes per line.
           case 2:
