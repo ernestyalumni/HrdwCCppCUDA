@@ -48,6 +48,15 @@ DefaultConstructs::DefaultConstructs():
   clog << default_ctor_message << ":" << to_string(default_ctor_counter_);
 }
 
+DefaultConstructs::DefaultConstructs(
+  const string& s,
+  const int value
+  ):
+  s_data_{s},
+  int_data_{value},
+  is_default_constructed_{false}
+{}
+
 DefaultConstructs::~DefaultConstructs()
 {
   ++dtor_counter_;
@@ -315,6 +324,14 @@ CustomDestructorEncapsulated::~CustomDestructorEncapsulated()
     to_string(data_.data()) << " or " << to_string(other_data_);
 }
 
+MembersDestructionOrder::MembersDestructionOrder(
+  const string& s,
+  const int value1,
+  const int value2
+  ):
+  data_1_{s, value1},
+  data_2_{value2}
+{}
 
 } // namespace Classes
 } // namespace Cpp

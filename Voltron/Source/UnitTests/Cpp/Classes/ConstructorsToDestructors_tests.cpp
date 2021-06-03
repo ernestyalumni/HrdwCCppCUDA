@@ -10,6 +10,7 @@
 using Cpp::Classes::CustomDestructorEncapsulated;
 using Cpp::Classes::CustomDestructorLight;
 using Cpp::Classes::DefaultConstructs;
+using Cpp::Classes::MembersDestructionOrder;
 using Cpp::Classes::MoveOnlyLight;
 using Cpp::Classes::NoDefaultConstruction;
 using Cpp::Classes::return_no_default_construction_as_type;
@@ -42,13 +43,13 @@ struct TestClogSetup
   }
 };
 
+int default_constructs_dtor_counter_start_value {
+  DefaultConstructs::dtor_counter()};
+
 BOOST_AUTO_TEST_SUITE(DefaultConstructs_tests)
 
 int default_constructs_default_ctor_counter_start_value {
   DefaultConstructs::default_ctor_counter()};
-
-int default_constructs_dtor_counter_start_value {
-  DefaultConstructs::dtor_counter()};
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -480,12 +481,12 @@ BOOST_FIXTURE_TEST_CASE(FunctionCanReturnRvalue, TestClogSetup)
 
 BOOST_AUTO_TEST_SUITE_END() // MoveOnlyLight_tests
 
-BOOST_AUTO_TEST_SUITE(CustomDestructorEncapsulated_tests)
-
 int custom_destructor_light_move_ctor_counter_start_value {
   CustomDestructorLight::move_ctor_counter()};
 int custom_destructor_light_dtor_counter_start_value {
   CustomDestructorLight::dtor_counter()};
+
+BOOST_AUTO_TEST_SUITE(CustomDestructorEncapsulated_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -570,6 +571,57 @@ BOOST_FIXTURE_TEST_CASE(DestructorDestroysEncapsulatedObjectInOrder,
 }
 
 BOOST_AUTO_TEST_SUITE_END() // CustomDestructorEncapsulated_tests
+
+BOOST_AUTO_TEST_SUITE(MembersDestructionOrder_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(ClassMembersDestructionReversedOrder, TestClogSetup)
+{
+  BOOST_TEST(DefaultConstructs::dtor_counter() ==
+    default_constructs_dtor_counter_start_value + 5);
+
+  BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+    custom_destructor_light_dtor_counter_start_value + 2);
+
+  string s_var {"Prosperity."};
+  int int_var {42};
+  int int_var2 {43};
+
+  {
+    MembersDestructionOrder a {s_var, int_var, int_var2};
+
+    BOOST_TEST(a.data_1_s_data() == s_var);
+    BOOST_TEST(a.data_1_int_data() == int_var);
+    BOOST_TEST(a.data_2_data() == int_var2);    
+
+    BOOST_TEST(DefaultConstructs::dtor_counter() ==
+      default_constructs_dtor_counter_start_value + 5);
+
+    BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+      custom_destructor_light_dtor_counter_start_value + 2);
+
+    BOOST_TEST(stream_.str() == "");
+
+    stringstream().swap(stream_); 
+  }
+
+  BOOST_TEST(DefaultConstructs::dtor_counter() ==
+    default_constructs_dtor_counter_start_value + 6);
+
+  BOOST_TEST(CustomDestructorLight::dtor_counter() ==
+    custom_destructor_light_dtor_counter_start_value + 3);
+
+  BOOST_TEST(stream_.str() ==
+    "CustomDestructorLight destructs:" +
+    to_string(custom_destructor_light_dtor_counter_start_value + 3) +
+    "data_:" +
+    to_string(int_var2) +
+    "DefaultConstructs destructs:" +
+    to_string(default_constructs_dtor_counter_start_value + 6));
+}
+
+BOOST_AUTO_TEST_SUITE_END() // MembersDestructionOrder_tests
 
 BOOST_AUTO_TEST_SUITE_END() // ConstructorsToDestructors_tests
 BOOST_AUTO_TEST_SUITE_END() // Classes

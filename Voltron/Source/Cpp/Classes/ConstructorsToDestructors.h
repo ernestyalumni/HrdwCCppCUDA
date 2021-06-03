@@ -332,7 +332,6 @@ class CustomDestructorLight
     static int dtor_counter_;
 };
 
-
 class CustomDestructorEncapsulated
 {
   public:
@@ -389,6 +388,54 @@ class CustomDestructorEncapsulated
     int other_data_;
 
     static int dtor_counter_;
+};
+
+//------------------------------------------------------------------------------
+/// \brief What is the order of destruction for a class's members? Answer: They
+/// are destroyed in reverse order of declaration.
+/// \ref https://isocpp.org/wiki/faq/dtors
+//------------------------------------------------------------------------------
+class MembersDestructionOrder
+{
+  public:
+
+    MembersDestructionOrder() = delete;
+
+    MembersDestructionOrder(
+      const std::string& s,
+      const int value1,
+      const int value2);
+
+    // Copy ctor.
+    MembersDestructionOrder(const MembersDestructionOrder&) = delete;
+    // Copy assignment.
+    MembersDestructionOrder& operator=(const MembersDestructionOrder&) = delete;
+    // Move ctor.
+    MembersDestructionOrder(MembersDestructionOrder&&) = delete;
+    // Move assignment.
+    MembersDestructionOrder& operator=(MembersDestructionOrder&&) = delete;
+
+    virtual ~MembersDestructionOrder() = default;
+
+    std::string& data_1_s_data()
+    {
+      return data_1_.s_data();
+    }
+
+    const int data_1_int_data() const
+    {
+      return data_1_.int_data();
+    }
+
+    const int data_2_data() const
+    {
+      return data_2_.data();
+    }
+
+  private:
+
+    DefaultConstructs data_1_;
+    CustomDestructorLight data_2_;
 };
 
 } // namespace Classes
