@@ -16,6 +16,7 @@ ADD_EXECUTABLE(Check
   Algorithms/Bits/OnesComplement_tests.cpp
   Algorithms/Bits/PrintBytes_tests.cpp
   Algorithms/Bits/Radix_tests.cpp
+  Algorithms/ExpertIo/Level1_tests.cpp
   Algorithms/HackerRank/BitManipulationLonelyInteger_tests.cpp
   Algorithms/HackerRank/BubbleSort_tests.cpp
   Algorithms/HackerRank/CountingSort_tests.cpp
