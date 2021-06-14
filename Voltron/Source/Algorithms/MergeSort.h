@@ -1,5 +1,4 @@
 //------------------------------------------------------------------------------
-/// \file MergeSort.h
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating Merge Sort.
 /// \ref https://gist.github.com/kbendick/1de4f311e2a780339eb3
