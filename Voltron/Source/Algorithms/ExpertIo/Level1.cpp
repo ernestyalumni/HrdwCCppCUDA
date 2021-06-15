@@ -1,8 +1,11 @@
 #include "Level1.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <map>
 #include <vector>
+
+#include <iostream>
 
 using std::map;
 using std::size_t;
@@ -97,6 +100,90 @@ bool is_valid_subsequence(vector<int> array, vector<int> sequence)
   return false;
 }
 
+
+vector<int> sorted_squared_array_algorithmic(vector<int> array)
+{
+  // https://en.cppreference.com/w/cpp/algorithm/for_each
+  // Applies the given function object f to the result of dereferencing every
+  // iterator in the range [first, last).
+
+  // O(4) space.
+  int array_index {0};
+  int first_nonnegative_ptr {0};
+  bool has_negative {false};
+  const size_t N {array.size()};
+
+  // O(N) time.
+  std::for_each(
+    array.begin(),
+    array.end(),
+    [&has_negative, &first_nonnegative_ptr, &array_index, &N](int& x)
+    {
+      if (!has_negative)
+      {
+        if (x < 0)
+        {
+          has_negative = true;
+
+          first_nonnegative_ptr = N;
+        }
+      }
+      else
+      {
+        if (x >= 0)
+        {
+          first_nonnegative_ptr = array_index;
+        }
+      }
+
+      ++array_index;
+      x = x * x;
+    });
+
+
+  if (!has_negative)
+  {
+    return array;
+  }
+  else
+  {
+    vector<int> sorted_array;
+    // The last of the negative values.
+    array_index = first_nonnegative_ptr - 1;
+
+    while (array_index >= 0 || first_nonnegative_ptr < N)
+    {
+      if (array_index >= 0 && first_nonnegative_ptr < N)
+      {
+        if (array.at(array_index ) > array.at(first_nonnegative_ptr))
+        {
+          sorted_array.emplace_back(array.at(first_nonnegative_ptr));
+          ++first_nonnegative_ptr;
+        }
+        else
+        {
+          sorted_array.emplace_back(array.at(array_index));
+          --array_index;
+        }
+      }
+      else
+      {
+        if (array_index < 0)
+        {
+          sorted_array.emplace_back(array.at(first_nonnegative_ptr));
+          ++first_nonnegative_ptr;
+        }
+        else
+        {
+          sorted_array.emplace_back(array.at(array_index));
+          --array_index;
+        }
+      }
+    }
+
+    return sorted_array;
+  }
+}
 
 } // namespace ExpertIo
 } // namespace Algorithms

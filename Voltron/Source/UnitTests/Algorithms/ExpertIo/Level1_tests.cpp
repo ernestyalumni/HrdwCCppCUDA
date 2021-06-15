@@ -4,6 +4,7 @@
 #include <vector>
 
 using Algorithms::ExpertIo::is_valid_subsequence;
+using Algorithms::ExpertIo::sorted_squared_array_algorithmic;
 using Algorithms::ExpertIo::two_number_sum_brute;
 using Algorithms::ExpertIo::two_number_sum_with_map;
 
@@ -54,6 +55,49 @@ BOOST_AUTO_TEST_CASE(ExampleWithTwoPointers)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ValidateSubsequence
+
+BOOST_AUTO_TEST_SUITE(SortedSquaredArray)
+
+const vector<int> sample_array {1, 2, 3, 4, 5, 6, 8, 9};
+
+const vector<int> test_case_array_8 {-2, -1};
+
+const vector<int> test_case_array_9 {-5, -4, -3, -2, -1};
+
+const vector<int> test_case_array_11 {-10, -5, 0, 5, 10};
+
+const vector<int> test_case_array_12 {-7, -3, 1, 9, 22, 30};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortedSquaredArrayWithAlgorithmImplementation)
+{
+  const auto x = sorted_squared_array_algorithmic(sample_array);
+
+  auto iter_x = x.begin();
+
+  for (const auto& a : sample_array)
+  {
+    BOOST_TEST((a * a == *iter_x));
+
+    ++iter_x;
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareOfNegativeValuesGetsSorted)
+{
+  {
+    const auto x = sorted_squared_array_algorithmic(test_case_array_8);
+
+    BOOST_TEST(x.at(0) == 1);
+    BOOST_TEST(x.at(1) == 4);
+  }
+
+}
+
+BOOST_AUTO_TEST_SUITE_END() // SortedSquaredArray
 
 BOOST_AUTO_TEST_SUITE_END() // ExpertIo
 BOOST_AUTO_TEST_SUITE_END() // Algorithms

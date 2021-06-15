@@ -56,6 +56,8 @@ person *hash_table_delete(char *name {
   if ()
 }
 
+person *hash_table_delete()
+
 int main() {
 
   for (int i=0; i < TABLE_SIZE; i++) {
@@ -77,7 +79,7 @@ int main() {
   hash_table_insert(&kate);
   hash_table_insert(&mpho);
   hash_table_insert(&sarah);
-  
+
 
   printf("Jacob => %u\n",hash("Jacob"));
   printf("Natalie => %u\n",hash("Natalie"));

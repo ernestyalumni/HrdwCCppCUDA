@@ -28,6 +28,7 @@ std::vector<int> two_number_sum_with_map(
 //------------------------------------------------------------------------------
 bool is_valid_subsequence(std::vector<int> array, std::vector<int> sequence);
 
+std::vector<int> sorted_squared_array_algorithmic(std::vector<int> array);
 
 } // namespace ExpertIo
 } // namespace Algorithms
