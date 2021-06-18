@@ -30,6 +30,10 @@ bool is_valid_subsequence(std::vector<int> array, std::vector<int> sequence);
 
 std::vector<int> sorted_squared_array_algorithmic(std::vector<int> array);
 
+std::vector<int> sorted_squared_array_with_selection_sort(
+  std::vector<int> array);
+
+
 } // namespace ExpertIo
 } // namespace Algorithms
 

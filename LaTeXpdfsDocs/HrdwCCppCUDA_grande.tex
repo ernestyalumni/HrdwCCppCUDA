@@ -3416,6 +3416,38 @@ e.g. \textbf{Maintenance}: move $A[1..j-1]$ to right until finding proper positi
 
 Typically, show Initialization and Maintenance of a Loop Invariant by induction. Use Termination to show the algorithm solves the problem and gives the final solution.
 
+\subsection{Selection Sort}
+
+pp. 248, Ch. 2, Sedgewick and Wayne (2011) \cite{SeWa2011}
+
+First, find smallest item in the array, and exchange it with the first entry (itself, if first entry is already the smallest). \\
+Then, find next smallest item and exchange it with the second entry. Continue.
+
+The work of moving items around is outside the inner loop; each exchange puts an item into its final position, so number of exchanges is $N$. Thus, running time is dominated by number of compares.
+
+\begin{proposition}
+	Selection sort uses $ \approx N^2 /2 $ compares and $N$ exchanges to sort an array of length $N$
+\end{proposition}
+
+\begin{proof}
+
+Sum over each element, summing the number of comparisons.
+
+\[
+\begin{gathered}
+	\sum_{i=1}^{N} (N - (i)) = N^2 - (N (N + 1) ) / 2 = N (N - 1) / 2
+\end{gathered}
+\]
+So it is $N^2$ compares.
+
+\end{proof}
+
+\emph{Running time is insensitive to input}. For example, it takes about as long to run selection sort for an array that's already in order as it does a randomly-ordered array.
+
+\emph{Data movement is minimal}. $N$ exchanges, that change value of 2 array entries. Number of array accesses is \emph{linear} function of array size. 
+
+
+
 \subsection{Insertion Sort, Straight Insertion Sort}
 
 \textbf{Best case} (Bester Fall): $O(N)$ comparisons, $O(1)$ swaps. \\

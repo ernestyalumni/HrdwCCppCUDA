@@ -1,6 +1,7 @@
 #include "PoolAllocator.h"
 
 #include <cstddef>
+#include <cstdlib> // malloc
 
 namespace Algorithms
 {
@@ -20,17 +21,15 @@ Chunk* PoolAllocator::allocate_block(const std::size_t chunk_size)
 
   for (int i {0}; i < chunks_per_block_ - 1; ++i)
   {
-    chunk->next =
+    chunk->next_ =
       reinterpret_cast<Chunk*>(reinterpret_cast<char*>(chunk) + chunk_size);
-    chunk = chunk->next;
+    chunk = chunk->next_;
   }
 
-  chunk->next = nullptr;
+  chunk->next_ = nullptr;
 
   return block_begin;
 }
-
-
 
 } // namespace GarbageCollection
 } // namespace Algorithms

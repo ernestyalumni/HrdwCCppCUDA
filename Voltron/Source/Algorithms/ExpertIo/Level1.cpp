@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <map>
+#include <utility> // std::swap
 #include <vector>
 
 #include <iostream>
@@ -183,6 +184,40 @@ vector<int> sorted_squared_array_algorithmic(vector<int> array)
 
     return sorted_array;
   }
+}
+
+vector<int> sorted_squared_array_with_selection_sort(vector<int> array)
+{
+  const size_t N {array.size()};
+  for (int i {0}; i < N; ++i)
+  {
+    array[i] = array[i] * array[i];
+  }
+
+  // Selection sort
+  auto selection_sort = [](vector<int>& arr)
+  {
+    const size_t N {arr.size()};
+
+    for (int i {0}; i < N; ++i)
+    {
+      int min_element_index {i};
+
+      for (int j {i + 1}; j < N; ++j)
+      {
+        if (arr[j] < arr[min_element_index])
+        {
+          min_element_index = j;
+        }
+      }
+
+      std::swap(arr[i], arr[min_element_index]);
+    }
+
+    return arr;
+  };
+
+  return selection_sort(array);
 }
 
 } // namespace ExpertIo

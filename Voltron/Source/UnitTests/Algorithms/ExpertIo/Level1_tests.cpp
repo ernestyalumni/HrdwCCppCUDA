@@ -5,6 +5,7 @@
 
 using Algorithms::ExpertIo::is_valid_subsequence;
 using Algorithms::ExpertIo::sorted_squared_array_algorithmic;
+using Algorithms::ExpertIo::sorted_squared_array_with_selection_sort;
 using Algorithms::ExpertIo::two_number_sum_brute;
 using Algorithms::ExpertIo::two_number_sum_with_map;
 
@@ -96,6 +97,21 @@ BOOST_AUTO_TEST_CASE(SquareOfNegativeValuesGetsSorted)
   }
 
 }
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareOfNegativeValuesGetsSortedWithSelectionSort)
+{
+  {
+    const auto x = sorted_squared_array_with_selection_sort(test_case_array_9);
+
+    BOOST_TEST(x.at(0) == 1);
+    BOOST_TEST(x.at(1) == 4);
+    BOOST_TEST(x.at(2) == 9);
+  }
+
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // SortedSquaredArray
 
