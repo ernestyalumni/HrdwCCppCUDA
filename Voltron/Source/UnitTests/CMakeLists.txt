@@ -148,6 +148,7 @@ ADD_EXECUTABLE(Check
   Utilities/LazyValuation_tests.cpp
   Utilities/NarrowCast_test.cpp
   Utilities/OnlyOneArgument_test.cpp
+  Utilities/SplitString_tests.cpp
   Utilities/StdForward_tests.cpp
   Utilities/StdTuple_tests.cpp
   Utilities/ToBytes_test.cpp
