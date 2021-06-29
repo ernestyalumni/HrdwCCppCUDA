@@ -2,6 +2,7 @@
 #define ALGORITHMS_SORTING_SELECTION_SORT_H
 
 #include <cstddef>
+#include <limits>
 #include <utility> // std::swap
 
 namespace Algorithms
@@ -9,11 +10,15 @@ namespace Algorithms
 namespace Sorting
 {
 
-class SelectionSort
+namespace SelectionSort
+{
+
+
+class SelectionSortIterative
 {
   public:
 
-    SelectionSort() = default;
+    SelectionSortIterative() = default;
 
     //--------------------------------------------------------------------------
     /// \brief Sort a into increasing order.
@@ -42,10 +47,58 @@ class SelectionSort
 
         std::swap(a[i], a[min_element_index]);
       }
-
     }
-
 };
+
+//------------------------------------------------------------------------------
+/// \brief Returns index of minimum value in array
+/// array[lower_index...end_index]
+//------------------------------------------------------------------------------
+template <typename A, typename T>
+std::size_t minimum_value_index(
+  const A array,
+  const std::size_t lower_index,
+  const std::size_t upper_index)
+{
+  T min_value {std::numeric_limits<T>::max()};
+  std::size_t min_index {lower_index};
+
+  for (std::size_t i {lower_index}; i < upper_index; ++i)
+  {
+    if (min_value > array[i])
+    {
+      min_value = array[i];
+      min_index = i;
+    }
+  }
+
+  return min_index;
+}
+
+// cf. https://www.geeksforgeeks.org/practice-questions-for-recursion/
+template <typename A, typename T>
+void selection_sort_recursive(
+  A& array,
+  const std::size_t start_index,
+  const std::size_t end_index)
+{
+  if (start_index >= end_index)
+  {
+    return;
+  }
+
+  std::size_t min_index;
+  T temp_value;
+
+  min_index = minimum_value_index<A, T>(array, start_index, end_index);
+
+  std::swap(array[start_index], array[min_index]);
+
+  selection_sort_recursive<A, T>(array, start_index + 1, end_index);
+}
+
+
+} // namespace SelectionSort
 
 } // namespace Sorting
 } // namespace Algorithms
