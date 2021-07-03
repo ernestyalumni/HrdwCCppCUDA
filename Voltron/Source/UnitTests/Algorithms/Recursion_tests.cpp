@@ -3,6 +3,8 @@
 //------------------------------------------------------------------------------
 #include "Algorithms/Recursion.h"
 
+#include "Tools/CaptureCout.h"
+
 #include <boost/test/unit_test.hpp>
 #include <string>
 
@@ -15,10 +17,27 @@ using
     recursive_step_permutations;
 using
   Algorithms::Recursion::HackerRank::DavisStaircases::cached_step_permutations;
+using Algorithms::Recursion::increasing_decreasing_values;
+using Tools::CaptureCoutFixture;
 using std::string;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Recursion_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(IncreasingDecreasingValueDemonstratesRecursiveStacks,
+  CaptureCoutFixture)
+{
+  const string expected {
+    "200 400 800 unwinding 800unwinding 400unwinding 200"
+  };
+
+  increasing_decreasing_values(200);
+
+  BOOST_TEST(local_oss_.str() == expected);
+}
+
 BOOST_AUTO_TEST_SUITE(Fibonacci_tests)
 
 //------------------------------------------------------------------------------

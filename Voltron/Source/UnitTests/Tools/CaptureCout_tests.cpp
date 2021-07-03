@@ -48,7 +48,6 @@ BOOST_AUTO_TEST_CASE(CaptureCoutAcceptsLocalOStringStream)
   //auto cout_buffer_ptr = capture_cout(local_oss);
 
   //cout << "some message";
-
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Capture_Cout_tests

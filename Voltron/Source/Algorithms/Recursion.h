@@ -3,7 +3,7 @@
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating recursion.
 /// \ref 
-///-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef ALGORITHMS_RECURSION_H
 #define ALGORITHMS_RECURSION_H
 
@@ -14,6 +14,12 @@ namespace Algorithms
 {
 namespace Recursion
 {
+
+//------------------------------------------------------------------------------
+/// \ref https://www.geeksforgeeks.org/practice-questions-for-recursion-set-3/
+/// \details Practice Questions for Recursion, Question 2, Set 3.
+//------------------------------------------------------------------------------
+void increasing_decreasing_values(const int n);
 
 namespace Fibonacci
 {

@@ -9,6 +9,7 @@
 #include <array>
 #include <cassert>
 #include <cstddef> // std::size_t
+#include <iostream>
 #include <numeric> // std::accumulate
 #include <string>
 #include <utility> // std::swap
@@ -16,16 +17,39 @@
 
 using std::accumulate;
 using std::array;
+using std::cout;
 using std::size_t;
 using std::string;
 using std::swap; // also with algorithm
 using std::vector;
 
-
 namespace Algorithms
 {
 namespace Recursion
 {
+
+void increasing_decreasing_values(const int n)
+{
+  constexpr int limit {1000};
+
+  if (n <= 0)
+  {
+    return;
+  }
+
+  if (n >= 1000)
+  {
+    return;
+  }
+
+  cout << n << " ";
+
+  // Go to the next stack frame.
+  increasing_decreasing_values(2 * n);
+
+  // Unwind the (recursion) stack.
+  cout << "unwinding " << n;
+}
 
 namespace TowersOfHanoi
 {

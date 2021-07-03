@@ -29,8 +29,6 @@ BOOST_FIXTURE_TEST_CASE(DemonstrateHexDumpPrintOut,
 
 	hex_dump(my_string, sizeof(my_string), cout);
 
-	restore_cout();
-
 	// \ref https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
 	// Validate manually that the hex values match those in the original example.
 
@@ -57,8 +55,6 @@ BOOST_FIXTURE_TEST_CASE(IntegersOf16BitCanBeShownHex,
 	const string expected {"0000 : m;               6D 3B \n"};
 
   BOOST_TEST(local_oss_.str() == expected);
-
-	restore_cout();
 }
 
 //------------------------------------------------------------------------------
@@ -78,8 +74,6 @@ BOOST_FIXTURE_TEST_CASE(ShowHexOfLittleEndianValue,
 	const string expected {"0000 : m;               6D 3B \n"};
 
   BOOST_TEST(local_oss_.str() == expected);
-
-	restore_cout();
 }
 
 //------------------------------------------------------------------------------
@@ -97,8 +91,6 @@ BOOST_FIXTURE_TEST_CASE(ShowHexOfBigEndianValue,
 	hex_dump(&be_x, sizeof(x), cout);
 
 	const string expected {"0000 : ;m               3B 6D \n"};
-
-	restore_cout();
 
   BOOST_TEST(local_oss_.str() == expected);
 }

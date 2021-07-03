@@ -93,6 +93,11 @@ CaptureCoutFixture::CaptureCoutFixture():
   capture_locally();
 }
 
+CaptureCoutFixture::~CaptureCoutFixture()
+{
+  this->restore_cout();
+}
+
 void CaptureCoutFixture::capture_locally()
 {
   cout.rdbuf(local_oss_.rdbuf());
