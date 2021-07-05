@@ -1,14 +1,19 @@
 #include "Level1.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <map>
+#include <optional>
 #include <utility> // std::swap
 #include <vector>
 
 #include <iostream>
 
+using std::abs;
 using std::map;
+using std::nullopt;
+using std::optional;
 using std::size_t;
 using std::vector;
 
@@ -218,6 +223,118 @@ vector<int> sorted_squared_array_with_selection_sort(vector<int> array)
   };
 
   return selection_sort(array);
+}
+
+vector<int> sorted_squared_array_two_indices(vector<int> array)
+{
+  vector<int> results (array.size(), 0);
+
+  // Index "pointer" along results.
+  //int right_to_left_index {static_cast<int>(array.size() - 1)};
+
+  // Index "pointer" for possibly positive numbers. We know that in a sorted
+  // array, the positive numbers, if any, must start from the "right"
+  int right_index {static_cast<int>(array.size() - 1)};
+
+  // Index "pointer" for possibly negative numbers. Key observation was that we
+  // know in a sorted array, negative numbers, if any, must start from the
+  // "left."
+  int left_index {0};
+
+  // Don't need any of this.
+  /*
+  if (array[right_index] < 0)
+  {
+    right_index = -1;
+  }
+
+  if (array[left_index] >= 0)
+  {
+    left_index = array.size();
+  }
+
+  while (right_to_left_index >= 0)
+  {
+    optional<int> right_value;
+
+    if (right_index >= 0 && array[right_index] >= 0)
+    {
+      right_value = array[right_index];
+    }
+    else
+    {
+      right_value = nullopt;
+    }
+
+    optional<int> left_value;
+
+    if (left_index < array.size() && array[left_index] < 0)
+    {
+      left_value = abs(array[left_index]);
+    }
+    else
+    {
+      left_value = nullopt;
+    }
+
+    //left_value =
+      //left_index < array.size() && array[left_index] < 0 ?
+        //abs(array[left_index]) : nullopt;
+
+    if (right_value.has_value() && left_value.has_value())
+    {
+      if (right_value.value() >= left_value.value())
+      {
+        results[right_to_left_index] =
+          right_value.value() * right_value.value();
+        --right_index;
+      }
+      else
+      {
+        results[right_to_left_index] =
+          left_value.value() * left_value.value();
+        --left_index;        
+      }
+    }
+    else if (right_value.has_value())
+    {
+      results[right_to_left_index] =
+        right_value.value() * right_value.value();
+      --right_index;
+    }
+    else if (left_value.has_value())
+    {
+      results[right_to_left_index] =
+        left_value.value() * left_value.value();
+      --left_index;        
+    }
+
+
+    --right_to_left_index;
+  }
+  */
+
+  for (int index {static_cast<int>(array.size() - 1)}; index >= 0; --index)
+  {
+    const int left_value {array[left_index]};
+    const int right_value {array[right_index]};
+
+    // Don't forget to put absolute value sign; otherwise, first, it would
+    // defeat purpose of comparison (negative values always less than positive)
+    // values, and second, remember we want the squared values to be sorted.
+    if (abs(left_value) > abs(right_value))
+    {
+      results[index] = left_value * left_value;
+      ++left_index;
+    }
+    else
+    {
+      results[index] = right_value * right_value;
+      --right_index;
+    }
+  }
+
+  return results;
 }
 
 } // namespace ExpertIo

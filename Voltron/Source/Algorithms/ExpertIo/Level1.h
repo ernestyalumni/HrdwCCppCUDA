@@ -34,6 +34,16 @@ std::vector<int> sorted_squared_array_with_selection_sort(
   std::vector<int> array);
 
 
+//------------------------------------------------------------------------------
+/// \details Key observation:
+/// We know that the array is already sorted. It's a strong hint that problem
+/// can be solved in LINEAR TIME.
+/// Also, observe that the maximum squared value from a positive number must be
+/// on the "right" of the array, and max. squared value from a negative number
+/// must be on the left, due to given a sorted array.
+//------------------------------------------------------------------------------
+std::vector<int> sorted_squared_array_two_indices(std::vector<int> array);
+
 } // namespace ExpertIo
 } // namespace Algorithms
 

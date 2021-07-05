@@ -5,6 +5,7 @@
 
 using Algorithms::ExpertIo::is_valid_subsequence;
 using Algorithms::ExpertIo::sorted_squared_array_algorithmic;
+using Algorithms::ExpertIo::sorted_squared_array_two_indices;
 using Algorithms::ExpertIo::sorted_squared_array_with_selection_sort;
 using Algorithms::ExpertIo::two_number_sum_brute;
 using Algorithms::ExpertIo::two_number_sum_with_map;
@@ -109,9 +110,59 @@ BOOST_AUTO_TEST_CASE(SquareOfNegativeValuesGetsSortedWithSelectionSort)
     BOOST_TEST(x.at(1) == 4);
     BOOST_TEST(x.at(2) == 9);
   }
-
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareOfPositiveValuesGetsSortedWithTwoIndices)
+{
+  {
+    const auto x = sorted_squared_array_two_indices(sample_array);
+
+    BOOST_TEST(x.at(0) == 1);
+    BOOST_TEST(x.at(1) == 4);
+    BOOST_TEST(x.at(2) == 9);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareOfNegativeValuesGetsSortedWithTwoIndices)
+{
+  {
+    const auto x = sorted_squared_array_two_indices(test_case_array_8);
+
+    BOOST_TEST(x.at(0) == 1);
+    BOOST_TEST(x.at(1) == 4);
+  }
+  {
+    const auto x = sorted_squared_array_two_indices(test_case_array_9);
+
+    BOOST_TEST(x.at(0) == 1);
+    BOOST_TEST(x.at(1) == 4);
+    BOOST_TEST(x.at(2) == 9);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SquareOValuesGetsSortedWithTwoIndices)
+{
+  {
+    const auto x = sorted_squared_array_two_indices(test_case_array_11);
+
+    BOOST_TEST(x.at(0) == 0);
+    BOOST_TEST(x.at(1) == 25);
+    BOOST_TEST(x.at(2) == 25);
+  }
+  {
+    const auto x = sorted_squared_array_two_indices(test_case_array_12);
+
+    BOOST_TEST(x.at(0) == 1);
+    BOOST_TEST(x.at(1) == 9);
+    BOOST_TEST(x.at(2) == 49);
+  }
+}
 
 BOOST_AUTO_TEST_SUITE_END() // SortedSquaredArray
 
