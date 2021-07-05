@@ -788,6 +788,48 @@ cf. [What happens in OS when we dereference a NULL pointer in C?](https://stacko
 
 \part{C++}  
 
+\section{Pass by reference, pass by value, pointers vs. reference}
+
+In C++, pass arguments into a function in these different ways:
+\begin{itemize}
+	\item Call by Value
+	\item Call by Reference
+	\item Call by Address
+\end{itemize}
+cf. \href{https://www.tutorialspoint.com/differences-between-pass-by-value-and-pass-by-reference-in-cplusplus}{Differences between pass by value and pass by reference in C++, Tutorialspoint}
+
+Call by address, use pointer variables to send exact memory address, but call by reference, pass reference variable (alias of that variable).
+
+\subsection{Call by Value}
+
+Actual value that's passed as arguments isn't changed after performing some operation on it. When call by value used, it creates a copy of that variable into stack section in memory. When value changed, it changes value of that copy, the actual value remains the same.
+
+cf. \href{https://www.cs.fsu.edu/~myers/c++/notes/references.html}{FSU, Myers}
+
+Any r-values may be sent in.
+
+Local parameters are copies of original arguments passed in.
+
+Changes made in function to these variables don't affect originals.
+
+\subsection{Call by Reference}
+
+When call by reference is used, it creates a copy of the reference of that variable into stack section in memory. When value is changed using the reference it changes value of the actual variable.
+
+Use call by reference mainly when we want to change value of passed argument into invoker function.\\
+Also, since 1 function can return only 1 value, when we need more than 1 value from a function, we pass them as an output argument in this manner.
+
+When function expects strict reference types in parameter list, an L-value (i.e. variable, or storage location) must be passed in.
+
+Local parameters are references to storage locations of original arguments passed in.
+
+Changes to these variables in function will affect originals.
+
+\emph{No copy is made}, so overhead of copying (time, storage) is saved.
+
+cf. \href{https://www.cs.fsu.edu/~myers/c++/notes/references.html}{FSU, Myers}
+
+
 \section{static}
 
 
