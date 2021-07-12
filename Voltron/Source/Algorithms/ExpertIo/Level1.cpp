@@ -1,10 +1,12 @@
 #include "Level1.h"
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <map>
 #include <optional>
+#include <unordered_map>
 #include <utility> // std::swap
 #include <vector>
 
@@ -335,6 +337,19 @@ vector<int> sorted_squared_array_two_indices(vector<int> array)
   }
 
   return results;
+}
+
+string tournament_winner(
+  vector<vector<string>> competitions,
+  vector<int> results)
+{
+  unordered_map<string, int> scores;
+
+
+
+  const int N {static_cast<int>(competitions.size())};
+
+  return "";
 }
 
 } // namespace ExpertIo

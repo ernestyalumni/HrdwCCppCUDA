@@ -44,6 +44,15 @@ std::vector<int> sorted_squared_array_with_selection_sort(
 //------------------------------------------------------------------------------
 std::vector<int> sorted_squared_array_two_indices(std::vector<int> array);
 
+//------------------------------------------------------------------------------
+/// \name Tournament Winner
+/// \details For N teams, N choose 2 (\binom{N}{2}) for total number of games.
+//------------------------------------------------------------------------------
+
+std::string tournament_winner(
+  std::vector<std::vector<std::string>> competitions,
+  std::vector<int> results);
+
 } // namespace ExpertIo
 } // namespace Algorithms
 
