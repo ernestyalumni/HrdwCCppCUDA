@@ -1,15 +1,20 @@
 #include "Algorithms/ExpertIo/Level1.h"
 
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <vector>
 
+using Algorithms::ExpertIo::EasyNonConstructibleChange::
+  non_constructible_change_sort;
 using Algorithms::ExpertIo::is_valid_subsequence;
 using Algorithms::ExpertIo::sorted_squared_array_algorithmic;
 using Algorithms::ExpertIo::sorted_squared_array_two_indices;
 using Algorithms::ExpertIo::sorted_squared_array_with_selection_sort;
+using Algorithms::ExpertIo::tournament_winner;
 using Algorithms::ExpertIo::two_number_sum_brute;
 using Algorithms::ExpertIo::two_number_sum_with_map;
 
+using std::string;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
@@ -165,6 +170,89 @@ BOOST_AUTO_TEST_CASE(SquareOValuesGetsSortedWithTwoIndices)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // SortedSquaredArray
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TournamentWinnerWithUnorderedMapWorks)
+{
+  const vector<vector<string>> competitions {
+    {"HTML", "C#"},
+    {"C#", "Python"},
+    {"Python", "HTML"}};
+
+  const vector<int> competition_results {0, 0, 1};
+
+  const string winner {tournament_winner(competitions, competition_results)};
+
+  BOOST_TEST(winner == "Python");
+}
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TournamentWinnerWithUnorderedMapWorksForOtherTestCases)
+{
+  // Test case 9
+  {
+    const vector<vector<string>> competitions {
+      {"HTML", "Java"},
+      {"Java", "Python"},
+      {"Python", "HTML"},
+      {"C#", "Python"},
+      {"Java", "C#"},
+      {"C#", "HTML"},
+      {"SQL", "C#"},
+      {"HTML", "SQL"},
+      {"SQL", "Python"},
+      {"SQL", "Java"}};
+
+    const vector<int> competition_results {0, 0, 0, 0, 0, 0, 1, 0, 1, 1};
+
+    const string winner {tournament_winner(competitions, competition_results)};
+
+    BOOST_TEST(winner == "SQL");
+  }
+
+  // Test case 10
+  {
+    const vector<vector<string>> competitions {
+      {"A", "B"}};
+
+    const vector<int> competition_results {0};
+
+    const string winner {tournament_winner(competitions, competition_results)};
+
+    BOOST_TEST(winner == "B");
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NonConstructibleChangeSortPassesSampleCases)
+{
+  {
+    const vector<int> given_coins {1, 2, 5};
+    const int expected {4};
+
+    const int result {non_constructible_change_sort(given_coins)};
+
+    BOOST_TEST(result == expected);
+  }
+
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NonConstructibleChangePassesSampleCases)
+{
+  {
+    const vector<int> given_coins {1, 2, 5};
+    const int expected {4};
+
+
+  }
+
+}
 
 BOOST_AUTO_TEST_SUITE_END() // ExpertIo
 BOOST_AUTO_TEST_SUITE_END() // Algorithms

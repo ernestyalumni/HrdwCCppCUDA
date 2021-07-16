@@ -17,6 +17,8 @@ using std::map;
 using std::nullopt;
 using std::optional;
 using std::size_t;
+using std::string;
+using std::unordered_map;
 using std::vector;
 
 namespace Algorithms
@@ -343,14 +345,129 @@ string tournament_winner(
   vector<vector<string>> competitions,
   vector<int> results)
 {
+  // Implemented as hash map. Has constant time access.
   unordered_map<string, int> scores;
 
+  assert(results.size() == competitions.size());
+
+  const int M {static_cast<int>(competitions.size())};
+
+  for (int i {0}; i < M; ++i)
+  {
+    const string winner {
+      results.at(i) == 1 ? competitions.at(i).at(0) : competitions.at(i).at(1)};
+
+    // Constant time in search for the key, in this case, which is winner.
+    if (scores.count(winner) == 0)
+    {
+      // Team not yet accounted for case.
+      scores[winner] = 3;
+    }
+    else
+    {
+      // Team already has scores. Add to it.
+      scores[winner] += 3;
+    }
+  }
+
+  string winning_team;
+  int max_score {0};
 
 
-  const int N {static_cast<int>(competitions.size())};
+  // O(N) time. N number of teams.
+  for (auto iter {scores.begin()}; iter != scores.end(); ++iter)
+  {
+    if (iter->second >= max_score)
+    {
+      winning_team = iter->first;
+      max_score = iter->second;
+    }
+  }
 
-  return "";
+  return winning_team;
 }
+
+namespace EasyNonConstructibleChange
+{
+
+int non_constructible_change_sort(vector<int> coins)
+{
+  if (coins.size() == 0)
+  {
+    return 1;
+  }
+
+  // O(N log N) comparisons.
+  std::sort(coins.begin(), coins.end());    
+
+  int sum_counter {0};
+  int coin_type_counter {1};
+
+  for (auto& coin : coins)
+  {
+    assert(coin >= coin_type_counter);    
+
+    if (coin > coin_type_counter)
+    {
+      if (coin == coin_type_counter + 1)
+      {
+        coin_type_counter = coin;
+        sum_counter += coin;
+      }
+      else
+      {
+        return sum_counter + 1;
+      }
+    }
+
+    if (coin == coin_type_counter)
+    {
+      sum_counter += coin;
+    }
+  }
+
+  return sum_counter + 1;
+}
+
+/*
+int min_unavailable_change(
+  int& min_unavailable_change,
+  int& smallest_value,
+  vector<int>& coins_left)
+{
+  if (coins_left.size() == 0)
+  {
+    return 1;
+  }
+
+  if (coins_left.size() == 1)
+  {
+    const int last_coin {coins_left.back()};
+
+    if (last_coin == 1)
+    {
+      return min_unavailable_change + last_coin;
+    }
+
+    return min_unavailable_change;
+  }
+
+  const int next_coin {coins_left.back()};
+  coins_left.pop();
+
+  if (next_coin == 1)
+  {
+    min_unavailable_change += next_coin;
+  }
+
+  if (next_coin <= min_unavailable_change)
+  {
+
+  }
+}
+*/
+
+} // namespace EasyNonConstructibleChange
 
 } // namespace ExpertIo
 } // namespace Algorithms

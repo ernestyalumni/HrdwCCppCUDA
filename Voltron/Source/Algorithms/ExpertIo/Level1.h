@@ -1,6 +1,7 @@
 #ifndef ALGORITHMS_EXPERT_IO_LEVEL_1_H
 #define ALGORITHMS_EXPERT_IO_LEVEL_1_H
 
+#include <string>
 #include <vector>
 
 namespace Algorithms
@@ -52,6 +53,23 @@ std::vector<int> sorted_squared_array_two_indices(std::vector<int> array);
 std::string tournament_winner(
   std::vector<std::vector<std::string>> competitions,
   std::vector<int> results);
+
+namespace EasyNonConstructibleChange
+{
+
+//------------------------------------------------------------------------------
+/// \name Non-Constructible Change
+//------------------------------------------------------------------------------
+int non_constructible_change_sort(std::vector<int> coins);
+
+/*
+int min_unavailable_change(
+  int& min_change,
+  int& smallest_value,
+  std::vector<int>& coins_left);
+*/
+
+} // namespace EasyNonConstructibleChange
 
 } // namespace ExpertIo
 } // namespace Algorithms
