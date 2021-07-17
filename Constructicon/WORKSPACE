@@ -1,0 +1,24 @@
+# cf. https://docs.bazel.build/versions/4.1.0/tutorial/cpp.html#set-up-the-workspace
+
+# A workspace is a directory that holds your project's source files and Bazel's build outputs.
+# WORKSPACE file is special, identifies directory and its contents as Bazel workspace and lives at root of project's directory structure.
+
+# A directory within the workspace that contains a BUILD file is a *package*.
+
+
+# https://google.github.io/googletest/quickstart-bazel.html#set-up-a-bazel-workspace
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+  name = "com_google_googletest",
+  urls = ["https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip"],
+  strip_prefix = "googletest-609281088cfefc76f9d0ce82e1ff6c30cc3591e5",
+)
+
+# Bazel also needs a dependency on the rules_cc repo to build C++ code.
+http_archive(
+  name = "rules_cc",
+  urls = ["https://github.com/bazelbuild/rules_cc/archive/40548a2974f1aea06215272d9c2b47a14a24e556.zip"],
+  strip_prefix = "rules_cc-40548a2974f1aea06215272d9c2b47a14a24e556",
+)

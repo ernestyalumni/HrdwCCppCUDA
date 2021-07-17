@@ -20,3 +20,33 @@ __pycache__/
 .venv
 venv/
 
+# https://github.com/github/gitignore/blob/master/TeX.gitignore
+
+## Core LaTex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+## Intermediate documents:
+*.dvi
+*.xdv
+*-converted-to.*
+
+# Bazel
+# cf. https://github.com/bazelbuild/bazel/blob/master/.gitignore
+
+# Ignore all bazel-* symlinks. There is no full list since this can change
+# based on the name of the directory bazel is cloned into.
+/bazel-*
+
+# User-specific .bazelrc
+user.bazelrc

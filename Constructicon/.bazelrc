@@ -1,0 +1,14 @@
+# To enable the use of the --config flag:
+# cf. https://docs.bazel.build/versions/main/tutorial/cc-toolchain-config.html#set-up-the-build-environment
+
+# Use our custom-configured C++ toolchain.
+
+build:clang_config --crosstool_top=//toolchain:clang_suite
+
+# Use --cpu as a differentiator
+
+build:clang_config --cpu=k8
+
+# Use default Bazel C++ toolchain to build tools used during build.
+
+build:clang_config --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
