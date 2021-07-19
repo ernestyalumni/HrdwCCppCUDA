@@ -8,6 +8,10 @@ if [ ! -z $1 ]; then
     echo "First argument is set and is: " $1
 fi
 
+# C Primer.
+
+## Sizes demonstration.
+
 printf "\n"
 
 echo "Building sizes.c executable."
@@ -26,3 +30,52 @@ echo ${CC}
 bazel build //Source/Performance:SizesCExecutable --strategy=CppCompile=standalone
 
 ./bazel-bin/Source/Performance/SizesCExecutable
+
+
+## Pointer object
+
+bazel build --conlyopt=-c //Source/Performance:pointer.o --strategy=CppCompile=standalone
+
+
+## Pointer executable.
+
+# -c for compilation mode
+# cf. https://docs.bazel.build/versions/main/command-line-reference.html#flag--compilation_mode
+# https://docs.bazel.build/versions/main/user-manual.html#semantics-options
+
+# opt is -O2 -DNDEBUG
+bazel build -c opt //Source/Performance:PointerCExecutable --strategy=CppCompile=standalone
+
+# Or try
+
+./bazel-bin/Source/Performance/PointerCExecutable
+
+./bazel-bin/Source/Performance/PointerCExecutable 1 2 3 a b cc ddd grind "OnIt"
+
+
+################################################################################
+
+# Matrix Multiplication.
+
+## Custom Main file for demonstrating features.
+
+bazel build -c opt //Source/Performance:MatMultCustomMain.exe --strategy=CppCompile=standalone
+
+./bazel-bin/Source/Performance/MatMultCustomMain.exe
+
+
+################################################################################
+################################################################################
+
+# C++ version of Performance
+
+bazel build //Source/Performance:Performance --strategy=CppCompile=standalone
+
+bazel test --test_output=all //Source/UnitTests:ConstructiconGoogleUnitTests --strategy=CppCompile=standalone
+
+################################################################################
+
+bazel build //Source/Performance:MatMultiplyTestBed.exe --strategy=CppCompile=standalone
+
+./bazel-bin/Source/Performance/MatMultiplyTestBed.exe
+

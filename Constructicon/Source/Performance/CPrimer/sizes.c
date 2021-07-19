@@ -42,25 +42,34 @@ int main() {
 
   PRINT_SIZE_STRINGIFY(long); // 8 bytes
 
-  PRINT_SIZE_STRINGIFY(char); // 8 bytes
+  PRINT_SIZE_STRINGIFY(char); // 1 bytes
 
-  PRINT_SIZE_STRINGIFY(float); // 8 bytes
+  PRINT_SIZE_STRINGIFY(float); // 4 bytes
 
   PRINT_SIZE_STRINGIFY(double); // 8 bytes
 
-  PRINT_SIZE_STRINGIFY(unsigned int); // 8 bytes
+  PRINT_SIZE_STRINGIFY(unsigned int); // 4 bytes
 
   PRINT_SIZE_STRINGIFY(long long); // 8 bytes
 
-  PRINT_SIZE_STRINGIFY(uint8_t); // 8 bytes
+  PRINT_SIZE_STRINGIFY(uint8_t); // 1 bytes
 
-  PRINT_SIZE_STRINGIFY(uint16_t); // 8 bytes
+  PRINT_SIZE_STRINGIFY(uint16_t); // 2 bytes
 
-  PRINT_SIZE_STRINGIFY(uint32_t); // 8 bytes
+  PRINT_SIZE_STRINGIFY(uint32_t); // 4 bytes
 
   PRINT_SIZE_STRINGIFY(uint64_t); // 8 bytes
 
-  PRINT_SIZE_STRINGIFY(uint_fast8_t); // 8 bytes
+  PRINT_SIZE_STRINGIFY(uint_fast8_t); // 1 bytes
+
+  PRINT_SIZE_STRINGIFY(uint_fast16_t); // 2 bytes
+
+  PRINT_SIZE_STRINGIFY(uintmax_t); // 8 bytes
+
+  PRINT_SIZE_STRINGIFY(intmax_t); // 8 bytes
+
+  // __int128 is a clang C extension and not part of standard C.
+  PRINT_SIZE_STRINGIFY(__int128); // 16 bytes
 
 
   // Composite types have sizes too
@@ -77,10 +86,14 @@ int main() {
   // Array declaration. Use your macro to print the size of this.
   int x[5];
 
-  PRINT_SIZE_1("x, int[5] ", x);
+  PRINT_SIZE_1("x, int[5] ", x); // 20 bytes
+
+  PRINT_SIZE_1("pointer to x, int[5] ", &x); // 8 bytes
 
   // You can just use your macro here instead: PRINT_SIZE("student", you);
   printf("size of %s : %zu bytes \n", "student", sizeof(you));
+
+  PRINT_SIZE_1("pointer to student", &you); // 8 bytes
 
   return 0;
 }
