@@ -1246,6 +1246,26 @@ Ch. 22 - how to have smaller executable code size and (almost) entirely compiled
 
 Gutman (2016) \cite{Gutt2016}
 
+\section{Exception Handling, Error Handling, Exception Policy}
+
+cf. MIT OCW 6.005 Software Construction, Spring 2016.
+
+\subsection{Handling Exception Results with Special Values Shall Be Discouraged}
+
+Nearly all the Linux system calls I have encountered are designed like this: you get a return value of -1 to indicate an error when you are expecting a non-negative number for nominal operation, or a, for example, \verb|null| reference when expecting an object. 
+
+Special values for indicating error has 2 problems:
+\begin{itemize}
+	\item Tedious to check the return value; there is a cost to if-else branching.
+	\item It's easy to forget to do it (i.e. to do the check); this would leave the original object or data in a bad state possibly.
+\end{itemize}
+Furthermore, for the user, it's easy to forget which special values indicate what error if there was one, and with C++17 there is exactly one new mechanism designed for the need to provide a return value for a function that may fail, \verb|std::optional|.
+
+
+Stroustrup (2013) \cite{Stro2013}
+
+
+
 \part{Integers, numeric encodings, number representation, binary representation, hexidecimal representation}
 
 
