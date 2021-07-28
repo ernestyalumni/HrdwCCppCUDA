@@ -74,8 +74,13 @@ cc_binary(
     name="MatMultiplyTestBed.exe",
 
     deps = ["//Source/Performance:Performance"],
-    copts = [COMPILER_WARNING_FLAGS],
-    includes = ["//Source/Performance/"],
+    copts = [
+        COMPILER_WARNING_FLAGS,
+        "-O3",
+        "-ISource/Performance"
+        ],
+    # cf. https://github.com/bazelbuild/bazel/issues/8846
+    # includes = ["//Source/Performance"],
     srcs=[
             "MatrixMultiply/TestBed.cc"],
 

@@ -74,8 +74,9 @@ bazel build //Source/Performance:Performance --strategy=CppCompile=standalone
 bazel test --test_output=all //Source/UnitTests:ConstructiconGoogleUnitTests --strategy=CppCompile=standalone
 
 ################################################################################
+# cf. https://stackoverflow.com/questions/32823625/bazel-build-verbose-compiler-commands-logging
 
-bazel build //Source/Performance:MatMultiplyTestBed.exe --strategy=CppCompile=standalone
+bazel build -s //Source/Performance:MatMultiplyTestBed.exe --strategy=CppCompile=standalone
 
 ./bazel-bin/Source/Performance/MatMultiplyTestBed.exe
 

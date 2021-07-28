@@ -6,7 +6,8 @@ cc_test(
   name = "ConstructiconGoogleUnitTests",
   size = "small",
   srcs = [
-      "Performance/MatrixMultiply/MatrixMultiply_tests.cc"
+      "Performance/MatrixMultiply/MatrixMultiply_tests.cc",
+      "Utilities/Time/SuperTimeSpecification_tests.cc"
       ],
   deps = [
       "@com_google_googletest//:gtest_main",
