@@ -469,5 +469,26 @@ int min_unavailable_change(
 
 } // namespace EasyNonConstructibleChange
 
+namespace NthFibonacci
+{
+
+int get_nth_fibonacci_recursive(const int n)
+{
+  if (n == 0 || n == 1)
+  {
+    return 0;
+  }
+
+  if (n == 2)
+  {
+    return 1;
+  }
+
+  return get_nth_fibonacci_recursive(n - 1) +
+    get_nth_fibonacci_recursive(n - 2);
+}
+
+} // namespace NthFibonacci
+
 } // namespace ExpertIo
 } // namespace Algorithms

@@ -71,6 +71,19 @@ int min_unavailable_change(
 
 } // namespace EasyNonConstructibleChange
 
+namespace NthFibonacci
+{
+
+//------------------------------------------------------------------------------
+/// \brief Get nth fibonacci number.
+/// \details O(2^n) time.
+/// O(n) space, because N stacks on the call stack (e.g. n = 6, 6 recursive call
+/// stacks, fib(6) -> fib(5) -> ... -> fib(1))
+//------------------------------------------------------------------------------
+int get_nth_fibonacci_recursive(const int n);
+
+} // namespace NthFibonacci
+
 } // namespace ExpertIo
 } // namespace Algorithms
 

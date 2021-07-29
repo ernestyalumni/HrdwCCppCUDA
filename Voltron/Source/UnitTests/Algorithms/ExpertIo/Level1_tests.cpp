@@ -6,6 +6,7 @@
 
 using Algorithms::ExpertIo::EasyNonConstructibleChange::
   non_constructible_change_sort;
+using Algorithms::ExpertIo::NthFibonacci::get_nth_fibonacci_recursive;
 using Algorithms::ExpertIo::is_valid_subsequence;
 using Algorithms::ExpertIo::sorted_squared_array_algorithmic;
 using Algorithms::ExpertIo::sorted_squared_array_two_indices;
@@ -236,7 +237,7 @@ BOOST_AUTO_TEST_CASE(NonConstructibleChangeSortPassesSampleCases)
 
     const int result {non_constructible_change_sort(given_coins)};
 
-    BOOST_TEST(result == expected);
+    BOOST_TEST(result == 6);
   }
 
 }
@@ -253,6 +254,19 @@ BOOST_AUTO_TEST_CASE(NonConstructibleChangePassesSampleCases)
   }
 
 }
+
+BOOST_AUTO_TEST_SUITE(NthFibonacci)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FibonacciRecursiveComputesCorrectly)
+{
+  BOOST_TEST(get_nth_fibonacci_recursive(1) == 0);
+  BOOST_TEST(get_nth_fibonacci_recursive(2) == 1);
+  BOOST_TEST(get_nth_fibonacci_recursive(16) == 610);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // NthFibonacci
 
 BOOST_AUTO_TEST_SUITE_END() // ExpertIo
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
