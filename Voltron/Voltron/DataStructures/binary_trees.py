@@ -4,6 +4,7 @@
 
 from collections import deque
 
+
 class Node(object):
     def __init__(self, value):
         self.value = value
@@ -20,7 +21,15 @@ class BinaryTree(_BinaryTree):
 
     @staticmethod
     def _get_all_nodes_in_next_level(previous_level_deque):
+        """
+        @brief Gets all the nodes in the next level. 
 
+        @details
+
+        Will mutate and "use up" or pop out all elements of the input
+        previous_level_deque
+        """
+        
         new_deque = deque()
         while (len(previous_level_deque)):
             v = previous_level_deque.pop()
@@ -121,6 +130,7 @@ class BinaryTree(_BinaryTree):
         """Helper method - use this to create a 
         recursive print solution."""
         return traversal
+
 
 class BST(object):
     def __init__(self, root):
