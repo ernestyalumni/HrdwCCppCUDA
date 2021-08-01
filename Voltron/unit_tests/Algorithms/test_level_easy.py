@@ -18,7 +18,10 @@ from Voltron.Algorithms.level_easy import (
     minimum_waiting_time,
     minimum_waiting_time_optimal,
     class_photos,
-    tandem_bicycle
+    tandem_bicycle,
+    product_sum,
+    binary_search,
+    find_three_largest_numbers
     )
 
 
@@ -192,3 +195,97 @@ def test_tandem_bicycle_test_cases():
 
     result = tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, True)
     assert result == 37
+
+
+def test_product_sum_sample_input():
+
+    array = [5, 2, [7, -1], 3, [6, [-13, 8], 4]]
+
+    result = product_sum(array)
+
+    assert result == 12
+
+def test_product_sum_test_cases():
+
+    # Test Case 2.
+
+    array = [1, 2, 3, 4, 5]
+
+    result = product_sum(array)
+
+    assert result == 15
+
+    # Test Case 3.
+
+    array = [1, 2, [3], 4, 5]
+
+    result = product_sum(array)
+
+    assert result == 18
+
+    # Test Case 4.
+    array = [
+        [1, 2],
+        3,
+        [4, 5]]
+
+    result = product_sum(array)
+
+
+def test_binary_search_cases():
+
+    # Test case 1
+    array = [0, 1, 21, 33, 45, 45, 61, 71, 72, 73]
+
+    result = binary_search(array, 33)
+
+    assert result == 3
+
+    # Test case 2
+
+    array = [1, 5, 23, 111]
+
+    result = binary_search(array, 111)
+
+    assert result == 3
+
+    # Test case 3
+
+    result = binary_search(array, 5)
+
+    assert result == 1
+
+    # Test case 4
+
+    result = binary_search(array, 35)
+
+    assert result == -1
+
+
+def test_find_three_largest_numbers():
+
+    # Sample Input and Test Case 1
+
+    array = [141, 1, 17, -7, -17, -27, 18, 541, 8, 7, 7]
+
+    result = find_three_largest_numbers(array)
+
+    assert result == [18, 141, 541]
+
+def test_find_three_largest_numbers_test_cases():
+
+    # Test Case 2
+
+    array = [55, 7, 8]
+
+    result = find_three_largest_numbers(array)
+
+    assert result == [7, 8, 55]
+
+    # Test Case 3
+
+    array = [55, 43, 11, 3, -3, 10]
+
+    result = find_three_largest_numbers(array)
+
+    assert result == [11, 43, 55]

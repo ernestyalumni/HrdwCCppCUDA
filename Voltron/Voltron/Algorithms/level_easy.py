@@ -239,3 +239,73 @@ def tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, fastest):
         red_shirt_speeds.reverse()
 
     return _calculate_total_tandem_speed(red_shirt_speeds, blue_shirt_speeds)
+
+def _process_nested_list_element_recursive(element, level):
+    """
+    @details Assume we know that element is already a nested list.
+    """
+    assert isinstance(element, list)
+
+    level_sum = 0
+
+    if len(element) == 0:
+        return 0
+
+    for x in element:
+
+        if not isinstance(x, list):
+
+            level_sum += x
+
+        else:
+
+            level_sum += _process_nested_list_element_recursive(x, level + 1)
+
+    return level_sum * level
+
+
+def product_sum(array):
+    """
+    @details "Special" arrays inside it are summed themselves and then
+    multiplied by their level of depth.
+    """
+
+    return _process_nested_list_element_recursive(array, 1)
+
+def _binary_search_helper(array, target, l, r):
+    if (l > r):
+        return -1
+
+    # TODO: try calculating with r - l // 2 for midpoint index
+    midpoint_index = (l + r ) // 2
+    midpoint_value = array[midpoint_index]
+
+    if target == midpoint_value:
+        return midpoint_index
+
+    if (target < midpoint_value):
+        return _binary_search_helper(array, target, l, midpoint_index - 1)
+
+    assert target > midpoint_value
+
+    return _binary_search_helper(array, target, midpoint_index + 1, r)
+
+def binary_search(array, target):
+    N = len(array)
+
+    return _binary_search_helper(array, target, 0, N - 1)
+
+
+def find_three_largest_numbers(array):
+
+    assert len(array) >= 3
+
+    largest_three = [array[0], array[1], array[2]]
+    largest_three.sort()
+
+    for x in array[3:]:
+        if (x > largest_three[0]):
+            largest_three[0] = x
+            largest_three.sort()
+
+    return largest_three
