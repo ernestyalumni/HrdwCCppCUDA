@@ -12,9 +12,12 @@ from Voltron.DataStructures.level_easy import (
     _get_next_level_children,
     node_depths,
     find_closest_value_in_bst,
-    _get_closest_value_iterative
+    _get_closest_value_iterative,
+    branch_sums
     )
+
 from Voltron.DataStructures.binary_search_tree import Node as BSTNode
+from Voltron.DataStructures.binary_tree import Node
 
 from collections import deque
 
@@ -25,6 +28,25 @@ test_values = [5, 15, 2, 5, 13, 22, 1, 14]
 closest_value_bst_test_values = [
     5, 502, 55000, 1001, 4500, 204, 205, 207, 208, 206, 203, 15, 22, 57,
     60, 5, 2, 3, 1, 1, 1, 1, 1, -51, -403]
+
+
+@pytest.fixture
+def sample_branch_sums_test_binary_tree_fixture():
+
+    r = Node(1)
+    r.left_ = Node(2)
+    r.left_.left_ = Node(4)
+    r.left_.right_ = Node(5)
+    r.left_.left_.left_ = Node(8)
+    r.left_.left_.right_ = Node(9)
+    r.left_.right_ = Node(5)
+    r.left_.right_.left_ = Node(10)
+    r.right_ = Node(3)
+    r.right_.left_ = Node(6)
+    r.right_.right_ = Node(7)
+
+    return r
+
 
 def test_test_case_1():
     test_nodes = _make_disparate_input_nodes(list(range(1, 10)))
@@ -139,3 +161,42 @@ def test_get_closest_value_iterative_for_binary_search_trees():
     result = _get_closest_value_iterative(r, 6, r.value_)
 
     assert result == 5
+
+
+def test_branch_sums(sample_branch_sums_test_binary_tree_fixture):
+    r = sample_branch_sums_test_binary_tree_fixture
+    result = branch_sums(r)
+
+    assert result == [15, 16, 18, 10, 11]
+
+
+def test_branch_sums_test_case_2():
+    r = Node(1)
+    result = branch_sums(r)
+    assert result == [1,]
+
+
+def test_branch_sums_test_case_3():
+    r = Node(1)
+    r.left_ = Node(2)
+    result = branch_sums(r)
+    assert result == [3,]
+
+
+def test_branch_sums_test_case_6():
+    r = Node(1)
+    r.left_ = Node(2)
+    r.right_ = Node(3)
+    r.left_.left_ = Node(4)
+    r.left_.right_ = Node(5)
+    r.right_.left_ = Node(6)
+    r.right_.right_ = Node(7)
+    r.left_.left_.left_ = Node(8)
+    r.left_.left_.right_ = Node(9)
+    r.left_.right_.left_ = Node(10)
+    r.left_.right_.right_ = Node(1)
+    r.right_.left_.left_ = Node(1)
+    r.right_.left_.right_ = Node(1)
+
+    result = branch_sums(r)
+    assert result == [15, 16, 18, 9, 11, 11, 11]

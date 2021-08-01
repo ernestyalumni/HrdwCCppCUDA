@@ -161,3 +161,28 @@ def _get_closest_value_iterative(node, target, closest_value):
             current_node = current_node.left_
 
     return closest_value
+
+
+def _preorder_traversal(node, running_sum, sums):
+
+    if node is not None:
+
+        if node.left_ is None and node.right_ is None:
+            sums.append(running_sum + node.value_)
+            return
+
+        running_sum += node.value_
+
+        _preorder_traversal(node.left_, running_sum, sums)
+        _preorder_traversal(node.right_, running_sum, sums)
+
+
+
+def branch_sums(root):
+
+    running_sum = 0
+    sums = []
+
+    _preorder_traversal(root, running_sum, sums)
+
+    return sums
