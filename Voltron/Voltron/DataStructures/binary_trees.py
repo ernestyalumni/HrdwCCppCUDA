@@ -132,6 +132,63 @@ class BinaryTree(_BinaryTree):
         return traversal
 
 
+def _get_all_nodes_in_next_level(previous_level_queue):
+    new_queue = []
+    while (len(previous_level_queue) > 0):
+        v = previous_level_queue.pop()
+        if v.left is not None:
+            #new_queue.insert(0, v.left)
+            new_queue.append(v.left)
+        if v.right is not None:
+            #new_queue.insert(0, v.right)
+            new_queue.append(v.right)
+    return new_queue
+
+def level_order_traversal(node):
+    """
+    @ref https://leetcode.com/problems/binary-tree-level-order-traversal/description/
+    @ref https://www.goodtecher.com/leetcode-102-binary-tree-level-order-traversal/
+
+    @details O(N) time since each node processed exactly once.
+    O(N) space to keep output structure that contains N node values.
+
+    Leetcode 102. 
+    Given the root of a binary tree, return the level order traversal of its
+    nodes' values. (i.e., from left to right, level by level).
+    """
+    queue = []
+    #queue = deque()
+
+    if node is None or node.value is None:
+        return []
+
+    results = []
+    queue.append(node)
+
+    while (queue):
+        level_result = []
+
+        level_size = len(queue)
+
+        #results.append([node.value for node in queue])
+        #queue = _get_all_nodes_in_next_level(queue)
+
+        #while (len(queue) > 0):
+        for i in range(level_size):
+            #node = queue.popleft()
+            node = queue.pop(0)
+            level_result.append(node.value)
+
+            if node.left is not None:
+                queue.append(node.left)
+            if node.right is not None:
+                queue.append(node.right)
+
+        results.append(level_result)
+
+    return results
+
+
 class BST(object):
     def __init__(self, root):
         self.root = Node(root)
