@@ -19,7 +19,7 @@ def _insert_value_into_binary_tree(node, value):
             node.right_ = Node(value)
             return
         else:
-            assert node.left_ is None:
+            assert node.left_ is None
             node.left_ = Node(value)
             return
 
@@ -45,6 +45,15 @@ def insert_values_into_binary_tree(node, values):
         _insert_value_into_binary_tree(node, element)
 
 
+def _inorder_traversal_recursive(node, results):
+
+    if node is not None:
+
+        _inorder_traversal_recursive(node.left_, results)
+        results.append(node.value_)
+        _inorder_traversal_recursive(node.right_, results)
+
+
 def dfs_inorder_traversal_recursive(node):
     """
     @details O(N) time. Because of recursive function.
@@ -53,17 +62,8 @@ def dfs_inorder_traversal_recursive(node):
     """
 
     results = []
-    _inorder_traversal(node, results)
+    _inorder_traversal_recursive(node, results)
     return results
-
-
-def _inorder_traversal_recursive(node, results)
-
-    if node not None:
-
-        _inorder_traversal(node.left_, results)
-        results.append(node.value_)
-        _inorder_traversal(node.right_, results)
 
 
 def dfs_inorder_traversal_iterative(node):
@@ -72,9 +72,9 @@ def dfs_inorder_traversal_iterative(node):
 
     current_node = node
 
-    while (current_node not None or len(stack) > 0):
+    while (current_node is not None or len(stack) > 0):
 
-        while current_node not None:
+        while current_node is not None:
             # Reach all the way to the left until a leaf, adding to stack along
             # the way.
             stack.append(current_node)
@@ -99,7 +99,7 @@ def dfs_inorder_traversal_iterative_with_visited(node):
         # The last element
         current_node = stack.pop()
 
-        if current_node not None:
+        if current_node is not None:
 
             if current_node in visited:
 
@@ -110,7 +110,7 @@ def dfs_inorder_traversal_iterative_with_visited(node):
                 stack.append(current_node.right_)
 
                 stack.append(current_node)
-                visited.append(current_node)
+                visited.add(current_node)
 
                 stack.append(current_node.left_)
 
