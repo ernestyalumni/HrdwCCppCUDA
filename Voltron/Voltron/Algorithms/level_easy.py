@@ -155,3 +155,61 @@ def minimum_waiting_time_optimal(queries):
         running_sum += wait_time * queries_left
 
     return running_sum
+
+
+def class_photos(red_shirt_heights, blue_shirt_heights):
+    """
+    * Each student in the back row must be strictly taller than the student
+    directly in front of them in the front row.
+
+    @return Returns whether or not a class photo that follows the stated
+    guidelines can be taken.
+
+    @details
+
+    O(nlog(n)) time. O(1) space. n = number of students.
+    """
+    red_shirt_heights.sort()
+    blue_shirt_heights.sort()
+
+    # The shirt color of tallest student will determine which students need to
+    # be placed in the back row. Tallest student can't be placed in the front
+    # row because there's no student taller than them who can be placed behind
+    # them.
+
+    if blue_shirt_heights[-1] > red_shirt_heights[-1]:
+        back_row = blue_shirt_heights
+        front_row = red_shirt_heights
+    elif blue_shirt_heights[-1] < red_shirt_heights[-1]:
+        back_row = red_shirt_heights
+        front_row = blue_shirt_heights
+    else:
+        assert blue_shirt_heights[-1] == red_shirt_heights[-1]
+        return False
+
+    for index in range(len(red_shirt_heights)):
+        i = -(index + 1)
+        if (front_row[i] >= back_row[i]):
+            return False
+
+    return True
+
+
+def tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, fastest):
+    """
+    @details
+
+    Person that pedals faster dictates speed of the bicycle.
+
+    Given 2 lists of positive integers: 1 that contains speeds of riders wearing
+    red shirts and 1 that contains speeds of riders wearing blue shirts.
+
+    Your goal is to pair every rider wearing a red shirt with a rider wearing a
+    blue shirt to operate tandem bicycle.
+    """
+    red_shirt_speeds.sort()
+    blue_shirt_speeds.sort()
+
+
+
+    return 0
