@@ -12,6 +12,7 @@ from Voltron.Algorithms.level_easy import (
     get_nth_fibonacci_recursive,
     fibonacci_no_branch,
     get_nth_fibonacci_recursive_no_branch,
+    get_nth_fibonacci_memoization,
     non_constructible_change_all_permutations,
     non_constructible_change_observe_sum,
     minimum_waiting_time,
@@ -41,6 +42,17 @@ def test_get_nth_fibonacci_recursive_no_branch():
     assert get_nth_fibonacci_recursive_no_branch(17) == 987
 
     assert get_nth_fibonacci_recursive_no_branch(18) == 1597
+
+
+def test_get_nth_fibonacci_memoization():
+
+    assert get_nth_fibonacci_memoization(2) == 1
+
+    assert get_nth_fibonacci_memoization(6) == 5
+
+    assert get_nth_fibonacci_memoization(17) == 987
+
+    assert get_nth_fibonacci_memoization(18) == 1597
 
 
 def test_non_constructible_change_all_permutations():
@@ -147,3 +159,36 @@ def test_class_photos_test_cases():
     result = class_photos(test_red_shirt_heights, test_blue_shirt_heights)
 
     assert result
+
+
+def test_tandem_bicycle_test_cases():
+    
+    # Test Case 1
+    red_shirt_speeds = [5, 5, 3, 9, 2]
+    blue_shirt_speeds = [3, 6, 7, 2, 1]
+
+    result = tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, True)
+    assert result == 32
+
+
+    # Test Case 2
+    red_shirt_speeds = [5, 5, 3, 9, 2]
+    blue_shirt_speeds = [3, 6, 7, 2, 1]
+
+    result = tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, False)
+    assert result == 25
+
+
+    # Test Case 3
+    red_shirt_speeds = [1, 2, 1, 9, 12, 3]
+    blue_shirt_speeds = [3, 3, 4, 6, 1, 2]
+
+    result = tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, False)
+    assert result == 30
+
+    # Test Case 4
+    red_shirt_speeds = [1, 2, 1, 9, 12, 3]
+    blue_shirt_speeds = [3, 3, 4, 6, 1, 2]
+
+    result = tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, True)
+    assert result == 37

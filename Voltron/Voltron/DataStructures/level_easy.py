@@ -208,3 +208,45 @@ class TreeNode:
         TreeNode._depth_first_traversal_recursive(self, array)
 
         return array
+
+
+def remove_duplicates_from_linked_list(linked_list):
+    """
+    @brief Doesn't contain any nodes with duplicate values.
+
+    @details You're given the head of a Singly Linked List whose nodes are in
+    sorted order with respect to their values.
+
+    @returns Returns modified version of the Linked List that doesn't contain
+    any nodes with duplicate values.
+    """
+    current_node = linked_list
+    current_value = linked_list.value
+
+    while True:
+
+        # Reached the end of linked list already. No further duplicates.
+        if (current_node.next == None):
+            break
+
+        previous_node = current_node
+        current_node = current_node.next
+
+        if (current_node.value == current_value):
+
+            # No further links past this duplicate.
+            if (current_node.next == None):
+                # Just remove the duplicate.
+                previous_node.next = None
+                break
+
+            previous_node.next = current_node.next
+            current_node = previous_node
+
+        else:
+
+            assert current_value < current_node.value
+
+            current_value = current_node.value
+
+    return linked_list

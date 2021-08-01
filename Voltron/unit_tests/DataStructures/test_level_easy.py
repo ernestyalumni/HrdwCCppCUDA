@@ -14,11 +14,13 @@ from Voltron.DataStructures.level_easy import (
     find_closest_value_in_bst,
     _get_closest_value_iterative,
     branch_sums,
-    TreeNode
+    TreeNode,
+    remove_duplicates_from_linked_list
     )
 
 from Voltron.DataStructures.binary_search_tree import Node as BSTNode
 from Voltron.DataStructures.binary_tree import Node
+from Voltron.DataStructures.linked_list import Element as LinkedListNode
 
 from collections import deque
 
@@ -48,6 +50,21 @@ def sample_branch_sums_test_binary_tree_fixture():
 
     return r
 
+
+@pytest.fixture
+def linked_list_duplicates_fixture():
+    l = LinkedListNode(1)
+    l.next = LinkedListNode(1)
+    l.next.next = LinkedListNode(1)
+    l.next.next.next = LinkedListNode(3)
+    l.next.next.next.next = LinkedListNode(4)
+    l.next.next.next.next.next = LinkedListNode(4)
+    l.next.next.next.next.next.next = LinkedListNode(4)
+    l.next.next.next.next.next.next.next = LinkedListNode(5)
+    l.next.next.next.next.next.next.next.next = LinkedListNode(6)
+    l.next.next.next.next.next.next.next.next.next = LinkedListNode(6)
+
+    return l
 
 def test_test_case_1():
     test_nodes = _make_disparate_input_nodes(list(range(1, 10)))
@@ -216,3 +233,60 @@ def test_depth_first_search_tree_sample_case():
     r.depth_first_search_recursive(array)
 
     assert array == ['A', 'B', 'E', 'F', 'I', 'J', 'C', 'D', 'G', 'K', 'H']
+
+
+def test_remove_duplicates_from_linked_list(linked_list_duplicates_fixture):
+    l = linked_list_duplicates_fixture
+
+    assert l.value == 1
+    assert l.next.value == 1
+    assert l.next.next.value == 1
+    assert l.next.next.next.value == 3
+
+    l = remove_duplicates_from_linked_list(l)
+
+    assert l.value == 1
+    assert l.next.value == 3
+    assert l.next.next.value == 4
+    assert l.next.next.next.value == 5
+    assert l.next.next.next.next.value == 6
+    assert l.next.next.next.next.next == None
+
+
+def test_remove_duplicates_from_linked_list_test_cases():
+
+    # Test case 2
+
+    l = LinkedListNode(1)
+    l.next = LinkedListNode(1)
+    l.next.next = LinkedListNode(1)
+    l.next.next.next = LinkedListNode(1)
+    l.next.next.next.next = LinkedListNode(1)
+    l.next.next.next.next.next = LinkedListNode(4)
+    l.next.next.next.next.next.next = LinkedListNode(4)
+    l.next.next.next.next.next.next.next = LinkedListNode(5)
+    l.next.next.next.next.next.next.next.next = LinkedListNode(6)
+    l.next.next.next.next.next.next.next.next.next = LinkedListNode(6)
+
+    l = remove_duplicates_from_linked_list(l)
+
+    assert l.value == 1
+    assert l.next.value == 4
+    assert l.next.next.value == 5
+    assert l.next.next.next.value == 6
+    assert l.next.next.next.next == None
+
+    # Test case 3
+
+    l = LinkedListNode(1)
+    l.next = LinkedListNode(1)
+    l.next.next = LinkedListNode(1)
+    l.next.next.next = LinkedListNode(1)
+    l.next.next.next.next = LinkedListNode(1)
+    l.next.next.next.next.next = LinkedListNode(1)
+    l.next.next.next.next.next.next = LinkedListNode(1)
+
+    l = remove_duplicates_from_linked_list(l)
+
+    assert l.value == 1
+    assert l.next == None

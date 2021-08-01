@@ -35,6 +35,24 @@ def fibonacci_no_branch(n, value = 1, previous = 0):
 def get_nth_fibonacci_recursive_no_branch(n):
     return fibonacci_no_branch(n)
 
+def get_nth_fibonacci_memoization(n):
+    if (n == 0 or n == 1):
+        return 0
+    if (n == 2):
+        return 1
+    last_two = [0, 1]
+
+    # Use the counter because we want the nth fibonacci number. Continue
+    # operations until we reach n, from counting from 3, 4, ...    
+    counter = 3
+    while (counter <= n):
+        next_fibonacci_number_in_sequence = last_two[1] + last_two[0]
+        last_two[0] = last_two[1]
+        last_two[1] = next_fibonacci_number_in_sequence
+        counter += 1    
+
+    return last_two[1]
+
 
 def non_constructible_change_all_permutations(coins):
 
@@ -194,6 +212,12 @@ def class_photos(red_shirt_heights, blue_shirt_heights):
 
     return True
 
+def _calculate_total_tandem_speed(a, b):
+    sum = 0
+    for x, y in zip(a, b):
+        sum += max(x, y)
+    return sum
+
 
 def tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, fastest):
     """
@@ -207,9 +231,11 @@ def tandem_bicycle(red_shirt_speeds, blue_shirt_speeds, fastest):
     Your goal is to pair every rider wearing a red shirt with a rider wearing a
     blue shirt to operate tandem bicycle.
     """
+    # O(n log n) time.
     red_shirt_speeds.sort()
     blue_shirt_speeds.sort()
 
+    if fastest:
+        red_shirt_speeds.reverse()
 
-
-    return 0
+    return _calculate_total_tandem_speed(red_shirt_speeds, blue_shirt_speeds)
