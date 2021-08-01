@@ -7,6 +7,9 @@ def calculate_midpoint(l, r):
     @param r right index, included in range of elements to consider
     @return None if there's no elements to range over.
 
+    Returns the midpoint from the "left side" or "left half" if there's an even
+    number of elements.
+
     @details index = l, l+1, ... r are all included indices to consider.
     """
     # Get the total number of elements to consider.
@@ -16,10 +19,46 @@ def calculate_midpoint(l, r):
 
     return (L//2 + l) if (L % 2  == 1) else (L//2 - 1 + l)
 
-def compare_and_partition(\
-    midpoint_value, \
-    search_value, \
-    midpoint_index, \
+
+def quick_calculate_midpoint_index(l, r):
+    """
+    @return Returns midpoint index from "left side" or "left half" if there's an
+    even number of elements.
+    """
+
+    return (l + r) // 2
+
+
+def binary_search_recursive(array, search_target, l, r):
+
+    # Base case
+    if (l > r):
+        # Did not find the target value in the array.
+        return None
+
+    midpoint_index = (l + r) // 2
+
+    midpoint_value = array[midpoint_index]
+
+    if (midpoint_value == search_target):
+        return midpoint_index
+
+    if (search_target < midpoint_value):
+        return binary_search_recursive(
+            array,
+            search_target,
+            l,
+            midpoint_index - 1)
+
+    assert midpoint_value < search_target
+
+    return binary_search_recursive(array, search_target, midpoint_index + 1, r)
+
+
+def compare_and_partition(
+    midpoint_value,
+    search_value,
+    midpoint_index,
     l,
     r):
     
@@ -31,6 +70,7 @@ def compare_and_partition(\
 
     if (search_value > midpoint_value):
         return (midpoint_index + 1, r)
+
 
 def binary_search_iteration(a, l, r, search_value):
     m = calculate_midpoint(l, r)
@@ -50,6 +90,7 @@ def binary_search_iteration(a, l, r, search_value):
     except TypeError:
         return m
 
+
 def binary_search(a, search_value):
     """
     @name binary_search
@@ -65,3 +106,31 @@ def binary_search(a, search_value):
         except TypeError:
             return -1 if not result else result
 
+
+def binary_search_iterative(array, search_target):
+    midpoint_index = 0
+    start_index = 0
+    end_index = len(array) - 1
+
+    while (start_index <= end_index):
+
+        midpoint_index = (start_index + end_index) // 2
+
+        midpoint_value = array[midpoint_index]
+
+        if search_target < midpoint_value:
+
+            end_index = midpoint_index - 1
+
+        elif search_target > midpoint_value:
+
+            start_index = midpoint_index + 1
+
+        else:
+
+            assert midpoint_value == search_target
+
+            return midpoint_index
+
+    # Failure case when cannot find search target in array.
+    return None

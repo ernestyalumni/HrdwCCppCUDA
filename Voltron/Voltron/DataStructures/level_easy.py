@@ -3,7 +3,7 @@ from collections import deque
 ################################################################################
 # @details
 #
-# DataStructures : deque, Queue, Binary Tree
+# DataStructures : deque, Queue, Binary Tree, Binary Search Tree (BST)
 ################################################################################
 
 class BinaryTree:
@@ -62,7 +62,102 @@ def node_depths(root):
     return counter
 
 
+################################################################################
+# Find Closest Value in BST
+################################################################################
+
+def _get_closest_value(node, target):
+    """
+    Complexity: Average O(log(n)) time. But O(log(n)) space because of
+    recursion.
+    """
+    if node.value_ == target:
+        return node.value_
+
+    # Base case. Node with no leaves.
+    if (node.left_ == None and node.right_ == None):
+        return node.value_
+
+    if (node.left_ and node.right_ == None):
+        left_result = _get_closest_value(node.left_, target)
+        delta_value = abs(target - node.value_)
+        delta_left_result = abs(target - left_result)
+
+        return left_result if delta_left_result < delta_value else node.value_
+
+    if (node.right_ and node.left_ == None):
+        right_result = _get_closest_value(node.right_, target)
+        delta_value = abs(target - node.value_)
+        delta_right_result = abs(target - right_result)
+
+        return right_result if delta_right_result < delta_value else node.value_
+
+    if node.left_.value_ == target:
+        return node.left_.value_
+
+    if node.right_.value_ == target:
+        return node.right_.value_
+
+    if target < node.left_.value_:
+
+        left_result = _get_closest_value(node.left_, target)
+        delta_value = abs(target - node.value_)
+        delta_left_result = abs(target - left_result)
+        return left_result if delta_left_result < delta_value else node.value_
+
+    if target > node.right_.value_:
+
+        right_result = _get_closest_value(node.right_, target)
+        delta_value = abs(target - node.value_)
+        delta_right_result = abs(target - right_result)
+        return right_result if delta_right_result < delta_value else node.value_
+
+    assert node.left_.value_ < target and target < node.right_.value_
+
+    left_result = _get_closest_value(node.left_, target)
+    right_result = _get_closest_value(node.right_, target)
+
+    delta_left_result = abs(target - left_result)
+    delta_right_result = abs(right_result - target)
+    delta_value = abs(node.value_ - target)
+
+    results = {
+        delta_left_result : left_result,
+        delta_right_result : right_result,
+        delta_value : node.value_}
+
+    return results[min(results.keys())]
 
 
+def find_closest_value_in_bst(tree, target):
+    """
+    @brief Write function that takes Binary Search Tree (BST) and target integer
+    value and returns closest value to target value contained in BST.
 
-    
+    You can assume that there'll be only one closest value.
+    """
+    return _get_closest_value(tree, target)
+
+
+def _get_closest_value_iterative(node, target, closest_value):
+    current_node = node
+
+    while (current_node is not None):
+
+        if (current_node.value_ == target):
+            return current_node.value_
+
+        delta_node = abs(target - current_node.value_)
+        delta_closest = abs(target - closest_value)
+
+        closest_value = (closest_value
+            if delta_closest <= delta_node else current_node.value_)
+
+        if (current_node.value_ < target):
+            current_node = current_node.right_
+        else:
+            assert target < current_node.value_
+
+            current_node = current_node.left_
+
+    return closest_value
