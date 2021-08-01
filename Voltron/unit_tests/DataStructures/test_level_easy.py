@@ -13,7 +13,8 @@ from Voltron.DataStructures.level_easy import (
     node_depths,
     find_closest_value_in_bst,
     _get_closest_value_iterative,
-    branch_sums
+    branch_sums,
+    TreeNode
     )
 
 from Voltron.DataStructures.binary_search_tree import Node as BSTNode
@@ -200,3 +201,18 @@ def test_branch_sums_test_case_6():
 
     result = branch_sums(r)
     assert result == [15, 16, 18, 9, 11, 11, 11]
+
+
+def test_depth_first_search_tree_sample_case():
+    r = TreeNode('A')
+    r.children_ = [TreeNode('B'), TreeNode('C'), TreeNode('D')]
+    r.children_[0].children_ = [TreeNode('E'), TreeNode('F')]
+    r.children_[0].children_[1].children_ = [TreeNode('I'), TreeNode('J')]
+    r.children_[2].children_ = [TreeNode('G'), TreeNode('H')]
+    r.children_[2].children_[0].children_ = [TreeNode('K'),]
+
+    array = []
+
+    r.depth_first_search_recursive(array)
+
+    assert array == ['A', 'B', 'E', 'F', 'I', 'J', 'C', 'D', 'G', 'K', 'H']

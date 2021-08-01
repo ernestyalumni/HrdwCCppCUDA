@@ -13,7 +13,10 @@ from Voltron.Algorithms.level_easy import (
     fibonacci_no_branch,
     get_nth_fibonacci_recursive_no_branch,
     non_constructible_change_all_permutations,
-    non_constructible_change_observe_sum)
+    non_constructible_change_observe_sum,
+    minimum_waiting_time,
+    minimum_waiting_time_optimal
+    )
 
 
 def test_get_nth_fibonacci_recursive():
@@ -70,3 +73,34 @@ def test_non_constructible_change_observe_sum():
 
     assert non_constructible_change_observe_sum(coins) == 29
 
+
+def test_minimum_waiting_time_sample_case():
+    queries = [3, 2, 1, 2, 6]
+
+    assert minimum_waiting_time(queries) == 17
+
+    # Test case 12
+    queries = [5, 4, 3, 2, 1]
+
+    assert minimum_waiting_time(queries) == 20
+
+    # Test case 12
+    queries = [1, 2, 3, 4, 5]
+
+    assert minimum_waiting_time(queries) == 20
+
+
+def test_minimum_waiting_time_optimal_sample_case():
+    queries = [3, 2, 1, 2, 6]
+
+    assert minimum_waiting_time_optimal(queries) == 17
+
+    # Test case 12
+    queries = [5, 4, 3, 2, 1]
+
+    assert minimum_waiting_time_optimal(queries) == 20
+
+    # Test case 12
+    queries = [1, 2, 3, 4, 5]
+
+    assert minimum_waiting_time_optimal(queries) == 20

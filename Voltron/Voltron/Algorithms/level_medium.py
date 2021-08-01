@@ -69,7 +69,7 @@ def smallest_difference(array_one, array_two):
     current_index_1 = None
     current_index_2 = None
 
-    for target_element, target_index in enumerate(array_one):
+    for target_index, target_element in enumerate(array_one):
 
         resulting_index = _find_closest_value_index(
             array_two,

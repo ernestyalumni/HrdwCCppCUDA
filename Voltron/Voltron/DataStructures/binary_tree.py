@@ -93,6 +93,7 @@ def dfs_inorder_traversal_iterative_with_visited(node):
     """
     results = []
     visited = set()
+    # Recursive stack is replaced by stack of nodes.
     stack = [node,]
 
     while (len(stack) > 0):
@@ -106,6 +107,9 @@ def dfs_inorder_traversal_iterative_with_visited(node):
                 results.append(current_node.value_)
 
             else:
+                # For every adjacent and unvisited node of current node, mark
+                # node and insert it in the stack.
+
                 # Inorder: left -> root -> right
                 stack.append(current_node.right_)
 

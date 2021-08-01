@@ -110,3 +110,48 @@ def non_constructible_change_observe_sum(coins):
             minimum_change += 1
 
     return minimum_change
+
+
+def minimum_waiting_time(queries):
+
+    if not queries:
+        return 0
+
+    # N number of elements.
+    # O(N log N) time.
+    queries.sort()
+
+    running_sum = queries[0]
+
+    for index, wait_time in enumerate(queries):
+
+        if (index != 0 and index != len(queries) - 1):
+
+            old_value = queries[index]
+            queries[index] += running_sum
+            running_sum += old_value
+
+    return sum(queries[:-1])
+
+
+def minimum_waiting_time_optimal(queries):
+
+    if not queries:
+        return 0
+
+    # N number of elements.
+    # O(N log N) time.
+    queries.sort()
+
+    running_sum = 0
+
+    for index, wait_time in enumerate(queries):
+
+        # Remaining queries to consider to add to minimum total wait time.
+        queries_left = len(queries) - (index + 1)
+
+        # Add the current wait time queries_left times because the other queries
+        # of queries_left will have to wait this time as well.
+        running_sum += wait_time * queries_left
+
+    return running_sum

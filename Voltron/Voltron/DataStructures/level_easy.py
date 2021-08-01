@@ -186,3 +186,25 @@ def branch_sums(root):
     _preorder_traversal(root, running_sum, sums)
 
     return sums
+
+
+class TreeNode:
+    def __init__(self, name):
+        self.children_ = []
+        self.name_ = name
+
+    def add_child(self, name):
+        self.children_.append(TreeNode(name))
+        return self
+
+    @staticmethod
+    def _depth_first_traversal_recursive(node, results):
+        results.append(node.name_)
+        for child in node.children_:
+            TreeNode._depth_first_traversal_recursive(child, results)
+
+    def depth_first_search_recursive(self, array):
+
+        TreeNode._depth_first_traversal_recursive(self, array)
+
+        return array
