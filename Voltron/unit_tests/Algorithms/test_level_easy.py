@@ -23,7 +23,10 @@ from Voltron.Algorithms.level_easy import (
     binary_search,
     find_three_largest_numbers,
     is_palindrome,
-    caesar_cipher_encryptor
+    caesar_cipher_encryptor,
+    run_length_encoding,
+    generate_document,
+    first_non_repeating_character_with_ordered_dict
     )
 
 from Voltron.Algorithms.Sorting.bubble_sort import (
@@ -433,3 +436,85 @@ def test_is_caesar_cipher_encrpytor():
     s = "abc"
     result = caesar_cipher_encryptor(s, 26)
     assert result == "abc"
+
+def test_run_length_encoding_sample_input():
+    # Sample Input and Test Case 1
+
+    s = "AAAAAAAAAAAAABBCCCCDD"
+    result = run_length_encoding(s)
+    assert result == "9A4A2B4C2D"
+
+def test_run_length_encoding_test_cases():
+    # Sample Input and Test Case 1
+
+    s = "[(aaaaaaa,bbbbbbb,ccccc,dddddd)]"
+    result = run_length_encoding(s)
+    assert result == "1[1(7a1,7b1,5c1,6d1)1]"
+
+def test_generate_document():
+
+    # Sample and Test Case 1.
+    characters = "Bste!hetsi ogEAxpelrt x "
+    document = "AlgoExpert is the Best!"
+      
+    assert generate_document(characters, document)
+
+    # Sample and Test case 2
+
+    characters = "A"
+    document = "a"
+      
+    assert not generate_document(characters, document)
+
+    # Test Case 3
+
+    characters = "a"
+    document = "a"
+
+    assert generate_document(characters, document)
+
+    # Test Case 4
+
+    characters = "a hsgalhsa sanbjksbdkjba kjx",
+    document = ""
+
+    assert generate_document(characters, document)
+
+    # Test Case 5
+
+    characters = " "
+    document = "hello"
+
+    assert not generate_document(characters, document)
+
+def test_first_non_repeating_character_with_ordered_dict():
+
+    # Sample Input and Test Case 1
+
+    s = "abcdcaf"
+    results = first_non_repeating_character_with_ordered_dict(s)
+    assert results == 1
+
+    # Test Case 2
+
+    s = "faadabcbbebdf"
+    results = first_non_repeating_character_with_ordered_dict(s)
+    assert results == 6
+
+    # Test Case 3
+
+    s = "a"
+    results = first_non_repeating_character_with_ordered_dict(s)
+    assert results == 0
+
+    # Test Case 4
+
+    s = "ab"
+    results = first_non_repeating_character_with_ordered_dict(s)
+    assert results == 0
+
+    # Test Case 5
+
+    s = "abc"
+    results = first_non_repeating_character_with_ordered_dict(s)
+    assert results == 0

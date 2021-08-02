@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 ################################################################################
 
 
@@ -358,3 +360,116 @@ def caesar_cipher_encryptor(input_s, key):
         new_string.append(lower_case_alphabet[new_letter_index])
 
     return "".join(new_string)
+
+
+def _divide_by_10(current_count, current_character):
+    how_many_nines = current_count // 9
+    remainder_dividing_by_9 = current_count % 9
+    output = []
+    for i in range(how_many_nines):
+        output.append('9')
+        output.append(current_character)
+    if remainder_dividing_by_9 != 0:
+        output.append(str(remainder_dividing_by_9))
+        output.append(current_character)
+
+    return "".join(output)
+
+
+def run_length_encoding(input_s):
+    """
+    @details
+    Takes in non-empty string.
+
+    Input string can contain all sorts of special characters, including numbers.
+    """
+    N = len(input_s)
+    assert N > 0
+    if (N == 1):
+        return "1" + input_s
+
+    output = []
+
+    current_character = input_s[0]
+    current_count = 1
+
+    for i in range(1, N - 1):
+
+        if input_s[i] != current_character:
+            encoded_current_character = _divide_by_10(
+                current_count,
+                current_character)
+            output.append(encoded_current_character)
+            current_character = input_s[i]
+            current_count = 1
+
+        else:
+            current_count += 1
+
+    if input_s[N - 1] != current_character:
+        encoded_current_character = _divide_by_10(
+            current_count,
+            current_character)
+        output.append(encoded_current_character)
+        output.append('1')
+        output.append(str(input_s[N-1]))
+    else:
+        encoded_current_character = _divide_by_10(
+            current_count + 1,
+            current_character)
+        output.append(encoded_current_character)
+
+    return "".join(output)
+
+
+def generate_document(characters, document):
+
+    if len(characters) < len(document):
+        # Frequency of unique characters in the characters string must be
+        # greater than or equal to frequency of unique characters in the
+        # document string.
+
+        return False
+
+    if len(document) == 0:
+        return True
+
+    character_frequency_map = dict([])
+    for character in list(characters):
+        if character not in character_frequency_map:
+            character_frequency_map[character] = 1
+        else:
+            character_frequency_map[character] += 1
+
+    for letter in list(document):
+
+        if letter not in character_frequency_map:
+            return False
+
+        elif character_frequency_map[letter] <= 0:
+            return False
+        else:
+            character_frequency_map[letter] -= 1
+
+    return True
+
+def first_non_repeating_character_with_ordered_dict(input_s):
+    character_frequency_map = OrderedDict()
+
+    for letter in list(input_s):
+
+        if letter not in character_frequency_map:
+
+            character_frequency_map[letter] = 1
+
+        else:
+
+            character_frequency_map[letter] += 1
+
+    for character in character_frequency_map.keys():
+
+        if character_frequency_map[character] == 1:
+
+            return input_s.find(character)
+
+    return -1
