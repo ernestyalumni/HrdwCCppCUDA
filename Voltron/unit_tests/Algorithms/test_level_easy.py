@@ -21,8 +21,46 @@ from Voltron.Algorithms.level_easy import (
     tandem_bicycle,
     product_sum,
     binary_search,
-    find_three_largest_numbers
+    find_three_largest_numbers,
+    is_palindrome,
+    caesar_cipher_encryptor
     )
+
+from Voltron.Algorithms.Sorting.bubble_sort import (
+    bubble_sort_naive,
+    bubble_sort_optimized,
+    bubble_sort_no_extra_swaps
+    )
+from Voltron.Algorithms.Sorting.insertion_sort import (
+    insertion_sort,
+    insertion_sort_optimized
+    )
+from Voltron.Algorithms.Sorting.selection_sort import selection_sort
+
+
+from collections import OrderedDict
+
+import pytest
+
+@pytest.fixture
+def bubble_sort_test_cases_fixture():
+
+    test_cases = OrderedDict()
+
+    test_cases["Test case 1"] = [8, 5, 2, 9, 5, 6, 3]
+    test_cases["Test case 2"] = [1]
+    test_cases["Test case 3"] = [1, 2]
+    test_cases["Test case 4"] = [2, 1]
+    test_cases["Test case 5"] = [1, 3, 2]
+    test_cases["Test case 6"] = [3, 1, 2]
+    test_cases["Test case 7"] = [1, 2, 3]
+    test_cases["Test case 8"] = [
+        -4, 5, 10, 8, -10, -6, -4, -2, -5, 3, 5, -4, -5, -1, 1, 6, -7, -6, -7,
+        8]
+    test_cases["Test case 9"] = [
+        -7, 2, 3, 8, -10, 4, -6, -10, -2, -7, 10, 5, 2, 9, -9, -5, 3, 8]
+
+    return test_cases
 
 
 def test_get_nth_fibonacci_recursive():
@@ -289,3 +327,109 @@ def test_find_three_largest_numbers_test_cases():
     result = find_three_largest_numbers(array)
 
     assert result == [11, 43, 55]
+
+
+def test_bubble_sort_naive(bubble_sort_test_cases_fixture):
+
+    test_cases = bubble_sort_test_cases_fixture
+
+    for key in test_cases.keys():
+
+        assert bubble_sort_naive(test_cases[key]) == sorted(test_cases[key])
+
+
+def test_bubble_sort_optimized(bubble_sort_test_cases_fixture):
+
+    test_cases = bubble_sort_test_cases_fixture
+
+    for key in test_cases.keys():
+
+        assert bubble_sort_optimized(test_cases[key]) == sorted(test_cases[key])
+
+
+def test_bubble_sort_optimized(bubble_sort_test_cases_fixture):
+
+    test_cases = bubble_sort_test_cases_fixture
+
+    for key in test_cases.keys():
+
+        assert (bubble_sort_no_extra_swaps(test_cases[key]) ==
+            sorted(test_cases[key]))
+
+
+def test_insertion_sort(bubble_sort_test_cases_fixture):
+
+    test_cases = bubble_sort_test_cases_fixture
+
+    for key in test_cases.keys():
+
+        assert insertion_sort(test_cases[key]) == sorted(test_cases[key])
+
+
+def test_insertion_sort_optimized(bubble_sort_test_cases_fixture):
+
+    test_cases = bubble_sort_test_cases_fixture
+
+    for key in test_cases.keys():
+
+        assert (insertion_sort_optimized(test_cases[key]) ==
+            sorted(test_cases[key]))
+
+
+def test_selection_sort(bubble_sort_test_cases_fixture):
+
+    test_cases = bubble_sort_test_cases_fixture
+
+    for key in test_cases.keys():
+
+        assert selection_sort(test_cases[key]) == sorted(test_cases[key])
+
+
+def test_is_palindrome():
+
+    # Sample input and Test Case 1
+    x = "abcdcba"
+    assert is_palindrome(x)
+
+    # Test Case 2
+    x = "a"
+    assert is_palindrome(x)
+
+    # Test Case 3
+    x = "ab"
+    assert not is_palindrome(x)
+
+    # Test Case 4
+    x = "aba"
+    assert is_palindrome(x)
+
+    # Test Case 5
+    x = "abb"
+    assert not is_palindrome(x)
+
+
+def test_is_caesar_cipher_encrpytor():
+
+    # Sample input and Test Case 1
+    s = "xyz"
+    result = caesar_cipher_encryptor(s, 2)
+    assert result == "zab"
+
+    # Test Case 2
+    s = "abc"
+    result = caesar_cipher_encryptor(s, 0)
+    assert result == "abc"
+
+    # Test Case 3
+    result = caesar_cipher_encryptor(s, 3)
+    assert result == "def"
+
+    # Test Case 4
+    s = "xyz"
+    result = caesar_cipher_encryptor(s, 5)
+    assert result == "cde"
+
+    # Test Case 5
+    s = "abc"
+    result = caesar_cipher_encryptor(s, 26)
+    assert result == "abc"

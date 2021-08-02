@@ -309,3 +309,52 @@ def find_three_largest_numbers(array):
             largest_three.sort()
 
     return largest_three
+
+
+def is_palindrome(input_string):
+
+    N = len(input_string)
+    l_ptr = 0
+    r_ptr = N - 1
+
+    result = True
+
+    for i in range(N // 2):
+
+        if input_string[l_ptr] != input_string[r_ptr]:
+
+            result = False
+
+            break
+
+        l_ptr += 1
+        r_ptr -= 1
+
+    return result
+
+def caesar_cipher_encryptor(input_s, key):
+    """
+    @brief Given non-empty string of lowercase letters and non-negative integer
+    representing a key, return new string obtained by shifting every letter in
+    input string by k positions in the alphabet, where k is the key.
+    """
+    lower_case_alphabet = "abcdefghijklmnopqrstuvwxyz"
+    N_alphabet = len(lower_case_alphabet)
+    letter_to_index = dict([
+        (letter, index)
+        for index, letter in enumerate(list(lower_case_alphabet))])
+
+    new_string = []
+
+    for index in range(len(input_s)):
+
+        letter = input_s[index]
+
+        letter_index = letter_to_index[letter]
+
+        new_letter_index = (letter_index + key) % N_alphabet
+
+        # str does not support item assignment.
+        new_string.append(lower_case_alphabet[new_letter_index])
+
+    return "".join(new_string)
