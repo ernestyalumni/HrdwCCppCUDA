@@ -2,6 +2,25 @@ from collections import OrderedDict
 
 ################################################################################
 
+def two_number_sum(array, target_sum):
+
+    solution = []
+
+    result_number = dict()
+
+    # O(N) time complexity, O(N) space for result number.
+    for x in array:
+        y = target_sum - x
+        result_number[y] = x
+
+    # O(N) time complexity.
+    for y in array:
+        # Given assumption of unique numbers.
+        if y in result_number and result_number[y] != y:
+            solution.append(y)
+            solution.append(result_number[y])
+            break
+    return solution
 
 def get_nth_fibonacci_recursive(n):
     """

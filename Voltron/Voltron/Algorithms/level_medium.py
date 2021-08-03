@@ -2,6 +2,63 @@
 #
 ################################################################################
 
+def three_number_sum(array, target_sum):
+    output = set()
+    N = len(array)
+
+    for i in range(N):
+        x = array[i]
+
+        remaining_sum = dict()
+
+        for j in range(i + 1, N):
+            z = target_sum - array[j] - x
+            remaining_sum[z] = array[j]
+
+        for j in range(i + 1, N):
+
+            if (array[j] in remaining_sum and
+                    remaining_sum[array[j]] != array[j]):
+                solution = [x, array[j], remaining_sum[array[j]]]
+                solution.sort()
+                output.add(tuple(solution))
+
+    output = [list(x) for x in output]
+    output.sort()
+
+    return output
+
+
+def three_number_sum_with_sorted_array(array, target_sum):
+    output = []
+    N = len(array)
+    array.sort()
+
+    for i in range(N - 2):
+        left_index = i + 1
+        right_index = N - 1
+
+        while left_index < right_index:
+
+            current_sum = array[i] + array[left_index] + array[right_index]
+
+            if current_sum == target_sum:
+                output.append([array[i], array[left_index], array[right_index]])
+                left_index += 1
+                right_index -= 1
+
+            # Use the monotonicity property of sorted array.
+            if target_sum < current_sum:
+
+                right_index -= 1
+
+            if current_sum < target_sum:
+
+                left_index += 1
+
+    return output
+
+
 def _find_closest_value_index(array, target_value, l, r):
     """
     @param l left index
@@ -46,7 +103,7 @@ def _find_closest_value_index(array, target_value, l, r):
     return midpoint_index
 
 
-def smallest_difference(array_one, array_two):
+def smallest_difference_first_try(array_one, array_two):
     """
     @brief Find pair of numbers, one from each array, whose absolute difference
     is closest to 0, and returns an array containing these 2 numbers, with the
@@ -85,3 +142,38 @@ def smallest_difference(array_one, array_two):
             value_difference = difference
 
     return [array_one[current_index_1], array_two[current_index_2]]
+
+
+def smallest_difference(array_one, array_two):
+    array_one.sort()
+    array_two.sort()
+
+    ptr_to_array_one = 0
+    ptr_to_array_two = 0
+
+    output = []
+
+    smallest_difference = abs(array_one[0] - array_two[0])
+    current_difference = abs(array_one[0] - array_two[0])
+
+    while (ptr_to_array_one < len(array_one) and
+            ptr_to_array_two < len(array_two)):
+
+        x = array_one[ptr_to_array_one]
+        y = array_two[ptr_to_array_two]
+
+        if x < y:
+            current_difference = y - x
+            ptr_to_array_one += 1
+        elif y < x:
+            current_difference = x - y
+            ptr_to_array_two += 1
+        else:
+            assert x == y
+            return [x, y]
+
+        if current_difference < smallest_difference:
+            smallest_difference = current_difference
+            output = [x, y]
+
+    return output
