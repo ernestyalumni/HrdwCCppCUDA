@@ -2,6 +2,7 @@
 
 numpy
 pytest
+requests # somehow needed by pytest
 
 ###### Requirements with Version Specifiers ######
 
