@@ -39,6 +39,12 @@ namespace Fibonacci
 //------------------------------------------------------------------------------
 /// \name fib
 /// \details since constexpr function, cannot have branching (i.e. if, elses)
+/// If L = levels, O(2^L) time. O(L) space (L total number of stack frames,
+/// because once the "leaves" or base case is reached, it returns, and goes back
+/// to previous stack frame, so only at most L stack frames).
+/// In this case, we go down by -1 from n, so O(2^n time. O(n) space)
+/// cf. https://youtu.be/oBt53YbR9Kk?t=1190 freeCodeCamp.org, Dynamic
+/// Programming - Learn to Solve Algorithmic Problems and Coding Challenges.
 //------------------------------------------------------------------------------
 constexpr int fib_recursive(const int n)
 {

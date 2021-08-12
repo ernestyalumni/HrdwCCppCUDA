@@ -3394,6 +3394,14 @@ cf. Neagole (2020) \cite{Neag2020}, "Algorithms:Recursion" - 151 Recursion Intro
 
 Bell, Grimson, Guttag (2016) \cite{BGG2016}
 
+\subsection{Time Complexity, Space Complexity}
+
+\subsubsection{Fibonacci, $O(2^n)$ time, $O(n)$ space ($n$ stack frames)}
+
+For $n$th Fibonacci number, 2 branches as $n$ decreases by 1 until base cases, or "leaves". $n$ number of stack frames; once a base case is returned, pointer goes to previous stack frame, and then goes into next branch, and so there's at most $n$ stack frames needed.
+
+cf. \href{https://youtu.be/oBt53YbR9Kk?t=1190}{Dynamic Programming - Learn to Solve Algorithmic Problems and Coding Challenges}
+
 \subsection{Binary Trees and Recursion}
 
 cf. \href{https://leetcode.com/explore/learn/card/data-structure-tree/17/solve-problems-recursively/534/}{LeetCode, Solve Problems Recursively}
