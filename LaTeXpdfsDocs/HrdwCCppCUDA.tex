@@ -4795,7 +4795,99 @@ Ch. 3. Discrete Dynamics, Exercise 8:
 
 \part{Design}
 
+
 cf. Daniel Jackson. 6.170 Software Studio. Spring 2013. Massachusetts Institute of Technology: MIT OpenCourseWare, \url{https://ocw.mit.edu}. License: Creative Commons BY-NC-SA.
+
+\section{System Design}
+
+\subsection{Client-Server}
+
+Let (notation) \\
+client $\equiv \text{cli}$, \\
+server $\equiv \text{ser}$, \\
+
+$\text{cli}$ actions : $\lbrace $ request data, speak to $\text{ser} \rbrace$  \\
+$\text{ser}$ actions: $\lbrace$ listen, send data $\rbrace$ \\
+
+$\text{cli}$ action: make DNS query. Obtain IP address. \\
+
+e.g. $\text{cli} \equiv $ browser. \\
+browser makes DNS query. gets back IP address. \\
+IP address $\equiv $ unique identifier for machine on network and internet. \\
+
+$\text{cli}$ http request $\to  \text{ser}$ \\
+
+$\text{ser}$ listen to requests on ports $\sim 16000$ ports. \\
+Need to specify port. \\
+For http, port 80, https port 443 (decided upon long time ago). \\
+
+Try the following:
+
+\begin{lstlisting}
+	dig algoexpert.io
+	dig google.com
+	
+	nc -l 8081 # l for listen
+	nc 127.0.0.1 # 127.0.0.1 for local machine
+\end{lstlisting}
+
+\subsection{Relational Databases}
+
+Structure imposed on data. \\
+2 (major) structures. \\
+Relational Databases (Db's) vs. Non-relational Db's \\
+Tables or relations \\
+columns represent attributes \\
+rows referred to often as records. \\
+
+Non-relational Db's.
+
+\subsubsection{SQL query (time complexity)}
+
+$O(1)$ - hash index on id, or cached result on id from previous query. \\
+$O(n)$ - Do full scan and look at each row; \\
+$O(\log{(n)})$ sort id and do binary search. \\
+
+cf. \url{https://www.geeksforgeeks.org/sql-query-complexity/}
+
+\subsubsection{Databases definition}
+
+Databases (db) uses disk or memory for 2 actions: record data, query data. \\
+In general, they're themselves servers that are long lived and interact with rest of application through network calls, with protocols on top of TCP or even HTTP. 
+
+Some db's keep records in memory, users of such db's are aware records maybe lost forever if machine or process dies.
+
+
+
+
+\subsection{Example: Payments, payments processing system}
+
+Payment design. \\
+Users authorize payments, system interfaces with external payment processes like Visa to copmlete payment. \\
+Queue based architecture. \\
+Payment systems demand high reliability. Not making payments users requested or charging users multiple times - consequences too high. 
+
+To achieve this reliability, system puts "payment task" onto a queue that's processed asynchronously.
+
+\begin{enumerate}
+	\item user $u$. action, payment request. front-end service accepts $u$'s payment request. \\
+	Set up record in database that says $u$'s request, says status request received, payment pending. \\
+	record will be used to communicate with user what states of payment is. \\
+	front-end service $\equiv s_{fr}$. $s_{fr}$ has action accepts, accepts $ : u$
+	\item $s_{fr}$ has action put message on payment queue. \\
+	message has information: reference to newly created database record, details about payment (which credit card to use, amount, etc.) \\
+	If either step or previous one failed, user immediately notified. 
+	\item asynchronous processor reads from queue, process individual payments. \\
+	primary objective if the processing is to make the payment using external payment service (like Visa) and update $u$'s payment database record based on result.
+	\item Once payment goes through or fails in nonrecoverable way (e.g. external service rejects payment due to insufficient funds), asynchronous processor notifies user.
+\end{enumerate}
+
+cf. \url{https://www.linkedin.com/pulse/system-design-practice-designing-payment-avik-das/}
+
+
+
+
+
 
 
 \begin{thebibliography}{9}
