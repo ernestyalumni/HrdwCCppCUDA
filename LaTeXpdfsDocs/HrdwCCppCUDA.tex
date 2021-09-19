@@ -2966,6 +2966,26 @@ Eulerian path $O(|E|) $
 
 Hamiltonian path
 
+\subsection{Tries}
+
+Leaves of tree indicate the end of a word.
+
+Each node contains a character of a word. Each branch (path) from child from root to leaf is a word in a collection of words. 
+
+class Nodes $\lbrace $ array of all children or \\
+lookup table to do you have child? \\
+e.g. HashMap
+
+is end of word
+
+Used in word validation. Given this list of strings, word list validation.
+is CA prefix.
+
+Keep state, build on a lookup by keeping state in trie or return by reference to the Node.
+
+\href{https://youtu.be/zIjfhVPRZCg}{Data Structures: Tries, HackerRank}
+
+Insert and search costs O(key length) however, memory requirements of Trie is O(Alphabet size * key length * N) where $N$ is number of keys in Trie.
 
 
 \section{Search}
@@ -4376,7 +4396,7 @@ CS556 - Distributed Systems. Tutorial by Eleftherios Kosmas.
 
 \url{https://db.in.tum.de/teaching/ss19/c++praktikum/}
 
-
+\url{https://www.cs.cmu.edu/afs/cs/academic/class/15213-f99/www/class26/}
 
 
 
