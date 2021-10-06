@@ -1,6 +1,9 @@
 # @file .gitignore
 # cf. https://www.pluralsight.com/guides/how-to-use-gitignore-file
 
+# Object files
+*.o
+
 # Literal File Names
 # ignore any files named .DS_Store
 .DS_Store

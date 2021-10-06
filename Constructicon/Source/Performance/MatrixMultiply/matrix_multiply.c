@@ -101,3 +101,55 @@ int matrix_multiply_run(const matrix* A, const matrix* B, matrix* C) {
 
   return 0;
 }
+
+int matrix_multiply_ikj(const matrix* A, const matrix* B, matrix* C) {
+
+  for (int i = 0; i < A->rows; i++) {
+    for (int k = 0; k < A->cols; k++) {
+      for (int j = 0; j < B->cols; j++) {
+        C->values[i][j] += A->values[i][k] * B->values[k][j];
+      }
+    }
+  }
+
+  return 0;
+}
+
+int matrix_multiply_jik(const matrix* A, const matrix* B, matrix* C) {
+
+  for (int j = 0; j < B->cols; j++) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int k = 0; k < A->cols; k++) {
+        C->values[i][j] += A->values[i][k] * B->values[k][j];
+      }
+    }
+  }
+
+  return 0;
+}
+
+int matrix_multiply_jki(const matrix* A, const matrix* B, matrix* C) {
+
+  for (int j = 0; j < B->cols; j++) {
+    for (int k = 0; k < A->cols; k++) {
+      for (int i = 0; i < A->rows; i++) {
+        C->values[i][j] += A->values[i][k] * B->values[k][j];
+      }
+    }
+  }
+
+  return 0;
+}
+
+int matrix_multiply_kij(const matrix* A, const matrix* B, matrix* C) {
+
+  for (int k = 0; k < A->cols; k++) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < B->cols; j++) {
+        C->values[i][j] += A->values[i][k] * B->values[k][j];
+      }
+    }
+  }
+
+  return 0;
+}

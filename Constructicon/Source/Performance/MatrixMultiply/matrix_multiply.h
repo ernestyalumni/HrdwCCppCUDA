@@ -18,6 +18,19 @@ typedef struct {
 // Multiply matrix A*B, store result in C.
 int matrix_multiply_run(const matrix* A, const matrix* B, matrix* C);
 
+// indices i,j,k indicateLoop order (from outer loop to inner loop)
+
+// Fastest.
+int matrix_multiply_ikj(const matrix* A, const matrix* B, matrix* C);
+
+int matrix_multiply_jik(const matrix* A, const matrix* B, matrix* C);
+
+// Worst running time (longest)
+int matrix_multiply_jki(const matrix* A, const matrix* B, matrix* C);
+
+// Second fastest, but close to ikj order.
+int matrix_multiply_kij(const matrix* A, const matrix* B, matrix* C);
+
 // Allocates a row-by-cols matrix and returns it
 matrix* make_matrix(int rows, int cols);
 
