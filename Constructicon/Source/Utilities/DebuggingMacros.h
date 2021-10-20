@@ -1,3 +1,7 @@
+//------------------------------------------------------------------------------
+/// \ref tbassert.h in matrix multiply files for MIT OCW
+//------------------------------------------------------------------------------
+
 #ifndef UTILITIES_DEBUGGING_MACROS_H
 #define UTILITIES_DEBUGGING_MACROS_H
 

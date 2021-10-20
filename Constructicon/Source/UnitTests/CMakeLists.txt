@@ -1,7 +1,9 @@
 ENABLE_TESTING()
 
 ADD_EXECUTABLE(Check
-  Utilities/Time/SuperTimeSpecification_tests.cc)
+  Utilities/AsBits_tests.cpp
+  Utilities/Time/SuperTimeSpecification_tests.cc
+  )
 
 TARGET_LINK_LIBRARIES(Check
   gtest_main)

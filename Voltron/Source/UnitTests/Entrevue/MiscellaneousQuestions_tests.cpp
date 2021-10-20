@@ -6,15 +6,10 @@
 /// \details To run only these unit tests, do this:
 /// ./Check --run_test="Entrevue/Miscellaneous"
 //------------------------------------------------------------------------------
-#include "Cpp/Utilities/SuperBitSet.h"
-
 #include <boost/test/unit_test.hpp>
 #include <cstdint>
 #include <iostream>
 #include <limits>
-
-using Cpp::Utilities::SuperBitSet;
-using Cpp::Utilities::number_of_bits_in_a_byte;
 
 BOOST_AUTO_TEST_SUITE(Entrevue)
 BOOST_AUTO_TEST_SUITE(Miscellaneous)

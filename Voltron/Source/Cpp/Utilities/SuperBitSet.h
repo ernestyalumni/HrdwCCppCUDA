@@ -20,8 +20,7 @@ namespace Utilities
 namespace
 {
 
-//constexpr std::size_t number_of_bits_in_a_byte = 8;
-constexpr std::size_t number_of_bits_in_a_byte = CHAR_BIT;
+constexpr std::size_t number_of_bits_in_a_byte {CHAR_BIT};
 
 } // anonymous namespace
 

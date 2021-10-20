@@ -1,16 +1,13 @@
 //------------------------------------------------------------------------------
 // \file Keywords_tests.cpp
 //------------------------------------------------------------------------------
-#include "Cpp/Utilities/SuperBitSet.h"
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
 
 #include <boost/test/unit_test.hpp>
 #include <cstdint>
 #include <iostream>
 
-using Cpp::Utilities::SuperBitSet;
 using Cpp::Utilities::TypeSupport::get_underlying_value;
-using Cpp::Utilities::number_of_bits_in_a_byte;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Keywords_tests)
