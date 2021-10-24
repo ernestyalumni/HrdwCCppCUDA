@@ -2,6 +2,8 @@
 #define UTILITIES_AS_BITS_H
 
 #include <bitset>
+#include <climits>
+#include <iomanip> // std::setw
 #include <ios>
 #include <sstream>
 #include <string>
@@ -10,7 +12,7 @@
 namespace Utilities
 {
 
-template <typename T, typename = std::enable_if_t<std::is_integral<T>>>
+template <typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
 class AsBits : public std::bitset<sizeof(T) * CHAR_BIT>
 {
   public:
@@ -34,7 +36,7 @@ class AsBits : public std::bitset<sizeof(T) * CHAR_BIT>
       unsigned char* value_ptr {
         static_cast<unsigned char*>(static_cast<void*>(&value))};
 
-      for (std::size_t i {sizeof(Z)}; i > 0; --i)
+      for (std::size_t i {sizeof(T)}; i > 0; --i)
       {
         ss << std::hex <<
           std::setw(2) <<
