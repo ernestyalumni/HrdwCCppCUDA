@@ -27,7 +27,7 @@ class Array
 
     explicit Array(const size_t N);
 
-    explicit Array(const std::initializer_list<T> input);
+    explicit Array(const std::initializer_list<T>& input);
 
     //--------------------------------------------------------------------------
     /// \brief Copy Constructor
@@ -47,7 +47,7 @@ class Array
     /// over.
     /// deep copy - allocate memory for a new array and copy over the values.
     //--------------------------------------------------------------------------
-    Array(const Array &);
+    Array(const Array&);
 
     //--------------------------------------------------------------------------
     /// \brief Copy assignment.
@@ -57,6 +57,16 @@ class Array
     /// already been constructed and may own resources.
     //--------------------------------------------------------------------------
     Array& operator=(const Array&);
+
+    //--------------------------------------------------------------------------
+    /// \brief Move constructor
+    /// \ref 17.5.1 Copy Ch. 17 Construction, Cleanup, Copy, and Move;
+    /// Bjarne Stroustrup, The C++ Programming Language, 4th Ed., Stroustrup,
+    /// from the Matrix example.
+    /// \details Move constructor simply takes representation from its source
+    // and replace it with an empty Array.
+    //--------------------------------------------------------------------------
+    Array(Array&&);
 
     //--------------------------------------------------------------------------
     /// \brief Destructor.
@@ -165,7 +175,7 @@ Array<T>::Array(const size_t N):
 {}
 
 template <typename T>
-Array<T>::Array(const std::initializer_list<T> input):
+Array<T>::Array(const std::initializer_list<T>& input):
   capacity_{std::max(static_cast<size_t>(1), input.size())},
   internal_{new T[capacity_]},
   size_{input.size()}
@@ -174,7 +184,7 @@ Array<T>::Array(const std::initializer_list<T> input):
 }
 
 template <typename T>
-Array<T>::Array(const Array<T>& other):
+Array<T>::Array(const Array& other):
   capacity_{other.capacity()},
   internal_{new T[capacity_]},
   size_{other.size()}
@@ -194,6 +204,19 @@ Array<T>& Array<T>::operator=(const Array& other)
   }
 
   std::copy(other.begin(), other.end(), internal_);
+}
+
+template <typename T>
+Array<T>::Array(Array&& a):
+  capacity_{a.capacity()},
+  // Grab a's representation.
+  internal_{a.internal_},
+  size_{a.size()}
+{
+  a.capacity_ = 0;
+  a.size_ = 0;
+  // Clear a's representation.
+  a.internal_ = nullptr;
 }
 
 template <typename T>
