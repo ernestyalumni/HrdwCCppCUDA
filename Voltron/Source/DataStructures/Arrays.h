@@ -200,13 +200,7 @@ class Array
 {
   public:
 
-    explicit Array(const std::size_t L):
-      items_{new T[L]},
-      length_{0},
-      capacity_{L}
-    {}
-
-    explicit Array(const std::size_t L, const std::size_t l):
+    explicit Array(const std::size_t L, const std::size_t l = 0):
       items_{new T[L]},
       length_{l},
       capacity_{L}

@@ -94,6 +94,7 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/StdInitializerList_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/Arrays/ArrayQuestions_tests.cpp
+  DataStructures/Arrays/Array_tests.cpp
   DataStructures/Arrays/FixedSizeArrays_tests.cpp
   DataStructures/Arrays/ResizeableArray_tests.cpp
   DataStructures/Arrays_tests.cpp

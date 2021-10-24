@@ -240,6 +240,7 @@ BOOST_AUTO_TEST_CASE(AllocationAndDeallocationOfNewArrays)
 BOOST_AUTO_TEST_CASE(ConstructArrayWithSize)
 {
   Array<int> a {5};
+
   BOOST_TEST(a.length() == 0);
   BOOST_TEST(a.capacity() == 5);
 
