@@ -245,7 +245,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& A)
 
 //------------------------------------------------------------------------------
 /// \brief Move constructor.
-/// \details Move constructo simply takes representation from its source and
+/// \details Move constructor simply takes representation from its source and
 /// replace it with an empty Matrix.
 //------------------------------------------------------------------------------
 template <class T>

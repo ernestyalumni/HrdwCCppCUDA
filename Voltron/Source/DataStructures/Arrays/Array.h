@@ -29,6 +29,34 @@ class Array
 
     explicit Array(const std::initializer_list<T> input);
 
+    //--------------------------------------------------------------------------
+    /// \brief Copy Constructor
+    /// \ref Introductory Project, D.W. Harder, U. Waterloo.
+    /// \details Consider what happens here:
+    ///   void f(Array second)
+    ///   { // do something }
+    /// and you pass in an object, i.e.
+    ///   Array first (5);
+    ///   f(first);
+    ///
+    /// Calling f, a new Array, second, is allocated on the stack and all its
+    /// member variables are copied over, but only a shallow copy is done. When
+    /// f returns, dtor is called on instance second, leaving first dangling.
+    ///
+    /// shallow copy - when values of the member variables are all simply copied
+    /// over.
+    /// deep copy - allocate memory for a new array and copy over the values.
+    //--------------------------------------------------------------------------
+    Array(const Array &);
+
+    //--------------------------------------------------------------------------
+    /// \brief Copy assignment.
+    /// \ref https://en.cppreference.com/w/cpp/language/copy_assignment
+    /// \details No copy-and-swap idiom.
+    /// Copy assignment operator must correctly deal with an object that has
+    /// already been constructed and may own resources.
+    //--------------------------------------------------------------------------
+    Array& operator=(const Array&);
 
     //--------------------------------------------------------------------------
     /// \brief Destructor.
@@ -143,6 +171,27 @@ Array<T>::Array(const std::initializer_list<T> input):
   size_{input.size()}
 {
   std::copy(input.begin(), input.end(), internal_);
+}
+
+template <typename T>
+Array<T>::Array(const Array<T>& other):
+  capacity_{other.capacity()},
+  internal_{new T[capacity_]},
+  size_{other.size()}
+{
+  std::copy(other.begin(), other.end(), internal_);
+}
+
+template <typename T>
+Array<T>::Array(const Array<T>& other):
+{
+  if (capacity_ < other.size())
+  {
+    
+    
+  }
+
+  std::copy(other.begin(), other.end(), internal_);
 }
 
 template <typename T>
