@@ -183,12 +183,14 @@ Array<T>::Array(const Array<T>& other):
 }
 
 template <typename T>
-Array<T>::Array(const Array<T>& other):
+Array<T>& Array<T>::operator=(const Array& other)
 {
   if (capacity_ < other.size())
   {
-    
-    
+    delete [] internal_;
+    internal_ = new T[other.capacity()];
+    capacity_ = other.capacity();
+    size_ = other.size();
   }
 
   std::copy(other.begin(), other.end(), internal_);
@@ -227,7 +229,7 @@ T variance(const Array<T>& a)
 
   if (a.size() == 1)
   {
-    throw std::runtime_error("Cannot take variance if size is 1")
+    throw std::runtime_error("Cannot take variance if size is 1");
   }
 
   T summation {static_cast<T>(0)};
@@ -241,7 +243,7 @@ T variance(const Array<T>& a)
 }
 
 template <typename T>
-T std_dev(const Array<T>& a) const
+T std_dev(const Array<T>& a)
 {
   T result {
     variance(a) * static_cast<T>(a.size() - 1) / static_cast<T>(a.size())};

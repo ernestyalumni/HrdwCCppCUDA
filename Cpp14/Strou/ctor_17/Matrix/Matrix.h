@@ -186,7 +186,6 @@ class Matrix
 		T* elements_;									// point to dim[0]*dim[1] elements of type T
 };
 
-
 //------------------------------------------------------------------------------
 /// \details Note that default copy (copy the members) would be disastrously
 /// wrong; Matrix elements wouldn't be copied, Matrix copy would have a pointer
