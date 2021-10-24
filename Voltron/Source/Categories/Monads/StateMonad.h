@@ -135,7 +135,7 @@ class Compose
 namespace AsLambdas
 {
 
-auto unit = [](auto x)
+inline auto unit = [](auto x)
 {
   return [x](auto state)
   {
@@ -143,7 +143,7 @@ auto unit = [](auto x)
   };
 };
 
-auto bind = [](auto g, auto f)
+inline auto bind = [](auto g, auto f)
 {
   return [g, f](auto x)
   {

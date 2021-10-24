@@ -168,7 +168,7 @@ int count_palindromic_substrings(std::string s);
 /// \details Given length l, number of operations (comparisons) is l / 2 in
 /// worst case (worse case is that it's a palindrome).
 //------------------------------------------------------------------------------
-auto check_palindrome = [](auto start_iter, auto end_iter) -> bool
+inline auto check_palindrome = [](auto start_iter, auto end_iter) -> bool
 {
   bool is_palindrome {true};
 
@@ -190,7 +190,7 @@ auto check_palindrome = [](auto start_iter, auto end_iter) -> bool
   return is_palindrome;
 };
 
-auto find_even_size_palindromes = [](
+inline auto find_even_size_palindromes = [](
   auto start_limit,
   auto end_limit,
   auto start_iter) -> int
@@ -216,7 +216,7 @@ auto find_even_size_palindromes = [](
   return count;
 };
 
-auto find_odd_size_palindromes = [](
+inline auto find_odd_size_palindromes = [](
   auto start_limit,
   auto end_limit,
   auto start_iter)

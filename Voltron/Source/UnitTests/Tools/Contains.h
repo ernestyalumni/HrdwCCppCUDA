@@ -22,7 +22,7 @@ namespace Tools
 //auto error_contains(const std::string& substring);
 
 
-auto error_contains = [](const std::string& substring)
+inline auto error_contains = [](const std::string& substring)
 {
 	return [&substring](const auto& err) -> bool
 	{

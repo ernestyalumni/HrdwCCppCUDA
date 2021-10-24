@@ -24,7 +24,7 @@ namespace Tools
 /// /Voltron/BuildGcc/Temp0vsqP1/tempVkNj51
 ///
 //------------------------------------------------------------------------------ 
-decltype(auto) create_temporary_file_and_file_descriptor =
+inline decltype(auto) create_temporary_file_and_file_descriptor =
   [](
     const std::string& directory_path,
     const std::string& filename_prefix
