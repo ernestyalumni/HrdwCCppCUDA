@@ -19,39 +19,6 @@ namespace Utilities
 {
 namespace ErrorHandling
 {
-/*
-//------------------------------------------------------------------------------
-/// \brief Virtual base class for C++ functor for checking the result of a
-/// POSIX Linux system calls, usually when creating a new file descriptor.
-//------------------------------------------------------------------------------
-class HandleReturnValue
-{
-  public:
-
-    HandleReturnValue();
-
-    HandleReturnValue(const int error_number);
-
-    virtual void operator()(
-      const int result,
-      const std::string& custom_error_string);
-
-    //virtual void operator()(const int result);
-
-    ErrorNumber error_number() const
-    {
-      return error_number_;
-    }
-
-  protected:
-
-    void get_error_number();
-
-  private:
-
-    ErrorNumber error_number_;
-};
-*/
 
 class HandleReturnValuePassively
 {

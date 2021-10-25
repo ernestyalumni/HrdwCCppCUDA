@@ -116,7 +116,6 @@ ADD_EXECUTABLE(Check
   DataStructures/Stacks/StacksWithArrays_tests.cpp
   DataStructures/Stacks/Stacks_tests.cpp
   DeskCalculator/Token_tests.cpp
-  DigitalInts/BitWidth_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Entrevue/LeetCode/LeetCode_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp

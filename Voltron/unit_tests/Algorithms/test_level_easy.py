@@ -9,6 +9,7 @@ pytest Utilities/test_level_easy.py
 """
 from Voltron.Algorithms.level_easy import (
     # In order of appearance or usage.
+    two_number_sum,
     get_nth_fibonacci_recursive,
     fibonacci_no_branch,
     get_nth_fibonacci_recursive_no_branch,
@@ -64,6 +65,13 @@ def bubble_sort_test_cases_fixture():
         -7, 2, 3, 8, -10, 4, -6, -10, -2, -7, 10, 5, 2, 9, -9, -5, 3, 8]
 
     return test_cases
+
+
+def test_two_number_sum():
+    array = [3, 5, -4, 8, 11, 1, -1, 6]
+    target_sum = 10
+
+    two_number_sum(array, target_sum)
 
 
 def test_get_nth_fibonacci_recursive():

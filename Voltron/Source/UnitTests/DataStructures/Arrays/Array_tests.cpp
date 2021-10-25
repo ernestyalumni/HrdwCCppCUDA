@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(BeginWorksAsAnIterator)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(CopyConstructionCopiesValues)
+BOOST_AUTO_TEST_CASE(CopyAssignmentCopiesValues)
 {
   Array<int> a (3);
   a.append(35);
@@ -90,6 +90,48 @@ BOOST_AUTO_TEST_CASE(CopyConstructionCopiesValues)
   a = b;
 
   BOOST_TEST(a[0] == 42);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CopyAssignmentLeavesSourceUnchanged)
+{
+  Array<int> a (3);
+  a.append(35);
+  a.append(75);
+  Array<int> b (5);
+  b.append(42);
+
+  a = b;
+
+  BOOST_TEST(a[0] == 42);
+  BOOST_TEST(b[0] == 42);
+  BOOST_TEST(b.capacity() == 5);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MoveAssignmentSwapsMembers)
+{
+  Array<int> a (3);
+  a.append(35);
+  a.append(75);
+  Array<int> b (5);
+  b.append(42);
+
+  BOOST_TEST_REQUIRE(a[0] == 35);
+  BOOST_TEST_REQUIRE(a[1] == 75);
+  BOOST_TEST_REQUIRE(b[0] == 42);
+
+  a = std::move(b);
+
+  BOOST_TEST(a[0] == 42);
+  BOOST_TEST(a.capacity() == 5);
+  BOOST_TEST(a.size() == 1);
+  BOOST_TEST(b[0] == 35);
+  BOOST_TEST(b[1] == 75);
+  BOOST_TEST(b.capacity() == 3);
+  BOOST_TEST(b.size() == 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Array_tests

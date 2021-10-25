@@ -68,6 +68,8 @@ class Array
     //--------------------------------------------------------------------------
     Array(Array&&);
 
+    Array& operator=(Array&&);
+
     //--------------------------------------------------------------------------
     /// \brief Destructor.
     /// \details Deallocate the memory for the array.
@@ -156,6 +158,11 @@ class Array
       size_ = 0;
     }
 
+    //--------------------------------------------------------------------------
+    /// \details Swap each and all member variables.
+    //--------------------------------------------------------------------------
+    void swap(Array& other);
+
     // A friend to print the array
     template <typename U>
     friend std::ostream& operator<<(std::ostream&, const Array<U>&);
@@ -200,8 +207,9 @@ Array<T>& Array<T>::operator=(const Array& other)
     delete [] internal_;
     internal_ = new T[other.capacity()];
     capacity_ = other.capacity();
-    size_ = other.size();
   }
+
+  size_ = other.size();
 
   std::copy(other.begin(), other.end(), internal_);
 
@@ -222,9 +230,24 @@ Array<T>::Array(Array&& a):
 }
 
 template <typename T>
+Array<T>& Array<T>::operator=(Array&& a)
+{
+  swap(a);
+  return *this;
+}
+
+template <typename T>
 T Array<T>::operator[](const size_t n) const
 {
   return internal_[n];
+}
+
+template <typename T>
+void Array<T>::swap(Array& other)
+{
+  std::swap(capacity_, other.capacity_);
+  std::swap(internal_, other.internal_);
+  std::swap(size_, other.size_);
 }
 
 template <typename T>

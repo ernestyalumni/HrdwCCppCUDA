@@ -5,4 +5,6 @@ ADD_LIBRARY(Utilities
   ErrorHandling/HandleError.cpp
   ErrorHandling/HandleReturnValue.cpp
   FloatingPoint.cpp
-  SplitString.cpp)
+  Memory/HashTable.cpp
+  SplitString.cpp
+  )

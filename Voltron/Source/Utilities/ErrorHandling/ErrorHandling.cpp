@@ -21,38 +21,6 @@ namespace Utilities
 namespace ErrorHandling
 {
 
-/*
-HandleReturnValue::HandleReturnValue() :
-  error_number_{}
-{}
-
-HandleReturnValue::HandleReturnValue(const int error_number) :
-  error_number_{error_number}
-{}
-
-void HandleReturnValue::get_error_number()
-{  
-  error_number_ = ErrorNumber{};
-}
-
-void HandleReturnValue::operator()(
-  const int result,
-  const std::string& custom_error_string)
-{
-  if (result < 0)
-  {
-    get_error_number();
-
-    throw std::system_error(
-      errno,
-      std::system_category(),
-      "Failed to " + custom_error_string + " with errno : " +
-        error_number_.as_string() + " and error number " +
-          std::to_string(error_number().error_number()) + '\n');
-  }
-}
-*/
-
 HandleReturnValuePassively::HandleReturnValuePassively() = default;
 
 HandleReturnValuePassively::OptionalErrorNumber
