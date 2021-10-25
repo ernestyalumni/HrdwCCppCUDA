@@ -73,7 +73,24 @@ BOOST_AUTO_TEST_CASE(BeginWorksAsAnIterator)
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CopyConstructionCopiesValues)
+{
+  Array<int> a (3);
+  a.append(35);
+  a.append(75);
+  Array<int> b (5);
+  b.append(42);
 
+  BOOST_TEST(a[0] == 35);
+  BOOST_TEST(a[1] == 75);
+  BOOST_TEST(b[0] == 42);
+
+  a = b;
+
+  BOOST_TEST(a[0] == 42);
+}
 
 BOOST_AUTO_TEST_SUITE_END() // Array_tests
 

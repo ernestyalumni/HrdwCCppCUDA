@@ -204,6 +204,8 @@ Array<T>& Array<T>::operator=(const Array& other)
   }
 
   std::copy(other.begin(), other.end(), internal_);
+
+  return *this;
 }
 
 template <typename T>
