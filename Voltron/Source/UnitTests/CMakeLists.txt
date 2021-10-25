@@ -188,13 +188,13 @@ TARGET_LINK_LIBRARIES(Check
 # Recognizes Windows Subsystem Linux through CMAKE_SYSTEM; CMAKE_SYSTEM_NAME
 # results only in "Linux".
 IF(CMAKE_SYSTEM MATCHES "^Linux\..*microsoft-standard-WSL2$")
-  MESSAGE("Recognizes WSL2" ${CMAKE_SYSTEM})
+  MESSAGE("Recognizes WSL2 : " ${CMAKE_SYSTEM})
   MESSAGE("But CMake System Name: " ${CMAKE_SYSTEM_NAME})
 
   FIND_PACKAGE(TBB REQUIRED)
   TARGET_LINK_LIBRARIES(Check TBB::tbb)
 ELSE()
-  MESSAGE("Not WSL2" ${CMAKE_SYSTEM})
+  MESSAGE("Not WSL2 : " ${CMAKE_SYSTEM})
   MESSAGE("But CMake System Name: " ${CMAKE_SYSTEM_NAME})
 ENDIF()
 
