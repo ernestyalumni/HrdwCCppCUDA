@@ -119,6 +119,5 @@ BOOST_AUTO_TEST_CASE(SquareAsLazyEvaluation)
 	}
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // Lazy_tests
 BOOST_AUTO_TEST_SUITE_END() // Utilities

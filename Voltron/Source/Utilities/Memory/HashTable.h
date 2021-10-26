@@ -11,6 +11,8 @@ namespace Utilities
 namespace Memory
 {
 
+int to_int(int* ptr);
+
 struct Allocation
 {
   void* address_;
@@ -58,7 +60,7 @@ class HashTable
 
     void memory_change(const std::size_t n) const;
 
-    void insert(void* ptr, std::size_t size, bool is_array);
+    void insert(void* ptr, const std::size_t size, const bool is_array);
 
     std::size_t remove(void* ptr, bool is_array);
 
@@ -91,6 +93,10 @@ class HashTable
     {
       return array_size_;
     }
+
+  protected:
+
+    int hash_function(void* ptr, const int total_values);
 
   private:
 

@@ -21,6 +21,15 @@ class AsBits : public std::bitset<sizeof(T) * CHAR_BIT>
     using std::bitset<sizeof(T) * CHAR_BIT>::to_ullong;
     using std::bitset<sizeof(T) * CHAR_BIT>::to_ulong;
 
+    AsBits(const AsBits& other):
+      std::bitset<sizeof(T) * CHAR_BIT>{other.to_string()}
+    {}
+
+    AsBits& operator=(const AsBits& other)
+    {
+      return AsBits<T>{other.to_string()};
+    }
+
     T to_integer() const
     {
       return sizeof(T) <= sizeof(unsigned int) ? static_cast<T>(to_ulong()) :

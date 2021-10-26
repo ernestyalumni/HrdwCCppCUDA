@@ -148,6 +148,7 @@ ADD_EXECUTABLE(Check
   Utilities/FromAddress_tests.cpp
   Utilities/HexDump_tests.cpp
   Utilities/LazyValuation_tests.cpp
+  Utilities/Memory/HashTable_tests.cpp
   Utilities/NarrowCast_test.cpp
   Utilities/OnlyOneArgument_test.cpp
   Utilities/SplitString_tests.cpp
