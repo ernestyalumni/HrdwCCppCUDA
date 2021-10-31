@@ -2,7 +2,7 @@ ENABLE_TESTING()
 
 ADD_EXECUTABLE(Check
   Utilities/AsBits_tests.cpp
-  Utilities/Time/SuperTimeSpecification_tests.cc
+  Utilities/Time/TimeSpecification_tests.cc
   )
 
 TARGET_LINK_LIBRARIES(Check
