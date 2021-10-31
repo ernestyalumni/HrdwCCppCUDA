@@ -108,6 +108,18 @@ LinkedList<T>::Node* LinkedList<T>::Node::next_ptr() const
   return next_node_;
 }
 
+template <typename T>
+bool LinkedList<T>::empty() const
+{
+  return (list_head_ == nullptr);
+}
+
+template <typename T>
+LinkedList<T>::Node* LinkedList<T>::begin() const
+{
+  return nullptr;
+}
+
 } // namespace DWHarder
 } // namespace Arrays
 } // namespace DataStructures
