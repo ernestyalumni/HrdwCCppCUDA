@@ -1,14 +1,14 @@
-#include "Utilities/Time/SuperTimeSpecification.h"
+#include "Utilities/Time/TimeSpecification.h"
 
 #include <gtest/gtest.h>
 
-using Utilities::Time::SuperTimeSpecification;
+using Utilities::Time::TimeSpecification;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-TEST(SuperTimeSpecificationTests, DefaultConstructs)
+TEST(TimeSpecificationTests, DefaultConstructs)
 {
-  const SuperTimeSpecification ts;
+  const TimeSpecification ts;
 
   EXPECT_EQ(ts.tv_sec, 0);
   EXPECT_EQ(ts.tv_nsec, 0);
