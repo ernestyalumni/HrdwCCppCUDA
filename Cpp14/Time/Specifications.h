@@ -90,7 +90,16 @@ class TimeSpecification
       return timespec_;
     }
 
+    //--------------------------------------------------------------------------
     /// Accessors for Linux system call.
+    ///
+    /// For composition, don't do
+    /// ::timespec* as_timespec_pointer()
+    /// { return reinterprect_cast<::timespec*>(this)};
+    /// i.e. the first few (8) bytes are for the class object address and would
+    /// not align the corresponding data members. Only class inheritance
+    /// directly from ::itimerspec would make the reinterpret_cast correct.
+    //--------------------------------------------------------------------------
 
     const ::timespec* to_timespec_pointer() const
     {
@@ -100,16 +109,6 @@ class TimeSpecification
     ::timespec* to_timespec_pointer()
     {
       return &timespec_;
-    }
-
-    const ::timespec* as_timespec_pointer() const
-    {
-      return reinterpret_cast<const ::timespec*>(this);
-    }
-
-    ::timespec* as_timespec_pointer()
-    {
-      return reinterpret_cast<::timespec*>(this);
     }
 
     friend std::ostream& operator<<(std::ostream& os,
@@ -187,7 +186,16 @@ class IntervalTimerSpecification
       return itimerspec_;
     }
 
+    //--------------------------------------------------------------------------
     /// Accessors for Linux system call.
+
+    /// For composition, don't do
+    /// ::itimerspec* as_itimerspec_pointer()
+    /// { return reinterprect_cast<::itimerspec*>(this)};
+    /// i.e. the first few (8) bytes are for the class object address and would
+    /// not align the corresponding data members. Only class inheritance
+    /// directly from ::itimerspec would make the reinterpret_cast correct.
+    //--------------------------------------------------------------------------
 
     const ::itimerspec* to_itimerspec_pointer() const
     {
@@ -197,16 +205,6 @@ class IntervalTimerSpecification
     ::itimerspec* to_itimerspec_pointer()
     {
       return &itimerspec_;
-    }
-
-    const ::itimerspec* as_itimerspec_pointer() const
-    {
-      return reinterpret_cast<const ::itimerspec*>(this);
-    }
-
-    ::itimerspec* as_itimerspec_pointer()
-    {
-      return reinterpret_cast<::itimerspec*>(this);
     }
 
     friend std::ostream& operator<<(std::ostream& os,
