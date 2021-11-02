@@ -2,6 +2,7 @@ ENABLE_TESTING()
 
 ADD_EXECUTABLE(Check
   Utilities/AsBits_tests.cpp
+  Utilities/Time/ElapsedTime_tests.cpp
   Utilities/Time/GetClockTime_tests.cpp
   Utilities/Time/TimeSpecification_tests.cpp
   )

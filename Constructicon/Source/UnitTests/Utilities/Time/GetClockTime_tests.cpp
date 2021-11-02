@@ -5,8 +5,6 @@
 #include <ctime>
 #include <gtest/gtest.h>
 
-#include <iostream>
-
 using Utilities::Time::ClockId;
 using Utilities::Time::Details::carry_or_borrow_nanoseconds;
 using Utilities::Time::GetClockTime;
