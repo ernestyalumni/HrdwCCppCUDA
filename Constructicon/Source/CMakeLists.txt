@@ -77,6 +77,7 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
+ADD_SUBDIRECTORY(Concurrency)
 ADD_SUBDIRECTORY(Performance)
 ADD_SUBDIRECTORY(UnitTests)
 ADD_SUBDIRECTORY(Utilities)
