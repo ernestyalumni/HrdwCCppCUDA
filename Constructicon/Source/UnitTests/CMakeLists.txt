@@ -1,6 +1,7 @@
 ENABLE_TESTING()
 
 ADD_EXECUTABLE(Check
+  Concurrency/ThreadPool_tests.cpp
   Utilities/AsBits_tests.cpp
   Utilities/Time/ElapsedTime_tests.cpp
   Utilities/Time/GetClockTime_tests.cpp
@@ -8,6 +9,7 @@ ADD_EXECUTABLE(Check
   )
 
 TARGET_LINK_LIBRARIES(Check
+  Concurrency
   Utilities
   gtest_main)
 
