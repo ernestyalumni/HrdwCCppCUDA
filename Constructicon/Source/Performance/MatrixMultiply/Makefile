@@ -79,6 +79,11 @@ LDFLAGS := -lrt -flto -fuse-ld=gold
 # building in a release or debug configuration, and sets CFLAGS appropriately.
 # (This mechanism is based on one from the original materials for 6.197 by
 # Ceryen Tan and Marek Olszewski.)
+
+# cf. https://askubuntu.com/questions/350208/what-does-2-dev-null-mean
+# > operator redirects output, usually to file but can be to a device; /dev/null
+# is null device that takes any input and throws it away. Can be used to
+# suppress output.
 OLDMODE=$(shell cat .buildmode 2> /dev/null)
 ifeq ($(DEBUG),1)
   CFLAGS := $(CFLAGS_DEBUG) $(CFLAGS)
@@ -118,12 +123,14 @@ OBJ = $(addsuffix .o, $(basename $(SRC)))
 
 # These rules tell make how to automatically generate rules that build the
 # appropriate object-file from each of the source files listed in SRC (above).
-%.o : %.c #.buildmode
+# Without the specified .buildmode, we can run make again immediately.
+%.o : %.c .buildmode
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
 # This rule tells make that it can produce your binary by linking together all
 # of the object files produced from your source files and any necessary
 # libraries.
-$(PRODUCT) : $(OBJ) #.buildmode
+# Without the specified .buildmode, we can run make again immediately.
+$(PRODUCT) : $(OBJ) .buildmode
 	$(CC) -o $@ $(OBJ) $(LDFLAGS)

@@ -19,7 +19,7 @@
 #include <math.h>
 #include <string.h>
 
-# include "tbassert.h"
+#include "tbassert.h"
 
 // Allocates a row-by-cols matrix and returns it
 matrix* make_matrix(int rows, int cols) {
