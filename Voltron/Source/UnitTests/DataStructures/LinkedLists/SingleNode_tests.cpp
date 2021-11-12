@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 /// \file SingleNode_tests.cpp
 //------------------------------------------------------------------------------
-#include "DataStructures/Lists/SingleNode.h"
+#include "DataStructures/LinkedLists/SingleNode.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -33,6 +33,20 @@ BOOST_AUTO_TEST_CASE(ConstructsWithElementValueOnly)
 
 	BOOST_TEST(node.retrieve() == 42);
 	BOOST_TEST(node.next() == nullptr);		
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithValueAndSingleNode)
+{
+	SingleNode<int> node2 {69};
+
+	SingleNode<int> node1 {42, &node2};
+
+	BOOST_TEST(node1.retrieve() == 42);
+	BOOST_TEST(node1.next()->retrieve() == 69);
+
+	BOOST_TEST(node1.next()->next() == nullptr);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // SingleNode_tests

@@ -9,8 +9,6 @@ FIND_PACKAGE(Boost COMPONENTS filesystem system unit_test_framework REQUIRED)
 # Build unit tests
 ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
-ADD_SUBDIRECTORY(Systems)
-
 ADD_EXECUTABLE(Check
   Main.cpp
   Algorithms/Bits/OnesComplement_tests.cpp
@@ -105,9 +103,9 @@ ADD_EXECUTABLE(Check
   DataStructures/HashSet_tests.cpp
   DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp
+  DataStructures/LinkedLists/SingleNode_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
-  DataStructures/Lists/SingleNode_tests.cpp
   DataStructures/Lists_tests.cpp
   DataStructures/Queues/QueuesImplementations_tests.cpp
   DataStructures/Queues/QueuesWithArrays_tests.cpp
@@ -158,12 +156,6 @@ ADD_EXECUTABLE(Check
   Utilities/ToBytes_test.cpp
   Utilities/ToHexString_tests.cpp)
 
-ADD_EXECUTABLE(CommandLineArguments
-  MainCommandLineArguments.cpp)
-
-ADD_EXECUTABLE(TClapping
-  MainTClap.cpp)
-
 ADD_LIBRARY(UnitTestTools
   Tools/Contains.cpp)
 
@@ -202,6 +194,17 @@ ENDIF()
 SET_TARGET_PROPERTIES(Check
   PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/")
+
+ADD_SUBDIRECTORY(DataStructures)
+
+# Without specifying target property runtime_output_directory, this goes into
+# build folder's subdirectory "UnitTests"
+
+ADD_EXECUTABLE(CommandLineArguments
+  MainCommandLineArguments.cpp)
+
+ADD_EXECUTABLE(TClapping
+  MainTClap.cpp)
 
 ADD_EXECUTABLE(UDP-Receiver
   MainUDP-Receiver.cpp)

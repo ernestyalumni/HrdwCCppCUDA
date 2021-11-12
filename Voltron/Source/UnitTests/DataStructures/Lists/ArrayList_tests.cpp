@@ -2,8 +2,6 @@
 
 #include <boost/test/unit_test.hpp>
 
-//using DataStructures::Lists::ArrayList;
-
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Lists)
 BOOST_AUTO_TEST_SUITE(ArrayList_tests)

@@ -1,7 +1,7 @@
 #ifndef DATA_STRUCTURES_QUEUES_QUEUES_IMPLEMENTATIONS_H
 #define DATA_STRUCTURES_QUEUES_QUEUES_IMPLEMENTATIONS_H
 
-#include "Queues.h"
+#include "Queue.h"
 
 #include "DataStructures/Arrays/ResizeableArray.h"
 

@@ -5,9 +5,13 @@
 /// \ref Data Structures and Algorithm Analysis in C++, 3rd. Ed.. Dr. Clifford
 /// A. Shaffer. Fig. 4.1. The ADT for a list.
 /// \ref https://github.com/OpenDSA/OpenDSA/blob/master/SourceCode/C%2B%2B_Templates/Lists/List.h
+/// \ref https://ece.uwaterloo.ca/~dwharder/aads/Lecture_materials/3.01.Lists.pptx
+/// \ref D.W. Harder, Univ. of Waterloo. ECE 20.
 //-----------------------------------------------------------------------------
 #ifndef DATA_STRUCTURES_LISTS_LIST_H
 #define DATA_STRUCTURES_LISTS_LIST_H
+
+#include <cstddef>
 
 namespace DataStructures
 {
@@ -29,7 +33,7 @@ class List
     {}    
 
     //--------------------------------------------------------------------------
-    /// \brief Base constructor.
+    /// \brief Base destructor.
     //--------------------------------------------------------------------------
     virtual ~List() = default;
     // {} // Previous implementation:
@@ -70,30 +74,32 @@ class List
     //--------------------------------------------------------------------------
     /// \brief Move the current position one step left. No change if already at
     /// beginning.
+    /// \details For Front/1st node, n/a, kth node O(n), Back/nth node O(n)
     //--------------------------------------------------------------------------
     virtual void previous() = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Move the current position one step right. No change if already at
     /// end.
+    /// \details For Front/1st node, O(1), kth node, O(1), Back/nth node n/a
     //--------------------------------------------------------------------------
     virtual void next() = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Return: The number of elements in the list.
     //--------------------------------------------------------------------------
-    virtual int length() const = 0;
+    virtual std::size_t length() const = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Return: The position of the current element.
     //--------------------------------------------------------------------------
-    virtual int current_position() const = 0;
+    virtual std::size_t current_position() const = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Set current position.
     /// pos: The position to make current.
     //--------------------------------------------------------------------------
-    virtual void move_to_position(int position) = 0;
+    virtual void move_to_position(const std::size_t position) = 0;
 
     //--------------------------------------------------------------------------
     /// \brief Return true if current position is at end of the list.

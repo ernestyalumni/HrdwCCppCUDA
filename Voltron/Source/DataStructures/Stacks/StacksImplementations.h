@@ -1,7 +1,7 @@
 #ifndef DATA_STRUCTURES_STACKS_STACKS_IMPLEMENTATIONS_H
 #define DATA_STRUCTURES_STACKS_STACKS_IMPLEMENTATIONS_H
 
-#include "Stacks.h"
+#include "Stack.h"
 
 #include "DataStructures/Arrays/ResizeableArray.h"
 

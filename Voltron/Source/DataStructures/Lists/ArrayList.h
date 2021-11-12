@@ -11,6 +11,7 @@
 
 #include "List.h"
 
+#include <cstddef>
 #include <stdexcept> // std::out_of_range
 
 namespace DataStructures
@@ -27,14 +28,14 @@ class ArrayList : public List<T>
 	public:
 
 		// Default size.
-		static constexpr int default_size {10};
+		static constexpr std::size_t default_size {10};
 
 		// Constructors
 
     //--------------------------------------------------------------------------
     /// \brief Create a new list object with maximum size "size".
     //--------------------------------------------------------------------------
-		ArrayList(const int size = default_size) :
+		ArrayList(const std::size_t size = default_size) :
 			max_size_{size},
 			list_size_{0},
 			current_{0},
@@ -81,7 +82,7 @@ class ArrayList : public List<T>
 			// Shift elements up to make room
 			//
 			// Time complexity: worst case O(N).
-			for (int i {list_size_}; i > current_; --i)
+			for (std::size_t i {list_size_}; i > current_; --i)
 			{
 				list_array_[i] = list_array_[i - 1];
 			}
@@ -123,7 +124,7 @@ class ArrayList : public List<T>
 			T it {list_array_[current_]};
 
 			// Shift them down.
-			for (int i {current_}; i < list_size_ - 1; ++i)
+			for (std::size_t i {current_}; i < list_size_ - 1; ++i)
 			{
 				list_array_[i] = list_array_[i + 1];
 			}
@@ -175,7 +176,7 @@ class ArrayList : public List<T>
     //--------------------------------------------------------------------------
     /// \brief Return list size.
     //--------------------------------------------------------------------------
-		int length() const
+		std::size_t length() const
 		{
 			return list_size_;
 		}
@@ -183,7 +184,7 @@ class ArrayList : public List<T>
     //--------------------------------------------------------------------------
     /// \brief Return current position.
     //--------------------------------------------------------------------------
-		int current_position() const
+		std::size_t current_position() const
 		{
 			return current_;
 		}
@@ -191,7 +192,7 @@ class ArrayList : public List<T>
     //--------------------------------------------------------------------------
     /// \brief Set current list position to "position".
     //--------------------------------------------------------------------------
-		void move_to_position(int position)
+		void move_to_position(const std::size_t position)
 		{
 			//assert(
 			//	(position >= 0) && (position <= list_size_),
@@ -223,13 +224,13 @@ class ArrayList : public List<T>
 	private:
 
 		// Maximum size of list.
-		int max_size_;
+		std::size_t max_size_;
 
 		// Number of list items now.
-		int list_size_;
+		std::size_t list_size_;
 
 		// Position of current element
-		int current_;
+		std::size_t current_;
 
 		// Array holding list elements
 		T* list_array_;
