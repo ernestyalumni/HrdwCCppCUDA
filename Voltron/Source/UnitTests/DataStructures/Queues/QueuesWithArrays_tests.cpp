@@ -177,7 +177,6 @@ BOOST_AUTO_TEST_CASE(DequeueFromHead)
   BOOST_TEST(queue.size() == 7);
 }
 
-
 BOOST_AUTO_TEST_SUITE_END() // QueuesWithHeadTailFixedSizeArrayOnStack_tests
 
 BOOST_AUTO_TEST_SUITE_END() // QueuesWithArrays_tests

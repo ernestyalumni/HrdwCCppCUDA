@@ -7,6 +7,7 @@
 #include "Queue.h"
 
 #include <algorithm>
+#include <cassert>
 #include <cstddef> // std::size_t
 #include <optional>
 
@@ -35,7 +36,7 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Default ctor, creating an empty queue.
     //--------------------------------------------------------------------------
-    DynamicQueue(const std::size_t N);
+    DynamicQueue(const std::size_t N = 10);
 
     //--------------------------------------------------------------------------
     /// \brief Copy constructor.
@@ -59,12 +60,12 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Add an item.
     //--------------------------------------------------------------------------
-    void enqueue(const T& item);
+    virtual void enqueue(const T& item) override;
 
     //--------------------------------------------------------------------------
     /// \brief Remove the least recently added item.
     //--------------------------------------------------------------------------
-    T dequeue();
+    virtual T dequeue() override;
 
     void push(const T& item)
     {
@@ -79,33 +80,103 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Is the queue empty?
     //--------------------------------------------------------------------------
-    bool is_empty() const;
+    virtual bool is_empty() const override;
 
     //--------------------------------------------------------------------------
     /// \brief Number of items in the queue.
     //--------------------------------------------------------------------------
-    std::size_t size() const;
+    virtual std::size_t size() const override;
+
+  protected:
+
+    bool is_full()
+    {
+      return back_.has_value() ?
+        (((*back_) + 1) % array_capacity_ == front_) :
+        false;
+    }
+
+    T back() const
+    {
+      assert(!is_empty());
+
+      return array_[*back_];
+    }
+
+    std::size_t get_front_index() const
+    {
+      return front_;
+    }
+
+    std::size_t get_back_index() const
+    {
+      return *back_;
+    }
+
+    std::size_t get_size() const
+    {
+      return size_;
+    }
+
+    std::size_t get_array_capacity() const
+    {
+      return array_capacity_;
+    }
 
   private:
 
     void double_capacity()
     {
+      assert(is_full());
 
+      T* tmp_array = new T[2 * array_capacity_];
+
+      if (front_ <= *back_)
+      {
+        assert(front_ == 0 && *back_ == array_capacity_ - 1);
+
+        for (std::size_t i {0}; i < (*back_ + 1 - front_); ++i)
+        {
+          tmp_array[i] = array_[i + front_];
+        }
+      }
+      else
+      {
+        for (std::size_t i {0}; i < (array_capacity_ - front_); ++i)
+        {
+          tmp_array[i] = array_[i + front_];
+        }
+
+        for (std::size_t i {0}; i < front_; ++i)
+        {
+          tmp_array[i + (array_capacity_ - front_)] = array_[i];
+        }
+      }
+
+      delete [] array_;
+
+      array_ = tmp_array;
+
+      // Reset the front and back pointers.
+      front_ = 0;
+      back_ = array_capacity_ - 1;
+
+      array_capacity_ *= 2;
     }
 
-    std::size_t queue_size_;
-    std::size_t queue_front_;
-    std::optional<std::size_t> queue_back_;
+    std::size_t size_;
+    std::size_t front_;
+    std::optional<std::size_t> back_;
     std::size_t array_capacity_;
     T* array_;
 };
 
 template <typename T>
 DynamicQueue<T>::DynamicQueue(const std::size_t N):
-  queue_size_{0},
-  queue_front_{0},
-  queue_back_{std::nullopt},
-  array_capacity_{std::max(N, 1)},
+  size_{0},
+  front_{0},
+  back_{std::nullopt},
+  array_capacity_{std::max(N, static_cast<std::size_t>(1))},
   array_{new T[N]}
 {}
 
@@ -120,53 +191,73 @@ T DynamicQueue<T>::front() const
 {
   if (is_empty())
   {
-    throw std::runtime_error("Called front on empty DynamicQueue")
+    throw std::runtime_error("Called front on empty DynamicQueue");
   }
 
-  return array_[queue_front_];
+  return array_[front_];
 }
 
 
 template <typename T>
 bool DynamicQueue<T>::is_empty() const
 {
-  return queue_size_ == 0;
+  return !(back_.has_value());
 }
 
 template <typename T>
 void DynamicQueue<T>::enqueue(const T& item)
 {
-  if (queue_size_ == array_capacity_)
+  if (is_full())
   {
     double_capacity();
   }
 
-  if (!(queue_back_.has_value()))
+  if (is_empty())
   {
-    queue_back_ = 0
+    back_ = 0;
   }
   else
   {
-    ++(*queue_back_);
+    back_ = (*back_ + 1) % array_capacity_; 
   }
 
-  array_[*queue_back_] = item;
+  array_[*back_] = item;
 
-  ++queue_size_;
+  ++size_;
 }
 
 template <typename T>
-void DynamicQueue<T>::dequeue()
+T DynamicQueue<T>::dequeue()
 {
   if (is_empty())
   {
-    throw std::runtime_error("Called dequeue on an empty DynamicQueue")   
+    throw std::runtime_error("Called dequeue on an empty DynamicQueue");
   }
 
-  --queue_size_;
-  ++queue_front_;
+  if (front_ == *back_)
+  {
+    back_ = std::nullopt;
+    
+    const std::size_t old_front_ = front_;
+    front_ = 0;
 
-  return array_[queue_front_ - 1];
+    size_ = 0;
+    return array_[old_front_];
+  }
+
+  const std::size_t old_front_ = front_;
+
+  front_ = (front_ + 1) % array_capacity_;
+
+  --size_;
+
+  return array_[old_front_];
+}
+
+template <typename T>
+std::size_t DynamicQueue<T>::size() const
+{
+  return size_;
 }
 
 } // namespace AsHierarchy
