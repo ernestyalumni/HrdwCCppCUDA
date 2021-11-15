@@ -246,6 +246,9 @@ template <typename T>
 void Array<T>::swap(Array& other)
 {
   std::swap(capacity_, other.capacity_);
+
+  // This will swap the pointer of this object's internal_ for the rhs, which is
+  // called other. Upon exiting operator=, the other object is destroyed. 
   std::swap(internal_, other.internal_);
   std::swap(size_, other.size_);
 }

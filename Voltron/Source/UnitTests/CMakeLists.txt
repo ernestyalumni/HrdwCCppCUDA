@@ -107,6 +107,7 @@ ADD_EXECUTABLE(Check
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists_tests.cpp
+  DataStructures/Queues/ResizableDeque_tests.cpp
   DataStructures/Queues/DynamicQueue_tests.cpp
   DataStructures/Queues/QueuesImplementations_tests.cpp
   DataStructures/Queues/QueuesWithArrays_tests.cpp

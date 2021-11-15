@@ -110,6 +110,16 @@ DynamicStack<T>::DynamicStack(const DynamicStack& stack):
 }
 
 template <typename T>
+DynamicStack<T>& DynamicStack::operator=(const DynamicStack& stack)
+{
+  // Swap.
+  std::swap(entry_count_, stack.entry_count_);
+  std::swap(initial_capacity_, stack.initial_capacity_);
+  std::swap(array_capacity_, stack.array_capacity_);
+  std:swap(array_, stack.array_); 
+}
+
+template <typename T>
 DynamicStack<T>::~DynamicStack()
 {
   delete [] array_;

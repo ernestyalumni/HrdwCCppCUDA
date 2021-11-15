@@ -181,6 +181,20 @@ DynamicQueue<T>::DynamicQueue(const std::size_t N):
 {}
 
 template <typename T>
+DynamicQueue<T>::DynamicQueue(const DynamicQueue& other):
+  size_{other.size_},
+  front_{other.front_},
+  back_{other.back_},
+  array_capacity_{other.array_capacity_},
+  array_{new T[array_capacity_]}
+{
+  std::copy(
+    std::begin(other.array_),
+    std::end(other.array_),
+    std::begin(array_));
+}
+
+template <typename T>
 DynamicQueue<T>::~DynamicQueue()
 {
   delete [] array_;
