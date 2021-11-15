@@ -4,12 +4,12 @@
 /// \brief Classes and functions demonstrating LinkedLists.
 /// @ref https://ece.uwaterloo.ca/~dwharder/aads/Projects/1/Single_node/src/Single_node.h
 ///-----------------------------------------------------------------------------
-#ifndef DATA_STRUCTURES_LISTS_NODES_SINGLE_NODE_H
-#define DATA_STRUCTURES_LISTS_NODES_SINGLE_NODE_H
+#ifndef DATA_STRUCTURES_LINKED_LISTS_NODES_SINGLE_NODE_H
+#define DATA_STRUCTURES_LINKED_LISTS_NODES_SINGLE_NODE_H
 
 namespace DataStructures
 {
-namespace Lists
+namespace LinkedLists
 {
 namespace Nodes
 {
@@ -70,7 +70,7 @@ SingleNode<T>* SingleNode<T>::next() const
 }
 
 } // namespace Nodes
-} // namespace Lists
+} // namespace LinkedLists
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_LISTS_NODES_SINGLE_NODE_H
+#endif // DATA_STRUCTURES_LINKED_LISTS_NODES_SINGLE_NODE_H

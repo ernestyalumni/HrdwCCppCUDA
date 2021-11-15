@@ -103,14 +103,15 @@ ADD_EXECUTABLE(Check
   DataStructures/HashSet_tests.cpp
   DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp
+  DataStructures/LinkedLists/Node_tests.cpp
   DataStructures/LinkedLists/SingleNode_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Lists_tests.cpp
-  DataStructures/Queues/ResizableDeque_tests.cpp
   DataStructures/Queues/DynamicQueue_tests.cpp
   DataStructures/Queues/QueuesImplementations_tests.cpp
   DataStructures/Queues/QueuesWithArrays_tests.cpp
+  DataStructures/Queues/ResizableDeque_tests.cpp
   DataStructures/Queues/Queues_tests.cpp
   DataStructures/Stacks/DijkstraExpressionEvaluation_tests.cpp
   DataStructures/Stacks/StacksImplementations_tests.cpp
