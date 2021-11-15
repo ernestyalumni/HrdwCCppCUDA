@@ -15,8 +15,8 @@ BOOST_AUTO_TEST_CASE(DefaultConstructs)
 {
 	Node<int> node {};
 
-	BOOST_TEST(node.get_value() == 0);
-	BOOST_TEST(node.get_next() == nullptr);
+	BOOST_TEST(node.value_ == 0);
+	BOOST_TEST(node.next_ == nullptr);
 }
 
 //------------------------------------------------------------------------------
@@ -25,8 +25,8 @@ BOOST_AUTO_TEST_CASE(ConstructsWithElementValueOnly)
 {
 	Node<int> node {42};
 
-	BOOST_TEST(node.get_value() == 42);
-	BOOST_TEST(node.get_next() == nullptr);		
+	BOOST_TEST(node.value_ == 42);
+	BOOST_TEST(node.next_ == nullptr);
 }
 
 //------------------------------------------------------------------------------
@@ -37,10 +37,10 @@ BOOST_AUTO_TEST_CASE(ConstructsWithValueAndSingleNode)
 
 	Node<int> node1 {42, &node2};
 
-	BOOST_TEST(node1.get_value() == 42);
-	BOOST_TEST(node1.get_next()->get_value() == 69);
+	BOOST_TEST(node1.value_ == 42);
+	BOOST_TEST(node1.next_->value_ == 69);
 
-	BOOST_TEST(node1.get_next()->get_next() == nullptr);
+	BOOST_TEST(node1.next_->next_ == nullptr);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Node_tests

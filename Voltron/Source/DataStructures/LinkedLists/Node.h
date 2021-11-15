@@ -31,32 +31,10 @@ class Node
       std::swap(next_, other.next_);
     }
 
-		T get_value() const
-    {
-      return value_;
-    }
-
-    void set_value(const T& value)
-    {
-      value_ = value;
-    }
-
-		Node* get_next() const
-    {
-      return next_;
-    }
-
-    void set_next(Node* next)
-    {
-      next_ = next;
-    }
-
 		// friend class SingleList<T>;
 		// friend class CycleList<T>;
 		// friend class SentinelList<T>;
 		// friend class CycleSentinelList<T>;
-
-	private:
 
 		T value_;
 		Node* next_;

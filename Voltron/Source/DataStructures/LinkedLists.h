@@ -359,33 +359,6 @@ class SinglyLinkedList
 
     T get(const std::size_t index)
     {
-      /*if (front_ptr_ == nullptr)
-      {
-        return -1;
-      }
-
-      if (index >= length_)
-      {
-        return -1;
-      }
-
-      SinglyListNode<T>* current_ptr {front_ptr_};
-
-      std::size_t i {0};
-
-      while (current_ptr != nullptr && i < index)
-      {
-        current_ptr = current_ptr->next_;
-        ++i;
-      }
-
-      if (current_ptr == nullptr)
-      {
-        return -1;
-      }
-
-      return current_ptr->value_;
-      */
       if (index >= length_)
       {
         return -1;

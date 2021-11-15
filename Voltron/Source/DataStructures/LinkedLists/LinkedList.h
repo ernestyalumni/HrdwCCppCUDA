@@ -1,7 +1,10 @@
 #ifndef DATA_STRUCTURES_LINKED_LISTS_LINKED_LIST_H
 #define DATA_STRUCTURES_LINKED_LISTS_LINKED_LIST_H
 
+#include "Node.h"
+
 #include <cstddef>
+#include <stdexcept>
 
 namespace DataStructures
 {
@@ -18,29 +21,11 @@ class LinkedList
 {
   public:
 
-    class Node;
+    using Node = DataStructures::LinkedLists::Nodes::Node<T>;
 
     LinkedList():
-      list_head_{nullptr}
+      head_{nullptr}
     {}
-
-    class Node
-    {
-      public:
-
-        Node(const T value = static_cast<T>(0), Node* next_ptr = nullptr);
-
-        virtual ~Node() = default;
-
-        T get_value() const;
-
-        Node* next_ptr() const;
-
-      private:
-
-        T value_;
-        Node* next_node_;
-    };
 
     //--------------------------------------------------------------------------
     /// \brief Adding the value at the front of the linked list.
@@ -55,13 +40,18 @@ class LinkedList
     //--------------------------------------------------------------------------
     /// \brief Removing the value at the front of the linked list.
     //--------------------------------------------------------------------------
-    void pop_front();
+    T pop_front();
 
     //--------------------------------------------------------------------------
     /// \brief Access the head of the linked list.
     //--------------------------------------------------------------------------
     Node* begin() const;
 
+    //--------------------------------------------------------------------------
+    /// \details The member function Node* end() const equals whatever the last
+    /// node in the linked list points to - in this case, nullptr.
+    /// \ref 3.05.Linked_lists.pptx, D.W. Harder 2001 Waterloo Engineering.
+    //--------------------------------------------------------------------------
     Node* end() const;
 
     //--------------------------------------------------------------------------
@@ -81,41 +71,60 @@ class LinkedList
 
     //--------------------------------------------------------------------------
     /// \brief How many objecst are in the list?
-    /// \details The list is empty when the list_head pointer is set to nullptr.
+    /// \details The list is empty when the head pointer is set to nullptr.
     //--------------------------------------------------------------------------
     std::size_t size() const;
 
   private:
 
-    Node* list_head_;
+    Node* head_;
 };
 
 template <typename T>
-LinkedList<T>::Node::Node(const T value, Node* next_ptr):
-  value_{value},
-  next_node_{next_ptr}
-{}
-
-template <typename T>
-T LinkedList<T>::Node::get_value() const
+void LinkedList<T>::push_front(const T value)
 {
-  return value_;
+  // When list is empty, head_ == 0, i.e. head_ == nullptr;
+  head_ = new Node(value, head_);
 }
 
 template <typename T>
-LinkedList<T>::Node* LinkedList<T>::Node::next_ptr() const
+T LinkedList<T>::front() const
 {
-  return next_node_;
+  if (empty())
+  {
+    throw std::runtime_error("Attempted front() on empty LinkedList");
+  }
+
+  return head_->value_;
+}
+
+template <typename T>
+T LinkedList<T>::pop_front()
+{
+  if (empty())
+  {
+    throw std::runtime_error("Attempted pop_front() on empty LinkedList");
+  }
+
+  T result {head_->value};
+
+  return result;
 }
 
 template <typename T>
 bool LinkedList<T>::empty() const
 {
-  return (list_head_ == nullptr);
+  return (head_ == nullptr);
 }
 
 template <typename T>
 LinkedList<T>::Node* LinkedList<T>::begin() const
+{
+  return head_;
+}
+
+template <typename T>
+LinkedList<T>::Node* LinkedList<T>::end() const
 {
   return nullptr;
 }
