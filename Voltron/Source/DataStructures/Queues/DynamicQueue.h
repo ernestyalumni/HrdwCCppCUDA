@@ -27,7 +27,6 @@ namespace AsHierarchy
 /// allow insertions and erases at both the front and back in O(1)
 //-----------------------------------------------------------------------------
 
-
 template <typename T>
 class DynamicQueue : Queue<T>
 {
