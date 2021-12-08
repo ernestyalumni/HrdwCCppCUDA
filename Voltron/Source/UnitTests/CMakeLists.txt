@@ -49,6 +49,7 @@ ADD_EXECUTABLE(Check
   Cpp/CallByValueCallByReference_tests.cpp
   Cpp/Classes/BitField_tests.cpp
   Cpp/Classes/ConstructorsToDestructors_tests.cpp
+  Cpp/Classes/CopyMoveArrays_tests.cpp
   Cpp/Closure_tests.cpp
   Cpp/Enumeration_tests.cpp
   Cpp/FileIO/CStyleFileIO_tests.cpp
