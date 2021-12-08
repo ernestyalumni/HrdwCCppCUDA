@@ -7,4 +7,5 @@ ADD_LIBRARY(Utilities
   FloatingPoint.cpp
   Memory/HashTable.cpp
   SplitString.cpp
+  Time/TimeSpec.cpp
   )

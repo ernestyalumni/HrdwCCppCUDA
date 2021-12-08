@@ -5,7 +5,6 @@
 
 namespace Utilities
 {
-
 namespace Time
 {
 

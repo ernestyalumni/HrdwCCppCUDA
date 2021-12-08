@@ -7,7 +7,6 @@
 
 namespace Utilities
 {
-
 namespace Time
 {
 
@@ -56,7 +55,7 @@ class TimeSpecification
     /// explicitly by doing the following:
     ///
     /// ::timespec* as_timespec_pointer()
-    /// { return reinterpret_cast<::timspec*>(this)};
+    /// { return reinterpret_cast<::timespec*>(this)};
     ///
     /// and passing the resulting ::timespec pointer into a system call such as
     /// ::clock_gettime() - it results in the tv_sec field being in tv_nsec

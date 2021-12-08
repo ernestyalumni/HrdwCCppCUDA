@@ -34,7 +34,6 @@
 #include <iostream>
 #include <stdexcept> // std::runtime_error
 #include <type_traits>
-//#include <time.h> // ::clock_gettime, ::timespec
 
 namespace Utilities
 {
