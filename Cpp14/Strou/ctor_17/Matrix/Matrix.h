@@ -75,6 +75,8 @@ class Matrix
  		/// Matrix has a move ctor so that "return by value" is simple and
  		/// efficient, as well as "natural." Without move operations, we have
  		/// performance problems and must resort to workarounds.
+    /// \ref pp. 517, Sec. 17.5.2, "Move" in Stroustrup, The C++ Programming
+    /// Language, 4th Ed.
  		//--------------------------------------------------------------------------
  		template <class U>
  		friend Matrix<U> operator+(const Matrix<U>& a, const Matrix<U>& b)
@@ -94,6 +96,16 @@ class Matrix
 
  			return res; 
  		}
+
+    // Alternative implementation, pp. 533, "Passing Objects", Sec. 18.2.4 of
+    // Stroustrup, The C++ Programming Language, 4th Ed.
+    // Return-by-value
+    /*
+    Matrix operator+(const Matrix& a, const Matrix& b)
+    {
+      Matrix res {a};
+      return res+=b;
+    } */
 
  		//--------------------------------------------------------------------------
  		/// \ref pp. 533 18.2.4 Passing Objects. Ch. 18 Operator Overloading;

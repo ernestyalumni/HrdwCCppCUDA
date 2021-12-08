@@ -1183,6 +1183,31 @@ Ch. 22 - how to have smaller executable code size and (almost) entirely compiled
 
 Gutman (2016) \cite{Gutt2016}
 
+\subsection{Operator Overloading}
+
+cf. 18.2.4 "Passing Objects", pp. 532-533 of Stroustrup (2013) \cite{Stro2013}
+
+For arguments, we have 2 main choices for passing in objects to an operator: 
+\begin{itemize}
+\item Pass-by-value
+\item Pass-by-reference
+\end{itemize}
+
+Typically, an operator returns a result. Returning a pointer or reference to a newly created object is usually a bad idea: using a pointer gives notational problems, and referring to an object on free store (whether by pointer or by reference) results in memory management problems. INstead, return objects by value. For large objects, define move operations to make such transfers of values (i.e. return by value) efficient.
+
+If a function simply passes an object to another function, an rvalue reference argument  should be used.
+
+cf. 2.7.3 "Member of Free Function",  Gottschling (2015) \cite{Gott2015}
+
+Writing all 3 implementations (binary operator adding two complex class instances, operator oveload accepting a double as second argument, etc.) provides better performance.
+
+Adding 2 complex class values is more naturally expressed as a free function. To avoid ambiguity, we have to remove the member function with the complex argument.
+
+Subtle difference: free functions are selected by overload resolution with potential implicit conversion on both arguments while methods are subject to overriding and name hiding when classes are derived.
+
+\textbf{Binary Operators}: Prefer implementing binary operators as free functions.
+
+
 \section{Exception Handling, Error Handling, Exception Policy}
 
 Stroustrup (2013) \cite{Stro2013}
