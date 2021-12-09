@@ -22,7 +22,7 @@ Following operators can't be defined by a user:
 They take a name, rather than a value, as their second operand and provide primary means of referring to members.
 
 The named "operators" can't be overloaded because they report fundamnetal facts about their operands:
-`siezof` size of object (Sec. 6.2.8)
+`sizeof` size of object (Sec. 6.2.8)
 `alignof` alignment of object (Sec. 6.2.9)
 `typeid` `type_info` of an object (Sec. 22.5)
 

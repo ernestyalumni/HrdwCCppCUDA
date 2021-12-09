@@ -180,7 +180,6 @@ class TypeProperties
       is_trivial_{std::is_trivial<T>::value},
       is_trivially_copyable_{std::is_trivially_copyable<T>::value},
       is_standard_layout_{std::is_standard_layout<T>::value},
-      is_pod_{std::is_pod<T>::value},
       is_literal_type_{std::is_literal_type<T>::value},
 //      has_unique_object_representations_{ // C++17
   //      std::has_unique_object_representations<T>::value}, // C++17
