@@ -67,6 +67,7 @@ ADD_EXECUTABLE(Check
   Cpp/RuleOf5_tests.cpp
   Cpp/Std/Algorithm/Algorithms_tests.cpp
   Cpp/Std/Algorithm/EqualAndMismatch_tests.cpp
+  Cpp/Std/Algorithm/LeviCivitaSymbol_tests.cpp
   Cpp/Std/Algorithm/Transform_tests.cpp
   Cpp/Std/Containers/SpanView_tests.cpp
   Cpp/Std/Containers/Vector_tests.cpp
