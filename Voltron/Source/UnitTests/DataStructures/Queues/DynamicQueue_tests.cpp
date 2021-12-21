@@ -369,6 +369,82 @@ BOOST_AUTO_TEST_CASE(DoubleCapacityCopiesOverPreviousArrayFromArrayStart)
   }
 }
 
+//------------------------------------------------------------------------------
+/// \ref pp. 234, Ch. 10 Elementary Data Structures, Introduction to Algorithms,
+/// Cormen, Leiserson, Rivest, Stein.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(HeadPointsToFirstElement)
+{
+  TestDynamicQueueAsHierarchy<int> q {12};
+
+  for (int i {1}; i < 7; ++i)
+  {
+    q.enqueue(i);
+    BOOST_TEST(!q.is_empty());
+    BOOST_TEST(q.size() == i);
+    BOOST_TEST(q.front() == 1);
+    BOOST_TEST(q.get_front_index() == 0);
+    BOOST_TEST(q.get_back_index() == i - 1);
+    BOOST_TEST(q.get_array_capacity() == 12);
+  }
+
+  q.enqueue(15);
+  q.enqueue(6);
+  q.enqueue(9);
+  q.enqueue(8);
+  q.enqueue(4);
+  BOOST_TEST(q.size() == 11);
+  BOOST_TEST(q.get_back_index() == 10);
+  BOOST_TEST(q.get_array_capacity() == 12);
+
+  for (int i {1}; i < 7; ++i)
+  {
+    BOOST_TEST(q.dequeue() == i);
+    BOOST_TEST(q.get_front_index() == i);
+  }
+
+  BOOST_TEST(q.head() == 15);
+  BOOST_TEST(q.get_front_index() == 6);
+  BOOST_TEST(q.get_back_index() == 10);
+  BOOST_TEST(!q.is_full());
+  BOOST_TEST(q.get_array_capacity() == 12);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CircularlyWrapsAroundIfNotFull)
+{
+  TestDynamicQueueAsHierarchy<int> q {12};
+
+  for (int i {1}; i < 7; ++i)
+  {
+    q.enqueue(i);
+    BOOST_TEST(!q.is_full());
+  }
+
+  q.enqueue(15);
+  q.enqueue(6);
+  q.enqueue(9);
+  q.enqueue(8);
+  q.enqueue(4);
+  BOOST_TEST(!q.is_full());
+  q.enqueue(17);
+  BOOST_TEST(q.is_full());
+  BOOST_TEST(q.get_array_capacity() == 12);
+
+  for (int i {1}; i < 7; ++i)
+  {
+    BOOST_TEST(q.dequeue() == i);
+    BOOST_TEST(q.get_front_index() == i);
+    BOOST_TEST(!q.is_full());
+  }
+
+  
+}
+
 BOOST_AUTO_TEST_SUITE_END() // AsHierarchy_tests
 BOOST_AUTO_TEST_SUITE_END() // DynamicQueue_tests
 BOOST_AUTO_TEST_SUITE_END() // Queues

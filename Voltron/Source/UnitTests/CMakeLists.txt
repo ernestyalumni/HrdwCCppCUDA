@@ -112,9 +112,10 @@ ADD_EXECUTABLE(Check
   DataStructures/Queues/DynamicQueue_tests.cpp
   DataStructures/Queues/QueuesImplementations_tests.cpp
   DataStructures/Queues/QueuesWithArrays_tests.cpp
-  DataStructures/Queues/ResizableDeque_tests.cpp
   DataStructures/Queues/Queues_tests.cpp
+  DataStructures/Queues/ResizableDeque_tests.cpp
   DataStructures/Stacks/DijkstraExpressionEvaluation_tests.cpp
+  DataStructures/Stacks/DynamicStack_tests.cpp
   DataStructures/Stacks/StacksImplementations_tests.cpp
   DataStructures/Stacks/StacksWithArrays_tests.cpp
   DataStructures/Stacks/Stacks_tests.cpp
@@ -200,8 +201,6 @@ ENDIF()
 SET_TARGET_PROPERTIES(Check
   PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/")
-
-ADD_SUBDIRECTORY(DataStructures)
 
 # Without specifying target property runtime_output_directory, this goes into
 # build folder's subdirectory "UnitTests"

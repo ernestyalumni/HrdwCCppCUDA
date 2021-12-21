@@ -165,6 +165,10 @@ class DynamicQueue : Queue<T>
 
     std::size_t size_;
     std::size_t front_;
+    //--------------------------------------------------------------------------
+    /// This gives the very last element's index of the current elements in the
+    /// array, and not the index for the very next element.
+    //--------------------------------------------------------------------------
     std::optional<std::size_t> back_;
     std::size_t array_capacity_;
     T* array_;

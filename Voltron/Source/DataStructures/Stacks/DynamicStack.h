@@ -36,6 +36,11 @@ class DynamicStack : DataStructures::Stacks::AsHierarchy::Stack<T>
     //--------------------------------------------------------------------------
     DynamicStack& operator=(const DynamicStack&);
 
+    //--------------------------------------------------------------------------
+    /// \brief Move assignment.
+    //--------------------------------------------------------------------------
+    DynamicStack& operator=(DynamicStack&&);
+
     virtual ~DynamicStack();
 
     T top() const;
@@ -65,7 +70,7 @@ class DynamicStack : DataStructures::Stacks::AsHierarchy::Stack<T>
 
       // Next, the values must be copied over.
       // Requires N copies, run time is O(N).
-      std::copy(std::begin(array_), std::end(array_), std::begin(tmp_array));
+      std::copy(array_, array_ + array_capacity_, tmp_array);
 
       // The memory for the original array must be deallocated.
       delete [] array_;
@@ -110,7 +115,20 @@ DynamicStack<T>::DynamicStack(const DynamicStack& stack):
 }
 
 template <typename T>
-DynamicStack<T>& DynamicStack::operator=(const DynamicStack& stack)
+DynamicStack<T>& DynamicStack<T>::operator=(const DynamicStack& stack)
+{
+  entry_count_ = stack.entry_count_;
+  initial_capacity_ = stack.initial_capacity_;
+  array_capacity_ = stack.array_capacity_;
+
+  std::copy(
+    std::begin(stack.array_),
+    std::end(stack.array_),
+    std::begin(array_));
+}
+
+template <typename T>
+DynamicStack<T>& DynamicStack<T>::operator=(DynamicStack&& stack)
 {
   // Swap.
   std::swap(entry_count_, stack.entry_count_);
@@ -130,7 +148,7 @@ T DynamicStack<T>::top() const
 {
   if (is_empty())
   {
-    throw std::runtime_error("Called top on empty Dynamic Stack")
+    throw std::runtime_error("Called top on empty Dynamic Stack");
   }
 
   // If there are N objects in the stack, the last is located at index N - 1.
