@@ -262,7 +262,7 @@ T DynamicQueue<T>::dequeue()
     return array_[old_front_];
   }
 
-  const std::size_t old_front_ = front_;
+  const std::size_t old_front_ {front_};
 
   front_ = (front_ + 1) % array_capacity_;
 

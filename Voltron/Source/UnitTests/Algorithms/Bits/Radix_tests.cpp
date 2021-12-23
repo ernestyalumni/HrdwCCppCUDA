@@ -90,15 +90,11 @@ BOOST_AUTO_TEST_CASE(BinaryRepresentation)
   }
 
   // Examples
-  {
-    std::cout << "\n Examples of Binary Representations \n";
 
-    {
-      SuperBitSet<sizeof(uint16_t) * number_of_bits_in_a_byte> x {15213};
-      std::cout << "15213_10 as binary: " << x.to_string() << "\n";
-    }
-  }
+  SuperBitSet<sizeof(uint16_t) * number_of_bits_in_a_byte> x {15213};
 
+  // 15213_10 as binary.
+  BOOST_TEST(x.to_string() == "0011101101101101");
 }
 
 // cf. https://en.cppreference.com/w/cpp/language/integer_literal

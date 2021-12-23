@@ -3,7 +3,6 @@
 //------------------------------------------------------------------------------
 
 #include <boost/test/unit_test.hpp>
-#include <iostream>
 #include <stdexcept>
 
 #include "Utilities/NarrowCast.h"
@@ -18,8 +17,6 @@ BOOST_AUTO_TEST_SUITE(NarrowCast_tests)
 // cf. Stroustrup. C++ Programming Language, 4th. Ed. pp. 299 Sec. 11.5
 BOOST_AUTO_TEST_CASE(NarrowCastWorks)
 {
-  std::cout << "\n NarrowCastIsFun\n";
-
   const auto c1 = narrow_cast<char>(64);
 
   // Will throw if chars are unsigned.

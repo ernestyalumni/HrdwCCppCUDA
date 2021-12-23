@@ -3,6 +3,8 @@
 //------------------------------------------------------------------------------
 #include "Algorithms/Permutations.h"
 
+#include "Tools/CaptureCout.h"
+
 #include <algorithm>
 #include <boost/test/unit_test.hpp>
 #include <string>
@@ -11,6 +13,8 @@
 
 using Algorithms::Permutations::Details::single_swap;
 using Algorithms::Permutations::Details::print_permutations;
+using Tools::CaptureCoutFixture;
+using std::string;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Permutations_tests)
@@ -87,13 +91,31 @@ BOOST_AUTO_TEST_CASE(DemonstrateSingleSwap)
 // cf. https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DemonstratePrintPermutations)
+BOOST_FIXTURE_TEST_CASE(DemonstratePrintPermutations, CaptureCoutFixture)
 {
-  {
-    std::string a = "ABC";
-    print_permutations(a, 0, a.length() - 1);
-    BOOST_TEST(true);
-  }
+  std::string a = "ABC";
+  print_permutations(a, 0, a.length() - 1);
+
+  const string expected {
+    string{" Second swap : ABC "} +
+    string{" Second swap : ABC "} +
+    string{" Second swap : ACB "} +
+    string{" Second swap : ABC "} + 
+    string{" Second swap : ABC "} +
+    string{" Second swap : BAC "} +
+    string{" Second swap : BAC "} +
+    string{" Second swap : BCA "} +
+    string{" Second swap : BAC "} +
+    string{" Second swap : ABC "} +
+    string{" Second swap : CBA "} +
+    string{" Second swap : CBA "} +
+    string{" Second swap : CAB "} +
+    string{" Second swap : CBA "} +
+    string{" Second swap : ABC "}};
+
+  BOOST_TEST(local_oss_.str() == expected);  
+
+  BOOST_TEST(true);
 }
 
 // cf. https://en.cppreference.com/w/cpp/algorithm/rotate

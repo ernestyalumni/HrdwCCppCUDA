@@ -7,11 +7,13 @@
 #include "Algorithms/QuickSort.h"
 #include "Cpp/Std/TypeTraitsProperties.h"
 #include "DataStructures/LinkedLists.h"
+#include "Tools/CaptureCout.h"
 
 #include <array>
 #include <boost/test/unit_test.hpp>
 #include <deque>
 #include <forward_list>
+#include <iostream>
 #include <list>
 #include <string>
 #include <vector>
@@ -35,13 +37,15 @@ using Algorithms::Sorting::merge_sort_with_temp;
 using Algorithms::Sorting::naive_bubble_sort;
 using DataStructures::LinkedLists::UsingPointers::ListNode;
 using DataStructures::LinkedLists::UsingPointers::clean_up_ListNode_setup;
-
 using DataStructures::LinkedLists::UsingPointers::get_size;
-
 using DataStructures::LinkedLists::UsingPointers::setup_ListNode_linked_list;
 using Std::CompositeTypeTraits;
 using Std::PrimaryTypeTraits;
+using Tools::CaptureCoutFixture;
+using std::cout;
+using std::string;
 using std::vector;
+
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(Sorting_tests)
@@ -152,27 +156,113 @@ BOOST_AUTO_TEST_CASE(DemonstrateSingleSwapping)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DemonstrateContainerProperties)
+BOOST_FIXTURE_TEST_CASE(DemonstrateStdArrayContainerProperties,
+  CaptureCoutFixture)
 {
-  {
-    std::cout << "\n std::array \n";
-    PrimaryTypeTraits<std::array<int, 42>> array_primary_type_traits;
-    std::cout << array_primary_type_traits << '\n';
-    CompositeTypeTraits<std::array<int, 42>> array_composite_type_traits;
-    std::cout << array_composite_type_traits << '\n';
+  PrimaryTypeTraits<std::array<int, 42>> array_primary_type_traits;
+  CompositeTypeTraits<std::array<int, 42>> array_composite_type_traits;
 
-    std::cout << "\n std::list \n";
-    PrimaryTypeTraits<std::list<int>> list_primary_type_traits;
-    std::cout << list_primary_type_traits << '\n';
-    CompositeTypeTraits<std::list<int>> list_composite_type_traits;
-    std::cout << list_composite_type_traits << '\n';
+  cout << array_primary_type_traits;
+  cout << array_composite_type_traits;
 
-    std::cout << "\n std::vector \n";
-    PrimaryTypeTraits<std::vector<int>> vector_primary_type_traits;
-    std::cout << vector_primary_type_traits << '\n';
-    CompositeTypeTraits<std::vector<int>> vector_composite_type_traits;
-    std::cout << vector_composite_type_traits << '\n';
-  }
+  const string expected {
+    string{" is_void : 0"} +
+    string{" is_null_pointer : 0"} +
+    string{" is_integral : 0"} +
+    string{" is_floating_point : 0"} +
+    string{" is_array : 0"} +
+    string{" is_enum : 0"} +
+    string{" is_union : 0"} +
+    string{" is_class : 1"} +
+    string{" is_function : 0"} +
+    string{" is_pointer : 0"} +
+    string{" is_lvalue_reference : 0"} +
+    string{" is_rvalue_reference : 0"} +
+    string{" is_member_object_pointer : 0"} +
+    string{" is_member_function_pointer : 0\n"} +
+    string{" is_fundamental : 0"} +
+    string{" is_arithmetic : 0"} +
+    string{" is_scalar : 0"} +
+    string{" is_object : 1"} +
+    string{" is_compound : 1"} +
+    string{" is_reference : 0"} +
+    string{" is_member_pointer : 0\n"}};
+  
+  BOOST_TEST(local_oss_.str() == expected);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(DemonstrateStdListContainerProperties,
+  CaptureCoutFixture)
+{
+  PrimaryTypeTraits<std::list<int>> list_primary_type_traits;
+  CompositeTypeTraits<std::list<int>> list_composite_type_traits;
+
+  cout << list_primary_type_traits;
+  cout << list_composite_type_traits;
+
+  const string expected {
+    string{" is_void : 0"} +
+    string{" is_null_pointer : 0"} +
+    string{" is_integral : 0"} +
+    string{" is_floating_point : 0"} +
+    string{" is_array : 0"} +
+    string{" is_enum : 0"} +
+    string{" is_union : 0"} +
+    string{" is_class : 1"} +
+    string{" is_function : 0"} +
+    string{" is_pointer : 0"} +
+    string{" is_lvalue_reference : 0"} +
+    string{" is_rvalue_reference : 0"} +
+    string{" is_member_object_pointer : 0"} +
+    string{" is_member_function_pointer : 0\n"} +
+    string{" is_fundamental : 0"} +
+    string{" is_arithmetic : 0"} +
+    string{" is_scalar : 0"} +
+    string{" is_object : 1"} +
+    string{" is_compound : 1"} +
+    string{" is_reference : 0"} +
+    string{" is_member_pointer : 0\n"}};
+  
+  BOOST_TEST(local_oss_.str() == expected);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(DemonstrateStdVectorContainerProperties,
+  CaptureCoutFixture)
+{
+  PrimaryTypeTraits<std::vector<int>> vector_primary_type_traits;
+  CompositeTypeTraits<std::vector<int>> vector_composite_type_traits;
+
+  cout << vector_primary_type_traits;
+  cout << vector_composite_type_traits;
+
+  const string expected {
+    string{" is_void : 0"} +
+    string{" is_null_pointer : 0"} +
+    string{" is_integral : 0"} +
+    string{" is_floating_point : 0"} +
+    string{" is_array : 0"} +
+    string{" is_enum : 0"} +
+    string{" is_union : 0"} +
+    string{" is_class : 1"} +
+    string{" is_function : 0"} +
+    string{" is_pointer : 0"} +
+    string{" is_lvalue_reference : 0"} +
+    string{" is_rvalue_reference : 0"} +
+    string{" is_member_object_pointer : 0"} +
+    string{" is_member_function_pointer : 0\n"} +
+    string{" is_fundamental : 0"} +
+    string{" is_arithmetic : 0"} +
+    string{" is_scalar : 0"} +
+    string{" is_object : 1"} +
+    string{" is_compound : 1"} +
+    string{" is_reference : 0"} +
+    string{" is_member_pointer : 0\n"}};
+  
+  BOOST_TEST(local_oss_.str() == expected);
 }
 
 //------------------------------------------------------------------------------

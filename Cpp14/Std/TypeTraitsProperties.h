@@ -24,8 +24,8 @@
 /// COMPILATION TIPS:
 ///  g++ -std=c++14 List_main.cpp -o List_main
 //------------------------------------------------------------------------------
-#ifndef _STD_TYPE_TRAITS_PROPERTIES_H_
-#define _STD_TYPE_TRAITS_PROPERTIES_H_
+#ifndef STD_TYPE_TRAITS_PROPERTIES_H
+#define STD_TYPE_TRAITS_PROPERTIES_H
 
 #include <iostream>
 #include <type_traits>
@@ -197,7 +197,6 @@ class TypeProperties
     bool is_trivial() const { return is_trivial_; }
     bool is_trivially_copyable() const { return is_trivially_copyable_; }
     bool is_standard_layout() const { return is_standard_layout_; }
-    bool is_pod() const { return is_pod_; }
     bool is_literal_type() const { return is_literal_type_; }
 //    bool has_unique_object_representations() const // C++17
 //    { // C++17
@@ -222,7 +221,6 @@ class TypeProperties
     const bool is_trivial_;
     const bool is_trivially_copyable_;
     const bool is_standard_layout_;
-    const bool is_pod_;
     const bool is_literal_type_;
 //    const bool has_unique_object_representations_; // C++17
     const bool is_empty_;
@@ -242,7 +240,6 @@ std::ostream& operator<<(std::ostream& os, const TypeProperties<T>& traits)
     " is_trivial : " << traits.is_trivial() <<
     " is_trivially_copyable : " << traits.is_trivially_copyable() <<
     " is_standard_layout : " << traits.is_standard_layout() <<
-    " is_pod : " << traits.is_pod() <<
     " is_literal_type : " << traits.is_literal_type() <<
 //    " has_unique_object_representations : " << // C++17
 //      traits.has_unique_object_representations() << // C++17
@@ -372,4 +369,4 @@ std::ostream& operator<<(std::ostream& os, const RuleOf5Properties<T>& traits)
 
 } // namespace Std
 
-#endif // _STD_TYPE_TRAITS_PROPERTIES_H_
+#endif // STD_TYPE_TRAITS_PROPERTIES_H

@@ -3,11 +3,16 @@
 ///
 /// \ref cf. https://www.bogotobogo.com/cplusplus/functors.php
 //------------------------------------------------------------------------------
+#include "Tools/CaptureCout.h"
 
 #include <boost/test/unit_test.hpp>
 #include <algorithm> // std::for_each
 #include <iostream>
+#include <string>
 #include <vector>
+
+using Tools::CaptureCoutFixture;
+using std::string;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Functions_tests)
@@ -45,7 +50,7 @@ unsigned int fibonacci_cached(unsigned int n)
 {
   if (cache.size() > n)
   {
-    std::cerr << "using cache " << n << std::endl;
+    std::cout << "using cache " << n << "\n";
     return cache[n];
   }
   else
@@ -70,12 +75,9 @@ class PrintElements
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(FibonacciCachedRecursion)
+BOOST_FIXTURE_TEST_CASE(FibonacciCachedRecursion, CaptureCoutFixture)
 {
-  std::cout << "\n FibonacciCachedRecursion begins \n";
-
   std::for_each(cache.begin(), cache.end(), PrintElements<unsigned int>{});
-
 
   BOOST_TEST(fibonacci_cached(0) == 0);
   BOOST_TEST(fibonacci_cached(1) == 1);
@@ -85,7 +87,22 @@ BOOST_AUTO_TEST_CASE(FibonacciCachedRecursion)
   BOOST_TEST(fibonacci_cached(5) == 5);
   BOOST_TEST(fibonacci_cached(6) == 8);
 
-  std::cout << "\n FibonacciCachedRecursion ends \n";
+  const string expected {
+    string{"0 1 "} +
+    string{"using cache 0\n"} +
+    string{"using cache 1\n"} +
+    string{"using cache 1\n"} + 
+    string{"using cache 0\n"} +
+    string{"using cache 2\n"} +
+    string{"using cache 1\n"} +
+    string{"using cache 3\n"} +
+    string{"using cache 2\n"} +
+    string{"using cache 4\n"} +
+    string{"using cache 3\n"} +
+    string{"using cache 5\n"} +
+    string{"using cache 4\n"}};
+
+  BOOST_TEST(local_oss_.str() == expected);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Functions_tests
