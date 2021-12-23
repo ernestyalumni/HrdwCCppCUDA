@@ -442,7 +442,28 @@ BOOST_AUTO_TEST_CASE(CircularlyWrapsAroundIfNotFull)
     BOOST_TEST(!q.is_full());
   }
 
-  
+  BOOST_TEST(q.get_array_capacity() == 12);
+  BOOST_TEST(q.size() == 6);
+  BOOST_TEST(!q.is_full());
+
+  q.enqueue(3);
+  q.enqueue(5);
+
+  BOOST_TEST(q.get_front_index() == 6);
+  BOOST_TEST(q.get_back_index() == 1);
+  BOOST_TEST(q.get_array_capacity() == 12);
+  BOOST_TEST(q.size() == 8);
+  BOOST_TEST(!q.is_full());
+  BOOST_TEST(q.head() == 15);
+
+  BOOST_TEST(q.dequeue() == 15);
+
+  BOOST_TEST(q.get_front_index() == 7);
+  BOOST_TEST(q.get_back_index() == 1);
+  BOOST_TEST(q.get_array_capacity() == 12);
+  BOOST_TEST(q.size() == 7);
+  BOOST_TEST(!q.is_full());
+  BOOST_TEST(q.head() == 6);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // AsHierarchy_tests

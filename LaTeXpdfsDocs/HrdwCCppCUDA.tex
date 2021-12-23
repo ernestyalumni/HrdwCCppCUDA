@@ -2810,6 +2810,15 @@ Applications for Queues: cf. Harder (2018) \cite{Hard2018}, 3.03.Queues.pptx
 	\item Breadth-first traversals of trees, i.e. \emph{use queues for breadth-first traversals of trees}
 \end{itemize}
 
+\subsubsection{Queue as Circular Array}
+
+cf. pp. 234, Ch. 10 Elementary Data Structures of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+
+\verb|Q.head| attribute that indexes, or points to, its head. \\
+\verb|Q.tail| indexes next location at which newly arriving element will be inserted. \\
+elements reside in \verb|Q.head|, \verb|Q.head| $+1, \dots \verb|Q.tail| - 1$. When $\verb|Q.head| = \verb|Q.tail|$, queue is empty.
+
+Figure 10.2 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009} shows one way to implement a queue of \textbf{at most $n-1$ elements } using an \textbf{array $Q[1\dots n]$}. 
 
 \subsubsection{Queue as Linked List}
 
