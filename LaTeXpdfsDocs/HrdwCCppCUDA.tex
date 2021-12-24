@@ -2818,7 +2818,7 @@ cf. pp. 234, Ch. 10 Elementary Data Structures of Cormen, Leiserson, Rivest, and
 \verb|Q.tail| indexes next location at which newly arriving element will be inserted. \\
 elements reside in \verb|Q.head|, \verb|Q.head| $+1, \dots \verb|Q.tail| - 1$. When $\verb|Q.head| = \verb|Q.tail|$, queue is empty.
 
-Figure 10.2 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009} shows one way to implement a queue of \textbf{at most $n-1$ elements } using an \textbf{array $Q[1\dots n]$}. 
+Figure 10.2 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009} shows one way to implement a queue of \textbf{at most $n-1$ elements } using an \textbf{array $Q[1\dots n]$}. This is an important point: see \href{https://stackoverflow.com/questions/16395354/why-q-head-q-tail-1-represents-the-queue-is-full-in-clrs}{Stack overflow}.
 
 \subsubsection{Queue as Linked List}
 
@@ -2830,6 +2830,10 @@ Dequeue, remove head. \\
 peek - peek at head. \\
 
 Save references to head and tail.
+
+\exercisehead{10.1-2, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}} \emph{Explain how to implement 2 stacks in 1 array $A[1\dots n]$ in such a way that neither stack overflows unless the total number of elements in both stacks together is $n$. The PUSH and POP operations should run in $O(1)$ time.}
+
+The first stack starts at 1 and grows up towards $n$, while the second stack starts from $n$ and grows down towards $n$. Stack overflow happens when an element is pushed when the 2 stack pointers are adjacent.
 
 \subsubsection{Deque. double-ended queue}
 
