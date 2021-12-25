@@ -29,6 +29,8 @@ class Node
     {
       std::swap(value_, other.value_);
       std::swap(next_, other.next_);
+
+      return *this;
     }
 
 		// friend class SingleList<T>;

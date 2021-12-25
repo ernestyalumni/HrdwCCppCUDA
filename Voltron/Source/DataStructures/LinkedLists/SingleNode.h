@@ -27,6 +27,9 @@ class SingleNode
 		SingleNode(const T& element = T{}, SingleNode* next_node = nullptr);
 
 		SingleNode(const SingleNode&) = default;
+    SingleNode& operator=(const SingleNode&) = default;
+    SingleNode(SingleNode&&) = default;
+    SingleNode& operator=(SingleNode&&) = default;
 
 		T retrieve() const;
 		SingleNode* next() const;
