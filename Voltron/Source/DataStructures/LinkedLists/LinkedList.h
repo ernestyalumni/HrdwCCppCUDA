@@ -144,6 +144,10 @@ class LinkedList
       return *this;
     }
 
+    //--------------------------------------------------------------------------
+    /// \details Runs in O(N) time, where N is number of objects in the linked
+    /// list.
+    //--------------------------------------------------------------------------   
     virtual ~LinkedList()
     {
       while (!empty())
@@ -220,14 +224,13 @@ LinkedList<T>::LinkedList(const LinkedList& list):
 
   // We modify the next pointer of the node pointed to by copy.
   for (
-    Node* original {list.begin()->next_}, copy {begin()};
+    Node* original {list.begin()->next_}, *copy {begin()};
     original != list.end();
     // Then we move each pointer forward.
     original = original->next_, copy = copy->next_)
   {
     copy->next_ = new Node(original->value_, nullptr);
   }
-
 }
 
 template <typename T>

@@ -1,11 +1,88 @@
 #include "DataStructures/LinkedLists/LinkedList.h"
 
+#include "Tools/CaptureCout.h"
+
 #include <boost/test/unit_test.hpp>
+#include <iostream>
 
 using DataStructures::LinkedLists::DWHarder::LinkedList;
+using Tools::CaptureCoutFixture;
+using std::cout;
 
 template <typename T>
 using Node = LinkedList<T>::Node;
+
+//------------------------------------------------------------------------------
+/// \ref 3.05.Linked_lists.ppptx, U. Waterloo, D.W. Harder. Slide 24.
+//------------------------------------------------------------------------------
+int f()
+{
+  // ls is declared as a local variable on the stack
+  LinkedList<int> ls;
+
+  ls.push_front(3);
+
+  cout << ls.front();
+
+  // The return value is evaluated.
+  // The compiler then calls the destructor for local variables.
+  // The memory allocated for 'ls' is deallocated.
+  return 0;
+}
+
+LinkedList<int>* dynamic_f(const int n)
+{
+  // pls is allocated memory by the OS.
+  LinkedList<int>* pls {new LinkedList<int>{}};
+
+  pls->push_front(n);
+  cout << pls->front();
+
+  // The address of the linked list is the return value.
+  // After this, the 4 bytes for the pointer 'pls' is deallocated.
+  // The memory allocated for the linked list is still there.
+
+  return pls;
+}
+
+//------------------------------------------------------------------------------
+/// \details Compiler will warn against this function, return address of local
+/// variable.
+//------------------------------------------------------------------------------
+/*
+LinkedList<int>* broken_f()
+{
+  // ls is declared as a local variable on the stack.
+  LinkedList<int> ls;
+
+  ls.push_front(3);
+  cout << ls.front();
+
+  // The return value is evaluated.
+  // The compiler then calls the destructor for local variables.
+  // The memory allocated for 'ls' is deallocated.
+
+  return &ls;
+}
+*/
+
+class DWHarderLinkedListFixture
+{
+  public:
+
+    DWHarderLinkedListFixture():
+      ls_{}
+    {
+      ls_.push_front(1);
+      ls_.push_front(4);
+      ls_.push_front(9);
+      ls_.push_front(16);
+    }
+
+    virtual ~DWHarderLinkedListFixture() = default;
+
+    LinkedList<int> ls_;
+};
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(LinkedLists)
@@ -53,6 +130,71 @@ BOOST_AUTO_TEST_CASE(DefaultConstructedListReturnsNullptrForBegin)
   BOOST_TEST(ls.begin() == nullptr);
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(AllocateOnStackInFunction, CaptureCoutFixture)
+{
+  f();
+
+  BOOST_TEST(local_oss_.str() == "3");
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(AllocateOnFreeStoreInFunction, CaptureCoutFixture)
+{
+  LinkedList<int>* pls {dynamic_f(42)};
+
+  BOOST_TEST(local_oss_.str() == "42");
+
+  delete pls;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(CopyConstructs, DWHarderLinkedListFixture)
+{
+  LinkedList<int> ls {ls_};
+
+  BOOST_TEST(ls.pop_front() == 16);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 9);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 4);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 1);
+  BOOST_TEST(ls.empty());
+
+  BOOST_TEST(ls_.pop_front() == 16);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 9);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 4);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 1);
+  BOOST_TEST(ls_.empty());
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PushFrontAddsValueToLinkedList)
+{
+  LinkedList<int> ls;
+  ls.push_front(35);
+  ls.push_front(18);
+  ls.push_front(94);
+  ls.push_front(72);
+
+  BOOST_TEST(ls.front() == 72);
+  BOOST_TEST(ls.pop_front() == 72);
+  BOOST_TEST(ls.front() == 94);
+  BOOST_TEST(ls.pop_front() == 94);
+  BOOST_TEST(ls.front() == 18);
+  BOOST_TEST(ls.pop_front() == 18);
+  BOOST_TEST(ls.front() == 35);
+  BOOST_TEST(ls.pop_front() == 35);
+  BOOST_TEST(ls.empty());
+}
 
 BOOST_AUTO_TEST_SUITE_END() // LinkedList_tests
 BOOST_AUTO_TEST_SUITE_END() // LinkedLists
