@@ -219,6 +219,34 @@ class LinkedList
     //--------------------------------------------------------------------------
     std::size_t size() const;
 
+    //--------------------------------------------------------------------------
+    /// \ref https://www.geeksforgeeks.org/reverse-a-linked-list/
+    //--------------------------------------------------------------------------
+    Node* reverse_list()
+    {
+      // Initialize current, previous, and next pointers.
+      Node* current {head_};
+      Node* previous {nullptr};
+      Node* next {nullptr};
+
+      while (current != nullptr)
+      {
+        // Before changing next of current, store next.
+        next = current->next_;
+
+        // Reverse current node's pointer.
+        current->next_ = previous;
+
+        // Move pointers one position ahead.
+        previous = current;
+        current = next;
+      }
+
+      head_ = previous;
+
+      return previous;
+    }
+
   private:
 
     Node* head_;
