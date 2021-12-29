@@ -3,11 +3,14 @@
 //------------------------------------------------------------------------------
 #include "Cpp/Utilities/TypeSupport/UnderlyingTypes.h"
 
+#include "Tools/CaptureCout.h"
+
 #include <boost/test/unit_test.hpp>
 #include <cstdint>
 #include <iostream>
 
 using Cpp::Utilities::TypeSupport::get_underlying_value;
+using Tools::CaptureCoutFixture;
 
 BOOST_AUTO_TEST_SUITE(Cpp)
 BOOST_AUTO_TEST_SUITE(Keywords_tests)
@@ -47,23 +50,18 @@ BOOST_AUTO_TEST_SUITE(Casting_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(CastingBetweenCharsAndUint8_tAreInverses)
+BOOST_FIXTURE_TEST_CASE(CastingBetweenCharsAndUint8_tAreInverses,
+  CaptureCoutFixture)
 {
-  std::cout << "\n\n Casting Tests begin\n";
+  const char c {'a'};
 
-  {
-    const char c {'a'};
+  const uint8_t cu {static_cast<uint8_t>(c)};
 
-    const uint8_t cu {static_cast<uint8_t>(c)};
+  std::cout << "cu: " << cu << "\n";
 
-    std::cout << "cu: " << cu << "\n";
+  BOOST_TEST(c == static_cast<char>(cu));
 
-
-    BOOST_TEST(c == static_cast<char>(cu));
-  }
-
-
-  std::cout << "\n Casting Tests end\n";
+  BOOST_TEST(local_oss_.str() == "cu: a\n");
 }
 
 enum class BitToCharEnum : char

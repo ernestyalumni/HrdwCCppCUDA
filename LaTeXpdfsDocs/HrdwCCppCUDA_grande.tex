@@ -2871,9 +2871,9 @@ Linked lists vs. dynamic arrays: \\
 List data structures comparison \\
 
 \begin{center}
-	\begin{tabular}{ l | c | c | c | c | r }
+	\begin{tabular}{ l | c | c | c | c | p{50pt} }
 		\hline
-		& Linked list & Array & Dynamic Array & Balanced Tree & Hashed array tree \\ \hline 
+		& Linked list & Array & Dynamic Array & Balanced Tree & Hashed \newline array tree \\ \hline 
 		indexing & $O(N)$ & $O(1)$ & $O(1)$ & $O(\log{N})$ & $O(1)$ \\ \hline 
 		insert/delete at beginning & $O(1)$ &  & $O(N)$ & $O(\log{N})$ & $O(N)$ \\ \hline 
 		insert/delete at end & $\begin{gathered} O(1) \text{ when last element is known } \\ O(N) \text{ when last element is unknown }\end{gathered}$ &  & $O(1)$ amoritized  & $O(\log{N})$  & $O(N)$ \\ \hline 
@@ -2885,6 +2885,70 @@ List data structures comparison \\
 
 head of list is 1st. node. \\
 tail of 1st. last node in 1st. (or rest of list)
+
+cf. pp. 237-238 of Ch. 10 "Elementary Data Structures" of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}.
+
+Given element $x$ in the list, \\
+if \verb|x.next| $=$ NIL, element $x$ has no successor and is therefore the last element or \textbf{tail} of the list.
+
+In a circular list, the prev pointer of the head of the list points to tail, and next pointer of the tail of the list points to the head.
+
+\subsubsection{Inserting into a Linked List, $O(1)$ in front}
+
+Given an element $x$ whose key attribute has already been set, LIST-INSERT "splices" $x$ onto front of linked list.
+
+\subsubsection{Deleting from a Linked List, O(1) if given pointer, or O(N) if given key}
+
+LIST-DELETE removes element $x$ from linked list $L$. \\
+It must be given a pointer to $x$, and it then "splices" $x$ out of the list by updating pointers. O(1). \\
+
+If we wish to delete an element with a given key, we must first call LIST-SEARCH to retrieve a pointer to the element. O(N) because we need to do a search.
+
+\subsubsection{Sentinel}
+
+Code for LIST-DELETE would be simpler if we can ignore boundary conditions at head and tail of the list: \\
+
+LIST-DELETE'(L, x) \\
+\quad x.prev.next $=$ x.next \\
+\quad x.next.prev $=$ x.prev \\
+
+instead of  \\
+
+if x is not head, \\
+\quad x.prev.next $=$ x.next \\
+else \\
+\quad L.head $=$ x.next \\
+if x is not tail \\
+\quad x.next.prev = x.prev \\
+
+\textbf{Sentinel} is a dummy object that allows us to simplify boundary conditions.
+
+Wherever we have NIL in the code, replace it by sentinel L.nil. \\
+e.g. changes doubly linked list into a circular, doubly linked list with sentinel. \\
+sentinel L.nil lies between head and tail. \\
+attribute L.nil.next points to head of the list, \\
+L.nil.prev points to tail. \\
+Similarly, \emph{next} attribute of tail and \emph{prev} attribute of head point to L.nil \\
+
+Since L.nil.next points to head, we can eliminate attribute L.head altogether.
+
+\exercisehead{10.2-1, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Can you implement the dynamic-set operation INSERT on a singly linked list in $O(1)$ time? How about DELETE?}
+
+cf. 3.05.\verb|Linked_lists.pptx| of  Harder (2018) \cite{Hard2018}, assign to the head a new node with the target value and pointing to the previous head, for its next attribute/field. 
+
+To delete, assign a temporary pointer to point to the node being deleted. Then assign head to its next attribute/field. Then delete the temporary pointer that pointed to the original head.
+
+\exercisehead{10.2-2, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Implement a stack using a singly linked list $L$. The operations PUSH and POP should still take $O(1)$ time.}
+
+PUSH is exactly push front for a linked list. POP is exactly pop front for a linked list. To repeat, push front is assign to head a new node with target value and next attribute/field pointing to original head. pop front is first check if it's empty. If not, then assign a temporary pointer to the head node being deleted. Then assign to head its next. Then delete what the temporary pointer points to.
+
+\exercisehead{10.2-3, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Implement a queue by a singly linked list $L$. The operations ENQUEUE and DEQUEUE should still take $O(1)$ time}.
 
 \subsection{Stack, $O(1)$ pop, $O(1)$ push}
 

@@ -4,6 +4,7 @@
 #include "Stack.h"
 
 #include "DataStructures/Arrays/ResizeableArray.h"
+#include "DataStructures/LinkedLists/LinkedList.h"
 
 #include <cstddef> // std::size_t
 #include <stdexcept> // std::runtime_error
@@ -24,6 +25,8 @@ class StackAsResizeableArray : public Stack<Item, StackAsResizeableArray<Item>>
     using ItemArray = DataStructures::Arrays::CRTP::ResizeableArray<Item>;
 
     StackAsResizeableArray() = default;
+
+    virtual ~StackAsResizeableArray() = default;
 
     void push(const Item item)
     {
@@ -55,6 +58,47 @@ class StackAsResizeableArray : public Stack<Item, StackAsResizeableArray<Item>>
   private:
 
     ItemArray data_;
+};
+
+template <typename T>
+class StackAsLinkedList : public Stack<T, StackAsLinkedList<T>>
+{
+  public:
+
+    using LinkedList = DataStructures::LinkedLists::DWHarder::LinkedList<T>;
+
+    StackAsLinkedList() = default;
+
+    virtual ~StackAsLinkedList() = default;
+
+    void push(const T item)
+    {
+      ls_.push_front(item);
+    }
+
+    T pop()
+    {
+      if (ls_.empty())
+      {
+        std::runtime_error("StackAsLinkedList: stack is empty when popping.");
+      }
+
+      return ls_.pop_front();
+    }
+
+    bool is_empty() const
+    {
+      return ls_.empty();
+    }
+
+    std::size_t size() const
+    {
+      return ls_.size();
+    }
+
+  private:
+
+    LinkedList ls_;
 };
 
 } // namespace CRTP

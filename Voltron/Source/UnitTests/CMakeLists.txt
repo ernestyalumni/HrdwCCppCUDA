@@ -106,6 +106,7 @@ ADD_EXECUTABLE(Check
   DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp
   DataStructures/LinkedLists/Node_tests.cpp
+  DataStructures/LinkedLists/SentinelDoublyLinkedList_tests.cpp
   DataStructures/LinkedLists/SingleNode_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp

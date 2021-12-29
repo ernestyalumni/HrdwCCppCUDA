@@ -4,6 +4,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <iostream>
+#include <utility>
 
 using DataStructures::LinkedLists::DWHarder::LinkedList;
 using Tools::CaptureCoutFixture;
@@ -193,6 +194,53 @@ BOOST_AUTO_TEST_CASE(PushFrontAddsValueToLinkedList)
   BOOST_TEST(ls.pop_front() == 18);
   BOOST_TEST(ls.front() == 35);
   BOOST_TEST(ls.pop_front() == 35);
+  BOOST_TEST(ls.empty());
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(AssignmentWithLValue, DWHarderLinkedListFixture)
+{
+  LinkedList<int> ls {};
+
+  ls = ls_;
+
+  BOOST_TEST(ls.pop_front() == 16);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 9);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 4);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 1);
+  BOOST_TEST(ls.empty());
+
+  BOOST_TEST(ls_.pop_front() == 16);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 9);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 4);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 1);
+  BOOST_TEST(ls_.empty());
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(MoveAssigns, DWHarderLinkedListFixture)
+{
+  LinkedList<int> ls {};
+
+  ls = std::move(ls_);
+
+  BOOST_TEST(ls_.empty());
+
+  BOOST_TEST(ls.pop_front() == 16);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 9);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 4);
+  BOOST_TEST(!ls.empty());
+  BOOST_TEST(ls.pop_front() == 1);
   BOOST_TEST(ls.empty());
 }
 

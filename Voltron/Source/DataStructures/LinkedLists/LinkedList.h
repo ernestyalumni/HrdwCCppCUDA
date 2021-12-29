@@ -53,7 +53,10 @@ class LinkedList
     /// \details The RHS is passed by value (a copy is made). Return value is
     /// passed by reference.
     /// Note that rhs is a copy of the list, it's not a pointer to a list.
+    ///
+    /// If this isn't commented out, it'll lead to error, ambiguous overload.
     //--------------------------------------------------------------------------
+    /*
     LinkedList& operator=(LinkedList rhs)
     {
       // We will swap all the values of the member variables between the left-
@@ -65,18 +68,23 @@ class LinkedList
 
       return *this;
     }
+    */
 
     //--------------------------------------------------------------------------
     /// \brief Assignment
     /// \ref Slide 131 3.05.Linked_lists.pptx, D.W. Harder
+    /// \details First, pass by reference-no copying.
     //--------------------------------------------------------------------------
     LinkedList& operator=(const LinkedList& rhs)
     {
+      // Ensure we're no assigning something to itself.
       if (this == &rhs)
       {
         return *this;
       }
 
+      // If the right-hand side is empty, it's straightforward: just empty this
+      // list.
       if (rhs.empty())
       {
         while (!empty())
@@ -89,16 +97,21 @@ class LinkedList
 
       if (empty())
       {
-        head_ = new Node(rhs.front());
+        head_ = new Node{rhs.front()};
       }      
       else
       {
         begin()->value_ = rhs.front();
       }
 
-      Node* this_node {head_}, rhs_node = rhs.begin()->next_;
+      //------------------------------------------------------------------------
+      /// Step through the right-hand side list and for each node,
+      /// * if there's a corresponding node in this, copy over the value, else
+      /// * There's no corresponding node, create a new node and append it.
+      //------------------------------------------------------------------------
 
-      // 
+      Node* this_node {head_}, *rhs_node = rhs.begin()->next_;
+
       while (rhs_node != nullptr)
       {
         // There's no corresponding node; create a new node and append it.
@@ -117,6 +130,7 @@ class LinkedList
         rhs_node = rhs_node->next_;
       }
 
+      // If there are any nodes remaining in this, delete them.
       while (this_node->next_ != nullptr)
       {
         Node* tmp {this_node->next_};
@@ -369,4 +383,4 @@ std::size_t LinkedList<T>::size() const
 } // namespace Arrays
 } // namespace DataStructures
 
-#endif // DATA_STRUCTURES_ARRAYS_ARRAY_H
+#endif // DATA_STRUCTURES_LINKED_LISTS_LINKED_LIST_H
