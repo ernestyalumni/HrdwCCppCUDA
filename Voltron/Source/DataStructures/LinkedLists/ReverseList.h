@@ -17,14 +17,13 @@ Nodes::Node<T>* reverse_list(Nodes::Node<T>* input_head)
   using Node = Nodes::Node<T>;
 
   // Initialize 3 pointers.
-  Node* previous {nullptr};
-  Node* current {input_head};
-  Node* next {nullptr};
+  Node* previous {input_head};
+  Node* current {input_head->next_};
 
   while (current != nullptr)
   {
     // Before changing next of current, store next node.
-    next = current->next_;
+    Node* next {current->next_};
     // Now change next of current. This is where the actual reversing happens.
     current->next_ = previous;
     // Move previous and current one step forward.

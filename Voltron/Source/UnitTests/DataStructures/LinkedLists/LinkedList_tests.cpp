@@ -244,6 +244,27 @@ BOOST_FIXTURE_TEST_CASE(MoveAssigns, DWHarderLinkedListFixture)
   BOOST_TEST(ls.empty());
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(Reverses, DWHarderLinkedListFixture)
+{
+  Node<int>* head_ptr {ls_.reverse_list()};
+
+  BOOST_TEST(head_ptr->value_ == 1);
+  BOOST_TEST(head_ptr->next_->value_ == 4);
+  BOOST_TEST(head_ptr->next_->next_->value_ == 9);
+  BOOST_TEST(head_ptr->next_->next_->next_->value_ == 16);
+
+  BOOST_TEST(ls_.pop_front() == 1);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 4);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 9);
+  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(ls_.pop_front() == 16);
+  BOOST_TEST(ls_.empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END() // LinkedList_tests
 BOOST_AUTO_TEST_SUITE_END() // LinkedLists
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

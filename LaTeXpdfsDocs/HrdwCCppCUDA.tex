@@ -2848,6 +2848,62 @@ PUSH is exactly push front for a linked list. POP is exactly pop front for a lin
 
 \emph{Implement a queue by a singly linked list $L$. The operations ENQUEUE and DEQUEUE should still take $O(1)$ time}.
 
+Keep a pointer to last element in linked list, as well as the head pointer. \\
+To enqueue, insert element after last element of the list, and set it to new, last element (tail). \\
+To dequeue, pop front, i.e. delete first element of list and return it. \\
+
+
+\exercisehead{10.2-7, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Given a $\Theta(n)$-time nonrecursive procedure that reverses a singly linked list of $n$ elements. The procedure should use no more than constant storage beyond that needed for the list itself.} \\
+
+current $=$ L.head.next \\
+previous $=$ L.head \\
+while current $\neq$ nullptr, \\
+\quad next $=$ current.next \\
+\quad current.next = previous (does the actual reversing) \\
+\quad previous = current \\
+\quad current = next \\
+L.head = previous \\
+
+cf. \url{https://sites.math.rutgers.edu/~ajl213/CLRS/Ch10.pdf}
+
+\subsection{Implementing pointers and objects for data structures}
+
+cf. Sec. 10.3 "Implementing pointers and objects" in Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}.
+
+\subsubsection{A multiple-array representation of objects for linked lists}
+
+3 arrays, array \emph{key} holds values of keys currently in the dynamic set. \\
+pointers in arrays \emph{next} and \emph{prev} (notation: \emph{previous}). \\
+Given array index $x$ (notation: $i$), key[i], next[i], previous[i] represents an object in the linked list. \\
+
+\subsubsection{Allocating and freeing objects; example of doubly linked list represented by multiple arrays}
+
+Suppose arrays in multiple-array representation have length $m$, and at some moment, dynamic set contains $n\leq m$ elements. \\
+Then $n$ objects represent elements currently in the dynamic set, \\
+remaining $m-n$ objects are \textbf{free}. \\
+
+Keep free objects in a singly linked list, called \textbf{free list}.
+
+Free list uses only next array, which stores next pointers (i.e. index to next element). 
+
+head of free list held in global variable free. 
+
+free list acts like a stack. \\
+
+Allocate-object(): \\
+if free $==$ nil, \\
+\quad error "out of space" \\
+else $x= $ free \\
+\quad free $=$ x.next \\
+\quad return x \\
+
+free-object(x) \\
+x.next $=$ free \\
+free $=$ x \\
+
+
 
 \subsection{Stack, $O(1)$ pop, $O(1)$ push}
 
@@ -3007,6 +3063,38 @@ height - number of edges between it and farthest leaf \\
 depth - number of edges to root.
 
 height, depth are inverse
+
+\subsubsection{Rooted Trees representation}
+
+cf. Sec. 10.4 "Representing rooted trees", Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+
+Assume each node contains a key attribute.
+
+\subsubsection{Binary trees representation}
+
+p, left, right store pointers to parent, left child, right child. \\
+if x.p = NIL, then x is root \\
+if x.left = NIL, node x has no left child. \\
+if x.right = NIL, node x has no right child. \\
+
+root of entire tree T is printed to by attribute T.root 
+
+\subsubsection{Rooted trees with unbounded branching}
+
+If (class of) tree has number of children of each node is at most some constant k.
+
+Replace the left, right attributes by child1, child2, ... childk
+
+For arbitrary numbers of children, \textbf{left-child, right-sibling representation} \\
+each node has parent pointer p \\
+T.root points to root of tree T \\
+each node has only 2 pointers \\
+1. x.left-child points to left most child of node x \\
+2. x.right-sibling points to sibling of x immediately to its right \\
+
+If node x has no children, then x.left-child =NIL \\
+If node x is rightmost child of its parent, then x.right-sibling = NIL
+
 
 \subsection{Graphs}
 
