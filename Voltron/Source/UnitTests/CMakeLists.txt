@@ -122,6 +122,7 @@ ADD_EXECUTABLE(Check
   DataStructures/Stacks/StacksImplementations_tests.cpp
   DataStructures/Stacks/StacksWithArrays_tests.cpp
   DataStructures/Stacks/Stacks_tests.cpp
+  DataStructures/Trees/BinaryTrees/BinaryNode_tests.cpp
   DeskCalculator/Token_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Entrevue/LeetCode/LeetCode_tests.cpp

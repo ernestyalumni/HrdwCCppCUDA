@@ -1,6 +1,8 @@
 //------------------------------------------------------------------------------
 /// \file BinarySearchTrees_tests.cpp
 /// \date 20201015 15, 17:21 complete
+/// TODO: There is a memory leak on the unit tests for BinarySearchTrees. Use
+/// valgrind.
 //------------------------------------------------------------------------------
 #include "DataStructures/BinarySearchTrees.h"
 

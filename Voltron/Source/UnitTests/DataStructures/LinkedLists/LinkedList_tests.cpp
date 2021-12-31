@@ -13,6 +13,10 @@ using std::cout;
 template <typename T>
 using Node = LinkedList<T>::Node;
 
+BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(LinkedLists)
+BOOST_AUTO_TEST_SUITE(LinkedList_tests)
+
 //------------------------------------------------------------------------------
 /// \ref 3.05.Linked_lists.ppptx, U. Waterloo, D.W. Harder. Slide 24.
 //------------------------------------------------------------------------------
@@ -84,10 +88,6 @@ class DWHarderLinkedListFixture
 
     LinkedList<int> ls_;
 };
-
-BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(LinkedLists)
-BOOST_AUTO_TEST_SUITE(LinkedList_tests)
 
 //------------------------------------------------------------------------------
 /// \ref 3.05.Linked_lists.ppptx, U. Waterloo, D.W. Harder.

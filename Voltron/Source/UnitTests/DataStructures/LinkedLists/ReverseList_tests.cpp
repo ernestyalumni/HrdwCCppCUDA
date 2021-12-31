@@ -6,6 +6,10 @@
 using DataStructures::LinkedLists::Nodes::Node;
 using DataStructures::LinkedLists::reverse_list;
 
+BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(LinkedLists)
+BOOST_AUTO_TEST_SUITE(ReverseList_tests)
+
 class NodeFixture
 {
   public:
@@ -24,10 +28,6 @@ class NodeFixture
     Node<int> a_3_;
     Node<int> a_4_;    
 };
-
-BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(LinkedLists)
-BOOST_AUTO_TEST_SUITE(ReverseList_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

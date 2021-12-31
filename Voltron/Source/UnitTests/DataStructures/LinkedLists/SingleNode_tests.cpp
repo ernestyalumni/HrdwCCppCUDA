@@ -11,6 +11,11 @@ using DataStructures::LinkedLists::Nodes::SingleNode;
 //template <typename T>
 //using SingleNode = DataStructures::Lists::SingleNode::SingleNode<T>;
 
+BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(LinkedLists)
+BOOST_AUTO_TEST_SUITE(Nodes)
+BOOST_AUTO_TEST_SUITE(SingleNode_tests)
+
 class SingleNodeTestsFixture
 {
   public:
@@ -27,11 +32,6 @@ class SingleNodeTestsFixture
     SingleNode<int> a_2_;
     SingleNode<int> a_3_;
 };
-
-BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(LinkedLists)
-BOOST_AUTO_TEST_SUITE(Nodes)
-BOOST_AUTO_TEST_SUITE(SingleNode_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

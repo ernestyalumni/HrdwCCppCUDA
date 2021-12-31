@@ -4,6 +4,11 @@
 
 using DataStructures::LinkedLists::Nodes::Node;
 
+BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(LinkedLists)
+BOOST_AUTO_TEST_SUITE(Nodes)
+BOOST_AUTO_TEST_SUITE(Node_tests)
+
 class NodeTestsFixture
 {
   public:
@@ -20,11 +25,6 @@ class NodeTestsFixture
     Node<int> a_2_;
     Node<int> a_3_;    
 };
-
-BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(LinkedLists)
-BOOST_AUTO_TEST_SUITE(Nodes)
-BOOST_AUTO_TEST_SUITE(Node_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

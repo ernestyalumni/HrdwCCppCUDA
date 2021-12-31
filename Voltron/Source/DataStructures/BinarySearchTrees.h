@@ -6,6 +6,8 @@
 ///
 /// \ref https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/140/introduction-to-a-bst/997/
 /// \ref LeetCode, Binary Search Tree
+/// TODO: There is a memory leak on the unit tests for BinarySearchTrees. Use
+/// valgrind.
 //------------------------------------------------------------------------------
 #ifndef DATA_STRUCTURES_BINARY_SEARCH_TREES_H
 #define DATA_STRUCTURES_BINARY_SEARCH_TREES_H

@@ -5,6 +5,11 @@
 
 using namespace DataStructures::Queues;
 
+BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(Queues)
+BOOST_AUTO_TEST_SUITE(CLRSCircularQueue_tests)
+BOOST_AUTO_TEST_SUITE(AsHierarchy_tests)
+
 template <typename T>
 class TestCLRSCircularQueueAsHierarchy :
   public AsHierarchy::CLRSCircularQueue<T>
@@ -48,11 +53,6 @@ class CLRSCircularQueueAsHierarchyFixture
 
     TestCLRSCircularQueueAsHierarchy<int> rhs_q_;
 };
-
-BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(Queues)
-BOOST_AUTO_TEST_SUITE(CLRSCircularQueue_tests)
-BOOST_AUTO_TEST_SUITE(AsHierarchy_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
