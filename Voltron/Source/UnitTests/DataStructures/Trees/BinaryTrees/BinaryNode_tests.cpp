@@ -70,6 +70,48 @@ class NodeFixture
 BOOST_AUTO_TEST_SUITE(DWHarder)
 
 //------------------------------------------------------------------------------
+/// \ref Exercise 10.4-1, Ch. 10 Elementary Data Structures, Cormen, Leiserson,
+/// Rivest, Stein.
+//------------------------------------------------------------------------------
+class BinaryNodeFixture
+{
+  public:
+
+    BinaryNodeFixture():
+      a_06_{new DWHarderBinaryNode<int>{18}},
+      a_01_{new DWHarderBinaryNode<int>{12}},
+      a_04_{new DWHarderBinaryNode<int>{10}},
+      a_03_{new DWHarderBinaryNode<int>{4}},
+      a_07_{new DWHarderBinaryNode<int>{7}},
+      a_10_{new DWHarderBinaryNode<int>{5}},
+      a_05_{new DWHarderBinaryNode<int>{2}},
+      a_09_{new DWHarderBinaryNode<int>{21}}
+    {
+      a_06_->set_left(a_01_);
+      a_06_->set_right(a_04_);
+      a_01_->set_left(a_07_);
+      a_01_->set_right(a_03_);
+      a_03_->set_left(a_10_);
+      a_04_->set_left(a_05_);
+      a_04_->set_right(a_09_);
+    }
+
+    virtual ~BinaryNodeFixture()
+    {
+      // User defined to be empty.
+    }
+
+    DWHarderBinaryNode<int>* a_06_;
+    DWHarderBinaryNode<int>* a_01_;
+    DWHarderBinaryNode<int>* a_04_;
+    DWHarderBinaryNode<int>* a_03_;
+    DWHarderBinaryNode<int>* a_07_;
+    DWHarderBinaryNode<int>* a_10_;
+    DWHarderBinaryNode<int>* a_05_;
+    DWHarderBinaryNode<int>* a_09_;
+};
+
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ConstructsWithValue)
 {
@@ -78,6 +120,81 @@ BOOST_AUTO_TEST_CASE(ConstructsWithValue)
   BOOST_TEST(a.value() == 42);
   BOOST_TEST(a.left() == nullptr);
   BOOST_TEST(a.right() == nullptr);
+}
+
+//------------------------------------------------------------------------------
+/// \ref Exercise 10.4-1, Ch. 10 Elementary Data Structures, Cormen, Leiserson,
+/// Rivest, Stein.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DynamicallyConstructBinaryNodes)
+{
+  DWHarderBinaryNode<int>* a_06 {new DWHarderBinaryNode<int>{18}};
+  DWHarderBinaryNode<int>* a_01 {new DWHarderBinaryNode<int>{12}};
+  DWHarderBinaryNode<int>* a_04 {new DWHarderBinaryNode<int>{10}};
+  a_06->set_left(a_01);
+  a_06->set_right(a_04);
+  DWHarderBinaryNode<int>* a_03 {new DWHarderBinaryNode<int>{4}};
+  DWHarderBinaryNode<int>* a_07 {new DWHarderBinaryNode<int>{7}};
+  a_01->set_left(a_07);
+  a_01->set_right(a_03);
+  DWHarderBinaryNode<int>* a_10 {new DWHarderBinaryNode<int>{5}};
+  a_03->set_left(a_10);
+  DWHarderBinaryNode<int>* a_05 {new DWHarderBinaryNode<int>{2}};
+  DWHarderBinaryNode<int>* a_09 {new DWHarderBinaryNode<int>{21}};
+  a_04->set_left(a_05);
+  a_04->set_right(a_09);
+
+  BOOST_TEST(a_06->value() == 18);
+  BOOST_TEST(a_06->left()->value() == 12);
+  BOOST_TEST(a_06->right()->value() == 10);
+  BOOST_TEST(a_06->left()->left()->value() == 7);
+  BOOST_TEST(a_06->left()->right()->value() == 4);
+  BOOST_TEST(a_06->left()->right()->left()->value() == 5);
+  BOOST_TEST(a_06->right()->left()->value() == 2);
+  BOOST_TEST(a_06->right()->right()->value() == 21);
+
+  delete a_06;
+  delete a_01;
+  delete a_04;
+  delete a_03;
+  delete a_07;
+  delete a_10;
+  delete a_05;
+  delete a_09;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DynamicallyClearBinaryNodes)
+{
+  DWHarderBinaryNode<int>* a_06 {new DWHarderBinaryNode<int>{18}};
+  DWHarderBinaryNode<int>* a_01 {new DWHarderBinaryNode<int>{12}};
+  DWHarderBinaryNode<int>* a_04 {new DWHarderBinaryNode<int>{10}};
+  a_06->set_left(a_01);
+  a_06->set_right(a_04);
+  DWHarderBinaryNode<int>* a_03 {new DWHarderBinaryNode<int>{4}};
+  DWHarderBinaryNode<int>* a_07 {new DWHarderBinaryNode<int>{7}};
+  a_01->set_left(a_07);
+  a_01->set_right(a_03);
+  DWHarderBinaryNode<int>* a_10 {new DWHarderBinaryNode<int>{5}};
+  a_03->set_left(a_10);
+  DWHarderBinaryNode<int>* a_05 {new DWHarderBinaryNode<int>{2}};
+  DWHarderBinaryNode<int>* a_09 {new DWHarderBinaryNode<int>{21}};
+  a_04->set_left(a_05);
+  a_04->set_right(a_09);
+
+  a_06->clear();
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(ClearBinaryNodesFromFunction, BinaryNodeFixture)
+{
+  a_06_->clear();
+  BOOST_TEST(true);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DWHarder

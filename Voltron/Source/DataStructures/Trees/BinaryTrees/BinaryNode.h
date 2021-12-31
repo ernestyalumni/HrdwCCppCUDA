@@ -40,6 +40,16 @@ class BinaryNode
     std::size_t height() const;
     void clear();
 
+    void set_left(BinaryNode* left)
+    {
+      p_left_tree_ = left;
+    }
+
+    void set_right(BinaryNode* right)
+    {
+      p_right_tree_ = right;
+    }
+
   protected:
 
     Type node_value_;
@@ -54,6 +64,23 @@ BinaryNode<Type>::BinaryNode(const Type& object):
   p_right_tree_{nullptr}
 {
   // Empty constructor.
+}
+
+template <typename Type>
+void BinaryNode<Type>::clear()
+{
+  if (left() != nullptr)
+  {
+    left()->clear();
+  }
+
+  if (right() != nullptr)
+  {
+    right()->clear();
+  }
+
+  // Reach a leaf.
+  delete this;
 }
 
 // Accessors.
