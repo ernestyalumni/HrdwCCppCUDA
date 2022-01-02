@@ -55,6 +55,11 @@ class StackAsResizeableArray : public Stack<Item, StackAsResizeableArray<Item>>
       return data_.size();
     }
 
+    Item top() const
+    {
+      return data_[size() - 1];
+    }
+
   private:
 
     ItemArray data_;
@@ -94,6 +99,11 @@ class StackAsLinkedList : public Stack<T, StackAsLinkedList<T>>
     std::size_t size() const
     {
       return ls_.size();
+    }
+
+    T top() const
+    {
+      return ls_.front();
     }
 
   private:

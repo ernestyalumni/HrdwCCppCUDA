@@ -50,6 +50,8 @@ class Stack
     /// \brief Number of items in the queue.
     //--------------------------------------------------------------------------
     virtual std::size_t size() const = 0;    
+
+    virtual Item top() const = 0;
 };
 
 } // namespace AsHierarchy
@@ -80,6 +82,11 @@ class Stack
     std::size_t size() const
     {
       return object()->size();
+    }
+
+    Item top()
+    {
+      return object()->top();
     }
 
   private:
@@ -137,6 +144,11 @@ class Stack
     std::size_t size() const
     {
       return implementation_->size();
+    }
+
+    Item top()
+    {
+      return implementation_->top();
     }
 
   private:

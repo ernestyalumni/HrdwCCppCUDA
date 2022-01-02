@@ -43,7 +43,7 @@ class DynamicStack : DataStructures::Stacks::AsHierarchy::Stack<T>
 
     virtual ~DynamicStack();
 
-    T top() const;
+    virtual T top() const override;
     virtual std::size_t size() const override;
     virtual bool is_empty() const override;
     std::size_t capacity() const;

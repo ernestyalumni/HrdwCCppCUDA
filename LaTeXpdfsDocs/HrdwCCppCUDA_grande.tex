@@ -21,7 +21,7 @@
 \usepackage[table]{xcolor}
 \usepackage{pdfpages}
 \usepackage{tikz}
-\usetikzlibrary{matrix,arrows, positioning, shapes}
+\usetikzlibrary{graphs,matrix,arrows, positioning, shapes}
 
 \usepackage{multicol}
 
@@ -2240,7 +2240,12 @@ RAM (memory) is essentially a giant array, access somewhere in constant time. \\
 	\vdots	&  \vdots \\  \hline
 	\end{tabular}
 \end{table}
-
+\begin{center}
+	\begin{tabular}{ l | r | r | r | r | r | r }
+		Hexadecimal & 1 & 7 & 3 & A & 4 & C \\
+		Binary & 0001 & 0111& 0011 & 1010 & 0100 & 1100 \\
+	\end{tabular}
+\end{center}
 -in $\theta(1)$ time, can \\
 \begin{itemize}
 	\item load $O(1)$ words 
@@ -2969,6 +2974,22 @@ L.head = previous \\
 
 cf. \url{https://sites.math.rutgers.edu/~ajl213/CLRS/Ch10.pdf}
 
+\problemhead{10-1, Comparisons among lists, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\begin{center}
+	\begin{tabular}{ l | c | c | c | c }
+		& unsorted, singly linked & sorted, singly linked & unsorted, doubly linked & sorted, doubly linked \\
+		SEARCH(L, k) & N & N & N & N \\
+		INSERT(L, x) & 1 & 1 & 1 & 1 \\
+		DELETE(L, x) & N & N & 1 & 1 \\
+		SUCCESSOR(L, x) & N & 1 & N & 1 \\
+		PREDECCESSOR(L, x) & N & N & N & 1 \\
+		MINIMUM(L) & N & 1 & N & 1 \\
+		MAXIMUM(L) & N & N & N & 1\\
+	\end{tabular}
+\end{center}
+
+
 \subsection{Implementing pointers and objects for data structures}
 
 cf. Sec. 10.3 "Implementing pointers and objects" in Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}.
@@ -3221,6 +3242,91 @@ each node has only 2 pointers \\
 If node x has no children, then x.left-child =NIL \\
 If node x is rightmost child of its parent, then x.right-sibling = NIL
 
+\exercisehead{10.4-2, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Write an $O(n)$-time recursive procedure that, given an $n$-node binary tree, prints out the key of each node in the tree}.
+
+cf. \url{https://sites.math.rutgers.edu/~ajl213/CLRS/Ch10.pdf}
+
+(this is for pre-order)
+print-tree(node) \\
+if node == NIL, return \\
+else \\
+\quad print node.key \\
+\quad print-tree(node.left) \\
+\quad print-tree(node.right) \\
+
+\subsubsection{Preorder, postorder, inorder traversal, recursive}
+
+To reiterate from \href{https://en.wikipedia.org/wiki/Tree_traversal#Depth-first_search}{wikipedia, "Tree Traversal"}, \\
+
+\textbf{preorder traversal} \\
+\begin{enumerate}
+	\item visit current node
+	\item recursively traverse left subtree
+	\item recursively traverse right subtree
+\end{enumerate}
+
+\textbf{postorder traversal} \\
+\begin{enumerate}
+	\item recursively traverse left subtree
+	\item recursively traverse right subtree
+	\item visit current node
+\end{enumerate}
+
+\textbf{inorder traversal} \\
+\begin{enumerate}
+	\item recursively traverse left subtree
+	\item visit current node
+	\item recursively traverse right subtree
+\end{enumerate}
+
+\exercisehead{10.4-3, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Write an $O(n)$-time nonrecursive procedure that, given an $n$-node binary tree, prints out the key of each node in the tree. Use a stack as an auxiliary data structure}.
+
+printWithStack(node)  \\
+let S by an empty stack. \\
+push(S, node) \\
+while S is not empty, \\
+\quad U = pop(S) \\
+\quad U $\neq $ NIL, then \\
+\quad \quad print U.key \\
+\quad \quad push(S, U.left) \\
+\quad \quad push(S, U.right) \\
+
+Keep in mind that this \emph{does not} reproduce inorder recursive traversal. This instead exhibits interesting behavior of immediately printing a node. It's because recursion relies on a termination condition, which is typically that a node is a leaf.
+
+\subsubsection{Postorder Traversal with stack}
+
+Consider the following from \href{https://www.geeksforgeeks.org/iterative-postorder-traversal-using-stack/}{geeksforgeeks, iterative postorder}: \\
+
+Create an empty stack. \\
+2.1 while root is not NIL, \\
+\quad push root's right and then root to stack, \\
+\quad set root as root's left child. \\
+2.2 pop item from stack and set as root \\
+\quad if popped item has right child, and right child is top of the stack, then remove right child from stack, push root back and set root as root's right child \\
+\quad else print root's data and set root as nullptr \\
+2.3 repeat steps 2.1, 2.2 while stack isn't empty. \\
+
+Consider also the following: \\
+
+Create empty stack S, push(S, node) \\
+currentptr=node, previousptr=NIL \\
+while S is not empty, \\
+\quad currentptr = S.top() \\
+\quad if currentptr is a leaf or we've traversed right node of currentptr or left node of currentptr, \\
+\quad \quad print currentptr.value \\
+\quad \quad S.pop() \\
+\quad \quad previousptr = currentptr \\
+\quad else \\
+\quad \quad if currentptr.right is not NIL, S.push(currentptr.right) \\
+\quad \quad if currentptr.left is not NIL, S.push(currentptr.left) \\
+
+The predicate "we've traversed right node of currentptr or left node of currentptr" is to reproduce the recursive stack callback.
+
+
 \subsection{Graphs}
 
 edges can store data too. \\
@@ -3315,6 +3421,82 @@ Keep state, build on a lookup by keeping state in trie or return by reference to
 \href{https://youtu.be/zIjfhVPRZCg}{Data Structures: Tries, HackerRank}
 
 Insert and search costs O(key length) however, memory requirements of Trie is O(Alphabet size * key length * N) where $N$ is number of keys in Trie.
+
+\section{Hash Tables}
+
+\subsection{Direct-address tables}
+
+Direct addressing works well when universe U of keys is small. \\
+Suppose dynamic set in which each element has key drawn from universe $U = \lbrace 0 , 1 \dots m - 1 \rbrace$ $m$ not too large. \\
+Assume no 2 elements have same key. \\
+To represent dynamic set, use array, or \textbf{direct-address table}, $T[0, \dots m-1]$ in which each position, or \textbf{slot}, corresponds to key in universe U. \\
+Slot k points to element in set with key k. \\
+If set contains no element with key k, then T[k] = NIL \\
+
+Direct-Address-Search(T, k) \\
+\quad return T[k] \\
+
+Direct-Address-Insert(T, x) \\
+\quad T[x.key] = x \\
+
+Direct-Address-Delete(T,x) \\
+\quad T[x.key] = NIL \\
+
+O(1) time.
+
+\exercisehead{11.1-1, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{Suppose that a dynamic set S is represented by a direct-address table T of length m. Describe a procedure that finds the maximum element of S. What is the worst-case performance of your procedure?}
+
+Start at i = m-1. Consider T[i]. $\forall \, m - 1, m- 2, \dots 0$, until T[i] is an element O(m).
+
+\exercisehead{11.1-2, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{A \textbf{bit vector} is simply an array of bits (0s and 1s). A bit vector of length m takes much less space than an array of m pointers. Describe how to use a bit vector to represent a dynamic set of distinct elements with no satellite data. Dictionary operations should run in O(1) time.}
+
+Let x be a bit vector of length $m$. Let dynamic set of n elements s.t. $n\leq m$ of distinct elements with key values from $0, 1, \dots n-1$. \\
+
+insert(k) \\
+\quad x[k] = 1\\
+
+Delete(k) \\
+\quad x[k] = 0\\
+
+search(k) \\
+\quad return x[k] \\
+
+cf. 11.2 "Hash Tables" of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+
+Let K of keys stored in dictionary much smaller than universe U of all possible keys, we can reduce storage requirements to $\Theta(|K|)$, while search requires only O(1) time. \\
+
+Given an element with key k, \\
+direct addressing: k stored in slot k \\
+hashing: element stored in slot H(k), i.e. \textbf{hash value} h(k) of key k \\
+hash function $\begin{aligned} & \quad \\ 
+& h : U \to \lbrace 0, 1, \dots m -1 \rbrace \\
+& h:k \mapsto h(k) \end{aligned}$ s.t. T[h(k)] = k \\
+
+where size m of hash table typically m $< |U|$ \\
+
+\textbf{collision}: 2 keys may hash to same slot. 
+
+\subsubsection{Collision resolution by chaining for Hash Tables}
+
+\textbf{chaining}- place all elements that hash to same slot into same linked list. \\
+slot j contains pointer to head of list of all stored elements that hash to j \\
+if there are no such elements, slot j contains NIL. \\
+
+Dictionary operations: \\
+Chained-Hash-Insert(T,x) \\
+\quad insert x at head of list T[j(x.key)] \\
+
+Chained-Hash-Search(T, k) \\
+\quad search for element with key k in list T[h(k)] \\
+
+Chained-Hash-Delete(T, x) \\
+\quad delete x from list T[h(x.key)] \\
+
+ 
 
 \section{Search}
 

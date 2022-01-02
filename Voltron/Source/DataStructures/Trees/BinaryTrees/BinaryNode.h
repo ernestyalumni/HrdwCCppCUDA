@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <iostream>
 
 namespace DataStructures
 {
@@ -173,6 +174,212 @@ class Node
     Node* left_;
     Node* right_;
 };
+
+//------------------------------------------------------------------------------
+/// \ref Exercise 10.4-2, pp. 248, Ch. 10 "Elementary Data Structures", Cormen,
+/// Leiserson, Rivest, Stein.
+//------------------------------------------------------------------------------
+
+template <typename T>
+void print_preorder_traversal(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  // Visit current node.
+  std::cout << node->value_ << " ";
+
+  // Recursively traverse left subtree.
+  print_preorder_traversal<T>(node->left_);
+
+  // Recursively traverse right subtree.
+  print_preorder_traversal<T>(node->right_);
+}
+
+template <typename T>
+void print_postorder_traversal(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  // Recursively traverse left subtree.
+  print_postorder_traversal<T>(node->left_);
+
+  // Recursively traverse right subtree.
+  print_postorder_traversal<T>(node->right_);
+
+  // Visit current node.
+  std::cout << node->value_ << " ";
+}
+
+template <typename T>
+void print_inorder_traversal(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  // Recursively traverse left subtree.
+  print_inorder_traversal<T>(node->left_);
+
+  // Visit current node.
+  std::cout << node->value_ << " ";
+
+  // Recursively traverse right subtree.
+  print_inorder_traversal<T>(node->right_);
+}
+
+//------------------------------------------------------------------------------
+/// TODO: This exhibits an interesting order that isn't easily achieved by the
+/// recursive version.
+//------------------------------------------------------------------------------
+template <typename T, template<typename> class StackT>
+void print_inorder_traversal_with_stack_v1(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  StackT<Node<T>*> s {};
+  Node<T>* current_ptr {node};
+
+  s.push(node);
+
+  while (!s.is_empty())
+  {
+    Node<T>* current_node {s.pop()};
+
+    if (current_node != nullptr)
+    {
+      std::cout << current_node->value_ << " ";
+
+      // Reverse since a stack is LIFO.
+      s.push(current_node->right_);
+      s.push(current_node->left_);
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+/// \ref https://medium.com/@ajinkyajawale/inorder-preorder-postorder-traversal-of-binary-tree-58326119d8da
+//------------------------------------------------------------------------------
+template <typename T, template<typename> class StackT>
+void print_inorder_traversal_with_stack(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  StackT<Node<T>*> s {};
+  Node<T>* current_ptr {node};
+
+  while (!s.is_empty() || current_ptr != nullptr)
+  {
+    // Traverse left subtree first, until leaf is reached.
+    while (current_ptr != nullptr)
+    {
+      // Save the "root", i.e. push the "root" onto the stack and set root =
+      // root.left and continue until it hits nullptr.
+      s.push(current_ptr);
+
+      current_ptr = current_ptr->left_;
+    }
+    // Exited because a leaf was found and current_ptr == nullptr now. Go back
+    // to the stack for the previous "root".
+    current_ptr = s.pop();
+
+    std::cout << current_ptr->value_ << " ";
+
+    // Traverse the right subtree.
+    current_ptr = current_ptr->right_;
+  }
+}
+
+template <typename T, template<typename> class StackT>
+void print_preorder_traversal_with_stack(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  StackT<Node<T>*> s {};
+  s.push(node);
+
+  while (!s.is_empty())
+  {
+    Node<T>* current_ptr {s.pop()};
+
+    // Effectively visit the "root" node first.
+    std::cout << current_ptr->value_ << " ";
+
+    // Push right before left so that, due to property of a stack, left is
+    // processed before right.
+    if (current_ptr->right_ != nullptr)
+    {
+      s.push(current_ptr->right_);
+    }
+    // We've put the right subtree before the stack (so it's "below") so that
+    // the left subtree will be popped off in the next iteration.
+    if (current_ptr->left_ != nullptr)
+    {
+      s.push(current_ptr->left_);
+    }
+  }
+}
+
+template <typename T, template<typename> class StackT>
+void print_postorder_traversal_with_stack(Node<T>* node)
+{
+  if (node == nullptr)
+  {
+    return;
+  }
+
+  StackT<Node<T>*> s {};
+  s.push(node);
+  Node<T>* current_ptr {node};
+  Node<T>* previous_ptr {nullptr};
+
+  while (!s.is_empty())
+  {
+    current_ptr = s.top();
+
+    // If we are at a leaf or we've already traversed the right node or left
+    // node. This predicate, if previous_ptr is any of the left or right
+    // children, reproduces the recursive stack calling since we had already
+    // visited the children.
+    if ((current_ptr->left_ == nullptr && current_ptr->right_ == nullptr) ||
+      previous_ptr == current_ptr->right_ || previous_ptr == current_ptr->left_)
+    {
+      // Deal with topological dependency.
+      std::cout << current_ptr->value_ << " ";
+
+      s.pop();
+
+      previous_ptr = current_ptr;
+    }
+    else
+    {
+      if (current_ptr->right_ != nullptr)
+      {
+        s.push(current_ptr->right_);
+      }
+
+      if (current_ptr->left_ != nullptr)
+      {
+        s.push(current_ptr->left_);
+      }
+    }
+  }
+}
 
 } // namespace BinaryTrees
 } // namespace Trees
