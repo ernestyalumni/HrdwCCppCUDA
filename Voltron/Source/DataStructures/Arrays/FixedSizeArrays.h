@@ -91,10 +91,7 @@ class DynamicFixedSizeArray : BaseArray<T>
 			data_{new T[other.size()]},
 			size_{other.size_}
 		{
-			for (size_t index {0}; index < size_; ++index)
-			{
-				data_[index] = other[index];
-			}
+      std::copy(other.data_, other.data_ + other.size_, data_);
 		}
 
 		// Copy assignment.
@@ -109,10 +106,7 @@ class DynamicFixedSizeArray : BaseArray<T>
 					std::to_string(other.size()));
 			}
 
-			for (size_t index {0}; index < size_; ++index)
-			{
-				data_[index] = other[index];
-			}
+      std::copy(other.data_, other.data_ + other.data_ + other.size_, data_);
 
 			return *this;
 		}
@@ -147,9 +141,9 @@ class DynamicFixedSizeArray : BaseArray<T>
 			return *this;
 		}
 
-		~DynamicFixedSizeArray()
+		virtual ~DynamicFixedSizeArray()
 		{
-			if (size() > 0)
+			if (size() > 0 || data_ != nullptr)
 			{
 				delete[] data_;
 			}

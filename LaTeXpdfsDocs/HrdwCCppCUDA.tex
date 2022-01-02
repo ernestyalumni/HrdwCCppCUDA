@@ -3316,6 +3316,129 @@ O(1) time.
 
 Start at i = m-1. Consider T[i]. $\forall \, m - 1, m- 2, \dots 0$, until T[i] is an element O(m).
 
+\exercisehead{11.1-2, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+\emph{A \textbf{bit vector} is simply an array of bits (0s and 1s). A bit vector of length m takes much less space than an array of m pointers. Describe how to use a bit vector to represent a dynamic set of distinct elements with no satellite data. Dictionary operations should run in O(1) time.}
+
+Let x be a bit vector of length $m$. Let dynamic set of n elements s.t. $n\leq m$ of distinct elements with key values from $0, 1, \dots n-1$. \\
+
+insert(k) \\
+\quad x[k] = 1\\
+
+Delete(k) \\
+\quad x[k] = 0\\
+
+search(k) \\
+\quad return x[k] \\
+
+cf. 11.2 "Hash Tables" of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+
+Let K of keys stored in dictionary much smaller than universe U of all possible keys, we can reduce storage requirements to $\Theta(|K|)$, while search requires only O(1) time. \\
+
+Given an element with key k, \\
+direct addressing: k stored in slot k \\
+hashing: element stored in slot H(k), i.e. \textbf{hash value} h(k) of key k \\
+hash function $\begin{aligned} & \quad \\ 
+& h : U \to \lbrace 0, 1, \dots m -1 \rbrace \\
+& h:k \mapsto h(k) \end{aligned}$ s.t. T[h(k)] = k \\
+
+where size m of hash table typically m $< |U|$ \\
+
+\textbf{collision}: 2 keys may hash to same slot. 
+
+\subsubsection{Collision resolution by chaining for Hash Tables}
+
+\textbf{chaining}- place all elements that hash to same slot into same linked list. \\
+slot j contains pointer to head of list of all stored elements that hash to j \\
+if there are no such elements, slot j contains NIL. \\
+
+Dictionary operations: \\
+Chained-Hash-Insert(T,x) \\
+\quad insert x at head of list T[j(x.key)] \\
+
+Chained-Hash-Search(T, k) \\
+\quad search for element with key k in list T[h(k)] \\
+
+Chained-Hash-Delete(T, x) \\
+\quad delete x from list T[h(x.key)] \\
+
+For searching, worst-case running time is O(N). \\
+Delete an element in O(1) time if list doubly linked. If lists only singly linked, then first have to find x.
+
+\subsubsection{Analysis of hashing with chaining}
+
+Given hash table T with m slots, stores n elements, define \textbf{load factor} $\alpha := \frac{n}{m}$, i.e. average number of elements stored in chain.
+
+\textbf{simple uniform hashing} - assumption that any given element is equally likely to hash into any of m slots.
+
+$\forall \, j = 0, 1, \dots m - 1$, let length of list T[j] $\equiv n_j$, so that \\
+\[
+n = n_0 + n_1 + \dots + n_{m-1}
+\] 
+
+expected value of $n_j \equiv E[n_j] = \alpha = \frac{n}{m}$ \\
+
+\begin{theorem}[11.1, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}]
+	In hash table in which collisions are resolved by chaining, unsuccessful search takes average case time $\Theta(1+\alpha)$, under assumption of simple uniform hash.
+\end{theorem}
+
+\begin{proof}
+	
+	By simple uniform hashing assumption, any key k not already stored is equally likely to hash to any m slots.
+	
+	Expected time to search unsuccessfully for key k is expected time to search to end of list T[h(k)], which has expected length $E[n_{h(k)}] = \alpha$. \\
+	
+	Thus expected number of elements examined is unsuccessful search is $\alpha$. \\
+	$\Longrightarrow $ take time required $\Theta(1+\alpha)$
+\end{proof}
+
+
+\begin{theorem}[11.2, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}]
+	In a hash table in which collisions resolved by chaining, successful search takes average-case time $\Theta(1+\alpha)$, under simple uniform hashing assumption.	
+\end{theorem}
+\begin{proof}
+	Assume element being searched equally likely to be any of the n elements stored in table. \\
+	number of elements examined during successful sesarch for x is 1 more than number of elements that appear before x in x's list. \\
+	Let $x_i \equiv i$th element inserted into table, $i = 1, 2, \dots n$ \\
+	\phantom{Let } $k_i \equiv x_i$.key \\
+	
+	$\forall \, $ keys $k_i, k_j$, define indicator random variable $X_{ij} = I\lbrace h(k_i) = h(k_j) \rbrace$ \\
+	under simple uniform hashing assumption, $Pr\lbrace h(k_i) = h(k_j) \rbrace = \frac{1}{m}$, because probability to hash into any slot is $\frac{1}{m}$ and so probability to hash into this particular slot is also $\frac{1}{m}$ since it must be as equally likely as any other. \\
+	
+	$E[X_{ij}] = \frac{1}{m}$ since Lemma 5.1 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009} which is, recall, really simple: $E[X_{ij}] = 1 \cdot Pr\lbrace h(k_i) = h(k_j) \rbrace + 0 \cdot Pr\lbrace h(k_i) = h(k_j) \rbrace$. \\
+	
+	Note that because new elements placed at front of list, elements before x in list inserted after x inserted. \\
+	
+	Take average, over n elements in table, of 1 plus expected number of elements added to x's list after x was added to list.
+	
+	Thus, expected number of elements examined in a successful search,
+	\[
+	\begin{gathered}
+	E\left[ \frac{1}{n} \sum_{i=1}^n \left( 1 + \sum_{j={i+1}}^n X_{ij} \right) \right] = \frac{1}{n} \sum_{i=1}^n \left( 1 + \sum_{j=i+1}^n E[X_{ij}] \right) = \frac{1}{n} \sum_{i=1}^n \left( 1 + \sum_{j=i+1}^n \frac{1}{n} \right) = 1 + \frac{1}{nm} \sum_{i=1}^n (n-i) = \\
+	= 1 + \frac{n}{m} - \frac{1}{nm} \left( \frac{n (n+1) }{2} \right) = 1 + \frac{n-1}{2m} = 1 + \frac{\alpha}{2} - \frac{\alpha}{2n}
+	\end{gathered}
+	\]
+	
+	Thus total time required for successful search is $\Theta\left(2 + \frac{\alpha}{2} - \frac{\alpha}{2n}\right) = \Theta(1+\alpha)$
+	
+\end{proof}
+
+\exercisehead{11.2-1, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}}
+
+cf. \url{https://sites.math.rutgers.edu/~ajl213/CLRS/Ch11.pdf}
+
+Given n distinct keys, suppose keys are totally ordered $\lbrace k_1, \dots k_n \rbrace$. Given key $k_i$, consider $\forall \, l $ s.t. $l > k_i$ and $h(l) = h(k_i)$, \, $Pr[h(l)=h(k)] =\frac{1}{m}$. \\
+
+Probability that for some key there's a collision, 
+\[
+\sum_{i <j}^n Pr[h(k_j) = h(k_i)] = \sum_{j > i} \frac{1}{m} = \frac{n-i}{m}
+\]
+Using simple uniform hashing assumption.
+
+Expected number of collisions 
+\[
+\sum_{i=1}^n \frac{n-i}{m} = \frac{n^2 - \frac{n(n+1)}{2} }{m} = \frac{n (n-1) }{m}
+\]
 
 \section{Search}
 

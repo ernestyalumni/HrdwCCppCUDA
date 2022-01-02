@@ -9,6 +9,11 @@ using DataStructures::LinkedLists::CLRS::SentinelDoublyLinkedList;
 template <typename T>
 using Node = SentinelDoublyLinkedList<T>::Node;
 
+BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(LinkedLists)
+BOOST_AUTO_TEST_SUITE(SentinelDoublyLinkedList_tests)
+BOOST_AUTO_TEST_SUITE(CLRSSentinelDoublyLinkedList_tests)
+
 class CLRSSentinelDoublyLinkedListFixture
 {
   public:
@@ -27,11 +32,6 @@ class CLRSSentinelDoublyLinkedListFixture
 
     SentinelDoublyLinkedList<int> ls_;
 };
-
-BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(LinkedLists)
-BOOST_AUTO_TEST_SUITE(SentinelDoublyLinkedList_tests)
-BOOST_AUTO_TEST_SUITE(CLRSSentinelDoublyLinkedList_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

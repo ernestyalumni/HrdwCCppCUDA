@@ -408,7 +408,7 @@ std::size_t LinkedList<T>::size() const
 }
 
 } // namespace DWHarder
-} // namespace Arrays
+} // namespace LinkedLists
 } // namespace DataStructures
 
 #endif // DATA_STRUCTURES_LINKED_LISTS_LINKED_LIST_H
