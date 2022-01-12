@@ -4849,6 +4849,46 @@ When there are more threads than processors, concurrency is simulated by \textbf
 
 On most systems, time slicing happens unpredictably and nondeterministically, meaning that a thread may be paused or resumed at any time.
 
+\subsection{Context Switching}
+
+cf. \href{https://en.wikipedia.org/wiki/Context_switch}{wikipedia, "Context Switch"}
+
+context switch - process of storing state of a process or thread, so it can be restored and resume execution at a later point. This allows multiple processes to share a single CPU.
+
+Context switch in varying contexts: in multitasking, refers to process of storing system state for 1 task, so task can be paused and another task resumed.
+
+If interrupt, such as task needs disk storage access, context switch can occur to free up CPU time for other tasks.
+
+Some OS require context switch to move between user mode and kernel mode.
+
+\subsubsection{Costs of context switching}
+
+\emph{Costs}: time to save and load registers, memory maps, update tables and lists.
+
+What's actually involved depends on architectures, OS, number of resources shared (threads that belong to same process share many resources compared to unrelated non-cooperating processes). \\
+e.g. Linux kernel, context switching involves switching registers, stack pointer (its typical stack-pointer register), program counter, flushing translation lookaside buffer (TLB), and loading page table of next process to run (unless old process shares memory with new).  \\
+analogous context switching between user threads, notably green threads, and is very lightweight, saving and restoring minimal context. \\
+
+\subsubsection{Switching cases, i.e. 3 potential triggers: Multitasking, Interrupt handling, User and kernel mode switching}
+
+\emph{Multitasking}: 1 process must be switched out of CPU so another process can run. This context switch can be triggered by the process making itself unrunnable, such as waiting for IO or synchronization operation to complete. \\
+On pre-emptive multitasking system (use an interrupt to suspend currently executing process and invokes scheduler to determine which process should execute next so all processes get some amount of CPU time at any given time), scheduler may also switch out processes that are still runnable. To prevent other processes from being starved of CPU time, pre-emptive schedulers often configure timer interrupt to fire when process exceeds its time slice. This interrupt ensures scheduler will gain control to perform a context switch. \\
+
+\emph{Interrupt handling}: Interrupt driven - meaning, e.g. if CPU requests data from disk, it doesn't need to busy-wait until read is over; it can issues request (to IO device) and continue with some other task. When read is over, CPU can be interrupted (in this case by hardware, which sends interrupt request to PIC) and presented with read.
+
+\emph{User and kernel mode switching}: When system transitions between user mode and kernel mode, context switch isn't necessary; a \emph{mode transition} isn't by itself a context switch. Depends on OS.
+
+\subsubsection{Performance in Context Switching}
+
+Context switching has cost in performance due to running task scheduler, TLB (translation lookaside buffer) flushes, and indirectly due to sharing CPU cache between multiple tasks.
+
+Switching between threads of a single process can be faster than between 2 separate processes because threads share the same virtual memory maps, so a TLB flush isn't necessary.
+
+Time to switch between 2 separate processes is \textbf{process switching latency}. Time to switch between 2 threads of same process is \textbf{thread switching latency}. 
+
+Switching between 2 processes in single address space OS can be faster than switching between 2 processes in OS with private per-process address spaces.
+
+
 
 
 \section{IPC: Interprocess Communications}
