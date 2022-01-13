@@ -391,6 +391,66 @@ def _find_ones_connected_to_border(
                     stack.append(neighbor)
 
 
+
+"""
+Array of Products
+
+Write a function that takes in a non-empty array of integers and returns an
+array of the same length, where each element in the output array is equal to the
+product of every other number in the input array.
+
+In other words, the value at output[i] is equal to the product of every number
+in the input array other than input[i]
+"""
+
+def array_of_products(array):
+    """
+    @details Hint 3. For each index in the input array, try calculating the
+    product of every element to the left and the product of every element to the
+    right. You can do this with 2 loops through the array: one from left to
+    right and one from right to left. How can these products help us?
+    """
+    N = len(array)
+    if (N == 0):
+        return array
+
+    products_towards_left = [1 for _ in range(N)]
+    products_towards_right = [1 for _ in range(N)]
+
+    product_towards_right = 1
+    for i in range(N):
+        if (i != 0):
+            product_towards_right *= array[i - 1]
+            products_towards_right[i] = product_towards_right
+
+    product_towards_left = 1
+    for i in range(N - 2, -1, -1):
+        product_towards_left *= array[i + 1]
+        products_towards_left[i] = product_towards_left
+
+    return [products_towards_right[i] * products_towards_left[i]
+        for i in range(N)]
+
+
+def brute_force_array_of_products(array):
+    """
+    @details Hint 1. Think about the most naive approach to solving this
+    problem. How can we do exactly what the problem wants to do without focusing
+    at all on time and space complexity?
+
+    O(N^2) time, O(1) space for product variable, O(N) space for output.
+    """
+    N = len(array)
+    output = []
+    for i in range(N):
+        product = 1
+        for j in range(N):
+            if j != i:
+                product *= array[j]
+        output.append(product)
+    return output
+
+
 def remove_islands(matrix):
     """
     @details

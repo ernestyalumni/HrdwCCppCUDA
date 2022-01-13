@@ -13,6 +13,8 @@ from Voltron.Algorithms.level_medium import (
     _find_peaks,
     _find_peak_length,
     longest_peak,
+    array_of_products,
+    brute_force_array_of_products,
     remove_islands
     )
 
@@ -280,6 +282,42 @@ def test_longest_peak():
     # Test case 9
     array = [1, 2, 3, 3, 2, 1]
     assert longest_peak(array) == 0    
+
+
+def test_array_of_products():
+
+    # Test case 1
+    array = [5, 1, 4, 2]
+
+    assert array_of_products(array) == [8, 40, 10, 20]
+
+    # Test Case 2
+    array = [1, 8, 6, 2, 4]
+
+    assert array_of_products(array) == [384, 48, 64, 192, 96]
+
+    # Test Case 3
+    array = [-5, 2, -4, 14, -6]
+
+    assert array_of_products(array) == [672, -1680, 840, -240, 560]
+
+
+def test_brute_force_array_of_products():
+
+    # Test case 1
+    array = [5, 1, 4, 2]
+
+    assert brute_force_array_of_products(array) == [8, 40, 10, 20]
+
+    # Test Case 2
+    array = [1, 8, 6, 2, 4]
+
+    assert brute_force_array_of_products(array) == [384, 48, 64, 192, 96]
+
+    # Test Case 3
+    array = [-5, 2, -4, 14, -6]
+
+    assert brute_force_array_of_products(array) == [672, -1680, 840, -240, 560]
 
 
 def test_remove_islands():
