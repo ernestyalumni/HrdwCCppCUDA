@@ -3105,6 +3105,34 @@ Save references to head and tail.
 
 The first stack starts at 1 and grows up towards $n$, while the second stack starts from $n$ and grows down towards $n$. Stack overflow happens when an element is pushed when the 2 stack pointers are adjacent.
 
+\exercisehead{10.1-6, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}} \emph{Show how to implement a queue using 2 stacks. Analyze the running time of the queue operations.} 
+
+For a queue q, recall a queue follows LIFO order. Given 2 stacks, s1, s2, recall stacks are FIFO.
+
+The following are the solutions (implementation): \\
+enqueue - enqueue pushes an element into s2. Check if s1 empty. \\
+dequeue - dequeue pops elements from s1. Check if s1 empty. \\
+If at any time, s1 is empty, then pop all elements in s2, into s1 so that the order is reversed.
+
+Case 0. q empty, so s1 and s2 empty, enqueue element x1. Check if s1 empty then pops x1 into s1. Dequeue pops element x1.
+
+Assume n1, n2 cases for s1, s2. Enqueue pushes x into s2. s1 not empty and still in LIFO order from assumption. Dequeue pops x1 from assumption. If n1 = 1, then n2 + 1 elements from s2 will be popped into s1 in reversed or LIFO order.
+
+Average case time complexity for both is O(1). Worst case time complexity is O(N) because of the transfer from s2 to s1 to maintain LIFO order.
+
+\exercisehead{10.1-7, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}} \emph{Show how to implement a stack using 2 queues. Analyze running time of stack operations}.
+
+For a stack s, given 2 queues, choose 1 queue to be active $q_a$, and another to be not active $q_{na}$.
+
+push: given element x, enqueue into $q_a$. O(1) time. 
+
+Because queues when popping or pushing "preserves order", the only way to get the last element in is to dequeue until the very last element.
+
+pop: dequeue $q_a$ until last element is reached (can check if empty afterwards). Then return that last element. Also, enqueue previous elements into $q_{na}$ and label $q_{na} \mapsto q_a$ to be active.
+
+
+
+
 \subsubsection{Deque. double-ended queue}
 
 One can enqueue and dequeue from either end.
