@@ -4180,7 +4180,19 @@ In analyzing insertion sort, from pp. 27, 2.2 of Cormen, Leiserson, Rivest, and 
 
 One simplifying abstraction, \textbf{rate of growth} or \textbf{order of growth} just means to consider only the leading term of a formula for large values of $n$.
 
+cf. pp. 18, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
 
+insertion sort takes parameter array A[1$\dots$ n]. Sorts inplace. \\
+
+Insertion-Sort(A) \\
+for j = 2 to A.length \\
+\quad key = A[j] \\
+\quad // insert A[j] into sorted sequence A[1 $\dots$ j - 1] \\
+\quad i = j - 1\\
+\quad while i > 0 and A[i] > key \\
+\quad \quad A[i + 1] = A[i] \\
+\quad \quad i = i - 1\\
+\quad A[i + 1] = key \\
 
 \subsection{Bubble Sort, $O(N^2)$ in time, $O(1)$ in space}
 

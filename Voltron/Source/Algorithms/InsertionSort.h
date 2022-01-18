@@ -110,7 +110,6 @@ void insertion(T* const array, int const n)
 /// \brief Sort a linked list using insertion sort.
 /// \url https://leetcode.com/problems/insertion-sort-list/
 /// \ref 147. Insertion Sort List.
-///
 //------------------------------------------------------------------------------
 DataStructures::LinkedLists::UsingPointers::ListNode* insertion_sort_list(
   DataStructures::LinkedLists::UsingPointers::ListNode* head);

@@ -67,7 +67,7 @@ IF(CCACHE_FOUND)
   SET(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 ENDIF()
 
-# Declare dependency on GoogleTest which is donwloaded from GitHub.
+# Declare dependency on GoogleTest which is downloaded from GitHub.
 # cf. https://google.github.io/googletest/quickstart-cmake.html
 INCLUDE(FetchContent)
 FetchContent_Declare(

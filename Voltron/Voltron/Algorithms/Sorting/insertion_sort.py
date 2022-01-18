@@ -6,6 +6,7 @@ def insertion_sort(array):
     # are to be assumed to be sorted or about to be sorted.    
     for k in range(1, N):
 
+        # k, k - 1, ... 1
         for j in range(k, 0, -1):
 
             if (array[j - 1] > array[j]):
@@ -18,6 +19,7 @@ def insertion_sort(array):
                 break
 
     return array
+
 
 def insertion_sort_optimized(array):
 

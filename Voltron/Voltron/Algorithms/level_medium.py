@@ -432,6 +432,89 @@ def array_of_products(array):
         for i in range(N)]
 
 
+"""
+First Duplicate Value
+
+Given an array of integers between 1 and n, inclusive, where n is the length of
+the array, write a function that returns the first integer that appears more
+than once (when the array is read from left to right).
+
+In other words, out of all the integers that might occur more than once in the
+input array, your function should return the one whose first duplicate value has
+the minimum index.
+
+If no integer appears more than once, your function should return -1.
+
+Note that you're allowed to mutate the input array.
+"""
+
+def brute_force_first_duplicate_value(array):
+    """
+    O(N^2) time.
+
+    The brute-force solution can be done in O(N^2) time. Think about how you can
+    determine if a value appears twice in an array.
+    """
+    N = len(array)
+    minimum_index = N
+
+    for i in range(N):
+        temp = array[i]
+        for j in range(i + 1, N):
+            if temp == array[j]:
+                if minimum_index > j:
+                    minimum_index = j
+
+    if (minimum_index < N):
+        return array[minimum_index]
+
+    return -1
+
+def first_duplicate_value_with_ds(array):
+    """
+    O(N) time, O(N) space.
+
+    Hint 2. You can use a data structure that has constant-time lookups to keep
+    to keep track of integers that you've seen already. This leads the way to a
+    linear-time solution.
+    """
+    N = len(array)
+    minimum_index = N
+    seen_already = [False for i in range(N)]
+
+    for i in range(N):
+        temp = array[i]
+        if not seen_already[temp - 1]:
+            seen_already[temp - 1] = True
+        else:
+            if (minimum_index > i):
+                minimum_index = i
+
+    if (minimum_index < N):
+        return array[minimum_index]
+
+    return -1
+
+
+def first_duplicate_value(array):
+    """
+
+    Use the negative sign, at the index that represents an array element's
+    value, to represent an element being "seen".
+    """
+    N = len(array)
+    minimum_index = N
+    for i in range(N):
+        temp = array[i]
+        temp = abs(temp) - 1
+        if (array[temp] < 0):
+            return temp + 1
+        else:
+            array[temp] *= -1
+
+    return -1
+
+
 def brute_force_array_of_products(array):
     """
     @details Hint 1. Think about the most naive approach to solving this

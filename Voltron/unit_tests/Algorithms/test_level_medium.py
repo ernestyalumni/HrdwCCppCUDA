@@ -15,6 +15,8 @@ from Voltron.Algorithms.level_medium import (
     longest_peak,
     array_of_products,
     brute_force_array_of_products,
+    brute_force_first_duplicate_value,
+    first_duplicate_value_with_ds,
     remove_islands
     )
 
@@ -318,6 +320,24 @@ def test_brute_force_array_of_products():
     array = [-5, 2, -4, 14, -6]
 
     assert brute_force_array_of_products(array) == [672, -1680, 840, -240, 560]
+
+
+def test_first_duplicate_value_with_ds():
+
+    # Test case 3
+    array = [1, 1, 2, 3, 3, 2, 2]
+
+    assert first_duplicate_value_with_ds(array) == 1
+
+    # Test case 4
+    array = [3, 1, 3, 1, 1, 4, 4]
+
+    assert first_duplicate_value_with_ds(array) == 3
+
+    # Test case 5
+    array = []
+
+    assert first_duplicate_value_with_ds(array) == -1
 
 
 def test_remove_islands():
