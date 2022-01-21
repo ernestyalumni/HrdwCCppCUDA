@@ -5026,7 +5026,7 @@ When writing programs that communicate across a computer network, one must first
 
 For example, a Web server is typically thought of as a long-running program (or \textbf{daemon}) that sends network messages only in response to requests coming in from the network.
 
-Other side of the porotocol is a Web client, e.g. browser, which always \emph{initiates} communication with the server.
+Other side of the protocol is a Web client, e.g. browser, which always \emph{initiates} communication with the server.
 
 Deciding that client always initiates requests tends to simplify protocol - basic client/server model.
 
@@ -5342,6 +5342,33 @@ right=2.2cm of serverClose
 \end{gathered} 
 \]
 cf. \href{https://www.csd.uoc.gr/~hy556/material/tutorials/cs556-3rd-tutorial.pdf}{CS556 - Distributed Systems, Tutorial by Eleftherios Kosmas, Introduction to Sockets Programming in C using TCP/IP}
+
+cf. \href{https://www.cs.colostate.edu/~massey/Teaching/cs457/}{CS 457, Colorado State, Lecture 20 "Transport Layer: UDP and TCP"}
+
+Recall the application layer is for communication between networked applications. Protocols for application layer include HTTP, FTP, NNTP, etc. \\
+Transport layer is for communication between processes (e.g. socket). It relies on network layer and server the application layer. Protocols are TCP and UDP. \\
+FYI, network layer is communication between nodes and protocols are IP. \\
+
+So for the \emph{Internet Transport Protocols}, being UDP and TCP, \\
+\begin{itemize}
+	\item UDP (datagram \emph{messaging} service) 
+	\begin{itemize}
+		\item No-frills extension of "best-effort" IP
+		\item Just send the data - \emph{each send is a message}
+	\end{itemize}
+	\item TCP (reliable, \emph{streaming}, in-order delivery)
+	\begin{itemize}
+		\item Connection set-up
+		\item Discarding of corrupted packets
+		\item Retransmission of lost packets
+		\item flow control
+		\item congestion control
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Multiplexing and Demultiplexing with TCP and UDP}
+
+For the TCP/UDP segment format, the host
 
 
 \section{References and Resources for Linux System Programming}

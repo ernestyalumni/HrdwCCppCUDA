@@ -432,6 +432,25 @@ def array_of_products(array):
         for i in range(N)]
 
 
+def brute_force_array_of_products(array):
+    """
+    @details Hint 1. Think about the most naive approach to solving this
+    problem. How can we do exactly what the problem wants to do without focusing
+    at all on time and space complexity?
+
+    O(N^2) time, O(1) space for product variable, O(N) space for output.
+    """
+    N = len(array)
+    output = []
+    for i in range(N):
+        product = 1
+        for j in range(N):
+            if j != i:
+                product *= array[j]
+        output.append(product)
+    return output
+
+
 """
 First Duplicate Value
 
@@ -515,23 +534,72 @@ def first_duplicate_value(array):
     return -1
 
 
-def brute_force_array_of_products(array):
-    """
-    @details Hint 1. Think about the most naive approach to solving this
-    problem. How can we do exactly what the problem wants to do without focusing
-    at all on time and space complexity?
+"""
+@brief Merge Overlapping Intervals
 
-    O(N^2) time, O(1) space for product variable, O(N) space for output.
+Write a function that takes a non-empty array of arbitrary intervals, merges any
+overlapping intervals, and returns the new intervals in no particular order.
+"""
+
+def _is_overlapping(i1, i2):
+    if i1 == None:
+
+        return False
+
+    return i1[0] < i2[1] or i2[0] < i1[1]
+
+def _merge_intervals(i1, i2):
+    coordinates = [i1[0], i1[1], i2[0], i2[1]]
+    min_coordinate = min(coordinates)
+    max_coordinate = max(coordinates)
+    return [min_coordinate, max_coordinate]
+
+def sorted_merge_overlapping_intervals(intervals):
+
     """
-    N = len(array)
-    output = []
-    for i in range(N):
-        product = 1
-        for j in range(N):
-            if j != i:
-                product *= array[j]
-        output.append(product)
-    return output
+    @details Hint 2: Sort the intervals with respect to their starting values.
+    This will allow you to merge all overlapping intervals in a single traversal
+    through the sorted intervals.
+    """
+
+    # Sorting
+
+    sorted_intervals = sorted(intervals, key=lambda interval: interval[0])
+
+    result = []
+
+    # Given nonempty array.
+    current_interval = intervals[0]
+
+    N = len(intervals)
+
+    for i in range(1, N):
+
+        if (_is_overlapping(current_interval, sorted_intervals[i])):
+
+            current_interval = _merge_intervals(
+                current_interval,
+                sorted_intervals[i])
+
+            if (i == N - 1):
+
+                result.append(current_interval)
+
+        else:
+            result.append(current_interval)
+
+            if (i != N - 1):
+
+                current_interval = None
+
+    return result
+
+
+def merge_overlapping_intervals(intervals):
+    """
+    O(N log(N)) time | O(N) space - where N is length of input array.
+    """    
+
 
 
 def remove_islands(matrix):
