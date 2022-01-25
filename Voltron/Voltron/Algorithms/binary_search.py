@@ -108,29 +108,28 @@ def binary_search(a, search_value):
 
 
 def binary_search_iterative(array, search_target):
-    midpoint_index = 0
-    start_index = 0
-    end_index = len(array) - 1
+    low = 0
+    high = len(array) - 1
 
-    while (start_index <= end_index):
+    while (low <= high):
 
-        midpoint_index = (start_index + end_index) // 2
+        midpoint_index = (high + low) // 2
 
         midpoint_value = array[midpoint_index]
 
+        if (search_target == midpoint_value):
+            return midpoint_index
+
         if search_target < midpoint_value:
 
-            end_index = midpoint_index - 1
-
-        elif search_target > midpoint_value:
-
-            start_index = midpoint_index + 1
+            high = midpoint_index - 1
 
         else:
+            assert search_target > midpoint_value
 
-            assert midpoint_value == search_target
+            low = midpoint_index + 1
 
-            return midpoint_index
+    return None
 
     # Failure case when cannot find search target in array.
     return None

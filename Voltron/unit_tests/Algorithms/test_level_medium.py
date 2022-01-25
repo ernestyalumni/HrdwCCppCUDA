@@ -17,7 +17,6 @@ from Voltron.Algorithms.level_medium import (
     brute_force_array_of_products,
     brute_force_first_duplicate_value,
     first_duplicate_value_with_ds,
-    brute_merge_overlapping_intervals,
     sorted_merge_overlapping_intervals,
     remove_islands
     )
