@@ -380,3 +380,7 @@ def test_remove_islands():
         [1, 0, 0, 0, 1]]
 
     assert result == expected
+
+
+#def test_sorted_merge_overlapping_intervals():
+    
