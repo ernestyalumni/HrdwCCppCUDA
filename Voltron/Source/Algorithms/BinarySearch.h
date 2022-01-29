@@ -28,7 +28,7 @@ std::optional<std::size_t> binary_search_iterative(
   /// \details Be careful of a huge error case that gets caught by a unit test
   /// testing a value smaller than the left bound. The exit condition requires
   /// that l > r. But what happens if l = 0 and the the type is unsigned
-  /// std::size_t.
+  /// std::size_t? Underflow!
   //----------------------------------------------------------------------------
   const int high,
   const int low = 0)
@@ -183,6 +183,35 @@ std::optional<std::size_t> binary_search_inclusive(
 
 int square_root(int x);
 
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/discuss/interview-question/algorithms/124724/facebook-onsite-count-occurrences-of-a-number-in-a-sorted-array
+/// \ref https://www.geeksforgeeks.org/count-number-of-occurrences-or-frequency-in-a-sorted-array/
+//------------------------------------------------------------------------------
+
+template <
+  typename T,
+  typename FindFirstT,
+  typename FindLastT,
+  typename ContainerT>
+int find_number_of_occurrences_in_sorted_array(
+  FindFirstT f1,
+  FindLastT f2,
+  const ContainerT& a,
+  const T target,
+  const int high,
+  const int low = 0)
+{
+  const auto result1 = f1(a, target, high, low);
+
+  if (!static_cast<bool>(result1))
+  {
+    return 0;
+  }
+
+  return f2(a, target, high, low).value() - result1.value() + 1;
+}
+
 namespace Details
 {
 
@@ -256,7 +285,7 @@ std::optional<std::size_t> binary_search_last_occurrence_recursive(
   const int high,
   const int low = 0)
 {
-  const int N {a.size()};
+  const int N {static_cast<int>(a.size())};
 
   if (low > high)
   {
@@ -289,7 +318,7 @@ std::optional<std::size_t> binary_search_last_occurrence_iterative(
   int r {high};
   int l {low};
 
-  const int N {a.size()};
+  const int N {static_cast<int>(a.size())};
 
   while (l <= r)
   {
