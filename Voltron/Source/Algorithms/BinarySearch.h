@@ -2,8 +2,7 @@
 /// \file BinarySearch.h
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating Binary Search.
-/// \ref 
-///-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef ALGORITHMS_SEARCH_BINARY_SEARCH_H
 #define ALGORITHMS_SEARCH_BINARY_SEARCH_H
 
@@ -11,103 +10,82 @@
 #include <optional>
 #include <utility> // std::make_pair
 
+#include <iostream>
+
 namespace Algorithms
 {
 namespace Search
 {
 
-namespace Details
-{
-
 //------------------------------------------------------------------------------
-/// \details If l - r odd so that total number of elements is even, midpoint is
-/// the position of the "farthest right" element in the "left" half.
+/// \ref Exercise 2.3-5, Cormen, Leiserson, Rivest, and Stein (2009)
 //------------------------------------------------------------------------------
-
-std::optional<std::size_t> calculate_midpoint(
-  const std::size_t l,
-  const std::size_t r);
-
-template <typename T>
-std::optional<std::pair<bool, std::pair<std::size_t, std::size_t>>>
-  compare_partition(
-    const T& midpoint_value,
-    const T& search_value,
-    const std::size_t midpoint_index,
-    const std::size_t l,
-    const std::size_t r)
+template <typename T, typename ContainerT>
+std::optional<std::size_t> binary_search_iterative(
+  const ContainerT& a,
+  const T target,
+  //----------------------------------------------------------------------------
+  /// \details Be careful of a huge error case that gets caught by a unit test
+  /// testing a value smaller than the left bound. The exit condition requires
+  /// that l > r. But what happens if l = 0 and the the type is unsigned
+  /// std::size_t.
+  //----------------------------------------------------------------------------
+  const int high,
+  const int low = 0)
 {
-  if (search_value == midpoint_value)
-  {
-    return 
-      std::make_pair(
-        true,
-        std::make_pair(midpoint_index, midpoint_index));
-  }
+  int r {high};
+  int l {low};
 
-  if (search_value < midpoint_value)
+  while (l <= r)
   {
-    if (midpoint_index == 0)
+    // Gets highest value in left half; lies on "left side" of middle pt. if
+    // number of elements is even.
+    const int mid {(l + r) / 2};
+
+    if (a[mid] == target)
     {
-      return std::nullopt;
+      return mid;
     }
-    return std::make_pair(false, std::make_pair(l, midpoint_index - 1));
+
+    if (a[mid] < target)
+    {
+      l = mid + 1;
+    }
+    else
+    {
+      r = mid - 1;
+    }
   }
 
-  //if (search_value > midpoint_value)
-  //{
-  if (midpoint_index + 1 > r)
-  {
-    return std::nullopt;
-  }
-  return std::make_pair(false, std::make_pair(midpoint_index + 1, r));
-  //}
+  return std::nullopt;
 }
 
-template <class TContainer, typename T>
-std::optional<std::pair<bool, std::pair<std::size_t, std::size_t>>>
-  binary_search_iteration(
-    const TContainer& a,
-    std::size_t l,
-    std::size_t r,
-    const T& search_value)
+template <typename T, typename ContainerT>
+std::optional<std::size_t> binary_search_recursive(
+  const ContainerT& a,
+  const T target,
+  const int high,
+  const int low = 0)
 {
-  const auto m = calculate_midpoint(l, r);
-
-  if (!m)
+  if (low > high)
   {
     return std::nullopt;
   }
 
-  return compare_partition(a[m.value()], search_value, m.value(), l, r);
-}
+  const int mid {(low + high) / 2};
 
-} // namespace Details
-
-template <class TContainer, typename T>
-std::optional<std::size_t>
-  binary_search(const TContainer& a, const T& search_value)
-{
-  std::size_t l {0};
-  std::size_t r {a.size() - 1};
-
-  while (true)
+  if (a[mid] == target)
   {
-    const auto result = Details::binary_search_iteration(a, l, r, search_value);
+    return mid;
+  }
 
-    if (!result)
-    {
-      return std::nullopt;
-    }
-
-    // Found search value!
-    if (result.value().first)
-    {
-      return result.value().second.first;
-    }
-
-    l = result.value().second.first;
-    r = result.value().second.second;
+  if (a[mid] < target)
+  {
+    return binary_search_recursive(a, target, high, mid + 1);
+  }
+  else
+  {
+    return binary_search_recursive(a, target, mid - 1, low);
   }
 }
 
@@ -204,6 +182,231 @@ std::optional<std::size_t> binary_search_inclusive(
 //------------------------------------------------------------------------------
 
 int square_root(int x);
+
+namespace Details
+{
+
+//------------------------------------------------------------------------------
+/// \url https://leetcode.com/discuss/interview-question/algorithms/124724/facebook-onsite-count-occurrences-of-a-number-in-a-sorted-array
+//------------------------------------------------------------------------------
+
+template <typename T, typename ContainerT>
+std::optional<std::size_t> binary_search_first_occurrence_recursive(
+  const ContainerT& a,
+  const T target,
+  const int high,
+  const int low = 0)
+{
+  if (low > high)
+  {
+    return std::nullopt;
+  }
+
+  const int mid {(low + high) / 2};
+
+  if ((mid == 0 || a[mid - 1] < target) && (a[mid] == target))
+  {
+    return mid;
+  }
+  else if (a[mid] < target)
+  {
+    return binary_search_first_occurrence_recursive(a, target, high, mid + 1);
+  }
+  else
+  {
+    return binary_search_first_occurrence_recursive(a, target, mid - 1, low);
+  }
+}
+
+template <typename T, typename ContainerT>
+std::optional<std::size_t> binary_search_first_occurrence_iterative(
+  const ContainerT& a,
+  const T target,
+  const int high,
+  const int low = 0)
+{
+  int r {high};
+  int l {low};
+
+  while (l <= r)
+  {
+    const int mid {(l + r) / 2};
+
+    if ((mid == 0 || a[mid - 1] < target) && (a[mid] == target))
+    {
+      return mid;
+    }
+    else if (a[mid] < target)
+    {
+      l = mid + 1;
+    }
+    else
+    {
+      r = mid - 1;
+    }
+  }
+
+  return std::nullopt;
+}
+
+template <typename T, typename ContainerT>
+std::optional<std::size_t> binary_search_last_occurrence_recursive(
+  const ContainerT& a,
+  const T target,
+  const int high,
+  const int low = 0)
+{
+  const int N {a.size()};
+
+  if (low > high)
+  {
+    return std::nullopt;
+  }
+
+  const int mid {(low + high) / 2};
+
+  if ((mid == N - 1 || a[mid + 1] > target) && (a[mid] == target))
+  {
+    return mid;
+  }
+  else if (a[mid] > target)
+  {
+    return binary_search_last_occurrence_recursive(a, target, mid - 1, low);
+  }
+  else
+  {
+    return binary_search_last_occurrence_recursive(a, target, high, mid + 1);
+  }
+}
+
+template <typename T, typename ContainerT>
+std::optional<std::size_t> binary_search_last_occurrence_iterative(
+  const ContainerT& a,
+  const T target,
+  const int high,
+  const int low = 0)
+{
+  int r {high};
+  int l {low};
+
+  const int N {a.size()};
+
+  while (l <= r)
+  {
+    const int mid {(l + r) / 2};
+
+    if ((mid == N - 1 || a[mid + 1] > target) && (a[mid] == target))
+    {
+      return mid;
+    }
+    else if (a[mid] > target)
+    {
+      r = mid - 1;
+    }
+    else
+    {
+      l = mid + 1;
+    }
+  }
+
+  return std::nullopt;
+}
+
+//------------------------------------------------------------------------------
+/// Not great code.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/// \details If l - r odd so that total number of elements is even, midpoint is
+/// the position of the "farthest right" element in the "left" half.
+//------------------------------------------------------------------------------
+
+std::optional<std::size_t> calculate_midpoint(
+  const std::size_t l,
+  const std::size_t r);
+
+template <typename T>
+std::optional<std::pair<bool, std::pair<std::size_t, std::size_t>>>
+  compare_partition(
+    const T& midpoint_value,
+    const T& search_value,
+    const std::size_t midpoint_index,
+    const std::size_t l,
+    const std::size_t r)
+{
+  if (search_value == midpoint_value)
+  {
+    return 
+      std::make_pair(
+        true,
+        std::make_pair(midpoint_index, midpoint_index));
+  }
+
+  if (search_value < midpoint_value)
+  {
+    if (midpoint_index == 0)
+    {
+      return std::nullopt;
+    }
+    return std::make_pair(false, std::make_pair(l, midpoint_index - 1));
+  }
+
+  //if (search_value > midpoint_value)
+  //{
+  if (midpoint_index + 1 > r)
+  {
+    return std::nullopt;
+  }
+  return std::make_pair(false, std::make_pair(midpoint_index + 1, r));
+  //}
+}
+
+template <class TContainer, typename T>
+std::optional<std::pair<bool, std::pair<std::size_t, std::size_t>>>
+  binary_search_iteration(
+    const TContainer& a,
+    std::size_t l,
+    std::size_t r,
+    const T& search_value)
+{
+  const auto m = calculate_midpoint(l, r);
+
+  if (!m)
+  {
+    return std::nullopt;
+  }
+
+  return compare_partition(a[m.value()], search_value, m.value(), l, r);
+}
+
+} // namespace Details
+
+template <class TContainer, typename T>
+std::optional<std::size_t>
+  binary_search(const TContainer& a, const T& search_value)
+{
+  std::size_t l {0};
+  std::size_t r {a.size() - 1};
+
+  while (true)
+  {
+    const auto result = Details::binary_search_iteration(a, l, r, search_value);
+
+    if (!result)
+    {
+      return std::nullopt;
+    }
+
+    // Found search value!
+    if (result.value().first)
+    {
+      return result.value().second.first;
+    }
+
+    l = result.value().second.first;
+    r = result.value().second.second;
+  }
+}
 
 } // namespace Search
 } // namespace Algorithms

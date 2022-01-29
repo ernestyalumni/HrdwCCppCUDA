@@ -3589,18 +3589,18 @@ iterative-binary search(A, v, low, high) \\
 \quad return NIL \\
 
 Recursive-binary search (A, v, low, high) \\
-\quad if low > high, \\
+\quad if low $>$ high, \\
 \quad \quad return NIL \\
 \quad mid  = floor((low + high) / 2) \\
 \quad if v == A[mid] \\
 \quad \quad return mid \\
-\quad else if v > A[mid] \\
+\quad else if v $>$ A[mid] \\
 \quad \quad return recursive-binary search(A, v, mid + 1, high) \\
 \quad else return recursive-binary search(A, v, low, mid - 1) \\
 
 Time we do comparison of v with middle element, search range continues with range of elements halved.
 
-Recurrrence is 
+Recurrence is 
 \[
 T(n) = \begin{cases} \Theta(1) & \text{ if } n = 1 \\
 	T(n/2) + O(1) & \text{ if } n > 1 \end{cases}
@@ -3609,6 +3609,27 @@ T(n) = \begin{cases} \Theta(1) & \text{ if } n = 1 \\
 \Longrightarrow T(n) = \Theta(\log{n})
 \]
 
+\subsubsection{Binary Search for leftmost or rightmost occurrence}
+
+Consider this question from \href{https://leetcode.com/discuss/interview-question/algorithms/124724/facebook-onsite-count-occurrences-of-a-number-in-a-sorted-array}{leetcode}, where we count the number of occurrences of a number in a sorted array.
+
+To get the number of occurrences, it's easier to find the position of the left most appearance of the number and the position of the right most appearance of the number. Then we'll need a binary search that'll find such a position when the numbers are not unique in an array.
+
+Consider finding the leftmost occurrence: \\
+if (m= 0 or x $>$ a (m - 1)) and a(m) = x, \\
+(contrapositive (m $\neq$ 0 and x $\leq $ a(m-1)) or a(m) $\neq$ x \\
+\quad \, if a(m) $<$ x \\
+\quad \, $\Longrightarrow $ (m+1, h) \\
+\quad \, else \\
+\quad \, $\Longrightarrow (l, m - 1)$ \\
+
+Consider finding the rightmost occurrence: \\
+if (m= n - 1 or x $<$ a (m + 1)) and a(m) = x, \\
+(contrapositive (m $\neq$ n - 1 and x $\geq $ a(m  + 1)) or a(m) $\neq$ x \\
+\quad \, if a(m) $>$ x \\
+\quad \, $\Longrightarrow $ (l, m - 1) \\
+\quad \, else (a(m) $<$ x or a(m+1) $\leq $ x and m $\neq $ n -1) \\
+\quad \, $\Longrightarrow (m+ 1, h)$ \\
 
 
 \subsection{Breadth-first search (BFS)}
