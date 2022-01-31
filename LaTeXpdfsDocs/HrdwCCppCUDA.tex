@@ -3518,6 +3518,82 @@ Expected number of collisions
 \sum_{i=1}^n \frac{n-i}{m} = \frac{n^2 - \frac{n(n+1)}{2} }{m} = \frac{n (n-1) }{m}
 \]
 
+The hash process: 
+
+\[
+\begin{gathered}
+\begin{tikzpicture}
+\matrix (m) [matrix of math nodes, row sep=2.8em, column sep=4.8em, minimum width=2.2em]
+{
+	\text{Object} & & \\
+	\text{32-bit integer} & & \\
+	\text{Map to an index } 0, \dots M - 1 & & \\ 
+	\text{Deal with collisions} & & \\
+	& \text{Linear probing} & \text{Chained hash tables} \\
+	& \text{Quadratic probing} & \text{Open addressing} \\
+	& \text{Double Hashing} & \\
+};
+\path[->]
+(m-1-1) edge node [auto] {$$} (m-2-1)
+(m-2-1) edge node [right] {Modulus, mid-square, multiplicative, Fibonacci} (m-3-1)
+(m-3-1) edge node [auto] {$$} (m-4-1)
+(m-5-3) edge node [auto] {$$} (m-5-2)
+;
+\end{tikzpicture}   \\
+\end{gathered}
+\]
+
+\subsection{Hash functions}
+
+cf. 11.3 "Hash functions" of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}
+
+\subsubsection{What makes a good hash function?}
+
+A good hash function satisfies (approximately) assumption of simple uniform hashing: that each key equally likely to hash to any of m slots, independently of where any other key hashed to. \\
+Unfortunately, probability distribution from which keys drawn unknown, and drawing itself might not be independent. \\
+
+However, if we know keys are random real numbers k independently, uniformly distributed in range $0\leq k < 1$, then
+\begin{equation}
+h(k) = \lfloor km \rfloor
+\end{equation}
+satisfies condition of simple uniform hashing.
+
+Create well-performing hash function: \\
+e.g. consider compiler's symbol table, in which keys are character strings, representing identifiers in a program. Closely related symbols, e.g. pt and pts, often occur in same program. \\
+- good hash function would minimize change such variants hash to the same slot. \\
+
+A good approach derives hash value independent of patterns that might exist in data: \\
+e.g. "division method"; key divided by prime number $\mapsto$ remainder; choose prime number unrelated to problems in keys distribution. \\
+
+example: want keys that are "close" to yield hash values far apart; e.g. universal hashing (11.3.3 of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}).
+
+\subsubsection{Interpreting keys as natural numbers for hash functions}
+
+Most hash functions assume universe of keys is set $\mathbb{N} = \lbrace 0, 1,2, \dots \rbrace$ of natural numbers; thus if keys aren't natural numbers, find a way to interpret as natural numbers. \\
+e.g. interpret a character string as integer expressed in suitable radix notation. \\
+e.g. pt as p = 112, t = 116, radix-128 int $\mapsto (112 \cdot 128) + 116 = 14452$, i.e.
+\[
+r(s) = \sum_{j=0}^{N- 1} 128^j \cdot s[j]
+\]
+
+\subsubsection{Division method}
+
+map key k into m slots by taking remainder of k divided by m, i.e. 
+\begin{equation}
+h(k) = k \mod{m}
+\end{equation}
+
+m shouldn't be power of 2, since if $m=2^p$, h(k) is just p lowest-order bits of k \\
+Unless we know all low-order p bit patterns equally likely better off designing hash function to depend on all bits of key. \\
+Exercise 11.3-3 (of Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}) shows choosing $m=2^p - 1$ when k is character string interpreted in radix $2^p$ maybe poor choice, because permuting characters of k doesn't change hash value. \\
+
+prime not too close to exact power of 2 often good choice for m \\
+e.g. hash table, with collisions resolved by chaining, to hold n = 2000 character strings, where a character has 8 bits = 1 byte \\
+We don't mind examining average of 3 elements in an unsuccessful search, so allocate hash table of size m = 701.  \\
+Choose m= 701 because it's a prime near $2000/3$ but not near any power of 2
+\begin{equation}
+h(k) = k \mod{701}
+\end{equation}
 
 
 \section{Search}

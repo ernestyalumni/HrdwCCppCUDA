@@ -53,7 +53,7 @@ class DoubleNode
 		friend class DoublyLinkedList<T>;
 
 		// If ptr is a pointer to a DoubleNode<T> object,
-		// in one of the friendly classes, you shoud:
+		// in one of the friendly classes, you should:
 		// 		use ptr->next_node 	to modify it
 		// 		use ptr->next() 		to access it
 
