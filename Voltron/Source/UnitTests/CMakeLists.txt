@@ -104,6 +104,7 @@ ADD_EXECUTABLE(Check
   DataStructures/BinaryTrees_tests.cpp
   DataStructures/DataStructures_tests.cpp
   DataStructures/HashSet_tests.cpp
+  DataStructures/HashTables/HashFunctions_tests.cpp
   DataStructures/HashTables/HashTable_tests.cpp
   DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists/DoublyLinkedList_tests.cpp

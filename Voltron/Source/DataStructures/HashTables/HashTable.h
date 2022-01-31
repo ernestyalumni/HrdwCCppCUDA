@@ -58,7 +58,6 @@ class HashTable
     void clear() = 0;
 };
 
-
 } // namespace HashTables
 } // namespace DataStructures
 
