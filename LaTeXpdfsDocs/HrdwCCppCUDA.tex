@@ -3596,6 +3596,47 @@ h(k) = k \mod{701}
 \end{equation}
 
 
+\subsubsection{Multiplication method}
+
+\[
+h(k) = \lfloor m (kA \mod{1}) \rfloor
+\]
+where $0 < A < 1$, where $kA \mod{1}$ means take the fractional part of $kA$, i.e. $kA - \lfloor kA \rfloor$ \\
+
+advantage of multiplication method: value of $m$ is not critical. \\
+typically choose m to be a power of 2 ($m = 2^p$ for some $p \in \mathbb{Z}$). \\
+
+Suppose word size of machine is $w$ bits, $k$ fits into single word. \\
+
+Restrict A to be fraction of form $s/2^w$, where $s$ is an integer in range $0 < s < 2^w$.  \\
+
+So $k \times s = k \times A \cdot 2^w$, \\
+where first multiply k by w-bit integer s $= A \cdot 2^w$.  \\
+
+Result is $2w$ bit value $r_1 2^w + r_0$ where $r_1$ is high-order word of product, $r_0$ is low-order word of product desired $p$-bit hash value consists of p most significant bits of $r_0$. \\
+
+Although this method works with any value of constant $A$, optimal choice depends on characteristics of data being hashed. Knuth suggests
+\[
+A \approx (\sqrt{5} - 1) / 2 = 0.6180339887
+\]
+
+e.g. $k= 123456, \, p = 14$ (14-bit has value), $m = 2^{14} = 16384, \, w = 32$ (32-bit word size).
+
+Adapting Knuth's suggestion, choose $A = s/2^w$, and $A \approx (\sqrt{5} - 1) / 2$, so $A = 2654435769 / 2^{32}$. \\
+$ k \cdot s = 327706022297664 = (76300 \cdot 2^{32}) + 17612864$, so $r_1 = 76300$, $r_0 = 17612864$. \\
+14 most significant bits of $r_0$ yield $h(k) = 67$ since 
+\[
+17612864 \mapsto 0000000 \, 10000110011000 \, 000010 \, 00000
+\]
+so 14 most significant bits of 32 are 
+\[
+00000 \, 00 1000011 = 67
+\]
+
+\subsubsection{Universal hashing}
+
+
+
 \section{Search}
 
 \subsection{Binary Search $O(\log{(N)})$}

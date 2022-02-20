@@ -3684,6 +3684,87 @@ Choose m= 701 because it's a prime near $2000/3$ but not near any power of 2
 h(k) = k \mod{701}
 \end{equation}
 
+\subsubsection{Multiplication method}
+
+\[
+h(k) = \lfloor m (kA \mod{1}) \rfloor
+\]
+where $0 < A < 1$, where $kA \mod{1}$ means take the fractional part of $kA$, i.e. $kA - \lfloor kA \rfloor$ \\
+
+advantage of multiplication method: value of $m$ is not critical. \\
+typically choose m to be a power of 2 ($m = 2^p$ for some $p \in \mathbb{Z}$). \\
+
+Suppose word size of machine is $w$ bits, $k$ fits into single word. \\
+
+Restrict A to be fraction of form $s/2^w$, where $s$ is an integer in range $0 < s < 2^w$.  \\
+
+So $k \times s = k \times A \cdot 2^w$, \\
+where first multiply k by w-bit integer s $= A \cdot 2^w$.  \\
+
+Result is $2w$ bit value $r_1 2^w + r_0$ where $r_1$ is high-order word of product, $r_0$ is low-order word of product desired $p$-bit hash value consists of p most significant bits of $r_0$. \\
+
+Although this method works with any value of constant $A$, optimal choice depends on characteristics of data being hashed. Knuth suggests
+\[
+A \approx (\sqrt{5} - 1) / 2 = 0.6180339887
+\]
+
+e.g. $k= 123456, \, p = 14$ (14-bit has value), $m = 2^{14} = 16384, \, w = 32$ (32-bit word size).
+
+Adapting Knuth's suggestion, choose $A = s/2^w$, and $A \approx (\sqrt{5} - 1) / 2$, so $A = 2654435769 / 2^{32}$. \\
+$ k \cdot s = 327706022297664 = (76300 \cdot 2^{32}) + 17612864$, so $r_1 = 76300$, $r_0 = 17612864$. \\
+14 most significant bits of $r_0$ yield $h(k) = 67$ since 
+\[
+17612864 \mapsto 0000000 \, 10000110011000 \, 000010 \, 00000
+\]
+so 14 most significant bits of 32 are 
+\[
+00000 \, 00 1000011 = 67
+\]
+
+\subsubsection{Universal hashing}
+
+Let $\mathcal{H}$ be a finite collection of hash functions that map given universe $U$ of keys into range $\lbrace 0 ,1 , \dots m -1 \rbrace$. \\
+collection $\mathcal{H}$ called \textbf{universal} if $\forall \, $ pair of distinct $k, l \in U$, number of hash functions $h \in \mathcal{H}$ for which $h(k) = h(l)$ is at most $|\mathcal{H}| / m$.
+
+i.e. with hash function randomly chosen from $\mathcal{H}$, chance of collision between distinct keys $k$ and $l$ is chance $\frac{1}{m}$ of a collision if $h(k), h(l)$ were randomly and independently chosen from $\lbrace 0, 1, \dots m -1 \rbrace$.
+
+This Thm. shows a universal class of hash functions gives good average-case behavior. \\
+$n_i \equiv $ length of list $T[i]$
+
+\begin{theorem}[11.3, Cormen, Leiserson, Rivest, and Stein (2009) \cite{CLRS2009}]
+Suppose hash function $h$ chosen randomly from universal collection of hash functions and has been used to hash $n$ keys into table $T$ of size $m$, using chaining to resolve collisions.
+
+If key $k$ not in table, then expected length $E[n_{h(k)}]$ of list that key $k$ hashes to is at most load factor $\alpha = n/m$.
+
+If key $k$ is in the table, then expected length $E[n_{h(k)}]$ of the list containing key $k$ is at most $1+\alpha$.
+\end{theorem}
+
+\begin{proof}
+Note expectations here are over choice of hash functions and don't depend on any assumptions about distribution of keys.
+
+$\forall \, $ distinct $k, l$ keys, define indicator random variable $X_{kl} = I\lbrace h(k) = h(l) \rbrace$ \\
+Since by definition of universal collection of hash functions, single pair of keys collides at most $\frac{1}{m}$, so
+\[
+\text{Pr}\lbrace h(k) = h(l) \rbrace \leq \frac{1}{m}
+\]
+
+By Lemma 5.1, i.e. $E[X_{kl}] = 1 \cdot \text{Pr}\lbrace h(k) = h(l) \rbrace + 0 \leq \frac{1}{m}$, we have $E[X_{kl}] \leq \frac{1}{m}$.
+
+Next, define, $\forall \,$ key $k$, random variable $Y_k$ that equals number of keys other than $k$ that hash to same slot as $k$, s.t. 
+\[
+Y_k = \sum_{\substack{l \in T \\ l \neq k} } X_{kl} \underbrace{=}_{\text{ by linearity of expectation }} \sum_{ \substack{l \in T \\ l \neq k }} E[X_{kl}] \leq \sum_{ \substack{ l \in T \\ l \neq k } } \frac{1}{m}
+\]
+
+Remainder of proof depends on whether key $k$ is in table $T$. \\
+If $k \notin T$, then $n_{h(k)} = Y_k$ and $| \lbrace l : l \in T \text{ and } l\neq k \rbrace | = n$. Thus $E[n_{h(k)}] = E[Y_k] \leq n /m = \alpha$. \\
+If $k \in T$, then because key $k$ appears in list $T[h(k)]$ and count $Y_k$ doesn't include key $k$, we have $n(k) = Y_k + 1$ and $| \lbrace l : l \in T \text{ and } l \neq k \rbrace | = n-1$. \\
+Thus $E [n_{h(k)}] = E[Y_k] + 1 \leq (n-1) / m + 1 = 1 + \alpha - \frac{1}{m} < 1 + \alpha$
+
+\end{proof}
+
+Following Corollary says universal hashing pays off: it's impossible for adversary to pick a sequence of operations that forces worst-case running time.  \\
+By cleverly randomizing choice of hash function at run time, we guarantee that we can process every sequence of operations with good average-case running time.
+
 \section{Search}
 
 \subsection{Binary Search $O(\log{(N)})$}
