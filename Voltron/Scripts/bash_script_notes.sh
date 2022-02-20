@@ -14,3 +14,14 @@ if [ $# -gt 0 ]; then
 else
   echo "${#} number of arguments"
 fi
+
+# cf. Lecture 02 - Shell Scripting, 15-123S09 CS CMU
+
+# Quotes
+
+# unquoted strings are normally interpreted
+# "quoted strings are basically literals -- but $variables are evaluated"
+# 'quoted strings are absolutely literally interpreted'
+# `commands in quotes like this are executed, their output is then inserted as
+# if it were assigned to a variable and then that variable was evaluated`
+
