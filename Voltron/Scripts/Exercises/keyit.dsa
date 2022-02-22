@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# PURPOSE: This script is used to set up DSA SSH keys. This script must be
+# executed by the user who needs the keys setup.
+# cf. Mastering Unix Shell Scripting, 2nd Ed Randal Michael
+# pp. 24
+#
+
+# Remote host.
+REM_HOST=$1
+
+# To execute a command on another machine using OpenSSH, use
+# ssh user@hostname command_to_execute
+# ssh -l user hostname command_to_execute
+
+# Will set up DSA keys, if DSA keys exist.
+cat $HOME/.ssh/id_dsa.pub | ssh $REM_HOST "cat >> ~/.ssh/authorized_keys"
