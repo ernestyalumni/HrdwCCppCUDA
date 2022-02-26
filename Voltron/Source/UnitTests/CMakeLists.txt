@@ -191,7 +191,8 @@ TARGET_LINK_LIBRARIES(Check
   ${CMAKE_THREAD_LIBS_INIT}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
-  ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+  TBB::tbb)
 
 # Recognizes Windows Subsystem Linux through CMAKE_SYSTEM; CMAKE_SYSTEM_NAME
 # results only in "Linux".
@@ -200,7 +201,7 @@ IF(CMAKE_SYSTEM MATCHES "^Linux\..*microsoft-standard-WSL2$")
   MESSAGE("But CMake System Name: " ${CMAKE_SYSTEM_NAME})
 
   FIND_PACKAGE(TBB REQUIRED)
-  TARGET_LINK_LIBRARIES(Check TBB::tbb)
+  TARGET_LINK_LIBRARIES(Check PRIVATE TBB::tbb)
 ELSE()
   MESSAGE("Not WSL2 : " ${CMAKE_SYSTEM})
   MESSAGE("But CMake System Name: " ${CMAKE_SYSTEM_NAME})

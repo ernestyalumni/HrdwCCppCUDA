@@ -25,3 +25,18 @@ fi
 # `commands in quotes like this are executed, their output is then inserted as
 # if it were assigned to a variable and then that variable was evaluated`
 
+# Expressions, Strings, pp. 92, Ch. 6 Expressions of
+# Linux Shell Scripting with Bash, Ken. O. Burtch.
+#
+# -z s--(zero length) True if string is empty
+# -n s (or just s) -- (not null) True if string is not empty
+# s1 = s2 - True if string s1 is equal to s2
+# s1 != S2
+# s1 < s2
+# s1 >> s2
+
+# pp. 100, Ch. 6 Expressions
+# Arithmetic Tests
+# n1 -eq n2
+# n1 -ne n2
+# n1 -lt n2

@@ -66,6 +66,9 @@ INCLUDE_DIRECTORIES(SYSTEM ThirdParty)
 # variable (and other variables as well).
 FIND_PACKAGE(Threads REQUIRED)
 
+# cf. https://stackoverflow.com/questions/69282407/linking-to-tbb-libraries-with-cmake
+FIND_PACKAGE(TBB REQUIRED)
+
 # Do we need to include these source project directories? I don't know.
 #INCLUDE_DIRECTORIES ("${PROJECT_SOURCE_DIR}/Hierarchy")
 #  "${PROJECT_SOURCE_DIR}/UnitTests")
