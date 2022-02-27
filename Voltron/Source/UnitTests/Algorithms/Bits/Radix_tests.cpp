@@ -44,7 +44,10 @@ BOOST_AUTO_TEST_SUITE(NumericalRepresentation_tests)
 BOOST_AUTO_TEST_CASE(BinaryRepresentation)
 {
   // Limits
+
+  // Uncomment out for print out.
   {
+    /*
     std::cout << "\n\n Unsigned limits \n";
 
     std::cout << "std::numeric_limits<uint8_t>::max(): " <<
@@ -60,12 +63,14 @@ BOOST_AUTO_TEST_CASE(BinaryRepresentation)
     std::cout << "\n FloatingPoint limits \n";
 
     std::cout << "std::numeric_limits<float>::max(): " <<
-      std::numeric_limits<float>::max() << "\n";
+      std::numeric_limits<float>::max() << "\n"; // 3.40282e+38
     std::cout << "std::numeric_limits<double>::max(): " <<
-      std::numeric_limits<double>::max() << "\n";
+      std::numeric_limits<double>::max() << "\n"; // 1.79769e+308
+    */
   }
 
   {
+    /*
     std::cout << "\n\n Signed limits \n";
 
     std::cout << "std::numeric_limits<int8_t>::max(): " <<
@@ -86,7 +91,8 @@ BOOST_AUTO_TEST_CASE(BinaryRepresentation)
     std::cout << "std::numeric_limits<int32_t>::min(): " <<
       std::numeric_limits<int32_t>::min() << "\n"; // -2147483648
     std::cout << "std::numeric_limits<int64_t>::min(): " <<
-      std::numeric_limits<int64_t>::min() << "\n"; // 18446744073709551615
+      std::numeric_limits<int64_t>::min() << "\n"; // -9223372036854775808
+    */
   }
 
   // Examples

@@ -17,6 +17,7 @@ ADD_EXECUTABLE(Check
   Algorithms/Bits/Radix_tests.cpp
   Algorithms/DynamicProgramming/Memoization_tests.cpp
   Algorithms/ExpertIo/Level1_tests.cpp
+  Algorithms/ExpertIo/Level2_tests.cpp
   Algorithms/HackerRank/BitManipulationLonelyInteger_tests.cpp
   Algorithms/HackerRank/BubbleSort_tests.cpp
   Algorithms/HackerRank/CountingSort_tests.cpp
@@ -201,7 +202,7 @@ IF(CMAKE_SYSTEM MATCHES "^Linux\..*microsoft-standard-WSL2$")
   MESSAGE("But CMake System Name: " ${CMAKE_SYSTEM_NAME})
 
   FIND_PACKAGE(TBB REQUIRED)
-  TARGET_LINK_LIBRARIES(Check PRIVATE TBB::tbb)
+  # TARGET_LINK_LIBRARIES(Check PRIVATE TBB::tbb)
 ELSE()
   MESSAGE("Not WSL2 : " ${CMAKE_SYSTEM})
   MESSAGE("But CMake System Name: " ${CMAKE_SYSTEM_NAME})

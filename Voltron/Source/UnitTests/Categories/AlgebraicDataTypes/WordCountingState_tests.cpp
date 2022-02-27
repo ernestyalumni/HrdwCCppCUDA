@@ -39,12 +39,14 @@ BOOST_AUTO_TEST_CASE(RunningTCountsWords)
         std::istream_iterator<std::string>(file_eg),
         std::istream_iterator<std::string>())};
     
-    std::cout << count << std::endl;    
+    BOOST_TEST(count == 0);
   }
 
   RunningT running {"WordCountingState_tests.cpp"};
+
+
   running.count_words();
-  std::cout << running.count() << std::endl;
+  BOOST_TEST(running.count() == 0);
 }
 
 
@@ -54,7 +56,6 @@ BOOST_AUTO_TEST_CASE(ProgramTCountsWords)
 {
   ProgramT program;
   program.count_words("main.cpp");
-  std::cout << "Program count : " << program.count() << std::endl;
   BOOST_TEST(program.count() == 0);
 }
 
@@ -78,15 +79,17 @@ BOOST_AUTO_TEST_CASE(ProgramTCounts)
   temp_out.close();
 
   std::ifstream temp_in {full_filepath};
-  std::cout << temp_in.rdbuf() << '\n';
+  // This should print out the lyrics.
+  // std::cout << temp_in.rdbuf() << '\n';
   std::ifstream temp_in2 {full_filepath};
-  std::cout << temp_in2.rdbuf() << '\n';
+  // This should print out the lyrics a second time.
+  // std::cout << temp_in2.rdbuf() << '\n';
   std::ifstream temp_in3 {full_filepath};
   std::istream_iterator<std::string> temp_iter {temp_in3};
 
+  // temp_distance expected ot be 69
   auto temp_distance =
     std::distance(temp_iter, std::istream_iterator<std::string>());
-  std::cout << " temp distance : " << temp_distance << '\n';
 
   RunningT running {full_filepath};
   running.count_words();
@@ -95,7 +98,6 @@ BOOST_AUTO_TEST_CASE(ProgramTCounts)
   ProgramT program;
   BOOST_TEST(program.count() == 0);  
   program.count_words(full_filepath);
-  std::cout << "Program count : " << program.count() << std::endl;
   BOOST_TEST(program.count() == 69);
 }
 
