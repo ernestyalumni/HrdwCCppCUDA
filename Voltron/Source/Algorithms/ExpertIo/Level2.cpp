@@ -23,7 +23,7 @@ bool is_not_overlapping(
   const vector<int>& interval1,
   const vector<int>& interval2)
 {
-  return (interval1[1] < interval2[0]) &&  (interval2[1] < interval1[0]); 
+  return (interval1[1] < interval2[0]) &&  (interval2[1] < interval1[0]);
 }
 
 //------------------------------------------------------------------------------

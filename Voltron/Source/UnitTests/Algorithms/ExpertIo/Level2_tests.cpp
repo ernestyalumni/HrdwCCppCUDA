@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(InsertionSortIntervalSorts)
       {-50, 0},
       {70, 90},
       {90, 91},
-      {90, 95}};    
+      {90, 95}};
     insertion_sort_intervals(input);
     BOOST_TEST(input[0][0] == -50);
     BOOST_TEST(input[1][0] == -10);
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(InsertionSortIntervalSorts)
       {9, 12},
       {12, 54},
       {45, 90},
-      {91, 93}};    
+      {91, 93}};
     insertion_sort_intervals(input);
     BOOST_TEST(input[0][0] == 9);
     BOOST_TEST(input[1][0] == 12);
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(MergeOverlappingIntervalsWorks)
     BOOST_TEST(result[1] == expected[1]);
   }
   {
-    // Test case 5    
+    // Test case 5
     const vector<vector<int>> input {{100, 105}, {1, 104}};
     const vector<vector<int>> expected {{1, 105}};
     const vector<vector<int>> result {merge_overlapping_intervals(input)};
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(MergeOverlappingIntervalsWorks)
     BOOST_TEST(result[0][1] == expected[0][1]);
   }
   {
-    // Test case 6    
+    // Test case 6
     const vector<vector<int>> input {
       {89, 90},
       {-10, 20},
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(MergeOverlappingIntervalsWorks)
     BOOST_TEST(result[0] == expected[0]);
     BOOST_TEST(result[1] == expected[1]);
   }
-    // Test case 8    
+    // Test case 8
     const vector<vector<int>> input {
       {43, 49},
       {9, 12},

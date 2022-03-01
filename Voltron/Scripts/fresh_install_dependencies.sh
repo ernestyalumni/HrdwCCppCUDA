@@ -44,6 +44,10 @@ install_packages ()
   then
     sudo apt-get install build-essential ccache cmake libboost-all-dev \
       libtbb-dev
+
+  elif [[ "$1"="Fedora Linux" ]]
+  then
+    sudo dnf install ccache tbb-devel boost-devel
   fi
 }
 
