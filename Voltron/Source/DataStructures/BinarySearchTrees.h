@@ -126,12 +126,8 @@ class InorderBstIterator
 
     bool has_next()
     {
-      if ((current_node_ptr_ == nullptr) && (node_stack_.empty()))
-      {
-        return false;
-      }
-
-      return true;
+      return (current_node_ptr_ == nullptr && node_stack_.empty()) ? false :
+        true;
     }
 
   private:
@@ -139,27 +135,6 @@ class InorderBstIterator
     std::stack<NodeType*> node_stack_;
     NodeType* current_node_ptr_;
 };
-
-//------------------------------------------------------------------------------
-/// \class BSTIterator
-/// \brief Definition for a binary tree node.
-//------------------------------------------------------------------------------
-/*
-class BstIterator
-{
-  public:
-
-    explicit BstIterator(TreeNode* root);
-
-    // \return the next smallest number
-    int next();
-
-    // \return whether we have a next smallest number
-    bool has_next();
-
-  private:
-};
-*/
 
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/explore/learn/card/introduction-to-data-structure-binary-search-tree/141/basic-operations-in-a-bst/1000/
