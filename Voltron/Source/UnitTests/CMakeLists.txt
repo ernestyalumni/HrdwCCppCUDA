@@ -218,8 +218,11 @@ SET_TARGET_PROPERTIES(Check
 ADD_EXECUTABLE(CommandLineArguments
   MainCommandLineArguments.cpp)
 
-ADD_EXECUTABLE(TClapping
-  MainTClap.cpp)
+# TODO: fix this error:
+# /home/topolo/PropD/HrdwCCppCUDA/Voltron/Source/ThirdParty/tclap/ ValueArg.h:243:20: error: expected unqualified-id before ‘const’
+#  243 |        ValueArg<T>(const ValueArg<T>& rhs);
+#ADD_EXECUTABLE(TClapping
+#  MainTClap.cpp)
 
 ADD_EXECUTABLE(UDP-Receiver
   MainUDP-Receiver.cpp)

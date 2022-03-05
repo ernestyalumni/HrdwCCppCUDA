@@ -1,6 +1,7 @@
 #include "Algorithms/ExpertIo/Level1.h"
 
 #include <boost/test/unit_test.hpp>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -14,7 +15,8 @@ using Algorithms::ExpertIo::sorted_squared_array_with_selection_sort;
 using Algorithms::ExpertIo::tournament_winner;
 using Algorithms::ExpertIo::two_number_sum_brute;
 using Algorithms::ExpertIo::two_number_sum_with_map;
-
+using Algorithms::ExpertIo::two_number_sum_with_sorting;
+using std::set;
 using std::string;
 using std::vector;
 
@@ -46,6 +48,52 @@ BOOST_AUTO_TEST_CASE(ExampleFindingAnyTwoArraySumWithMap)
 
   BOOST_TEST(map_solution[0] == 11);
   BOOST_TEST(map_solution[1] == -1);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TwoNumberSumWithSortingWorks)
+{
+  // Test Case 1
+  {
+    vector<int> array {3, 5, -4, 8, 11, 1, -1, 6};
+    const int target_sum {10};
+
+    const auto result = two_number_sum_with_sorting(array, target_sum);
+    const set<int> solution {result.begin(), result.end()};
+    BOOST_TEST((solution.find(11) != solution.end()));
+    BOOST_TEST((solution.find(-1) != solution.end()));
+  }
+  // Test Case 2
+  {
+    vector<int> array {4, 6};
+    const int target_sum {10};
+
+    const auto result = two_number_sum_with_sorting(array, target_sum);
+    const set<int> solution {result.begin(), result.end()};
+    BOOST_TEST((solution.find(4) != solution.end()));
+    BOOST_TEST((solution.find(6) != solution.end()));
+  }
+  // Test Case 3
+  {
+    vector<int> array {4, 6, 1};
+    const int target_sum {5};
+
+    const auto result = two_number_sum_with_sorting(array, target_sum);
+    const set<int> solution {result.begin(), result.end()};
+    BOOST_TEST((solution.find(4) != solution.end()));
+    BOOST_TEST((solution.find(1) != solution.end()));
+  }
+  // Test Case 4
+  {
+    vector<int> array {4, 6, 1, -3};
+    const int target_sum {3};
+
+    const auto result = two_number_sum_with_sorting(array, target_sum);
+    const set<int> solution {result.begin(), result.end()};
+    BOOST_TEST((solution.find(6) != solution.end()));
+    BOOST_TEST((solution.find(-3) != solution.end()));
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // TwoNumberSum

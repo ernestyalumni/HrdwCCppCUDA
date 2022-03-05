@@ -10,8 +10,6 @@
 #include <utility> // std::swap
 #include <vector>
 
-#include <iostream>
-
 using std::abs;
 using std::map;
 using std::nullopt;
@@ -47,6 +45,13 @@ vector<int> two_number_sum_brute(vector<int> array, int target_sum)
   return solution;
 }
 
+//------------------------------------------------------------------------------
+/// \details Two Number Sum Hint 2 Realize that for every number X in the input
+/// array, you are essentially trying to find a corresponding number Y such that
+/// X + Y = targetSum. With two variables in this equation known to you, it
+/// shouldn't be hard to solve for Y.
+//------------------------------------------------------------------------------
+
 vector<int> two_number_sum_with_map(vector<int> array, int target_sum)
 {
   vector<int> solution;
@@ -77,6 +82,39 @@ vector<int> two_number_sum_with_map(vector<int> array, int target_sum)
   }
 
   return solution;
+}
+
+vector<int> two_number_sum_with_sorting(vector<int> array, int target_sum)
+{
+  // Doing this now allows us to use the condition that for an array
+  // a_0, a_1, ... a_{N-1}, then
+  // a_0 <= a_1 <= ... <= a_{N-1}
+  std::sort(array.begin(), array.end());
+
+  int left_index {0};
+  int right_index {static_cast<int>(array.size()) - 1};
+
+  while (left_index < right_index)
+  {
+    // If a_l + a_r = T, then we're done.
+    if (array[left_index] + array[right_index] == target_sum)
+    {
+      return vector<int>{array[left_index], array[right_index]};
+    }
+    // if a_l + a_r > T, set r = r - 1 (moving to the right index by 1 will only
+    // make the possible sum decrease monotonically).
+    else if (array[left_index] + array[right_index] > target_sum)
+    {
+      right_index -= 1;
+    }
+    else
+    {
+      assert(array[left_index] + array[right_index] < target_sum);
+      left_index += 1;
+    }
+  }
+
+  return vector<int>{};
 }
 
 bool is_valid_subsequence(vector<int> array, vector<int> sequence)
