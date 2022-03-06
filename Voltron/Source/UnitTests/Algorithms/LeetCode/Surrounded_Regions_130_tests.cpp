@@ -1,3 +1,5 @@
+#include "Tools/CaptureCout.h"
+
 //------------------------------------------------------------------------------
 // \file Surrounded_Regions_130_tests.cpp
 //------------------------------------------------------------------------------
@@ -7,6 +9,8 @@
 //#include <boost/test/included/unit_test.hpp>
 #include <iostream>
 #include <vector>
+
+using Tools::CaptureCoutFixture;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
@@ -63,7 +67,7 @@ const std::vector<std::vector<char>> given_board
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DemonstrateGivenExample)
+BOOST_FIXTURE_TEST_CASE(DemonstrateGivenExample, CaptureCoutFixture)
 {
 	{
 		std::for_each(
@@ -72,9 +76,9 @@ BOOST_AUTO_TEST_CASE(DemonstrateGivenExample)
 			PrintElements<char>{});
 	}
 
+  restore_cout();
 
-
-	BOOST_TEST(true);
+  BOOST_TEST(local_oss_.str() == "X X X X ");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // 

@@ -3,16 +3,17 @@
 ///
 /// \ref Ch. 5 of Cukic.
 //------------------------------------------------------------------------------
-#include <boost/test/unit_test.hpp>
+#include "Tools/CaptureCout.h"
 
+#include <boost/test/unit_test.hpp>
 #include <iostream> // std::cerr
 #include <list> // std::list
 #include <numeric> // std::accumulate
 #include <vector>
 
-BOOST_AUTO_TEST_SUITE(Mutable)
-BOOST_AUTO_TEST_SUITE(Mutable_tests)
+using Tools::CaptureCoutFixture;
 
+BOOST_AUTO_TEST_SUITE(Mutable)
 BOOST_AUTO_TEST_SUITE(Mutable_tests)
 
 // cf. pp. 101, Sec. 5.1. of Cukic
@@ -68,7 +69,7 @@ double max(const std::vector<double>& numbers)
 
   // Writes numbers 1, 2, 3 to std::cerr. The max function isn't referentially
   // transparent, and therefore it isn't pure.
-  std::cerr << "Maximum is: " << *result << std::endl;
+  std::cout << "Maximum is: " << *result << "\n";
   return *result;
 }
 
@@ -81,15 +82,14 @@ double pure_max(const std::vector<double>& numbers)
 // cf. Listing 5.2 Search for and logging the maximum value, pp. 104
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(ReferentialTransparencyExamples)
+BOOST_FIXTURE_TEST_CASE(ReferentialTransparencyExamples, CaptureCoutFixture)
 {
   auto sum_max = max({1}) + max({1, 2}) + max({1, 2, 3});
 
+  BOOST_TEST(local_oss_.str() == "Maximum is: 1\nMaximum is: 2\nMaximum is: 3\n");
+
   BOOST_TEST(sum_max == 6);
 }
-
-
-BOOST_AUTO_TEST_SUITE_END() // Mutable_tests
 
 BOOST_AUTO_TEST_SUITE_END() // Mutable_tests
 BOOST_AUTO_TEST_SUITE_END() // Mutable
