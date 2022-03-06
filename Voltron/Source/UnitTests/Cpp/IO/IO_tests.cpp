@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_SUITE(IO_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(IfstreamExamples)
 {
-  std::cout << "\n IfstreamExamples \n";
+  //std::cout << "\n IfstreamExamples \n";
 
   // cf. https://en.cppreference.com/w/cpp/io/basic_ifstream
   TemporaryDirectory temp_dir {"/temp"};  
@@ -34,7 +34,8 @@ BOOST_AUTO_TEST_CASE(IfstreamExamples)
 
   const std::string full_filepath {temp_dir.path() + "/" + filename};
 
-  std::cout << full_filepath << '\n';
+  // /home/ernest/Eng/HrdwCCppCUDA/Voltron/BuildGcc//tempHSdK3a/Test.b
+  // std::cout << full_filepath << '\n';
 
   std::ofstream(full_filepath, std::ios::binary).write(
     reinterpret_cast<char*>(&d), sizeof(d)) << 123 << "abc";
@@ -54,7 +55,7 @@ BOOST_AUTO_TEST_CASE(IfstreamExamples)
     std::string s;
     if (istrm >> n >> s) // text input
     {
-      std::cout << "read back from file: " << d << ' ' << n << ' ' << s << '\n';
+      // std::cout << "read back from file: " << d << ' ' << n << ' ' << s << '\n';
 
       BOOST_TEST(d == 3.14);
       BOOST_TEST(n == 123);

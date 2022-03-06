@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(StdGeneratePlayground)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(IncreasingAddressesPrintWorks)
 {
-  std::cout << "\n IncreasingAddressesPrintWorks begins \n";
+  //std::cout << "\n IncreasingAddressesPrintWorks begins \n";
   {
     const ToHexString hex_string {1234};
 
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(IncreasingAddressesPrintWorks)
     hex_string.increasing_addresses_print();
   }
 
-  std::cout << "\n IncreasingAddressesPrintWorks ends \n";
+  //std::cout << "\n IncreasingAddressesPrintWorks ends \n";
 
   BOOST_TEST(true);
 }

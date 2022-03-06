@@ -76,10 +76,10 @@ BOOST_AUTO_TEST_CASE(DoesNotConstructIf)
     int result_value{::getrlimit(RLIMIT_AS, &resource_limits)};
 
     BOOST_TEST_REQUIRE(result_value == 0);
-    std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
-      "\n"; // 18446744073709551615 0xffff ffff ffff ffff 8 bytes
-    std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
-      "\n";
+    //std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
+    //  "\n"; // 18446744073709551615 0xffff ffff ffff ffff 8 bytes
+    //std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
+    //  "\n"; // 18446744073709551615
   }
   // Core file.
   {
@@ -88,10 +88,10 @@ BOOST_AUTO_TEST_CASE(DoesNotConstructIf)
     const int result_value{::getrlimit(RLIMIT_CORE, &resource_limits)};
 
     BOOST_TEST_REQUIRE(result_value == 0);
-    std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
-      "\n"; // 18446744073709551615 0xffff ffff ffff ffff 8 bytes
-    std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
-      "\n";
+    //std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
+    //  "\n"; // 18446744073709551615 0xffff ffff ffff ffff 8 bytes
+    //std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
+    //  "\n"; // 18446744073709551615
   }
   // CPU limit (in time, seconds).
   {
@@ -100,10 +100,10 @@ BOOST_AUTO_TEST_CASE(DoesNotConstructIf)
     const int result_value{::getrlimit(RLIMIT_CPU, &resource_limits)};
 
     BOOST_TEST_REQUIRE(result_value == 0);
-    std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
-      "\n"; // 18446744073709551615 0xffff ffff ffff ffff 8 bytes
-    std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
-      "\n";
+    // std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
+    //  "\n"; // 18446744073709551615 0xffff ffff ffff ffff 8 bytes
+    // std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
+    //  "\n"; // 18446744073709551615
   }
   // Number of extant process or threads limit for process.
   {
@@ -112,10 +112,10 @@ BOOST_AUTO_TEST_CASE(DoesNotConstructIf)
     const int result_value{::getrlimit(RLIMIT_NPROC, &resource_limits)};
 
     BOOST_TEST_REQUIRE(result_value == 0);
-    std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
-      "\n"; // 127812
-    std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
-      "\n";
+    // std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
+    //  "\n"; // 127812
+    // std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
+    //  "\n"; // 49178
   }
 
   // Number of opened fds limit for process.
@@ -125,9 +125,9 @@ BOOST_AUTO_TEST_CASE(DoesNotConstructIf)
     const int result_value{::getrlimit(RLIMIT_NOFILE, &resource_limits)};
 
     BOOST_TEST_REQUIRE(result_value == 0);
-    std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
+    // std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
       "\n"; // 1024
-    std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
+    // std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
       "\n"; // 524288
   }
 
@@ -157,10 +157,10 @@ BOOST_AUTO_TEST_CASE(DoesNotConstructIf)
   BOOST_TEST_REQUIRE(::setrlimit(RLIMIT_NOFILE, &resource_limits) == 0);
   BOOST_TEST_REQUIRE(::getrlimit(RLIMIT_NOFILE, &resource_limits) == 0);
 
-  std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
-    "\n"; // 1024
-  std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
-    "\n"; // 524288  
+  //std::cout << "\n resource_limits.rlim_cur: " << resource_limits.rlim_cur <<
+  //  "\n"; // 1024
+  //std::cout << "\n resource_limits.rlim_max: " << resource_limits.rlim_max <<
+  //  "\n"; // 524288
 }
 
 BOOST_AUTO_TEST_SUITE_END() // EpollFd_tests

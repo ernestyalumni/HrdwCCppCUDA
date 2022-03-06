@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_SUITE(Entrevue_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(Demonstrate)
 {
-  std::cout << "\n\n Entrevue tests \n\n";
+  //std::cout << "\n\n Entrevue tests \n\n";
   {
     BOOST_TEST(true);
   }
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(Demonstrate)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(FinDemonstrate)
 {
-  std::cout << "\n\n End Entrevue tests \n\n";
+  //std::cout << "\n\n End Entrevue tests \n\n";
   {
     BOOST_TEST(true);
   }
