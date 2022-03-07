@@ -39,7 +39,43 @@ class BST
       right_{right}
     {}
 
-    virtual ~BST() = default;
+    //virtual ~BST() = default;
+
+    //--------------------------------------------------------------------------
+    /// Average: O(log(N)) time | O(log(N)) space
+    /// Worst: O(N) time | O(N) space.
+    /// \details O(log(N)) space and O(N) space respectively  for the recursion
+    /// stack frames called.
+    //--------------------------------------------------------------------------
+    BST& insert_recursive_algoexpert(T val)
+    {
+      if (val < value_)
+      {
+        if (left_ == nullptr)
+        {
+          BST* new_bst {new BST{val}};
+          left_ = new_bst;
+        }
+        else
+        {
+          left_->insert_recursive_algoexpert(val);
+        }
+      }
+      else
+      {
+        if (right_ == nullptr)
+        {
+          BST* new_bst {new BST{val}};
+          right_ = new_bst;
+        }
+        else
+        {
+          right_->insert_recursive_algoexpert(val);
+        }
+      }
+
+      return *this;
+    }
 
     /*
     {
@@ -136,6 +172,24 @@ class BST
 
     bool contains(const T val)
     {
+      BST* current_node_ptr {this};
+      const T current_value {current_node_ptr->value_};
+
+      if (current_value == val)
+      {
+        return true;
+      }
+
+      if (val < current_value && current_node_ptr->left_ != nullptr)
+      {
+        return current_node_ptr->left_->contains(val);
+      }
+
+      if (val > current_value && current_node_ptr->right_ != nullptr)
+      {
+        return current_node_ptr->right_->contains(val);
+      }
+
       return false;
     }
 
