@@ -42,6 +42,11 @@ class BST
     //virtual ~BST() = default;
 
     //--------------------------------------------------------------------------
+    /// For insert, contains, remove
+    /// Average: O(log(N)) time
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
     /// Average: O(log(N)) time | O(log(N)) space
     /// Worst: O(N) time | O(N) space.
     /// \details O(log(N)) space and O(N) space respectively  for the recursion
@@ -193,8 +198,47 @@ class BST
       return false;
     }
 
+    //--------------------------------------------------------------------------
+    /// \details Hint 2 Traverse the BST all the while applying the logic
+    /// described in Hint #1. For insertion, add the target value to the BST
+    /// once you reach a leaf (None / null) node. For searching, if you reach a
+    /// leaf node without having found the target value that means the value
+    /// isn't in the BST. For removal, consider the various cases that you might
+    /// encounter; the node you need to remove might have 2 children nodes, 1,
+    /// none; it might also be the root node; make sure to account for all of
+    /// these cases.
+    ///
+    /// Video Explanation. Conceptual Overview. 12:53. Easy cases: leaf.
+    /// Remove root: grab smallest value in the right subtree. e.g. 12. The
+    /// smallest value in right subtree will still be greater than the value,
+    /// and will be the smallest of all values greater than the value.
+    //--------------------------------------------------------------------------
+
     BST& remove(const T val)
     {
+      BST* current_node_ptr {this};
+      BST* previous_node_ptr {this};
+
+      /*
+      while (current_node_ptr != nullptr)
+      {
+        const T current_value {current_node_ptr->value_};
+
+        if (current_value == val)
+        {
+          if (current_node_ptr == previous_node_ptr)
+          {
+            return *this;
+          }
+
+          if (previous_node_ptr->left_ == current_node_ptr)
+          {
+            if 
+          }
+        }
+      }
+      */
+
       // Do not edit the return statement of this method.
       return* this;
     }
