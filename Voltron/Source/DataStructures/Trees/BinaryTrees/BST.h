@@ -2,6 +2,7 @@
 #define DATA_STRUCTURES_TREES_BINARY_TREES_BST_H
 
 #include <cassert>
+#include <stdexcept>
 
 namespace DataStructures
 {
@@ -198,6 +199,68 @@ class BST
       return false;
     }
 
+    BST& remove_recursive_algoexpert(const T val, BST* parent = nullptr)
+    {
+      if (val < value_)
+      {
+        if (left_ != nullptr)
+        {
+          left_->remove(val, this);
+        }
+      }
+      else if (val > value_)
+      {
+        if (right_ != nullptr)
+        {
+          right_->remove(val, this);
+        }
+      }
+      else
+      {
+        if (left_ != nullptr && right_ != nullptr)
+        {
+          value_ = right_->get_min();
+          // Remove that minimum value.
+          return right_->remove(value_, this);
+        }
+        else if (parent == nullptr)
+        {
+          // All elements in the left subtree. Rebalance once.
+          if (left_ != nullptr)
+          {
+            value_ = left_->value_;
+            right_ = left_->right_;
+            left_ = left_->left_;
+          }
+          // All elements in the right subtree. Rebalance once.
+          else if (right_ != nullptr)
+          {
+            value_ = right_->value_;
+            left_ = right_->left_;
+            right_ = right_->right_;
+          }
+          else
+          {
+            // This is a single-node tree; do nothing.
+          }
+        }
+        else if (parent->left_ == this)
+        {
+          parent->left_ = left_ != nullptr ? left_ : right_;
+        }
+        else if (parent->right_ == this)
+        {
+          parent->right_ = left_ != nullptr ? left_ : right_;
+        }
+        else
+        {
+          throw std::runtime_error("parent input is not a parent!");
+        }
+      }
+
+      return *this;
+    }
+
     //--------------------------------------------------------------------------
     /// \details Hint 2 Traverse the BST all the while applying the logic
     /// described in Hint #1. For insertion, add the target value to the BST
@@ -246,6 +309,16 @@ class BST
     static bool is_leaf(BST* node_ptr)
     {
       return (node_ptr->left_ == nullptr) && (node_ptr->right_ == nullptr);
+    }
+
+    T get_min()
+    {
+      if (left_ == nullptr)
+      {
+        return value_;
+      }
+
+      return left_->get_min();
     }
 };
 
