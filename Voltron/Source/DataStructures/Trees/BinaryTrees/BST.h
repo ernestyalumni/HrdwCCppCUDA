@@ -11,6 +11,218 @@ namespace Trees
 namespace BinaryTrees
 {
 
+template <typename T>
+class BinarySearchTree
+{
+  public:
+
+    class Node
+    {
+      public:
+
+        T value_;
+        Node* left_;
+        Node* right_;
+
+        Node(const T val, Node* left=nullptr, Node* right=nullptr):
+          value_{val},
+          left_{left},
+          right_{right}
+        {}
+
+        //----------------------------------------------------------------------
+        /// \details Chosen to place duplicate values to the right.
+        /// Exploit Binary Search Tree property that if the target value is less
+        /// than the current value, we know that the target value cannot be
+        /// anywhere in the right subtree and vice versa, so we look in the left
+        /// subtree.
+        //----------------------------------------------------------------------
+        void insert(const T val)
+        {
+          if (val < value_)
+          {
+            if (left_ == nullptr)
+            {
+              Node* new_node_ptr {new Node{val}};
+              left_ = new_node_ptr;
+            }
+            else
+            {
+              left_->insert(val);
+            }
+          }
+          else
+          {
+            if (right_ == nullptr)
+            {
+              Node* new_node_ptr {new Node{val}};
+              right_ = new_node_ptr;
+            }
+            else
+            {
+              right_->insert(val);
+            }
+          }
+        }
+
+        bool contains(const T val)
+        {
+          if (val == value_)
+          {
+            return true;
+          }
+
+          if (val < value_)
+          {
+            if (left_ == nullptr)
+            {
+              return false;
+            }
+
+            return left_->contains(val);
+          }
+          else
+          {
+            if (right_ == nullptr)
+            {
+              return false;
+            }
+
+            return right_->contains(val);
+          }
+        }
+
+        Node* remove(const T val, Node* parent)
+        {
+          // Handle the case when parent is nullptr (node has no parent) in
+          // Binary Search Tree as special case of the root.
+          assert(parent != nullptr);
+
+          if (val < value_)
+          {
+            // Continue looking in the left subtree; otherwise drop out of
+            // if-else statements and return this node
+            if (left_ != nullptr)
+            {
+              return left_->remove(val, this);
+            }
+            else
+            {
+              return nullptr;
+            }
+          }
+          else if (val > value_)
+          {
+            if (right_ != nullptr)
+            {
+              return right_->remove(val, this);
+            }
+            else
+            {
+              return nullptr;
+            }
+          }
+          // val == value_
+          else
+          {
+            if (left_ != nullptr && right_ != nullptr)
+            {
+              // Get the next largest value after val and make that the new
+              // root.
+              value_ = get_min();
+              return right_->remove(value_, this);
+            }
+            else if (parent->left_ == this)
+            {
+              parent->left_ = left_ != nullptr ? left_ : right_;
+              return this;
+            }
+            else if (parent->right_ == this)
+            {
+              parent->right_ = left_ != nullptr ? left_ : right_;
+              return this;
+            }
+          }
+
+          return *this;
+        }
+
+        //----------------------------------------------------------------------
+        /// \details Recall the strategy of exploiting the Binary Search Tree
+        /// property - since any smaller values must be to the left, eliminate
+        /// searching the right.
+        //----------------------------------------------------------------------
+        T get_min() const
+        {
+          // No other values would be placed to the left that's less than the
+          // current value
+          if (left_ == nullptr)
+          {
+            return value_;
+          }
+
+          return left_->get_min();
+        }
+    };
+
+    BinarySearchTree():
+      root_ptr_{nullptr}
+    {}
+
+    Node* get_root_ptr()
+    {
+      return root_ptr_;
+    }
+
+    //--------------------------------------------------------------------------
+    /// \return False if tree is empty or if the target value cannot be found.
+    //--------------------------------------------------------------------------
+    bool remove(const T val)
+    {
+      if (root_ptr_ == nullptr)
+      {
+        return false;
+      }
+
+      // Deal with the case when the root has the value to remove.
+      if (root_ptr_->value_ == val)
+      {
+        Node auxiliary_root {0};
+        auxiliary_root.left_ = root_ptr_;
+        Node* node_to_remove_ptr {root_ptr_->remove(val, &auxiliary_root)};
+        // auxiliary root will have its left_ data member be mutated by remove
+        // in the condition that parent->left_ == this.
+        root_ptr_ = auxiliary_root.left_;
+        if (node_to_remove_ptr != nullptr)
+        {
+          delete node_to_remove_ptr;
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+      else
+      {
+        Node* node_to_remove_ptr {root_ptr_->remove(val, root_ptr_)};
+        if (node_to_remove_ptr != nullptr)
+        {
+          delete node_to_remove_ptr;
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+    }
+
+  private:
+
+    Node* root_ptr_;
+};
+
 namespace ExpertIO
 {
 
@@ -199,20 +411,50 @@ class BST
       return false;
     }
 
+    bool contains_recursive_algoexpert(const T val)
+    {
+      if (val < value_)
+      {
+        if (left_ == nullptr)
+        {
+          return false;
+        }
+        else
+        {
+          return left_->contains(val);
+        }
+      }
+      else if (val > value_)
+      {
+        if (right_ == nullptr)
+        {
+          return false;
+        }
+        else
+        {
+          return right_->contains(val);
+        }
+      }
+      else
+      {
+        return true;
+      }
+    }
+
     BST& remove_recursive_algoexpert(const T val, BST* parent = nullptr)
     {
       if (val < value_)
       {
         if (left_ != nullptr)
         {
-          left_->remove(val, this);
+          left_->remove_recursive_algoexpert(val, this);
         }
       }
       else if (val > value_)
       {
         if (right_ != nullptr)
         {
-          right_->remove(val, this);
+          right_->remove_recursive_algoexpert(val, this);
         }
       }
       else
@@ -221,7 +463,7 @@ class BST
         {
           value_ = right_->get_min();
           // Remove that minimum value.
-          return right_->remove(value_, this);
+          return right_->remove_recursive_algoexpert(value_, this);
         }
         else if (parent == nullptr)
         {
@@ -252,10 +494,12 @@ class BST
         {
           parent->right_ = left_ != nullptr ? left_ : right_;
         }
+        /*
         else
         {
           throw std::runtime_error("parent input is not a parent!");
         }
+        */
       }
 
       return *this;
