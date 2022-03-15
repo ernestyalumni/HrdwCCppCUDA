@@ -92,6 +92,9 @@ class BinarySearchTree
           }
         }
 
+        //----------------------------------------------------------------------
+        /// cf. https://www.algolist.net/Data_structures/Binary_search_tree/Removal
+        //----------------------------------------------------------------------
         Node* remove(const T val, Node* parent)
         {
           // Handle the case when parent is nullptr (node has no parent) in
@@ -129,7 +132,7 @@ class BinarySearchTree
             {
               // Get the next largest value after val and make that the new
               // root.
-              value_ = get_min();
+              value_ = right_->get_min();
               return right_->remove(value_, this);
             }
             else if (parent->left_ == this)
@@ -144,7 +147,7 @@ class BinarySearchTree
             }
           }
 
-          return *this;
+          return this;
         }
 
         //----------------------------------------------------------------------
@@ -169,9 +172,32 @@ class BinarySearchTree
       root_ptr_{nullptr}
     {}
 
+    virtual ~BinarySearchTree()
+    {
+      post_order_deletion(root_ptr_);
+    }
+
     Node* get_root_ptr()
     {
       return root_ptr_;
+    }
+
+    void insert(const T val)
+    {
+      if (root_ptr_ == nullptr)
+      {
+        Node* new_node_ptr {new Node{val}};
+        root_ptr_ = new_node_ptr;
+      }
+      else
+      {
+        root_ptr_->insert(val);
+      }
+    }
+
+    bool contains(const T val)
+    {
+      return get_root_ptr()->contains(val);
     }
 
     //--------------------------------------------------------------------------
@@ -219,6 +245,27 @@ class BinarySearchTree
     }
 
   private:
+
+    void post_order_deletion(Node* node_ptr)
+    {
+      if (node_ptr == nullptr)
+      {
+        return;
+      }
+
+      // Recursively traverse left subtree.
+      post_order_deletion(node_ptr->left_);
+
+      // Recursively traverse right subtree.
+      post_order_deletion(node_ptr->right_);
+
+      // Visit current node. This is guaranteed to be a leaf because to get to
+      // this line of code, the code had to exit the above 2 statements by
+      // visiting nullptr at the left, and nullptr at the right.
+      // Release memory pointed to by pointer-variable.
+      delete node_ptr;
+      node_ptr = nullptr;
+    }
 
     Node* root_ptr_;
 };

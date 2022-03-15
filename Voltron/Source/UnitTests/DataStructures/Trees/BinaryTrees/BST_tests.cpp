@@ -5,9 +5,106 @@
 template <typename T>
 using AlgoExpertBST = DataStructures::Trees::BinaryTrees::ExpertIO::BST<T>;
 
+template <typename T>
+using BinarySearchTree =
+  DataStructures::Trees::BinaryTrees::BinarySearchTree<T>;
+
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Trees)
 BOOST_AUTO_TEST_SUITE(BinaryTrees)
+
+BOOST_AUTO_TEST_SUITE(BinarySearchTree_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertInserts)
+{
+  BinarySearchTree<int> sample {};
+  sample.insert(10);
+  BOOST_TEST(sample.get_root_ptr()->contains(10));
+  sample.insert(5);
+  BOOST_TEST(sample.get_root_ptr()->contains(5));
+  sample.insert(2);
+  BOOST_TEST(sample.get_root_ptr()->contains(2));
+  sample.insert(5);
+  sample.insert(15);
+  BOOST_TEST(sample.get_root_ptr()->contains(15));
+  sample.insert(13);
+  BOOST_TEST(sample.get_root_ptr()->contains(13));
+  sample.insert(22);
+  BOOST_TEST(sample.get_root_ptr()->contains(22));
+  sample.insert(14);
+  BOOST_TEST(sample.get_root_ptr()->contains(14));
+  sample.insert(1);
+  BOOST_TEST(sample.get_root_ptr()->contains(1));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DynamicallyDefaultConstructs)
+{
+  BinarySearchTree<int>* sample_ptr {new BinarySearchTree<int>{}};
+  sample_ptr->insert(10);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(10));
+  sample_ptr->insert(5);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(5));
+  sample_ptr->insert(2);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(2));
+  sample_ptr->insert(5);
+  sample_ptr->insert(15);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(15));
+  sample_ptr->insert(13);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(13));
+  sample_ptr->insert(22);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(22));
+  sample_ptr->insert(14);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(14));
+  sample_ptr->insert(1);
+  BOOST_TEST(sample_ptr->get_root_ptr()->contains(1));
+
+  delete sample_ptr;
+
+  BOOST_TEST(true);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertsAndRemoves)
+{
+  // Test Case 1
+  {
+    BinarySearchTree<int> sample {};
+    sample.insert(10);
+    sample.insert(5);
+    sample.insert(15);
+    sample.insert(2);
+    sample.insert(5);
+    sample.insert(13);
+    sample.insert(22);
+    sample.insert(1);
+    sample.insert(14);
+    sample.insert(12);
+    sample.remove(10);
+
+    BOOST_TEST(!sample.contains(10));
+    BOOST_TEST(sample.contains(12));
+    BOOST_TEST(sample.contains(14));
+    BOOST_TEST(sample.contains(1));
+    BOOST_TEST(sample.contains(22));
+    BOOST_TEST(sample.contains(13));
+    BOOST_TEST(sample.contains(5));
+    BOOST_TEST(sample.contains(15));
+    BOOST_TEST(sample.contains(2));
+
+    // Debug checks.
+    BOOST_TEST(sample.get_root_ptr()->value_ == 12);
+    BOOST_TEST(sample.get_root_ptr()->left_->value_ == 5);
+    BOOST_TEST(sample.get_root_ptr()->right_->value_ == 15);
+  }
+
+}
+
+BOOST_AUTO_TEST_SUITE_END() // BinarySearchTree_tests
 
 BOOST_AUTO_TEST_SUITE(BST_tests)
 
