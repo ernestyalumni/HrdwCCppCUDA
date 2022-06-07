@@ -77,6 +77,16 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
+# cf. https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
+# Follow this for a lightweight download of nlohmann/json.
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
+  GIT_PROGRESS TRUE
+  GIT_SHALLOW TRUE
+  GIT_TAG v3.10.5)
+
+FetchContent_MakeAvailable(json)
+
 ADD_SUBDIRECTORY(Concurrency)
 ADD_SUBDIRECTORY(Performance)
 ADD_SUBDIRECTORY(UnitTests)

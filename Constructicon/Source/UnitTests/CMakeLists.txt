@@ -2,6 +2,7 @@ ENABLE_TESTING()
 
 ADD_EXECUTABLE(Check
   Concurrency/ThreadPool_tests.cpp
+  Dependencies/json_tests.cpp
   Utilities/AsBits_tests.cpp
   Utilities/Time/ElapsedTime_tests.cpp
   Utilities/Time/GetClockTime_tests.cpp
@@ -11,7 +12,9 @@ ADD_EXECUTABLE(Check
 TARGET_LINK_LIBRARIES(Check
   Concurrency
   Utilities
-  gtest_main)
+  gtest_main
+  nlohmann_json::nlohmann_json
+  )
 
 INCLUDE(GoogleTest)
 gtest_discover_tests(Check)
