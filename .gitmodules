@@ -1,0 +1,3 @@
+[submodule "Constructicon/Dependencies/rapidjson"]
+	path = Constructicon/Dependencies/rapidjson
+	url = https://github.com/Tencent/rapidjson

@@ -87,6 +87,10 @@ FetchContent_Declare(json
 
 FetchContent_MakeAvailable(json)
 
+# cf. https://www.jibbow.com/posts/rapidjson-cmake/
+SET(RAPIDJSON_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../Dependencies/rapidjson/include)
+INCLUDE_DIRECTORIES(${RAPIDJSON_INCLUDE_DIR})
+
 ADD_SUBDIRECTORY(Concurrency)
 ADD_SUBDIRECTORY(Performance)
 ADD_SUBDIRECTORY(UnitTests)
