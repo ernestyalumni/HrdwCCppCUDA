@@ -380,6 +380,13 @@ def test_remove_islands():
 
     assert result == expected
 
-
-#def test_sorted_merge_overlapping_intervals():
     
+def test_valid_utf8():
+    """
+    393. Given an integer array data representing the data, return whether it is
+    a valid UTF-8 encoding (i.e. translates to a sequence of valid UTF-8 encoded
+    characters)
+    """
+
+    example1 = [197, 139, 1]
+    example2 = [235, 140, 4]
