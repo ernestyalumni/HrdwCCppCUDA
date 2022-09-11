@@ -21,6 +21,8 @@ from Voltron.Algorithms.level_medium import (
     remove_islands
     )
 
+from Voltron.Algorithms.LeetCode import UTF8Validation
+
 import pytest
 
 
@@ -387,6 +389,63 @@ def test_valid_utf8():
     a valid UTF-8 encoding (i.e. translates to a sequence of valid UTF-8 encoded
     characters)
     """
-
     example1 = [197, 139, 1]
     example2 = [235, 140, 4]
+    example3 = [39,89,227,83,132,95,10,0]
+
+    valid_utf8 = UTF8Validation.valid_utf8
+    assert valid_utf8(example1)
+    assert not valid_utf8(example2)
+
+    # Expect to be False
+    assert not valid_utf8(example3)
+
+def test_utf8_validation_check_most_significant_2_bits_of_byte():
+    check_2_bits = UTF8Validation.check_most_significant_2_bits_of_byte
+
+    assert not check_2_bits(197)
+    assert check_2_bits(130)
+    assert not check_2_bits(1)
+    assert not check_2_bits(235)
+    assert check_2_bits(140)
+    assert not check_2_bits(4)
+
+    assert check_2_bits(197, 1, 1)
+    assert check_2_bits(1, 0, 0)
+    assert check_2_bits(235, 1, 1)
+    assert check_2_bits(4, 0, 0)
+
+def test_utf8_validation_int_to_bitfield():
+    int_to_bitfield = UTF8Validation.int_to_bitfield
+    result = int_to_bitfield(123)
+    assert result == [1, 1, 1, 1, 0, 1, 1]
+    result = int_to_bitfield(255)
+    assert result == [1, 1, 1, 1, 1, 1, 1, 1]
+    result = int_to_bitfield(1234567)
+    assert (result ==
+        [1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1])
+
+    examples = [240,162,138,147,145]
+    print(int_to_bitfield(examples[0]))
+    print(int_to_bitfield(examples[1]))
+    print(int_to_bitfield(examples[2]))
+    print(int_to_bitfield(examples[3]))
+    print(int_to_bitfield(examples[4]))
+
+    examples_2 = [240,162,138,147,17]
+
+    print(int_to_bitfield(examples_2[0]))
+    print(int_to_bitfield(examples_2[1]))
+    print(int_to_bitfield(examples_2[2]))
+    print(int_to_bitfield(examples_2[3]))
+    print(int_to_bitfield(examples_2[4]))
+
+    examples_3 = [39,89,227,83,132,95,10,0]
+
+    print(int_to_bitfield(examples_3[0]))
+    print(int_to_bitfield(examples_3[1]))
+    print(int_to_bitfield(examples_3[2]))
+    print(int_to_bitfield(examples_3[3]))
+    print(int_to_bitfield(examples_3[4]))
+
+    assert False
