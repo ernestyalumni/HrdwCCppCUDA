@@ -426,26 +426,5 @@ def test_utf8_validation_int_to_bitfield():
         [1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1])
 
     examples = [240,162,138,147,145]
-    print(int_to_bitfield(examples[0]))
-    print(int_to_bitfield(examples[1]))
-    print(int_to_bitfield(examples[2]))
-    print(int_to_bitfield(examples[3]))
-    print(int_to_bitfield(examples[4]))
-
     examples_2 = [240,162,138,147,17]
-
-    print(int_to_bitfield(examples_2[0]))
-    print(int_to_bitfield(examples_2[1]))
-    print(int_to_bitfield(examples_2[2]))
-    print(int_to_bitfield(examples_2[3]))
-    print(int_to_bitfield(examples_2[4]))
-
     examples_3 = [39,89,227,83,132,95,10,0]
-
-    print(int_to_bitfield(examples_3[0]))
-    print(int_to_bitfield(examples_3[1]))
-    print(int_to_bitfield(examples_3[2]))
-    print(int_to_bitfield(examples_3[3]))
-    print(int_to_bitfield(examples_3[4]))
-
-    assert False
