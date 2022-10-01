@@ -5541,7 +5541,77 @@ CS556 - Distributed Systems. Tutorial by Eleftherios Kosmas.
 
 \part{Networking}
 
-Tanenbaum, Feamster, and Wetherall (2021) \cite{TFW2021}
+\section{Introduction}
+
+\subsection{Services and Protocols}
+
+cf. 1.5.5 The Relationship of Services to Protocols, Tanenbaum, Feamster, and Wetherall (2021) \cite{TFW2021}
+
+Services and protocols are distinct concepts - this distinction is so important, we emphasize it again.
+
+A \emph{service} is a set of primitives (operations) that a layer provides to the layer above it. \\
+- service defines what operations the layer is able to perform on behalf of its users, but says nothing at all about how these operations are implemented. \\
+
+A \emph{protocol} is a set of rules governing the format and meaning of the packets, or messages that are exchanged by peer entities within a layer. Entities use protocols in order to implement their service definitions. They're free to change their protocols at will provided they don't change the service visible to their users. \\
+This way, service and protocol are completely decoupled. This is a key concept that any network designer should understand well.
+
+\begin{tikzpicture}
+	\matrix (m) [matrix of math nodes, row sep=4.8em, column sep=12.8em, minimum width=1.2em]
+	{
+		\text{Layer } k + 1 & \text{Layer } k + 1 \\
+		\text{Layer } k & \text{Layer } k \\
+		\text{Layer } k - 1 & \text{Layer } k - 1 \\
+	};
+	\path[<->]
+	(m-1-1) edge node [right] {\text{Service provided by layer} k} (m-2-1)
+	(m-1-2) edge node [left] {} (m-2-2)
+	(m-2-1) edge node [left] {} (m-3-1)
+	(m-2-2) edge node [left] {} (m-3-2)
+	;
+	\path[<->]
+	(m-2-1) edge node [dashed, above] {\text{Protocol}} (m-2-2)
+;
+\end{tikzpicture} 
+
+\subsection{Reference Models}
+
+\subsubsection{The OSI Reference Model}
+
+cf. 1.6.1 The OSI Reference Model, Tanenbaum, Feamster, and Wetherall (2021) \cite{TFW2021}
+
+\begin{tikzpicture}
+	\matrix (m) [matrix of math nodes, row sep=1.8em, column sep=7.8em, minimum width=1.1em]
+	{
+		\text{Layer} & & & \text{Name of unit exchanged} \\
+		7 \text{ Application } & & & \text{ Application, APDU } \\
+		\text{ Interface }  & & &  \\
+		6 \text{ Presentation } & & & \text{ Presentation, PPDU } \\
+	};
+	\path[<->]
+	(m-2-1) edge node [dashed, above] {\text{Application protocol} } (m-2-4)
+	(m-4-1) edge node [dashed, above] {\text{Presentation protocol}} (m-4-4)
+	;
+\end{tikzpicture} 
+
+Principles that were applied to arrive at the 7 layers:
+\begin{enumerate}
+	\item layer should be created where different abstraction is needed
+	\item Each layer should perform a well-defined function.
+	\item Function of each layer should be chosen with eye toward defining internationally standardized protocols
+	\item layer boundaries should be chosen to minimize information flow across the interfaces
+	\item number of layers should be large enough that distinct functions need not be thrown together in the same layer out of necessity and small enough that the architecture doesn't become unwieldy.
+\end{enumerate}
+
+3 concepts central to OSI model:
+\begin{enumerate}
+	\item Services
+	\item Interfaces
+	\item Protocols
+\end{enumerate}
+
+\section{Medium Access Control (MAC) Sublayer}
+
+Data link layer or layer 2 is concerned with local delivery of frames between nodes on same level of network; e.g. Ethernet, Point-to-Point Protocol (PPP), HDLC, ADCCP.
 
 
 
