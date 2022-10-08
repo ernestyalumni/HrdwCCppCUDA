@@ -1,8 +1,10 @@
 ###### Requirements without Version Specifiers ######
 
 numpy
+jupyter
 pytest
 requests # somehow needed by pytest
+sympy
 
 ###### Requirements with Version Specifiers ######
 
