@@ -3454,6 +3454,21 @@ Keep state, build on a lookup by keeping state in trie or return by reference to
 
 Insert and search costs O(key length) however, memory requirements of Trie is O(Alphabet size * key length * N) where $N$ is number of keys in Trie.
 
+\section{Searching}
+
+cf. Ch. 9, "Searching", Shaffer (2011) \cite{Shaf2011}.
+
+Suppose we have a collection $\mathbf{L}$ of $n$ records of form
+\[
+(k_1, I_1), (k_2, I_2) , \dots (k_n, I_n)
+\]
+where $I_j$ is information associated with key $k_j$ from record $j$ for $1\leq j \leq n$.
+
+Given a particular key value $K$, search problem is to locate record $(k_j, I_j)$ in $\mathbf{L}$ s.t. $k_j = K$ (if one exists). Successful search is 1 in which record with key $k_j = K$ found.
+
+
+
+
 \section{Hash Tables}
 
 \subsection{Direct-address tables}
