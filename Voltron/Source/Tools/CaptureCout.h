@@ -18,26 +18,6 @@ std::pair<std::reference_wrapper<std::ostringstream>, std::streambuf*>
 
 std::streambuf* capture_cout(std::ostringstream& local_oss);
 
-class CaptureCout
-{
-  public:
-
-    CaptureCout();
-
-    ~CaptureCout();
-
-    void capture_locally();
-
-    //std::ostringstream& operator()();
-
-    void restore_cout();
-
-  private:
-
-    std::ostringstream oss_;
-    std::streambuf* cout_buffer_ptr_;
-};
-
 class CaptureCoutFixture
 {
   public:

@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 // \file ToBytes_test.cpp
 //------------------------------------------------------------------------------
+#include "Tools/CaptureCout.h"
 #include "Utilities/ToBytes.h"
 
 #include <boost/test/unit_test.hpp>
@@ -10,6 +11,7 @@
 #include <limits>
 #include <string>
 
+using Tools::CaptureCoutFixture;
 using Utilities::ToBytes;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
@@ -19,9 +21,7 @@ BOOST_AUTO_TEST_SUITE(ToBytes_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
 {
-  std::cout << "\n ReinterpretCastAndHexadecimalPrintExamples begins \n";
-
-
+  CaptureCoutFixture capture_cout {};
   constexpr unsigned short x_0 {15213};
   constexpr short x_1 {15213};
   constexpr short y {-15213};
@@ -31,12 +31,13 @@ BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
 
   //std::cout << std::to_integer(x[0]) << '\n'; // didn't work
   //std::cout << std::to_integer(*x) << '\n'; // didn't work
-  // std::cout << x << '\n'; // worked
+  // This will be always different.
+  //std::cout << x << '\n'; // worked
 
-  //std::cout << xa[0] << '\n'; // m
-  //std::cout << xa[1] << '\n'; // ;
-  //std::cout << xa[2] << '\n'; 
-  //std::cout << xa[3] << '\n';
+  std::cout << xa[0] << '\n'; // m
+  std::cout << xa[1] << '\n'; // ;
+  std::cout << xa[2] << '\n'; // m
+  std::cout << xa[3] << '\n'; // ;
   //printf("%x \n", xa); // 178892be
   //printf("%01x \n", xa[0]);
   //printf("%01x \n", xa[1]);
@@ -44,6 +45,7 @@ BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
   //printf("%001x \n", xa[3]);
   //printf("%001x \n", xa[4]);
 
+  BOOST_TEST(capture_cout.local_oss_.str() == "m\n;\nm\n;\n");
   BOOST_TEST_REQUIRE(sizeof(unsigned short) == 2);
   BOOST_TEST_REQUIRE(sizeof(short) == 2);
 

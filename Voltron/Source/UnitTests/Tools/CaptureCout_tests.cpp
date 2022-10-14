@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream> // std::ostringstream
 
-using Tools::CaptureCout;
+using Tools::CaptureCoutFixture;
 using Tools::capture_cout;
 using std::cout;
 using std::ostringstream;
@@ -52,27 +52,28 @@ BOOST_AUTO_TEST_CASE(CaptureCoutAcceptsLocalOStringStream)
 
 BOOST_AUTO_TEST_SUITE_END() // Capture_Cout_tests
 
-BOOST_AUTO_TEST_SUITE(CaptureCout_tests)
+BOOST_AUTO_TEST_SUITE(CaptureCoutFixture_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DefaultConstructs)
 {
-  CaptureCout capture_cout {};
+  CaptureCoutFixture capture_cout {};
   BOOST_TEST(true);
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(CaptureLocallyCapturesLocally)
+BOOST_AUTO_TEST_CASE(CaptureLocallyUponConstructionCapturesLocally)
 {
-  CaptureCout capture_cout {};
-  // TODO: Debug this. Segmentation Fault
-  //capture_cout.capture_locally();
+  CaptureCoutFixture capture_cout {};
+  cout << "\n Testing Testing \n";
+
+  capture_cout.local_oss_.str();
 }
 
 
-BOOST_AUTO_TEST_SUITE_END() // CaptureCout_tests
+BOOST_AUTO_TEST_SUITE_END() // CaptureCoutFixture_tests
 
 BOOST_AUTO_TEST_SUITE_END() // CaptureCout_tests
 BOOST_AUTO_TEST_SUITE_END() // Tools

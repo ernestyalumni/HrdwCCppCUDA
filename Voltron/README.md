@@ -257,3 +257,22 @@ Do this in your local build directory with the executable `Check`.
 ## If you want to ...
 
 Have a library (i.e. subdirectory) you're working on and link it to compile with the objects of another library, use `TARGET_LINK_LIBRARIES`. Example: `/Tools/`
+
+# Running Jupyter notebooks in Python virtual environment for Visual Studio Code
+
+Visual Studio Code *and* Jupyter notebooks has to "guess" and know where you've placed the virtual environment (its path location). What has worked for me is that,
+
+with the virtual environment contents or i.e. subdirectory `venv` in `HrdwCCppCUDA/Voltron/`, i.e. `HrdwCCppCUDA/Voltron/venv/`
+
+I run
+
+```
+// from `HrdwCCppCUDA/Voltron`
+source ./venv/bin/activate
+```
+Then from `HrdwCCppCUDA/Voltron` (*not* from `HrdwCCppCUDA`),
+
+```
+// Run this to launch/run Visual Studio Code.
+code .
+```
