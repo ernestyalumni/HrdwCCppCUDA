@@ -9,6 +9,7 @@ using Utilities::ErrorHandling::ErrorCodeNumber;
 using Utilities::ErrorHandling::ErrorNumber;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
+BOOST_AUTO_TEST_SUITE(ErrorHandling)
 BOOST_AUTO_TEST_SUITE(ErrorNumber_tests)
 
 // cf. https://en.cppreference.com/w/cpp/error/system_error
@@ -69,5 +70,6 @@ BOOST_AUTO_TEST_CASE(ConvertErrorCodeEnumerationWorksOnUserDefinedErrorCodes)
 }
 */
 
-BOOST_AUTO_TEST_SUITE_END() // ErrorHandling_tests
+BOOST_AUTO_TEST_SUITE_END() // ErrorNumber_tests
+BOOST_AUTO_TEST_SUITE_END() // ErrorHandling
 BOOST_AUTO_TEST_SUITE_END() // Utilities

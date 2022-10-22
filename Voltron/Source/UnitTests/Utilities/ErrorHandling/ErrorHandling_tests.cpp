@@ -15,6 +15,7 @@ using OptionalErrorNumber =
 	Utilities::ErrorHandling::HandleReturnValuePassively::OptionalErrorNumber;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
+BOOST_AUTO_TEST_SUITE(ErrorHandling)
 BOOST_AUTO_TEST_SUITE(ErrorHandling_tests)
 
 // cf. https://en.cppreference.com/w/cpp/error/errno
@@ -32,4 +33,5 @@ BOOST_AUTO_TEST_CASE(HandleReturnValuePassivelyGetsLatestErrno)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ErrorHandling_tests
+BOOST_AUTO_TEST_SUITE_END() // ErrorHandling
 BOOST_AUTO_TEST_SUITE_END() // Utilities

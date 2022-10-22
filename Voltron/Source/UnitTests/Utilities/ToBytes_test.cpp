@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_SUITE(ToBytes_tests)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
 {
-  CaptureCoutFixture capture_cout {};
+  //CaptureCoutFixture capture_cout {};
   constexpr unsigned short x_0 {15213};
   constexpr short x_1 {15213};
   constexpr short y {-15213};
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
   //printf("%001x \n", xa[3]);
   //printf("%001x \n", xa[4]);
 
-  BOOST_TEST(capture_cout.local_oss_.str() == "m\n;\nm\n;\n");
+  // BOOST_TEST(capture_cout.local_oss_.str() == "m\n;\nm\n;\n");
   BOOST_TEST_REQUIRE(sizeof(unsigned short) == 2);
   BOOST_TEST_REQUIRE(sizeof(short) == 2);
 

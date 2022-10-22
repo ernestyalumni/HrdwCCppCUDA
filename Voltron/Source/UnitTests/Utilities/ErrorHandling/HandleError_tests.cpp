@@ -14,6 +14,7 @@ using Tools::TemporaryDirectory;
 using Utilities::ErrorHandling::HandleError;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
+BOOST_AUTO_TEST_SUITE(ErrorHandling)
 BOOST_AUTO_TEST_SUITE(HandleError_tests)
 
 // cf. https://en.cppreference.com/w/cpp/error/system_error
@@ -81,4 +82,5 @@ BOOST_AUTO_TEST_CASE(OperatorDetectsErrors)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // HandleError_tests
+BOOST_AUTO_TEST_SUITE_END() // ErrorHandling
 BOOST_AUTO_TEST_SUITE_END() // Utilities

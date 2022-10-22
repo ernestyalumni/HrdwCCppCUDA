@@ -168,7 +168,6 @@ ADD_EXECUTABLE(Check
   Utilities/OnlyOneArgument_test.cpp
   Utilities/SplitString_tests.cpp
   Utilities/StdForward_tests.cpp
-  Utilities/StdTuple_tests.cpp
   Utilities/Time/GetElapsedTime_tests.cpp
   Utilities/Time/TimeSpec_tests.cpp
   Utilities/ToBytes_test.cpp

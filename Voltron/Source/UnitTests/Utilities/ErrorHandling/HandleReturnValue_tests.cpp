@@ -19,6 +19,7 @@ using Utilities::ErrorHandling::HandleReturnValueWithOptional;
 using std::string;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
+BOOST_AUTO_TEST_SUITE(ErrorHandling)
 BOOST_AUTO_TEST_SUITE(HandleReturnValue_tests)
 
 int open_non_existent_file(const string& directory_path)
@@ -94,4 +95,5 @@ BOOST_AUTO_TEST_CASE(OperatorReturnsOptionalErrorNumberForNegativeOne)
 BOOST_AUTO_TEST_SUITE_END() // HandleReturnValueWithOptional_tests
 
 BOOST_AUTO_TEST_SUITE_END() // HandleReturnValue_tests
+BOOST_AUTO_TEST_SUITE_END() // ErrorHandling
 BOOST_AUTO_TEST_SUITE_END() // Utilities
