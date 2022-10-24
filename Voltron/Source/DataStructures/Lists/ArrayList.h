@@ -18,6 +18,8 @@ namespace DataStructures
 {
 namespace Lists
 {
+namespace Shaffer
+{
 
 //-----------------------------------------------------------------------------
 /// \brief Array-based list implementation
@@ -236,6 +238,7 @@ class ArrayList : public List<T>
 		T* list_array_;
 };
 
+} // namespace Shaffer
 } // namespace Lists
 } // namespace DataStructures
 

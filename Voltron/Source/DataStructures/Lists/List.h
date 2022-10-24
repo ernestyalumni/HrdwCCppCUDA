@@ -17,6 +17,8 @@ namespace DataStructures
 {
 namespace Lists
 {
+namespace Shaffer
+{
 
 //-----------------------------------------------------------------------------
 /// \brief List ADT
@@ -133,6 +135,7 @@ class List
     {}
 };
 
+} // namespace Shaffer
 } // namespace Lists
 } // namespace DataStructures
 

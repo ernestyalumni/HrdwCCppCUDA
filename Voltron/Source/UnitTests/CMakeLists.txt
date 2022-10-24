@@ -25,8 +25,9 @@ ADD_EXECUTABLE(Check
   Algorithms/HackerRank/QuickSort_tests.cpp
   Algorithms/LeetCode/Arrays/MaxProductOfThreeIntegers_tests.cpp
   Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
+  Algorithms/LeetCode/MediumProblems_tests.cpp
   Algorithms/LeetCode/PrintMatrixSpiral_tests.cpp
-  Algorithms/LeetCode/Surrounded_Regions_130_tests.cpp
+  Algorithms/LeetCode/SurroundedRegions_130_tests.cpp
   Algorithms/PeakFinding/LoadPeakProblem_tests.cpp
   Algorithms/PeakFinding_tests.cpp
   Algorithms/Permutations_tests.cpp
@@ -130,6 +131,7 @@ ADD_EXECUTABLE(Check
   DataStructures/Stacks/Stacks_tests.cpp
   DataStructures/Trees/BinaryTrees/BST_tests.cpp
   DataStructures/Trees/BinaryTrees/BinaryNode_tests.cpp
+  DataStructures/Vector_tests.cpp
   DeskCalculator/Token_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Entrevue/LeetCode/LeetCode_tests.cpp
@@ -152,9 +154,10 @@ ADD_EXECUTABLE(Check
   Tools/CaptureCout_tests.cpp
   Tools/Filepaths_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
+  Utilities/ArithmeticType_tests.cpp
   Utilities/BitsStream_tests.cpp
   Utilities/BooleanAlgebra_tests.cpp
-  Utilities/Curry_test.cpp
+  Utilities/Debug_tests.cpp
   Utilities/ErrorHandling/ErrorHandling_tests.cpp
   Utilities/ErrorHandling/ErrorNumber_tests.cpp
   Utilities/ErrorHandling/HandleError_tests.cpp

@@ -13,6 +13,7 @@ ADD_LIBRARY(Algorithms
   HackerRank/InsertionSort.cpp
   HackerRank/QuickSort.cpp
   InsertionSort.cpp
+  LeetCode/MediumProblems.cpp
   PeakFinding.cpp
   PeakFinding/LoadPeakProblem.cpp
   Permutations.cpp

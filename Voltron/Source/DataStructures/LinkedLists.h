@@ -3,7 +3,7 @@
 /// \author Ernest Yeung
 /// \brief Classes and functions demonstrating LinkedLists.
 /// @ref https://gist.github.com/charlierm/5691020
-///-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 #ifndef DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H
 #define DATA_STRUCTURES_LINKED_LISTS_LINKED_LISTS_H
 

@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(CaptureLocallyUponConstructionCapturesLocally)
   CaptureCoutFixture capture_cout {};
   cout << "\n Testing Testing \n";
 
-  capture_cout.local_oss_.str();
+  BOOST_TEST(capture_cout.local_oss_.str() == "\n Testing Testing \n");
 }
 
 

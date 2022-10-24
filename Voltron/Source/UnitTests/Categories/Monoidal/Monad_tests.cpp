@@ -1,11 +1,13 @@
 //------------------------------------------------------------------------------
 // \file Monad_tests.cpp
 //------------------------------------------------------------------------------
+#include "Tools/CaptureCout.h"
 
 #include <boost/test/unit_test.hpp>
-
 #include <iostream>
 #include <optional>
+
+using Tools::CaptureCoutFixture;
 
 BOOST_AUTO_TEST_SUITE(Categories)
 BOOST_AUTO_TEST_SUITE(Monoidal)
@@ -40,16 +42,12 @@ auto create_ref(bool b)
 // \ref https://en.cppreference.com/w/cpp/utility/optional
 BOOST_AUTO_TEST_CASE(StdOptionalExamples)
 {
+  CaptureCoutFixture capture_cout {};
+
   std::cout << "create(false) returned "
     << create(false).value_or("empty") << '\n';
-}
 
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(MonadExamples)
-{
-  BOOST_TEST(true);
+  BOOST_TEST(capture_cout.local_oss_.str() == "create(false) returned empty\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Monad_tests

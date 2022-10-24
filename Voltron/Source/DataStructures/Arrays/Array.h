@@ -305,7 +305,6 @@ T std_dev(const Array<T>& a)
   return std::sqrt(result);
 }
 
-
 } // namespace DWHarder
 } // namespace Arrays
 } // namespace DataStructures

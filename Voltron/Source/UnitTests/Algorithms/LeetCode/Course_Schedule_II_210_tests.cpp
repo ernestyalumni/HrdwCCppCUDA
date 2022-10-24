@@ -24,16 +24,6 @@ class Solution {
     }
 };
 
-
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DemonstrateGivenExample)
-{
-
-	BOOST_TEST(true);
-}
-
 BOOST_AUTO_TEST_SUITE_END() // Course_Schedule_II_210_tests
 BOOST_AUTO_TEST_SUITE_END() // LeetCode
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
