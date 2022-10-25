@@ -99,6 +99,7 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/SuperBitSet_tests.cpp
   DataStructures/Arrays/ArrayQuestions_tests.cpp
   DataStructures/Arrays/Array_tests.cpp
+  DataStructures/Arrays/DynamicArray_tests.cpp
   DataStructures/Arrays/FixedSizeArrays_tests.cpp
   DataStructures/Arrays/ResizeableArray_tests.cpp
   DataStructures/Arrays_tests.cpp
@@ -108,7 +109,6 @@ ADD_EXECUTABLE(Check
   DataStructures/DataStructures_tests.cpp
   DataStructures/HashSet_tests.cpp
   DataStructures/HashTables/HashFunctions_tests.cpp
-  DataStructures/HashTables/HashTable_tests.cpp
   DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists/DoublyLinkedList_tests.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp

@@ -2,12 +2,16 @@
 /// \file Pointers_tests.cpp
 /// \ref 
 //------------------------------------------------------------------------------
+#include "Tools/CaptureCout.h"
+
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
 #include <utility>
+
+using Tools::CaptureCoutFixture;
 
 BOOST_AUTO_TEST_SUITE(Cpp) // The C++ Language
 BOOST_AUTO_TEST_SUITE(Pointers_test)
@@ -131,6 +135,8 @@ BOOST_AUTO_TEST_CASE(DemonstrateNullPtr)
 BOOST_AUTO_TEST_CASE(DemonstrateUniquePointers)
 {
   {
+    CaptureCoutFixture capture_cout {};
+
     // https://en.cppreference.com/w/cpp/memory/unique_ptr/reset
 
     // Creating new Foo...\n, D is a custom deleter
@@ -155,6 +161,10 @@ BOOST_AUTO_TEST_CASE(DemonstrateUniquePointers)
 
     BOOST_TEST(static_cast<bool>(is_Foo_constructed));
     BOOST_TEST(!is_Foo_constructed.value());
+
+    BOOST_TEST(
+      capture_cout.local_oss_.str() ==
+        "Creating new Foo...\nFoo...\nReplace owned Foo with a new Foo...\nFoo...\nCalling delete for Foo object...\n~Foo...\nRelease and delete the owned Foo...\nCalling delete for Foo object...\n~Foo...\n");
   }
   {
     std::unique_ptr<Quantity> u_ptr {std::make_unique<Quantity>(3)};
@@ -192,13 +202,6 @@ BOOST_AUTO_TEST_CASE(DemonstrateUniquePointers)
     u_ptr = std::make_unique<Quantity>(q1);
     BOOST_TEST(u_ptr->x() == 42);
   }
-}
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DemonstrateUniquePointersInClasses)
-{
-  // TODO
 }
 
 class IntString

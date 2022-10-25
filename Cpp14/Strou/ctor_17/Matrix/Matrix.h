@@ -132,7 +132,6 @@ class Matrix
 			return *this;
  		}
 
-
  	//----------------------------------------------------------------------------
  	/// Accessors 
  	//----------------------------------------------------------------------------
@@ -280,7 +279,6 @@ Matrix<T>& Matrix<T>::operator=(Matrix&& a) // move assignment
 	swap(elements_, a.elements_);
 	return *this;
 }
-
 
 } // namespace Matrices
 } // namespace Modules
