@@ -4,6 +4,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <fcntl.h>
+#include <filesystem>
 
 using FileIO::AccessMode;
 using FileIO::OpenExistingFile;
@@ -13,6 +14,8 @@ BOOST_AUTO_TEST_SUITE(FileIO)
 BOOST_AUTO_TEST_SUITE(OpenFile_tests)
 
 BOOST_AUTO_TEST_SUITE(OpenExistingFile_tests)
+
+namespace fs = std::filesystem;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
