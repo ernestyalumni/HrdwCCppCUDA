@@ -14,7 +14,6 @@ namespace DataStructures
 namespace Kedyk
 {
 
-
 //------------------------------------------------------------------------------
 /// \ref 5.3 Vector. pp. 40. Implementing Useful Algorithms in C++. Kedyk.
 /// \details An array of dynamic size is the simplest and most useful data
