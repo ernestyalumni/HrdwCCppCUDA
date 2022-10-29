@@ -129,6 +129,7 @@ ADD_EXECUTABLE(Check
   DataStructures/Stacks/StacksImplementations_tests.cpp
   DataStructures/Stacks/StacksWithArrays_tests.cpp
   DataStructures/Stacks/Stacks_tests.cpp
+  DataStructures/StaticFreeList_tests.cpp
   DataStructures/Trees/BinaryTrees/BST_tests.cpp
   DataStructures/Trees/BinaryTrees/BinaryNode_tests.cpp
   DataStructures/Vector_tests.cpp

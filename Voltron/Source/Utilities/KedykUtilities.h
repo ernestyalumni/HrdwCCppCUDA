@@ -28,10 +28,7 @@ ITEM_T* raw_memory(const std::size_t n)
   return (ITEM_T*)::operator new(sizeof(ITEM_T) * n);
 }
 
-void raw_delete(void* array)
-{
-  ::operator delete(array);
-}
+void raw_delete(void* array);
 
 template <typename ITEM_T>
 void raw_destruct(ITEM_T* array, const std::size_t size)

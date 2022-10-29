@@ -37,8 +37,11 @@ BOOST_AUTO_TEST_CASE(DefaultConstructor)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ConstructsWithSizeAndInitialValue)
 {
-  //TestVector<int> a {6, 9};
-  //BOOST_TEST(a.get_capacity() == 8);
+  // fatal error: in
+  // "DataStructures/Kedyk/Vector_tests/ConstructsWithSizeAndInitialValue":
+  // signal: SIGABRT (application abort requested)
+  //TestVector<int> a (6, 9);
+  // BOOST_TEST(a.get_capacity() == 8);
   //BOOST_TEST(a.get_size() == 6);
   //BOOST_TEST(a[0] == 9);
   //BOOST_TEST(a[1] == 9);
