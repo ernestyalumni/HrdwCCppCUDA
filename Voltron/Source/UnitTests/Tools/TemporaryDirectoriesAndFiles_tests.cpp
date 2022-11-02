@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 #include <algorithm> // std::copy_if
 #include <array>
+#include <cstdlib>
 #include <climits>
 #include <unistd.h> // ::getcwd
 #include <iostream>
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE(GetCwdAndMkdtempWorks)
 
   std::cout << "\n\n GetCwdAndMkdtempWorks \n";
 
-  std::cout << " Path MAX : " << PATH_MAX << '\n';
+  BOOST_TEST(PATH_MAX == 4096);
 
   ::getcwd(buffer_array.data(), PATH_MAX);
 
@@ -62,7 +63,11 @@ BOOST_AUTO_TEST_CASE(GetCwdAndMkdtempWorks)
   //  std::cout << " null terminated char found " << '\n';
   //}
 
-  std::string current_dir_name_str {::get_current_dir_name()};
+  // get_current_dir_name will malloc an array big enough. The caller should
+  // free the returned buffer.
+  char* current_dir_name_arr {::get_current_dir_name()};
+  std::string current_dir_name_str {current_dir_name_arr};
+
   std::cout << current_dir_name_str << '\n';
   //auto output_it =
     //std::copy_if(
@@ -73,6 +78,7 @@ BOOST_AUTO_TEST_CASE(GetCwdAndMkdtempWorks)
       //{
        // v 
       //})
+  free(current_dir_name_arr);
 
   const std::string temporary_directory_prefix {"Temp"};
 

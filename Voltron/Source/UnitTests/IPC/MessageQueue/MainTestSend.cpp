@@ -44,7 +44,9 @@ int main()
 
   std::cout << "START OF TEST_SEND \n";
 
-  const std::string current_dir_name_str {::get_current_dir_name()};
+  // Caller should free this returned buffer.
+  char* current_dir_name_arr {::get_current_dir_name()};
+  const std::string current_dir_name_str {current_dir_name_arr};
   //const std::string queue_name {current_dir_name_str + "/myipc"};
   const std::string queue_name {"/myipc"};
 
@@ -157,6 +159,8 @@ int main()
   }
 
   std::cout << "About to exit the sending process after closing the queue \n";
+
+  free(current_dir_name_arr);
 
   return 0;
 }

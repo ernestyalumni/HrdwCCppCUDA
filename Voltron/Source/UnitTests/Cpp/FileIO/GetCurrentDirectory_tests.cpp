@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include <boost/test/unit_test.hpp>
 #include <filesystem>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -20,6 +21,19 @@ BOOST_AUTO_TEST_CASE(StdFilesystemCurrentPathGetsCurrentPath)
 
   BOOST_TEST(true);
 }
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CanBeUsedToInitializeString)
+{
+  // Returns absolute path of current working directory, obtained as if (in
+  // native format) by POSIX getcwd.
+  // cf. https://en.cppreference.com/w/cpp/filesystem/current_path
+  const std::string current_path {fs::current_path()};
+
+  BOOST_TEST(true);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END() // StdFilesystemCurrent_Path_tests
 

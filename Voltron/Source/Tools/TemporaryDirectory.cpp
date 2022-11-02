@@ -22,9 +22,12 @@ TemporaryDirectory::TemporaryDirectory(const string& directory_name_prefix)
   // char* get_current_dir_name(void);
   // Returns null-terminated string containing absolute pathname that's current
   // working directory of the calling process.
-  string current_dir_name_str {::get_current_dir_name()};
+  char* current_dir_name_arr {::get_current_dir_name()};
+  string current_dir_name_str {current_dir_name_arr};
 
   path_ = make_temporary_directory(directory_name_prefix, current_dir_name_str);
+
+  free(current_dir_name_arr);
 }
 
 TemporaryDirectory::~TemporaryDirectory()

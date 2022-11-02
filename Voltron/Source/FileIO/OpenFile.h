@@ -24,6 +24,8 @@ class OpenExistingFile
 
     OpenExistingFile(const AccessMode mode);
 
+    virtual ~OpenExistingFile();
+
     void operator()(const std::string& pathname);
 
     int add_additional_flag(const FileFlag flag);

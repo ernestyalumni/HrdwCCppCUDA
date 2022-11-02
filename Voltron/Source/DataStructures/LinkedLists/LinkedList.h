@@ -14,7 +14,7 @@ namespace DWHarder
 {
 
 //------------------------------------------------------------------------------
-/// \ref 3.05.Linked_lists.pptx
+/// \ref 3.05.Linked_lists.pptx, D.W. Harder.
 //------------------------------------------------------------------------------
 template <typename T>
 class LinkedList
@@ -172,11 +172,13 @@ class LinkedList
 
     //--------------------------------------------------------------------------
     /// \brief Adding the value at the front of the linked list.
+    /// \details insert, front O(1)
     //--------------------------------------------------------------------------
     void push_front(const T value);
 
     //--------------------------------------------------------------------------
     /// \brief Retrieving the value at the front of the linked list.
+    /// \details access, front O(1)
     //--------------------------------------------------------------------------
     T front() const;
 
@@ -199,11 +201,13 @@ class LinkedList
 
     //--------------------------------------------------------------------------
     /// \brief Find the number of instances of an integer in the list.
+    /// \details O(N) time complexity.
     //--------------------------------------------------------------------------
     std::size_t count(const T value) const;
 
     //--------------------------------------------------------------------------
     /// \brief Remove all instances of a value from the list.
+    /// \details erase, front O(1), arbitrary O(N), back O(N)
     //--------------------------------------------------------------------------
     std::size_t erase(const T value);
 
@@ -249,6 +253,11 @@ class LinkedList
 
   private:
 
+    //--------------------------------------------------------------------------
+    /// \ref 3.05.Linked_lists.pptx,
+    /// \details Because each node in a linked lists refers to the next, linked
+    /// list class need only link to first node in list.
+    //--------------------------------------------------------------------------
     Node* head_;
 };
 
@@ -304,11 +313,15 @@ T LinkedList<T>::pop_front()
   T result {front()};
 
   // Assign a temporary pointer to point to the node being deleted.
+  // Because we could have been accessing a node which we have just deleted:
+  // e.g. delete begin(); head_ = begin()->next_;
 
   Node* head_ptr {head_};
 
   head_ = head_->next_;
 
+  // Given that delete is approximately 100x slower than most other instructions
+  // (it does call the OS). cf. Slide 76, Destructor. Waterloo Engineering.
   delete head_ptr;
 
   return result;
@@ -323,6 +336,7 @@ bool LinkedList<T>::empty() const
 template <typename T>
 LinkedList<T>::Node* LinkedList<T>::begin() const
 {
+  // This will always work: if list is empty, it'll return nullptr.
   return head_;
 }
 
