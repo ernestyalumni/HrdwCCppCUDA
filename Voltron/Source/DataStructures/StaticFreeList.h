@@ -35,6 +35,11 @@ struct StaticFreeList
       // Used when allocated.
       void* user_data_;
     };
+
+    Item(const T& input_item = T{}):
+      item_{input_item},
+      next_{nullptr}
+    {}
   };
 
   Item* nodes_;
@@ -60,7 +65,7 @@ struct StaticFreeList
     return size_ <= 0;
   }
 
-  ~StaticFreeList()
+  virtual ~StaticFreeList()
   {
     if (!is_empty())
     {
