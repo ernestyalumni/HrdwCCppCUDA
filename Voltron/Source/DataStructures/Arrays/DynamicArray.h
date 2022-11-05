@@ -4,7 +4,6 @@
 #include <algorithm> // std::copy, std::fill, std::max
 #include <cassert>
 #include <cstddef> // std::size_t
-#include <initializer_list>
 
 namespace DataStructures
 {
@@ -18,6 +17,7 @@ void raw_destruct(T* array, const std::size_t size)
   {
     array[i].~T();
   }
+
   delete[] array;
 }
 
@@ -34,10 +34,7 @@ class DynamicArray
       capacity_{default_capacity_}
     {}
 
-    DynamicArray(
-      const std::size_t initial_size,
-      const T& value = T{}
-      ):
+    DynamicArray(const std::size_t initial_size, const T& value = T{}):
       data_{new T[std::max(initial_size, default_capacity_)]},
       size_{0},
       capacity_{std::max(initial_size, default_capacity_)}
@@ -50,13 +47,13 @@ class DynamicArray
 
     virtual ~DynamicArray()
     {
-      if (size_ > 0 || data_ != nullptr)
-      {
-        raw_destruct<T>(data_, size_);
-      }
+      //if (size_ > 0 || data_ != nullptr)
+      //{
+      raw_destruct<T>(data_, size_);
+      //}
     }
 
-    void append(T item)
+    void append(const T& item)
     {
       if (size_ == capacity_)
       {
@@ -131,6 +128,7 @@ class DynamicArray
 
     void resize_capacity()
     {
+      /*
       capacity_ = std::max(2 * size_, default_capacity_);
 
       // Create a new array.
@@ -154,6 +152,18 @@ class DynamicArray
 
       // Items should now point to new copy.
       data_ = new_copy;
+      */
+
+      T* old_data {data_};
+      capacity_ = std::max(2 * size_, default_capacity_);
+      // Allocate a new array of capacity = 2 x the size.
+      data_ = new T[capacity_];
+      for (std::size_t i {0}; i < size_; ++i)
+      {
+        // Copy all the items into it (i.e. new array).
+        new(&data_[i])T(old_data[i]);
+      }
+      raw_destruct<T>(old_data, size_);
     }
 
     T* data_;

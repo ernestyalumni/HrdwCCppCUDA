@@ -5,11 +5,15 @@
 #include <filesystem>
 #include <fstream>
 #include <string> // std::getline
+#include <unordered_set>
 #include <vector>
 
 using UnitTests::FileIO::example_file_path_1;
 
 BOOST_AUTO_TEST_SUITE(FileIO)
+
+std::unordered_set<std::size_t> empty_lines {
+  0, 3, 6, 7, 8, 10, 11, 13, 15, 17, 18, 20, 21, 22, 24, 25, 32, 33, 35};
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -30,27 +34,51 @@ BOOST_AUTO_TEST_CASE(StepsToConstructFromWorkingPathWorks)
   std::size_t i {0};
   for (std::string line {}; std::getline(read_in_stream, line);)
   {
-    bool empty_line {false};
-    for (std::size_t i {0}; i < line.size(); ++i)
+    bool is_empty_line {true};
+    for (std::size_t j {0}; j < line.size(); ++j)
     {
-      if (!std::isspace(line[i]))
+      if (!std::isspace(line[j]))
       {
-        empty_line = true;
+        is_empty_line = false;
       }
     }
-    std::cout << "line: " << line << " " << line.empty() << " " << i <<
-      " empty? " << empty_line << "\n";
-    read_in.emplace_back(line);
+
+    if (is_empty_line)
+    {
+      BOOST_TEST((empty_lines.find(i) != empty_lines.end()));
+    }
+    else
+    {
+      BOOST_TEST((empty_lines.find(i) == empty_lines.end()));
+    }
+
+    read_in.push_back(line);
     ++i;
   }
 
+  for (auto iter = empty_lines.begin(); iter != empty_lines.end(); ++iter)
+  {
+    const std::string possible_empty_string {read_in.at(*iter)};
+
+    bool is_empty_line {true};
+    for (std::size_t i {0}; i < possible_empty_string.size(); ++i)
+    {
+      if (!std::isspace(possible_empty_string[i]))
+      {
+        is_empty_line = false;
+      }
+    }
+    BOOST_TEST(is_empty_line);
+  }
+
+  /*
   for (auto& x : read_in)
   {
     std::cout << "line: " << x << "\n";
   }
+  */
 
   BOOST_TEST(true);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // FileIO

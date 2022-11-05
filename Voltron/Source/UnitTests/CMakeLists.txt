@@ -155,6 +155,7 @@ ADD_EXECUTABLE(Check
   IPC/Sockets/Socket_tests.cpp
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
+  Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextFile_tests.cpp
   Tools/CaptureCout_tests.cpp
   Tools/Filepaths_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
@@ -192,6 +193,7 @@ TARGET_LINK_LIBRARIES(Check
   Hierarchy
   IO
   IPC
+  InfinitePrecisionCalculator
   QuestionsDEntrevue
   Tools
   UnitTestTools

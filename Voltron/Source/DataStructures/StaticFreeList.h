@@ -45,8 +45,8 @@ struct StaticFreeList
     size_{0},
     max_size_{0},
     // This code line, implementation, may not work:
-    // nodes_{new Item[fixed_size]}
-    nodes_{Utilities::Kedyk::raw_memory<Item>(fixed_size)},
+    nodes_{new Item[fixed_size]},
+    //nodes_{Utilities::Kedyk::raw_memory<Item>(fixed_size)},
     returned_{nullptr}
   {}
 
@@ -57,37 +57,10 @@ struct StaticFreeList
 
   bool is_empty()
   {
-    return size_ == 0;
+    return size_ <= 0;
   }
 
-  Item* allocate()
-  {
-    // Must handle full blocks externally - check using pointer arithmetic.
-    assert(!is_full());
-    Item* result {returned_};
-    if (result)
-    {
-      returned_ = returned_->next_;
-    }
-    else
-    {
-      result = &nodes_[max_size_++];
-    }
-    ++size_;
-    return result;
-  }
-
-  void remove(Item* item)
-  {
-    // Nodes must come from this list.
-    assert(item - nodes_ >= 0 && item - nodes_ < max_size_);
-    item->item_.~T();
-    item->next_ = returned_;
-    returned_ = item;
-    --size_;
-  }
-
-  virtual ~StaticFreeList()
+  ~StaticFreeList()
   {
     if (!is_empty())
     {
@@ -112,8 +85,37 @@ struct StaticFreeList
       }
     }
     // This code line, implementation, may not work.
-    // delete [] nodes_;
-    Utilities::Kedyk::raw_delete(nodes_);
+    delete [] nodes_;
+    //Utilities::Kedyk::raw_delete(nodes_);
+  }
+
+  Item* allocate()
+  {
+    // Must handle full blocks externally - check using pointer arithmetic.
+    assert(!is_full());
+    Item* result {returned_};
+    if (result)
+    {
+      returned_ = returned_->next_;
+    }
+    else
+    {
+      result = &nodes_[max_size_++];
+    }
+    ++size_;
+    return result;
+  }
+
+  void remove(Item* item)
+  {
+    // Nodes must come from this list.
+    assert(
+      item - nodes_ >= 0 &&
+      static_cast<std::size_t>(item - nodes_) < max_size_);
+    item->item_.~T();
+    item->next_ = returned_;
+    returned_ = item;
+    --size_;
   }
 };
 
