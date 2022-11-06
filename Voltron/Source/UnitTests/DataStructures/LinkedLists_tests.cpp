@@ -93,19 +93,19 @@ BOOST_AUTO_TEST_CASE(ElementSetNextSwapsElements)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DemonstrateLinkedList)
 {
+  /*
+  LinkedList<int> linked_list;
+
+  for (int i {0}; i < 10; ++i)
   {
-    LinkedList<int> linked_list; 
-
-    for (int i {0}; i < 10; ++i)
-    {
-      linked_list.push(i);
-    }
-
-    BOOST_TEST(linked_list.head_->value_ == 9);
-    BOOST_TEST(linked_list.head_->next_->value_ == 8);
-    BOOST_TEST(linked_list.head_->next_->next_->value_ == 7);
-    BOOST_TEST(linked_list.head_->next_->next_->next_->value_ == 6);
+    linked_list.push(i);
   }
+
+  BOOST_TEST(linked_list.head_->value_ == 9);
+  BOOST_TEST(linked_list.head_->next_->value_ == 8);
+  BOOST_TEST(linked_list.head_->next_->next_->value_ == 7);
+  BOOST_TEST(linked_list.head_->next_->next_->next_->value_ == 6);
+  */
 }
 
 BOOST_AUTO_TEST_SUITE(NodeAsUniquePtr_tests)
@@ -567,6 +567,7 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(SinglyLinkedListCleansUpMemory)
 {
+  /*
   SinglyLinkedList<int> list;
 
   list.add_at_head(0);
@@ -624,6 +625,7 @@ BOOST_AUTO_TEST_CASE(SinglyLinkedListCleansUpMemory)
   list.delete_at_index(5);
 
   list.add_at_tail(4);
+  */
 }
 
 /*

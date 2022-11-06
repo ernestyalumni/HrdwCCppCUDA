@@ -18,7 +18,23 @@ void raw_destruct(T* array, const std::size_t size)
     array[i].~T();
   }
 
-  delete[] array;
+  //----------------------------------------------------------------------------
+  /// \url https://stackoverflow.com/questions/17344727/does-delete-call-destructors
+  /// From Sec. 5.3.5 Delete of C++ standard, draft n3337, the delete-expression
+  /// will invoke the dtor for object or elements of array being deleted. In
+  /// case of array, elements will be destroyed in order of decreasing address
+  /// (that is, in reverse order of completion of their ctor).
+  /// \details We do not do the "array" delete, delete[]. We've already invoked
+  /// the dtor for each element.
+  //----------------------------------------------------------------------------
+  //delete[] array;
+  ::operator delete(array);
+}
+
+template <typename T>
+T* raw_new(const std::size_t n = 1)
+{
+  return (T*)::operator new(sizeof(T) * n);
 }
 
 template <typename T>
@@ -29,13 +45,18 @@ class DynamicArray
     inline static constexpr std::size_t default_capacity_ {8};
 
     DynamicArray():
-      data_{new T[default_capacity_]},
+      // cf. https://cplusplus.com/reference/new/operator%20new/
+      // void* operator new (std::size_t size) throw
+      // Allocates size bytes of storage, suitably aligned to represent any
+      // object of that size, and returns a non-null ptr to first byte of this
+      // block.
+      data_{raw_new<T>(default_capacity_)},
       size_{0},
       capacity_{default_capacity_}
     {}
 
     DynamicArray(const std::size_t initial_size, const T& value = T{}):
-      data_{new T[std::max(initial_size, default_capacity_)]},
+      data_{raw_new<T>(std::max(initial_size, default_capacity_))},
       size_{0},
       capacity_{std::max(initial_size, default_capacity_)}
     {
@@ -45,12 +66,69 @@ class DynamicArray
       }
     }
 
+    //--------------------------------------------------------------------------
+    /// You *MUST* define at least copy semantics (Rule of 3) and preferably
+    /// user define move semantics.
+    /// \ref https://stackoverflow.com/questions/63413418/free-double-free-detected-in-tcache-2
+    /// \details If copy ctor, copy assignment are not user-defined, written,
+    /// they are generated with shallow semantics. Since class "owns" a ptr,
+    /// namely, T* data_, then 2 instances of DynamicArray both own the same
+    /// pointer, and when one is destroyed, it destroys the data pointed to it
+    /// by the other.
+    //--------------------------------------------------------------------------
+
+    // Copy ctor.
+    DynamicArray(const DynamicArray& other):
+      data_{raw_new<T>(other.size())},
+      size_{other.size_},
+      capacity_{other.capacity_}
+    {
+      for (std::size_t i {0}; i < size_; ++i)
+      {
+        new(&data_[i])T(other.data_[i]);
+      }
+    }
+
+    // Copy assignment.
+    DynamicArray& operator=(const DynamicArray& other)
+    {
+      raw_destruct<T>(data_, size_);
+      data_ = raw_new<T>(other.size());
+      size_ = other.size();
+      capacity_ = other.capacity_;
+
+      for (std::size_t i {0}; i < size_; ++i)
+      {
+        new(&data_[i])T(other.data_[i]);
+      }
+
+      return *this;
+    }
+
+    // Move ctor.
+    DynamicArray(DynamicArray&& other):
+      data_{other.data_},
+      size_{other.size_},
+      capacity_{other.capacity_}
+    {
+      other.data_ = nullptr;
+
+      other.size_ = 0;
+    }
+
+    // Move assignment.
+    DynamicArray& operator=(DynamicArray&& other)
+    {
+      data_ = other.data_;
+      other.size_ = 0;
+
+      other.data_ = nullptr;
+      return *this;
+    }
+
     virtual ~DynamicArray()
     {
-      //if (size_ > 0 || data_ != nullptr)
-      //{
       raw_destruct<T>(data_, size_);
-      //}
     }
 
     void append(const T& item)
@@ -128,6 +206,7 @@ class DynamicArray
 
     void resize_capacity()
     {
+      // This is an old version; TODO: device to remove code comments or not.
       /*
       capacity_ = std::max(2 * size_, default_capacity_);
 
@@ -157,7 +236,7 @@ class DynamicArray
       T* old_data {data_};
       capacity_ = std::max(2 * size_, default_capacity_);
       // Allocate a new array of capacity = 2 x the size.
-      data_ = new T[capacity_];
+      data_ = raw_new<T>(capacity_);
       for (std::size_t i {0}; i < size_; ++i)
       {
         // Copy all the items into it (i.e. new array).
@@ -186,13 +265,70 @@ class PrimitiveDynamicArray
 
     PrimitiveDynamicArray(
       const std::size_t initial_size,
-      const T value
+      const T value = T{}
       ):
       data_{new T[std::max(initial_size, default_capacity_)]},
       size_{0},
       capacity_{std::max(initial_size, default_capacity_)}
     {
       std::fill(data_, data_ + size_, value);
+    }
+
+    //--------------------------------------------------------------------------
+    /// You *MUST* define at least copy semantics (Rule of 3) and preferably
+    /// user define move semantics.
+    /// \ref https://stackoverflow.com/questions/63413418/free-double-free-detected-in-tcache-2
+    /// When copy ctor and copy assignment aren't user-defined, written
+    /// yourself, they're generated with shallow copy semantics. Since this
+    /// class "owns" a pointer, namely T* data_, if shallow copied, then 2
+    /// instnaces of DynamicArray both own the same pointer, and when one is
+    /// destroyed, it destroys data pointed to by the other.
+    //--------------------------------------------------------------------------
+
+    // Copy ctor.
+    PrimitiveDynamicArray(const PrimitiveDynamicArray& other):
+      data_{new T[other.size()]},
+      size_{other.size_},
+      capacity_{other.capacity_}
+    {
+      std::copy(other.data_, other.data_ + other.size(), data_);
+    }
+
+    // Copy assignment.
+    PrimitiveDynamicArray& operator=(const PrimitiveDynamicArray& other)
+    {
+      delete[] data_;
+      data_ = new T[other.size()];
+      size_ = other.size();
+      capacity_ = other.capacity_;
+
+      std::copy(other.data_, other.data_ + other.size(), data_);
+
+      return *this;
+    }
+
+    // Move ctor.
+    PrimitiveDynamicArray(PrimitiveDynamicArray&& other):
+      data_{other.data_},
+      size_{other.size()},
+      capacity_{other.capacity_}
+    {
+      other.data_ = nullptr;
+
+      // So not to invoke delete effectively in the dtor of the other.
+      other.size_ = 0;
+    }
+
+    // Move assignment.
+    PrimitiveDynamicArray& operator=(PrimitiveDynamicArray&& other)
+    {
+      data_ = other.data_;
+      size_ = other.size_;
+      capacity_ = other.capacity_;
+      other.size_ = 0;
+
+      other.data_ = nullptr;
+      return *this;
     }
 
     virtual ~PrimitiveDynamicArray()
@@ -229,13 +365,17 @@ class PrimitiveDynamicArray
 
     T& operator[](const std::size_t i)
     {
-      assert(i >= 0 && i < size_);
+      // Commented out because it could be the case where we set it in the
+      // beginning.
+      //assert(i < size_);
       return data_[i];
     }
 
     const T& operator[](const std::size_t i) const
     {
-      assert(i >= 0 && i < size_);
+      // Commented out because it could be the case where we set it in the
+      // beginning.
+      //assert(i < size_);
       return data_[i];
     }
 

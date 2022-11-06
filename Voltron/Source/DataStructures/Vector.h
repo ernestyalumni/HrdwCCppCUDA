@@ -49,6 +49,22 @@ class Vector : public Utilities::Kedyk::ArithmeticType<Vector<ITEM_T>>
       }
     }
 
+    Vector(const Vector& rhs):
+      capacity_{std::max(rhs.size_, MIN_CAPACITY)},
+      size_{rhs.size_},
+      items_{Utilities::Kedyk::raw_memory<ITEM_T>(capacity_)}
+    {
+      for (std::size_t i {0}; i < size_; ++i)
+      {
+        new(&items_[i])ITEM_T(rhs.items_[i]);
+      }
+    }
+
+    Vector& operator=(const Vector& rhs)
+    {
+      return Utilities::Kedyk::generic_assign(*this, rhs);
+    }
+
     ~Vector()
     {
       Utilities::Kedyk::raw_destruct(items_, size_);
@@ -118,6 +134,7 @@ class Vector : public Utilities::Kedyk::ArithmeticType<Vector<ITEM_T>>
 
     void resize()
     {
+      // Allocate.
       ITEM_T* old_items = items_;
       capacity_ = std::max(2 * size_, MIN_CAPACITY);
       items_ = Utilities::Kedyk::raw_memory<ITEM_T>(capacity_);
@@ -133,9 +150,8 @@ class Vector : public Utilities::Kedyk::ArithmeticType<Vector<ITEM_T>>
         // Construct a ITEM_T object, placing it directly into memory address of
         // &items_[i], initialized to value at old_items[i].
         new(&items_[i])ITEM_T(old_items[i]);
-
-        Utilities::Kedyk::raw_destruct(old_items, size_);
       }
+      Utilities::Kedyk::raw_destruct(old_items, size_);
     }
 
     const std::size_t get_capacity() const

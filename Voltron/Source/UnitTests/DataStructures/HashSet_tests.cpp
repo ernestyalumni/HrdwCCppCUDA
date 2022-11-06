@@ -16,7 +16,6 @@ using std::shared_ptr;
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(HashSet_tests)
 
-
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(HashSetNodeConstructs)
@@ -45,6 +44,8 @@ BOOST_AUTO_TEST_CASE(HashSetNodeConstructs)
 
     // Given pointer to memory block previously allocated with new, free up
     // memory.
+    //delete left_ptr;
+    //delete right_ptr;
     delete root_ptr;
   }
 }
@@ -95,6 +96,7 @@ BOOST_AUTO_TEST_CASE(HashSetTIsASet)
   BOOST_TEST(obj->contains(2));
   obj->remove(2);
   BOOST_TEST(!obj->contains(2));
+  delete obj;
 }
 
 BOOST_AUTO_TEST_SUITE_END() // HashSet_tests

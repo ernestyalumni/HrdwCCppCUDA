@@ -21,6 +21,30 @@ BOOST_AUTO_TEST_CASE(DefaultConstructs)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithSizeOnly)
+{
+  {
+    DynamicArray<int> a {0};
+    BOOST_TEST(a.has_data());
+    BOOST_TEST(a.size() == 0);
+    BOOST_TEST(a.capacity() == a.default_capacity_);
+  }
+  {
+    DynamicArray<int> a {1};
+    BOOST_TEST(a.has_data());
+    BOOST_TEST(a.size() == 1);
+    BOOST_TEST(a.capacity() == a.default_capacity_);
+  }
+  {
+    DynamicArray<int> a {9};
+    BOOST_TEST(a.has_data());
+    BOOST_TEST(a.size() == 9);
+    BOOST_TEST(a.capacity() == 9);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(AppendsPastDefaultSize)
 {
   DynamicArray<int> a {};

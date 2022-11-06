@@ -107,16 +107,17 @@ ADD_EXECUTABLE(Check
   DataStructures/BinarySearchTrees_tests.cpp
   DataStructures/BinaryTrees_tests.cpp
   DataStructures/DataStructures_tests.cpp
+  DataStructures/Graphs/AdjacencyArrayGraph_tests.cpp
+  DataStructures/Graphs/WeightedGraph_tests.cpp
   DataStructures/HashSet_tests.cpp
   DataStructures/HashTables/HashFunctions_tests.cpp
-  DataStructures/Heaps/BinaryHeap_tests.cpp
   DataStructures/LinkedLists/DoublyLinkedList_tests.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp
   DataStructures/LinkedLists/Node_tests.cpp
   DataStructures/LinkedLists/ReverseList_tests.cpp
   DataStructures/LinkedLists/SentinelDoublyLinkedList_tests.cpp
   DataStructures/LinkedLists/SingleNode_tests.cpp
-  DataStructures/LinkedLists_tests.cpp
+  #DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Queues/CircularQueue_tests.cpp
   DataStructures/Queues/DynamicQueue_tests.cpp

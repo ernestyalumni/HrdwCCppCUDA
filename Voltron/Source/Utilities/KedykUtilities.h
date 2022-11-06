@@ -23,7 +23,7 @@ INT_T ceiling(const UNSIGNED_INT_T n, const INT_T divisor)
 /// don't call ctors and dtors and must be used in pairs.
 //------------------------------------------------------------------------------
 template <typename ITEM_T>
-ITEM_T* raw_memory(const std::size_t n)
+ITEM_T* raw_memory(const std::size_t n = 1)
 {
   return (ITEM_T*)::operator new(sizeof(ITEM_T) * n);
 }
@@ -36,8 +36,20 @@ void raw_destruct(ITEM_T* array, const std::size_t size)
   for (std::size_t i {0}; i < size; ++i)
   {
     array[i].~ITEM_T();
-    raw_delete(array);
   }
+  
+  raw_delete(array);
+}
+
+template <typename T>
+T& generic_assign(T& to, const T& rhs)
+{
+  if (&to != &rhs)
+  {
+    to.~T();
+    new(&to)T(rhs);
+  }
+  return to;
 }
 
 } // namespace Kedyk

@@ -269,6 +269,8 @@ BOOST_AUTO_TEST_CASE(InsertNewValueCreatesRootForEmptyTree)
   BOOST_TEST(check_root->counter_ == 0);
   BOOST_TEST(check_root->left_ == nullptr);
   BOOST_TEST(check_root->right_ == nullptr);
+
+  //delete tree_ptr;
 }
 
 //------------------------------------------------------------------------------
@@ -308,6 +310,8 @@ BOOST_AUTO_TEST_CASE(InsertNewValuePlacesLessThanValuesToTheLeft)
   BOOST_TEST(check_root->left_->left_->counter_ == 0);
   BOOST_TEST(check_root->left_->left_->left_ == nullptr);
   BOOST_TEST(check_root->left_->left_->right_ == nullptr);
+
+  //delete tree_ptr;
 }
 
 //------------------------------------------------------------------------------
@@ -347,6 +351,8 @@ BOOST_AUTO_TEST_CASE(InsertNewValuePlacesGreaterThanValuesToTheRight)
   BOOST_TEST(check_root->right_->right_->counter_ == 0);
   BOOST_TEST(check_root->right_->right_->left_ == nullptr);
   BOOST_TEST(check_root->right_->right_->right_ == nullptr);
+
+  //delete tree_ptr;
 }
 
 //------------------------------------------------------------------------------
@@ -376,6 +382,8 @@ BOOST_AUTO_TEST_CASE(ConstructsWithVectorOfIntegers)
   BOOST_TEST(check_root->left_->right_->counter_ == 1);
   BOOST_TEST(check_root->left_->right_->left_->value_ == 3);
   BOOST_TEST(check_root->left_->right_->left_->counter_ == 0);
+
+  //delete tree_ptr;
 }
 
 //------------------------------------------------------------------------------
@@ -408,6 +416,7 @@ BOOST_AUTO_TEST_CASE(FindKthLargestElementFindsKthLargestElement)
   BOOST_TEST(tree_ptr->find_kth_largest_element(3) == 5);
   BOOST_TEST(check_root->counter_ == 5);
 
+  //delete tree_ptr;
 }
 
 BOOST_AUTO_TEST_SUITE_END() // TreeWithCounter_tests

@@ -35,11 +35,13 @@ struct StaticFreeList
       // Used when allocated.
       void* user_data_;
     };
-
+    
+    /*
     Item(const T& input_item = T{}):
       item_{input_item},
       next_{nullptr}
     {}
+    */
   };
 
   Item* nodes_;
@@ -50,10 +52,15 @@ struct StaticFreeList
     size_{0},
     max_size_{0},
     // This code line, implementation, may not work:
-    nodes_{new Item[fixed_size]},
-    //nodes_{Utilities::Kedyk::raw_memory<Item>(fixed_size)},
+    //nodes_{new Item[fixed_size]},
+    nodes_{Utilities::Kedyk::raw_memory<Item>(fixed_size)},
     returned_{nullptr}
-  {}
+  {
+    for (std::size_t i {0}; i < capacity_; ++i)
+    {
+      new(&nodes_[i])Item({});
+    }
+  }
 
   bool is_full()
   {
@@ -65,7 +72,43 @@ struct StaticFreeList
     return size_ <= 0;
   }
 
-  virtual ~StaticFreeList()
+  // Copy ctor.
+  // StaticFreeList(const StaticFreeList&) = delete;
+
+  // Copy assignment.
+  // StaticFreeList& operator=(const StaticFreeList&) = delete;
+
+  // Move ctor.
+  /*
+  StaticFreeList(StaticFreeList&& other):
+    capacity_{other.capacity_},
+    size_{other.size_},
+    max_size_{other.max_size_},
+    nodes_{other.nodes_},
+    returned_{other.returned_}
+  {
+    other.nodes_ = nullptr;
+    other.returned_ = nullptr;
+
+    other.size_ = 0;
+  }
+
+  // Move assignment.
+  StaticFreeList& operator=(StaticFreeList&& other)
+  {
+    capacity_ = other.capacity_;
+    size_ = other.size_;
+    max_size_ = other.max_size_;
+    nodes_ = other.nodes_;
+    returned_ = other.returned_;
+    other.nodes_ = nullptr;
+    other.returned_ = nullptr;
+    other.size_ = 0;
+    return *this;
+  }
+  */
+
+  ~StaticFreeList()
   {
     if (!is_empty())
     {
@@ -90,8 +133,8 @@ struct StaticFreeList
       }
     }
     // This code line, implementation, may not work.
-    delete [] nodes_;
-    //Utilities::Kedyk::raw_delete(nodes_);
+    // delete[] nodes_;
+    Utilities::Kedyk::raw_delete(nodes_);
   }
 
   Item* allocate()
