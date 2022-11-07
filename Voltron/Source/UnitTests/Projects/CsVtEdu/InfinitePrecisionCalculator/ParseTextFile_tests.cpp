@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(Constructs)
   const std::string current_path_1 {example_file_path_1()};
   ParseTextFile parse_text_file {example_file_path_1()};
 
-  BOOST_TEST(true);
+  BOOST_TEST(parse_text_file.read_in_.size() == 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // InfinitePrecisionCalculator_tests

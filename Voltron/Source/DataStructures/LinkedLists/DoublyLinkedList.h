@@ -3,6 +3,7 @@
 
 #include "DoubleNode.h"
 
+#include <cassert>
 #include <utility>
 
 namespace DataStructures
@@ -25,6 +26,88 @@ class DoublyLinkedList
       head_{nullptr},
       tail_{nullptr}
     {}
+
+    // Copy ctor.
+    DoublyLinkedList(const DoublyLinkedList& rhs):
+      head_{nullptr},
+      tail_{nullptr}
+    {
+      if (rhs.empty())
+      {
+        return;
+      }
+
+      // Copy the first node-we no longer modify head_;
+      for (Node* n {rhs.head_}; n; n = n->next_)
+      {
+        push_back(n->value_);
+      }
+    }
+
+    // Copy assignment.
+    DoublyLinkedList& operator=(const DoublyLinkedList& rhs)
+    {
+      // Ensure we're not assigning something to itself.
+      if (this == &rhs)
+      {
+        return *this;
+      }
+
+      // If the right-hand side is empty, it's straight forward: just empty this
+      // list.
+      if (rhs.is_empty())
+      {
+        while (!is_empty())
+        {
+          pop_front();
+        }
+        return *this;
+      }
+
+      if (is_empty())
+      {
+        head_ = new Node{rhs.front()};
+      }
+      else
+      {
+        begin()->value_ = rhs.front();
+      }
+
+      //------------------------------------------------------------------------
+      /// Step through the right-hand side list and for each node,
+      /// * if there's a corresponding node in this, copy over the value, else
+      /// * There's no corresponding node, create a new node and append it.
+      //------------------------------------------------------------------------
+      Node* this_node {head_};
+      Node* rhs_node {rhs.begin()->next_};
+
+      while (rhs_node != nullptr)
+      {
+        // There's no corresponding node; create a new node and append it.
+        if (this_node->next_ == nullptr)
+        {
+          this_node->next_ = new Node(rhs_node->value_);
+          this_node = this_node->next_;
+        }
+        else
+        {
+          this_node = this_node->next_;
+          this_node->value_ = rhs_node->value_;
+        }
+
+        rhs_node = rhs_node->next_;
+      }
+
+      // If there are any nodes remaining in this, delete them.
+      while (this_node->next_ != nullptr)
+      {
+        Node* tmp {this_node->next_};
+        this_node->next_ = this_node->next_->next_;
+        delete tmp;
+      }
+
+      return *this;
+    }
 
     virtual ~DoublyLinkedList()
     {
@@ -166,6 +249,128 @@ class DoublyLinkedList
     Node* tail()
     {
       return tail_;
+    }
+
+    T front() const
+    {
+      assert(!is_empty());
+      return head_->value_;
+    }
+
+    //--------------------------------------------------------------------------
+    /// \url https://github.com/dkedyk/ImplementingUsefulAlgorithms/blob/master/Utils/GCFreeList.h
+    //--------------------------------------------------------------------------
+    class Iterator
+    {
+      public:
+        Iterator(Node* n):
+          current_{n}
+        {}
+
+        Node* get_current()
+        {
+          return current_;
+        }
+
+        // To next item.
+        Iterator& operator++()
+        {
+          assert(current_);
+          current_ = current_->next_;
+          return *this;
+        }
+
+        // To previous item.
+        Iterator& operator--()
+        {
+          assert(current_);
+          current_ = current_->previous_;
+          return *this;
+        }
+
+        T& operator*() const
+        {
+          assert(current_);
+          return current_->value_;
+        }
+
+        T* operator->() const
+        {
+          assert(current_);
+          return &current_->value_;
+        }
+
+        bool operator==(const Iterator& rhs) const
+        {
+          return current_ == rhs.current_;
+        }
+
+        bool operator!=(const Iterator& rhs) const
+        {
+          return current_ != rhs.current_;
+        }
+
+      private:
+
+        Node* current_;
+    };
+
+    Iterator begin()
+    {
+      return Iterator{head_};
+    }
+
+    Iterator rbegin()
+    {
+      return Iterator{tail_};
+    }
+
+    Iterator end()
+    {
+      return Iterator{nullptr};
+    }
+
+    Iterator rend()
+    {
+      return Iterator{nullptr};
+    }
+
+    void move_before(Iterator what, Iterator where)
+    {
+      assert(what != end());
+      // First check for self-reference.
+      if (what != where)
+      {
+        Node* n {what.get_current()};
+        Node* w {where.get_current()};
+
+        // Cut Node n out of the linked list.
+        assert(n);
+        // This "cuts" the "left side link" or previous link of Node n.
+        (n == tail_ ? tail_ : n->next_->previous_) = n->previous_;
+        // This "cuts" the "right side link" or next link of Node n.
+        (n == head_ ? head_ : n->previous_->next_) = n->next_;
+
+        n->next_ = w;
+        if (w)
+        {
+          n->previous_ = w->previous_;
+          w->previous_ = n;
+        }
+        else
+        {
+          n->previous_ = tail_;
+          tail_ = n;
+        }
+        if (n->previous_)
+        {
+          n->previous_->next_ = n;
+        }
+        if (w == head_)
+        {
+          head_ = n;
+        }
+      }
     }
 
   private:

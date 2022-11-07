@@ -25,14 +25,14 @@ void ParseTextFile::parse_stream()
   // as delimiter.
   for (std::string line {}; std::getline(read_in_stream_, line);)
   {
-    bool is_empty_line {false};
+    bool is_empty_line {true};
     for (std::size_t i {0}; i < line.size(); ++i)
     {
       // https://en.cppreference.com/w/cpp/string/byte/isspace
       // Checks white space characters: ' ', '\f', '\n', '\r', '\t', '\v'
       if (!std::isspace(line[i]))
       {
-        is_empty_line = true;
+        is_empty_line = false;
       }
     }
 
