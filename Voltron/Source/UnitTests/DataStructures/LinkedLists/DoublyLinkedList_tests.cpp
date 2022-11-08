@@ -201,6 +201,69 @@ BOOST_FIXTURE_TEST_CASE(ListDeleteRemovesElementFromFront,
   BOOST_TEST(x->next()->retrieve() == 16);
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(IteratorFunctionsAsAnIterator, DoublyLinkedListFixture)
+{
+  auto iter = ls_.begin();
+  BOOST_TEST(*iter == 25);
+  BOOST_TEST(iter->retrieve() == 25);
+  BOOST_TEST(iter->previous() == nullptr);
+  ++iter;
+  BOOST_TEST(*iter == 9);
+  BOOST_TEST(iter->retrieve() == 9);
+  BOOST_TEST(iter->previous()->retrieve() == 25);
+  ++iter;
+  BOOST_TEST(*iter == 16);
+  BOOST_TEST(iter->retrieve() == 16);
+  BOOST_TEST(iter->previous()->retrieve() == 9);
+  ++iter;
+  BOOST_TEST(*iter == 4);
+  BOOST_TEST(iter->retrieve() == 4);
+  BOOST_TEST(iter->previous()->retrieve() == 16);
+  ++iter;
+  BOOST_TEST(*iter == 1);
+  BOOST_TEST(iter->retrieve() == 1);
+  BOOST_TEST(iter->previous()->retrieve() == 4);
+  ++iter;
+  BOOST_TEST((iter == ls_.end()));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(MoveBeforeMovesBefore, DoublyLinkedListFixture)
+{
+  auto what = ls_.begin();
+  ++what;
+  ++what;
+  auto where = ls_.begin();
+  ls_.move_before(what, where);
+  auto iter = ls_.begin();
+  BOOST_TEST(*iter == 16);
+  ++iter;
+  BOOST_TEST(*iter == 25);
+  ++iter;
+  BOOST_TEST(*iter == 9);
+  ++iter;
+  BOOST_TEST(*iter == 4);
+  ++iter;
+  BOOST_TEST(*iter == 1);
+  what = ls_.rbegin();
+  where = ls_.begin();
+  ++where;
+  ls_.move_before(what, where);
+  iter = ls_.begin();
+  BOOST_TEST(*iter == 16);
+  ++iter;
+  BOOST_TEST(*iter == 1);
+  ++iter;
+  BOOST_TEST(*iter == 25);
+  ++iter;
+  BOOST_TEST(*iter == 9);
+  ++iter;
+  BOOST_TEST(*iter == 4);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // DoublyLinkedList_tests
 BOOST_AUTO_TEST_SUITE_END() // LinkedLists
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

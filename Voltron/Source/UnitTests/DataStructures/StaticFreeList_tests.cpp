@@ -184,14 +184,13 @@ BOOST_AUTO_TEST_CASE(AllocateAllocates)
   BOOST_TEST(static_free_list.max_size_ == 1);
   BOOST_TEST(static_free_list.size_ == 1);
 
+  // Update: If each element is not allocated with new in the ctor, this fatal
+  // error is obtained (it appears to happen during dtor of the class instance).
   // Obtain fatal error SIGABRT (application abort requested), unknown location
   // (0).
   allocate_1->item_ = "Tribe Called Quest";
-  //static_free_list.nodes_[0].item_ = "Tribe Called Quest";
 
-  //allocate_1->item_ = "Tribe Called Quest";
-
-  //BOOST_TEST(static_free_list.nodes_[0].item_ == "Tribe Called Quest");
+  BOOST_TEST(static_free_list.nodes_[0].item_ == "Tribe Called Quest");
   BOOST_TEST(static_free_list.returned_ == nullptr);
   auto* allocate_2 = static_free_list.allocate(); 
   BOOST_TEST(static_free_list.max_size_ == 2);

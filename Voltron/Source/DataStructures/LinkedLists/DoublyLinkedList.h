@@ -294,10 +294,10 @@ class DoublyLinkedList
           return current_->value_;
         }
 
-        T* operator->() const
+        Node* operator->() const
         {
           assert(current_);
-          return &current_->value_;
+          return current_;
         }
 
         bool operator==(const Iterator& rhs) const
