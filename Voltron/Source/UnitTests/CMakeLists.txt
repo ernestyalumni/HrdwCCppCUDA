@@ -107,6 +107,7 @@ ADD_EXECUTABLE(Check
   DataStructures/BinarySearchTrees_tests.cpp
   DataStructures/BinaryTrees_tests.cpp
   DataStructures/DataStructures_tests.cpp
+  DataStructures/FreeList_tests.cpp
   DataStructures/Graphs/AdjacencyArrayGraph_tests.cpp
   DataStructures/Graphs/WeightedGraph_tests.cpp
   DataStructures/HashSet_tests.cpp
