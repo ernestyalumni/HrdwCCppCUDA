@@ -62,6 +62,35 @@ BOOST_AUTO_TEST_CASE(PushFrontInserts)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PushBackAddsToBackOfList)
+{
+  DoublyLinkedList<int> ls {};
+  ls.push_back(9);
+  BOOST_TEST(ls.head()->retrieve() == 9);
+  BOOST_TEST(ls.tail()->retrieve() == 9);
+  ls.push_back(8);
+  BOOST_TEST(ls.head()->retrieve() == 9);
+  BOOST_TEST(ls.tail()->retrieve() == 8);
+  ls.push_back(7);
+  BOOST_TEST(ls.head()->retrieve() == 9);
+  BOOST_TEST(ls.tail()->retrieve() == 7);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ReturnPointerOfHeadCanBeIteratedThrough)
+{
+  DoublyLinkedList<int> ls {};
+  ls.push_back(9);
+  ls.push_back(8);
+  ls.push_back(7);
+  auto node_ptr = ls.head();
+  BOOST_TEST(node_ptr->retrieve() == 9);
+
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_FIXTURE_TEST_CASE(HeadGetsHead, DoublyLinkedListFixture)
 {
   BOOST_TEST(ls_.head()->retrieve() == 25);
