@@ -1,3 +1,4 @@
+#include "DataStructures/LinkedLists/DoublyLinkedList.h"
 #include "DataStructures/StaticFreeList.h"
 
 #include <boost/test/unit_test.hpp>
@@ -268,6 +269,9 @@ BOOST_AUTO_TEST_CASE(AllocateToFull)
   BOOST_TEST(static_free_list.max_size_ == 4);
   BOOST_TEST(static_free_list.size_ == 4);
 }
+
+template <typename T>
+using List_T = LinkedLists::DoublyLinkedList<Kedyk::StaticFreeList<T>>;
 
 BOOST_AUTO_TEST_SUITE_END() // StaticFreeList_tests
 BOOST_AUTO_TEST_SUITE_END() // Kedyk

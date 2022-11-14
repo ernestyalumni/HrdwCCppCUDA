@@ -40,6 +40,11 @@ class DoubleNode
 			return value_;
 		}
 
+    T& get_value()
+    {
+      return value_;
+    }
+
 		DoubleNode* next() const
 		{
 			return next_;

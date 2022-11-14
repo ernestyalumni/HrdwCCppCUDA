@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(ConstructsForSmallBlockSize)
 BOOST_AUTO_TEST_CASE(AllocateAllocates)
 {
   FreeList<int> fl {8};
-  int* allocated {fl.allocate()};
+  //int* allocated {fl.allocate()};
 }
 
 BOOST_AUTO_TEST_SUITE_END() // FreeList_tests

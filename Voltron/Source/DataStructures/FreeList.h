@@ -57,12 +57,12 @@ class FreeList
         block_size_ = std::min<std::size_t>(block_size_ * 2, max_block_size_);
       }
 
-      Item* result {first->value_.allocate()};
+      Item* result {first->get_value().allocate()};
       // Block list pointer.
-      result->user_data_ = (void*)first.get_current();
+      result->user_data_ = reinterpret_cast<void*>(first.get_current());
 
       // Move full blocks to the end.
-      if (first->is_full())
+      if (first->retrieve().is_full())
       {
         blocks_.move_before(first, blocks_.end());
       }
