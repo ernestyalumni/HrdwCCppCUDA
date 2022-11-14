@@ -84,7 +84,6 @@ ADD_EXECUTABLE(Check
   Cpp/Templates/FunctionT/FunctionT_tests.cpp
   Cpp/Templates/FunctionT/Max_tests.cpp
   Cpp/Templates/FunctionT/MoreMax_tests.cpp
-  Cpp/Templates/Template_Metaprogramming_tests.cpp
   Cpp/Templates/TypeUtilities_tests.cpp
   Cpp/Threads/Future_tests.cpp
   Cpp/Utilities/FunctionObject_test.cpp
@@ -157,6 +156,7 @@ ADD_EXECUTABLE(Check
   IPC/Sockets/Socket_tests.cpp
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
+  Projects/CsVtEdu/InfinitePrecisionCalculator/Addition_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextFile_tests.cpp
   Tools/CaptureCout_tests.cpp
   Tools/Filepaths_tests.cpp

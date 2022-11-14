@@ -62,7 +62,8 @@ class DoubleNode
 		// 		use ptr->next_node 	to modify it
 		// 		use ptr->next() 		to access it
 
-	private:
+		// These data members are made public because there are other applications,
+		// in particular functions, that'll need to modify these values directly.
 
 		T value_;
 		DoubleNode* next_;
