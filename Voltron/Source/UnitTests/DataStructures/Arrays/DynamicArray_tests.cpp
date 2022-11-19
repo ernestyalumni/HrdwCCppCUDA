@@ -2,8 +2,10 @@
 
 #include <boost/test/unit_test.hpp>
 #include <cstddef> // std::size_t
+#include <string>
 
 using DataStructures::Arrays::DynamicArray;
+using std::string;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Arrays)
@@ -68,6 +70,23 @@ BOOST_AUTO_TEST_CASE(AppendsPastDefaultSize)
   BOOST_TEST(a.capacity() == a.default_capacity_ * 2);
   BOOST_TEST(a.size() == i + 1);
   BOOST_TEST(a[i] == i * 2);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithStringType)
+{
+  DynamicArray<string> a {};
+
+  a.append("ab");
+  a.append("bc");
+  a.append("cd");
+  a.append("de");
+  a.append("ef");
+  a.append("fg");
+  a.append("gh");
+  a.append("hi");
+
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DynamicArray_tests
