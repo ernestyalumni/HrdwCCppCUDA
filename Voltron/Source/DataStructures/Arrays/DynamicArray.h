@@ -34,6 +34,13 @@ void raw_destruct(T* array, const std::size_t size)
 template <typename T>
 T* raw_new(const std::size_t n = 1)
 {
+  //----------------------------------------------------------------------------
+  /// \ref https://en.cppreference.com/w/cpp/memory/new/operator_new
+  /// Class-specific allocation functions:
+  /// void* T::operator new(std::size_t count);
+  /// If defined, called by the usual single-object new-expressions if
+  /// allocating object of type T.
+  //----------------------------------------------------------------------------
   return (T*)::operator new(sizeof(T) * n);
 }
 

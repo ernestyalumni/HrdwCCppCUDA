@@ -27,6 +27,16 @@ class DoublyLinkedList
       tail_{nullptr}
     {}
 
+    DoublyLinkedList(const std::size_t length, const T& value = T{}):
+      head_{nullptr},
+      tail_{nullptr}
+    {
+      for (std::size_t i {0}; i < length; ++i)
+      {
+        push_front(value);
+      }
+    }
+
     // Copy ctor.
     DoublyLinkedList(const DoublyLinkedList& rhs):
       head_{nullptr},
@@ -255,6 +265,22 @@ class DoublyLinkedList
     {
       assert(!is_empty());
       return head_->value_;
+    }
+
+    //--------------------------------------------------------------------------
+    /// \details O(N) time complexity.
+    //--------------------------------------------------------------------------
+    std::size_t size() const
+    {
+      std::size_t length {0};
+      Node* current_ptr {head_};
+      while (current_ptr != nullptr)
+      {
+        current_ptr = current_ptr->next();
+        ++length;
+      }
+
+      return length;
     }
 
     //--------------------------------------------------------------------------

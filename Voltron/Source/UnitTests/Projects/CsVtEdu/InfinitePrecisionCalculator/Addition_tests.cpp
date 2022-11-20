@@ -2,7 +2,6 @@
 #include "Projects/CsVtEdu/InfinitePrecisionCalculator/Addition.h"
 
 #include <boost/test/unit_test.hpp>
-#include <string>
 #include <vector>
 
 template <typename T>

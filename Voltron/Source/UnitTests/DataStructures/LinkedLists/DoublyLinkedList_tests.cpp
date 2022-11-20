@@ -43,6 +43,23 @@ BOOST_AUTO_TEST_CASE(DefaultConstructs)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithSizeAndInitialValue)
+{
+  DoublyLinkedList<int> ls {42, 0};
+
+  BOOST_TEST(ls.size() == 42);
+
+  for (
+    DoublyLinkedList<int>::Iterator iterator {ls.begin()};
+    iterator != ls.end();
+    ++iterator)
+  {
+    BOOST_TEST(*iterator == 0);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(PushFrontInserts)
 {
   DoublyLinkedList<int> ls {};
@@ -291,6 +308,21 @@ BOOST_FIXTURE_TEST_CASE(MoveBeforeMovesBefore, DoublyLinkedListFixture)
   BOOST_TEST(*iter == 9);
   ++iter;
   BOOST_TEST(*iter == 4);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(SizeCountsLength, DoublyLinkedListFixture)
+{
+  BOOST_TEST(ls_.size() == 5);
+
+  ls_.push_back(22);
+
+  BOOST_TEST(ls_.size() == 6);
+
+  ls_.list_delete(16);
+
+  BOOST_TEST(ls_.size() == 5);  
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DoublyLinkedList_tests
