@@ -3,6 +3,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <string>
+#include <vector>
 
 template <typename T>
 constexpr auto addition = CsVtEdu::InfinitePrecisionCalculator::addition<T>;
@@ -255,7 +256,48 @@ BOOST_AUTO_TEST_CASE(RecursiveAdditionAddsWithCarryForLargerSizedSecondOperand)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(AdditionAdds)
 {
+  // 56669777
+  DoublyLinkedList<int> operand_1 {};
+  operand_1.push_front(5);
+  operand_1.push_front(6);
+  operand_1.push_front(6);
+  operand_1.push_front(6);
+  operand_1.push_front(9);
+  operand_1.push_front(7);
+  operand_1.push_front(7);
+  operand_1.push_front(7);
 
+  // 99999911111
+  DoublyLinkedList<int> operand_2 {};
+  operand_2.push_front(9);
+  operand_2.push_front(9);
+  operand_2.push_front(9);
+  operand_2.push_front(9);
+  operand_2.push_front(9);
+  operand_2.push_front(9);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+
+  addition<int>(operand_1, operand_2);
+
+  auto operand_1_iter = operand_1.begin();
+  // 100056580888
+  for (int i {0}; i < 3; ++i)
+  {
+    BOOST_TEST(*operand_1_iter == 8);
+    ++operand_1_iter;
+  }
+
+  std::vector<int> expected {0, 8, 5, 6, 5, 0, 0, 0, 1};
+
+  for (auto ele : expected)
+  {
+    BOOST_TEST(*operand_1_iter == ele);
+    ++operand_1_iter;
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Addition_tests

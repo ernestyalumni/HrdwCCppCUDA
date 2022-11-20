@@ -16,7 +16,7 @@ template <typename T>
 using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 
 //------------------------------------------------------------------------------
-/// \details 
+/// \details
 /// cf. https://en.cppreference.com/w/cpp/types/is_integral value is bool.
 /// cf. https://en.cppreference.com/w/cpp/types/enable_if
 /// template <bool B, class T = void>
@@ -24,14 +24,14 @@ using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 /// type - either T or no such member, depending on value of B.
 /// template <bool B, class T = void>
 /// using enable_if_t = typename enable_if<B, T>::type;
-/// Assume 
+/// Assume
 //------------------------------------------------------------------------------
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 void addition(
   DataStructures::LinkedLists::DoublyLinkedList<T>& operand1,
   DataStructures::LinkedLists::DoublyLinkedList<T>& operand2)
 {
-  recursive_addition(
+  recursive_addition<T>(
     operand1.head(),
     operand2.head(),
     nullptr,
