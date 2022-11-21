@@ -60,6 +60,10 @@ void iterative_multiplication(
       carry_value = single_digit_result / 10 +
         current_result_ptr_2->retrieve() / 10;
 
+      // Now that carry value has been calculated, keep only the modulus in the
+      // result digit position.
+      current_result_ptr_2->get_value() = current_result_ptr_2->retrieve() % 10;
+
       current_operand_1_ptr = current_operand_1_ptr->next();
       current_result_ptr_2 = current_result_ptr_2->next();
     }
