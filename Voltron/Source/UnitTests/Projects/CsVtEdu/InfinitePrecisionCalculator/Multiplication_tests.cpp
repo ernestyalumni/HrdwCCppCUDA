@@ -74,6 +74,71 @@ BOOST_AUTO_TEST_CASE(IterativeMultiplicationWorksForSingleDigit)
     BOOST_TEST(result.head()->retrieve() == 8);
     BOOST_TEST(result.head()->next()->retrieve() == 1);
   }
+  {
+    DoublyLinkedList<int> operand_1 {};
+    operand_1.push_front(9);
+
+    DoublyLinkedList<int> operand_2 {};
+    operand_2.push_front(9);
+
+    DoublyLinkedList<int> result {operand_1.size() + operand_2.size(), 0};
+
+    iterative_multiplication<int>(
+      operand_1.head(),
+      operand_2.head(),
+      result.head());
+
+    BOOST_TEST(result.head()->retrieve() == 1);
+    BOOST_TEST(result.head()->next()->retrieve() == 8);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IterativeMultiplicationWorksForDoubleDigitMultiplicands)
+{
+  {
+    DoublyLinkedList<int> operand_1 {};
+    operand_1.push_front(9);
+    operand_1.push_front(9);
+    BOOST_TEST(operand_1.size() = 2);
+
+    DoublyLinkedList<int> operand_2 {};
+    operand_2.push_front(9);
+    BOOST_TEST(operand_2.size() = 1);
+
+    DoublyLinkedList<int> result {operand_1.size() + operand_2.size(), 0};
+
+    iterative_multiplication<int>(
+      operand_1.head(),
+      operand_2.head(),
+      result.head());
+
+    BOOST_TEST(result.head()->retrieve() == 1);
+    BOOST_TEST(result.head()->next()->retrieve() == 9);
+    BOOST_TEST(result.head()->next()->next()->retrieve() == 8);
+  }
+  {
+    DoublyLinkedList<int> operand_1 {};
+    operand_1.push_front(9);
+    BOOST_TEST(operand_1.size() = 1);
+
+    DoublyLinkedList<int> operand_2 {};
+    operand_2.push_front(9);
+    operand_2.push_front(9);
+    BOOST_TEST(operand_2.size() = 2);
+
+    DoublyLinkedList<int> result {operand_1.size() + operand_2.size(), 0};
+
+    iterative_multiplication<int>(
+      operand_1.head(),
+      operand_2.head(),
+      result.head());
+
+    BOOST_TEST(result.head()->retrieve() == 1);
+    BOOST_TEST(result.head()->next()->retrieve() == 9);
+    BOOST_TEST(result.head()->next()->next()->retrieve() == 8);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Multiplication_tests

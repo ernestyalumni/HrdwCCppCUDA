@@ -33,8 +33,15 @@ void iterative_multiplication(
   {
     T carry_value {static_cast<T>(0)};
 
+    // cf. https://en.wikipedia.org/wiki/Multiplication_algorithm
     // Each time we start from the next of Node from which we had started the
     // last iteration.
+    // This steps corresponds to how in arithmetic for multiplication, you have
+    // to shift in position with the digit position of the multiplier. See also
+    // the final step at end of this iteration.
+    // current_result_ptr_1 tracks the position from which we had shifted to.
+    // current_result_ptr_2 then, from that position, will move along the new
+    // result from multiplication.
     current_result_ptr_2 = current_result_ptr_1;
 
     current_operand_1_ptr = operand_ptr_1;
