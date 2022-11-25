@@ -79,6 +79,60 @@ void iterative_multiplication(
   }
 }
 
+namespace Details
+{
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+void tail_recursive_multiply(
+  const Node<T>* operand_ptr_1,
+  const Node<T>* current_operand_1_ptr,
+  const Node<T>* current_operand_2_ptr,
+  Node<T>* current_result_ptr_1,
+  Node<T>* current_result_ptr_2)
+{
+  if (current_operand_2_ptr == nullptr)
+  {
+    return;
+  }
+  T carry_value {static_cast<T>(0)};
+
+  current_result_ptr_2 = current_result_ptr_1;
+  current_operand_1_ptr = operand_ptr_1;
+
+  while (current_operand_1_ptr)
+  {
+    T single_digit_result {
+      current_operand_1_ptr->retrieve() *
+      current_operand_2_ptr->retrieve() +
+      carry_value};
+    current_result_ptr_2->get_value() += single_digit_result % 10;
+    carry_value = single_digit_result / 10 +
+      current_result_ptr_2->retrieve() / 10;
+
+    current_result_ptr_2->get_value() = current_result_ptr_2->retrieve() % 10;
+
+    current_operand_1_ptr = current_operand_1_ptr->next();
+    current_result_ptr_2 = current_result_ptr_2->next();
+  }
+
+  if (carry_value > static_cast<T>(0))
+  {
+    current_result_ptr_2->get_value() += carry_value;
+  }
+
+  current_result_ptr_1 = current_result_ptr_1->next_;
+  current_operand_2_ptr = current_operand_2_ptr->next_;
+
+  tail_recursive_multiply<T>(
+    operand_ptr_1,
+    current_operand_1_ptr,
+    current_operand_2_ptr,
+    current_result_ptr_1,
+    current_result_ptr_2);
+}
+
+} // namespace Details
+
 //------------------------------------------------------------------------------
 /// cf. https://stackoverflow.com/questions/22764142/recursion-vs-tail-recursion
 /// A loop has:
@@ -130,60 +184,6 @@ void tail_recursive_multiplication(
     current_result_ptr_1,
     current_result_ptr_2);
 }
-
-namespace Details
-{
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-void tail_recursive_multiply(
-  const Node<T>* operand_ptr_1,
-  const Node<T>* current_operand_1_ptr,
-  const Node<T>* current_operand_2_ptr,
-  Node<T>* current_result_ptr_1,
-  Node<T>* current_result_ptr_2)
-{
-  if (current_operand_2_ptr == nullptr)
-  {
-    return;
-  }
-  T carry_value {static_cast<T>(0)};
-
-  current_result_ptr_2 = current_result_ptr_1;
-  current_operand_1_ptr = operand_ptr_1;
-
-  while (current_operand_1_ptr)
-  {
-    T single_digit_result {
-      current_operand_1_ptr->retrieve() *
-      current_operand_2_ptr->retrieve() +
-      carry_value};
-    current_result_ptr_2->get_value() += single_digit_result % 10;
-    carry_value = single_digit_result / 10 +
-      current_result_ptr_2->retrieve() / 10;
-
-    current_result_ptr_2->get_value() = current_result_ptr_2->retrieve() % 10;
-
-    current_operand_1_ptr = current_operand_1_ptr->next();
-    current_result_ptr_2 = current_result_ptr_2->next();
-  }
-
-  if (carry_value > static_cast<T>(0))
-  {
-    current_result_ptr_2->get_value() += carry_value;
-  }
-
-  current_result_ptr_1 = current_result_ptr_1->next_;
-  current_operand_2_ptr = current_operand_2_ptr->next_;
-
-  tail_recursive_multiply(
-    operand_ptr_1,
-    current_operand_1_ptr,
-    current_operand_2_ptr,
-    current_result_ptr_1,
-    current_result_ptr_2);
-}
-
-} // namespace Details
 
 } // namespace InfinitePrecisionCalculator
 } // namespace CsVtEdu

@@ -10,6 +10,10 @@ template <typename T>
 constexpr auto iterative_multiplication =
   CsVtEdu::InfinitePrecisionCalculator::iterative_multiplication<T>;
 
+template <typename T>
+constexpr auto tail_recursive_multiplication =
+  CsVtEdu::InfinitePrecisionCalculator::tail_recursive_multiplication<T>;
+
 BOOST_AUTO_TEST_SUITE(Projects)
 BOOST_AUTO_TEST_SUITE(CsVtEdu)
 BOOST_AUTO_TEST_SUITE(InfinitePrecisionCalculator)
@@ -235,6 +239,51 @@ BOOST_AUTO_TEST_CASE(IterativeMultiplicationWorksForLargeValues)
       BOOST_TEST(result_ptr->retrieve() == expected[expected.size() - 1 - i]);
       result_ptr = result_ptr->next();
     }
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TailRecursiveMultiplicationWorksForLargeValues)
+{
+  // 2111111
+  DoublyLinkedList<int> operand_1 {};
+  operand_1.push_front(2);
+  operand_1.push_front(1);
+  operand_1.push_front(1);
+  operand_1.push_front(1);
+  operand_1.push_front(1);
+  operand_1.push_front(1);
+  operand_1.push_front(1);
+  BOOST_TEST(operand_1.size() = 7);
+
+  // 9111111
+  DoublyLinkedList<int> operand_2 {};
+  operand_2.push_front(9);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  operand_2.push_front(1);
+  BOOST_TEST(operand_2.size() = 7);
+
+  DoublyLinkedList<int> result {operand_1.size() + operand_2.size(), 0};
+  BOOST_TEST_REQUIRE(result.size() == 14);
+
+  tail_recursive_multiplication<int>(
+    operand_1.head(),
+    operand_2.head(),
+    result.head());
+
+  const vector<int> expected {1,9,2,3,4,5,6,6,6,5,4,3,2,1};
+  BOOST_TEST_REQUIRE(expected.size() == 14);
+
+  Node<int>* result_ptr {result.head()};
+  for (std::size_t i {0}; i < expected.size(); ++i)
+  {
+    BOOST_TEST(result_ptr->retrieve() == expected[expected.size() - 1 - i]);
+    result_ptr = result_ptr->next();
   }
 }
 

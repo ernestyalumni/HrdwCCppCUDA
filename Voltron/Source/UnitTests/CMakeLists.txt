@@ -112,6 +112,7 @@ ADD_EXECUTABLE(Check
   DataStructures/HashSet_tests.cpp
   DataStructures/HashTables/HashFunctions_tests.cpp
   DataStructures/LinkedLists/DoublyLinkedList_tests.cpp
+  DataStructures/LinkedLists/DoublyLinkedListTestValues.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp
   DataStructures/LinkedLists/Node_tests.cpp
   DataStructures/LinkedLists/ReverseList_tests.cpp
@@ -125,7 +126,6 @@ ADD_EXECUTABLE(Check
   DataStructures/Queues/QueuesWithArrays_tests.cpp
   DataStructures/Queues/Queues_tests.cpp
   DataStructures/Queues/ResizableDeque_tests.cpp
-  DataStructures/Stacks/DijkstraExpressionEvaluation_tests.cpp
   DataStructures/Stacks/DynamicStack_tests.cpp
   DataStructures/Stacks/StacksImplementations_tests.cpp
   DataStructures/Stacks/StacksWithArrays_tests.cpp
@@ -157,8 +157,11 @@ ADD_EXECUTABLE(Check
   Mutable/Mutable_tests.cpp
   Mutable/Mutex_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/Addition_tests.cpp
+  Projects/CsVtEdu/InfinitePrecisionCalculator/Exponentiation_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/Multiplication_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextFile_tests.cpp
+  Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextLine_tests.cpp
+  Projects/CsVtEdu/InfinitePrecisionCalculator/ReversePolishNotation_tests.cpp
   Tools/CaptureCout_tests.cpp
   Tools/Filepaths_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp

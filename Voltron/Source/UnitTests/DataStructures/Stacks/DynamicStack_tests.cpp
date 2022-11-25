@@ -1,4 +1,6 @@
+#include "DataStructures/LinkedLists/DoublyLinkedList.h"
 #include "DataStructures/Stacks/DynamicStack.h"
+#include "UnitTests/DataStructures/LinkedLists/DoublyLinkedListTestValues.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -7,6 +9,12 @@ using DataStructures::Stacks::AsHierarchy::DynamicStack;
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Stacks)
 BOOST_AUTO_TEST_SUITE(DynamicStack_tests)
+
+template <typename T>
+using DoublyLinkedList = DataStructures::LinkedLists::DoublyLinkedList<T>;
+
+using DoublyLinkedListTestValues =
+  UnitTests::DataStructures::LinkedLists::DoublyLinkedListTestValues;
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -80,6 +88,27 @@ BOOST_AUTO_TEST_CASE(PopWorks)
   BOOST_TEST(ds.size() == 5);
   BOOST_TEST(!ds.is_empty());
   BOOST_TEST(ds.top() == 17);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(WorksWithDoublyLinkedLists)
+{
+  DoublyLinkedListTestValues tv {};
+
+  DynamicStack<DoublyLinkedList<int>> ds {};
+
+  ds.push(tv.large_operand_1_);
+  ds.push(tv.large_operand_2_);
+  ds.push(tv.large_operand_3_);
+  ds.push(tv.large_operand_4_);
+
+  auto popped = ds.pop();
+  popped = ds.pop();
+  popped = ds.pop();
+  popped = ds.pop();
+  BOOST_TEST(ds.size() == 0);
+  BOOST_TEST(ds.is_empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DynamicStack_tests

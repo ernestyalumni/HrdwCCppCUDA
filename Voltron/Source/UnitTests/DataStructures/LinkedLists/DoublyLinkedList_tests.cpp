@@ -325,6 +325,19 @@ BOOST_FIXTURE_TEST_CASE(SizeCountsLength, DoublyLinkedListFixture)
   BOOST_TEST(ls_.size() == 5);  
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(ClearClears, DoublyLinkedListFixture)
+{
+  ls_.clear();
+  BOOST_TEST(ls_.size() == 0);
+  BOOST_TEST(ls_.is_empty());
+  ls_.push_front(0);
+  BOOST_TEST(ls_.size() == 1);
+  BOOST_TEST(!ls_.is_empty());
+  BOOST_TEST(ls_.head()->retrieve() == 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END() // DoublyLinkedList_tests
 BOOST_AUTO_TEST_SUITE_END() // LinkedLists
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

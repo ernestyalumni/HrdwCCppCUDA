@@ -10,7 +10,8 @@ using DataStructures::Stacks::StackWithVector;
 using DataStructures::Stacks::StackWithArray;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
-BOOST_AUTO_TEST_SUITE(Stack_tests)
+BOOST_AUTO_TEST_SUITE(Stacks)
+BOOST_AUTO_TEST_SUITE(Stacks_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -80,5 +81,6 @@ BOOST_AUTO_TEST_CASE(StackWithArrayWorksWithFurtherUsageExamples)
   BOOST_TEST(s.size() == 3);
 }
 
-BOOST_AUTO_TEST_SUITE_END() // Stack_tests
+BOOST_AUTO_TEST_SUITE_END() // Stacks_tests
+BOOST_AUTO_TEST_SUITE_END() // Stacks
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

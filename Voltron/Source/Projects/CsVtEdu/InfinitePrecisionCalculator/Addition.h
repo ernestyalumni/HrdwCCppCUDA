@@ -24,7 +24,7 @@ using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 /// type - either T or no such member, depending on value of B.
 /// template <bool B, class T = void>
 /// using enable_if_t = typename enable_if<B, T>::type;
-/// Assume
+/// \return void, but operand1 becomes mutated with the resulting summation.
 //------------------------------------------------------------------------------
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 void addition(

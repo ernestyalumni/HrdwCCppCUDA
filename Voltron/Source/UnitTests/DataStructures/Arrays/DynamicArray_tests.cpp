@@ -87,6 +87,9 @@ BOOST_AUTO_TEST_CASE(ConstructsWithStringType)
   a.append("gh");
   a.append("hi");
 
+  BOOST_TEST(a[0] == "ab");
+  BOOST_TEST(a[1] == "bc");
+  BOOST_TEST(a[7] == "hi");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DynamicArray_tests

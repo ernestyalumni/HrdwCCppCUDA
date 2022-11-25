@@ -42,7 +42,7 @@ class DoublyLinkedList
       head_{nullptr},
       tail_{nullptr}
     {
-      if (rhs.empty())
+      if (rhs.is_empty())
       {
         return;
       }
@@ -89,7 +89,7 @@ class DoublyLinkedList
       /// * There's no corresponding node, create a new node and append it.
       //------------------------------------------------------------------------
       Node* this_node {head_};
-      Node* rhs_node {rhs.begin()->next_};
+      const Node* rhs_node {rhs.head()->next()};
 
       while (rhs_node != nullptr)
       {
@@ -121,10 +121,7 @@ class DoublyLinkedList
 
     virtual ~DoublyLinkedList()
     {
-      while (!is_empty())
-      {
-        pop_front();
-      }
+      clear();
     }
 
     //--------------------------------------------------------------------------
@@ -231,6 +228,14 @@ class DoublyLinkedList
       return std::move(value);
     }
 
+    void clear()
+    {
+      while (!is_empty())
+      {
+        pop_front();
+      }
+    }
+
     Node* search(const T value)
     {
       Node* x {head_};
@@ -256,9 +261,27 @@ class DoublyLinkedList
       return head_;
     }
 
+    const Node* head() const
+    {
+      return head_;
+    }
+
     Node* tail()
     {
       return tail_;
+    }
+
+    void get_tail()
+    {
+      Node* ptr {head_};
+      Node* previous_ptr {nullptr};
+      while (ptr != nullptr)
+      {
+        previous_ptr = ptr;
+        ptr = ptr->next_;
+      }
+
+      tail_ = previous_ptr;
     }
 
     T front() const
@@ -346,12 +369,22 @@ class DoublyLinkedList
       return Iterator{head_};
     }
 
+    const Iterator begin() const
+    {
+      return Iterator{head_};
+    }
+
     Iterator rbegin()
     {
       return Iterator{tail_};
     }
 
     Iterator end()
+    {
+      return Iterator{nullptr};
+    }
+
+    const Iterator end() const
     {
       return Iterator{nullptr};
     }

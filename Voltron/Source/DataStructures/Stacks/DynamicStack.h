@@ -183,7 +183,7 @@ void DynamicStack<T>::push(const T item)
 /// \ref 3.02.Stacks.pptx, Slide 22, D.W. Harder, U. of Waterloo.
 /// \details Removing an object simply involves reducing the size.
 /// It's invalid to assign the last entry to "0".
-/// By decreasing the size, the previous top of the stack is no at the location
+/// By decreasing the size, the previous top of the stack is now at the location
 /// stack size or entry count.
 //------------------------------------------------------------------------------
 template <typename T>
@@ -207,16 +207,6 @@ void DynamicStack<T>::clear()
 }
 
 } // namespace AsHierarchy
-
-namespace CRTP
-{
-
-} // namespace CRTP
-
-namespace Pimpl
-{
-
-} // namespace Pimpl
 
 } // namespace Stacks
 } // namespace DataStructures

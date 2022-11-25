@@ -1,4 +1,6 @@
+#include "DataStructures/LinkedLists/DoublyLinkedList.h"
 #include "DataStructures/Stacks/StacksWithArrays.h"
+#include "UnitTests/DataStructures/LinkedLists/DoublyLinkedListTestValues.h"
 
 #include <boost/test/unit_test.hpp>
 #include <cstddef> // std::size_t
@@ -11,6 +13,114 @@ using TwoStacksOneArray = DataStructures::Stacks::TwoStacksOneArray<T, N>;
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Stacks)
 BOOST_AUTO_TEST_SUITE(StacksWithArrays_tests)
+
+BOOST_AUTO_TEST_SUITE(StackWithDynamicArray_tests)
+
+template <typename T>
+using DoublyLinkedList = DataStructures::LinkedLists::DoublyLinkedList<T>;
+
+template <typename T>
+using StackWithDynamicArray = DataStructures::Stacks::StackWithDynamicArray<T>;
+
+using DoublyLinkedListTestValues =
+  UnitTests::DataStructures::LinkedLists::DoublyLinkedListTestValues;
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DefaultConstructs)
+{
+  StackWithDynamicArray<DoublyLinkedList<int>> stack {};
+
+  BOOST_TEST(stack.size() == 0);
+  BOOST_TEST(stack.is_empty());
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(WorksWithDoublyLinkedLists)
+{
+  DoublyLinkedListTestValues tv {};
+
+  StackWithDynamicArray<DoublyLinkedList<int>> stack {};
+  stack.push(tv.large_operand_1_);
+
+  BOOST_TEST(stack.size() == 1);
+  BOOST_TEST(!stack.is_empty());
+
+  auto& top_reference = stack.top();
+  BOOST_TEST(top_reference.size() == 8);
+  BOOST_TEST(top_reference.head()->retrieve() == 1);
+  BOOST_TEST(top_reference.head()->next()->retrieve() == 2);
+  BOOST_TEST(top_reference.head()->next()->next()->retrieve() == 3);
+  BOOST_TEST(top_reference.head()->next()->next()->next()->retrieve() == 4);
+
+  stack.push(tv.large_operand_2_);
+  BOOST_TEST(stack.size() == 2);
+
+  stack.push(tv.large_operand_3_);
+  BOOST_TEST(stack.size() == 3);
+
+  top_reference = stack.top();
+  BOOST_TEST(top_reference.size() == 9);
+  BOOST_TEST(top_reference.head()->retrieve() == 0);
+  BOOST_TEST(top_reference.head()->next()->retrieve() == 1);
+  BOOST_TEST(top_reference.head()->next()->next()->retrieve() == 2);
+  BOOST_TEST(top_reference.head()->next()->next()->next()->retrieve() == 3);
+
+  stack.push(tv.large_operand_4_);
+  BOOST_TEST(stack.size() == 4);
+
+  top_reference = stack.top();
+  BOOST_TEST(top_reference.head()->retrieve() == 9);
+  BOOST_TEST(top_reference.head()->next()->retrieve() == 8);
+  BOOST_TEST(top_reference.head()->next()->next()->retrieve() == 7);
+  BOOST_TEST(top_reference.head()->next()->next()->next()->retrieve() == 6);
+
+  stack.pop();
+  BOOST_TEST(stack.size() == 3);
+  BOOST_TEST(!stack.is_empty());
+
+  auto& popped_reference = stack.top();
+
+  BOOST_TEST(popped_reference.head()->retrieve() == 0);
+  BOOST_TEST(popped_reference.head()->next()->retrieve() == 1);
+  BOOST_TEST(popped_reference.tail()->retrieve() == 8);
+  stack.pop();
+  BOOST_TEST(stack.size() == 2);
+  BOOST_TEST(!stack.is_empty());
+
+  stack.pop();
+  BOOST_TEST(stack.size() == 1);
+  BOOST_TEST(!stack.is_empty());
+
+  //stack.pop();
+  //BOOST_TEST(stack.size() == 0);
+  //BOOST_TEST(stack.is_empty());
+
+
+  {
+    auto& popped_reference = stack.top();
+    // BOOST_TEST(popped_reference.head()->retrieve() == 9);
+    //BOOST_TEST(popped_reference.head()->next()->retrieve() == 8);
+    //BOOST_TEST(popped_reference.tail()->retrieve() == 6);
+
+  }
+
+  // BOOST_TEST(popped_reference.head()->retrieve() == 9);
+  //BOOST_TEST(popped_reference.head()->next()->retrieve() == 8);
+  // BOOST_TEST(popped_reference.tail()->retrieve() == 6);
+  // stack.pop();
+  //BOOST_TEST(stack.size() == 2);
+  //BOOST_TEST(!stack.is_empty());
+
+  //popped_reference = stack.top();
+
+  //BOOST_TEST(popped_reference.head()->retrieve() == 9);
+  //BOOST_TEST(popped_reference.head()->next()->retrieve() == 9);
+  //BOOST_TEST(popped_reference.tail()->retrieve() == 1);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // StackWithDynamicArray_tests
 
 BOOST_AUTO_TEST_SUITE(TwoStacksOneArray_tests)
 

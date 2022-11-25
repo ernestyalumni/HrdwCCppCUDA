@@ -1,6 +1,7 @@
 #ifndef DATA_STRUCTURES_STACKS_STACKS_WITH_ARRAYS_H
 #define DATA_STRUCTURES_STACKS_STACKS_WITH_ARRAYS_H
 
+#include "DataStructures/Arrays/DynamicArray.h"
 #include "DataStructures/Arrays/FixedSizeArrays.h"
 
 #include <cstddef> // std::size_t
@@ -11,6 +12,57 @@ namespace DataStructures
 {
 namespace Stacks
 {
+
+template <typename T>
+class StackWithDynamicArray
+{
+  public:
+
+    StackWithDynamicArray():
+      array_{},
+      entry_count_{0}
+    {}
+
+    // Copy constructor.
+    StackWithDynamicArray(const StackWithDynamicArray&) = delete;
+
+    // Copy assignment.
+    StackWithDynamicArray& operator=(const StackWithDynamicArray&) = delete;
+
+    virtual ~StackWithDynamicArray() = default;
+
+    void push(const T& item)
+    {
+      array_.append(item);
+      ++entry_count_;
+    }
+
+    void pop()
+    {
+      array_.remove_last();
+      --entry_count_;
+    }
+
+    T& top()
+    {
+      return array_[entry_count_ - 1];
+    }
+
+    std::size_t size() const
+    {
+      return entry_count_;
+    }
+
+    bool is_empty() const
+    {
+      return entry_count_ == 0;
+    }
+
+  private:
+
+    DataStructures::Arrays::DynamicArray<T> array_;
+    std::size_t entry_count_;
+};
 
 //------------------------------------------------------------------------------
 /// \ref Cormen, Leiserson, Rivest, and Stein (2009), pp. 235. Exercises 10.1-2
