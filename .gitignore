@@ -38,6 +38,7 @@ venv/
 *.cb
 *.cb2
 .*.lb
+*.synctex.gz
 
 ## Intermediate documents:
 *.dvi
@@ -51,5 +52,14 @@ venv/
 # based on the name of the directory bazel is cloned into.
 /bazel-*
 
+bazel-*
+
 # User-specific .bazelrc
 user.bazelrc
+
+# Rust
+Cargo.lock
+target
+
+# Custom Builds
+Build*
