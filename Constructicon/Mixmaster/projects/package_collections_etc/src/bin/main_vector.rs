@@ -213,6 +213,47 @@ fn main()
   }
 
   //-----------------------------------------------------------------------------------------------
+  // cf. https://doc.rust-lang.org/book/ch08-03-hash-maps.html#adding-a-key-and-value-only-if-a-key-isnt-present
+  // Adding a Key and Value Only If a Key Isn't Present, i.e.
+  // All about entry API
+  //-----------------------------------------------------------------------------------------------
 
+  let mut scores = HashMap::new();
 
+  scores.insert(String::from("Blue"), 10);
+
+  // return value of entry is an enum called Entry.
+  // on_insert method on Entry is defined to return a mutable reference to value for the
+  // corresponding Entry key if that key exists, and if not, inserts the parameter as the new value
+  // for this key and returns a mutable reference to the new value.
+
+  let yellow_result = scores.entry(String::from("Yellow")).or_insert(50);
+  // error cannot borrow as mutable more than once at a time.
+  //let blue_result = scores.entry(String::from("Blue")).or_insert(60);
+
+  // Dereference here to assign to mutably borrowed value.
+  *yellow_result = 42;
+  //*blue_result = 69;
+
+  println!("{:?}", scores);
+
+  //-----------------------------------------------------------------------------------------------
+  // cf. https://doc.rust-lang.org/book/ch08-03-hash-maps.html
+  // Updating a Value Based on the Old Value, i.e.
+  // More entry API
+  //-----------------------------------------------------------------------------------------------
+
+  let text = "hello world wonderful world";
+
+  let mut map = HashMap::new();
+
+  // split_whitespace method returns an iterator over sub-slices, separated by whitespace.
+  for word in text.split_whitespace()
+  {
+    // or_insert method returns a mutable reference (&mut V) to the value for the specified key.
+    let count = map.entry(word).or_insert(0);
+    *count += 1;
+  }
+
+  println!("{:?}", map);
 }

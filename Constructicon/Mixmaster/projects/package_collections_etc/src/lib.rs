@@ -8,6 +8,12 @@ pub enum SpreadsheetCell
   Text(String),
 }
 
+//-------------------------------------------------------------------------------------------------
+// \url https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html
+// Propagating Errors
+//-------------------------------------------------------------------------------------------------
+
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
