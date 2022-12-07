@@ -13,6 +13,7 @@ pub enum SpreadsheetCell
 // Propagating Errors
 //-------------------------------------------------------------------------------------------------
 
+pub mod generics_traits_lifetimes;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
