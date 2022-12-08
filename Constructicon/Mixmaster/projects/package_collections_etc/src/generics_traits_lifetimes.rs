@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 pub fn largest_i32(list: &[i32]) -> &i32
 {
   let mut largest = &list[0];
@@ -92,6 +94,41 @@ impl Summary for Tweet
   }
 }
 
+//-------------------------------------------------------------------------------------------------
+/// \url https://doc.rust-lang.org/book/ch10-02-traits.html
+/// Using Trait Bounds o Conditionally Implement Methods
+/// \details By using a trait bound with an impl block that uses generic type parameters, we can
+/// implement methods conditionally for types that implement the specified traits.
+//-------------------------------------------------------------------------------------------------
+
+struct Pair<T>
+{
+  x: T,
+  y: T,
+}
+
+impl<T> Pair<T>
+{
+  fn new(x: T, y: T) -> Self
+  {
+    Self { x, y }
+  }
+}
+
+impl<T: Display + PartialOrd> Pair<T>
+{
+  fn cmp_display(&self)
+  {
+    if self.x >= self.y
+    {
+      println!("The largest member is x = {}", self.x);
+    }
+    else
+    {
+      println!("The largest member is y = {}", self.y);
+    }
+  }
+}
 //-------------------------------------------------------------------------------------------------
 /// cf. Lifetime Annotation Syntax, Lifetime Annotations in Function Signatures
 /// \url https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
