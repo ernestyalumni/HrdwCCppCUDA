@@ -8,4 +8,15 @@ fn main()
   let doorverwijzing = longest(&lang, &langste);
 
   println!("doorverwijzing string: {}", doorverwijzing);
+
+  /*
+  let referenza = &str();
+
+  {
+    let lungo = String::from("lungo");
+    let ilpiulungo = String::from("ilpiulungo");   
+    referenza = longest(&lungo, &ilpiulungo);
+  }
+  */
+
 }
