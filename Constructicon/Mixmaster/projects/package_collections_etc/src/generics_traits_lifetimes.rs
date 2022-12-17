@@ -129,6 +129,7 @@ impl<T: Display + PartialOrd> Pair<T>
     }
   }
 }
+
 //-------------------------------------------------------------------------------------------------
 /// cf. Lifetime Annotation Syntax, Lifetime Annotations in Function Signatures
 /// \url https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
@@ -148,6 +149,7 @@ impl<T: Display + PartialOrd> Pair<T>
 /// as both parameters are valid.
 /// Lifetime of the reference returned by longest function is the same as the smaller of the
 /// lifetimes of the values referred to by the function arguments.
+///
 //-------------------------------------------------------------------------------------------------
 pub fn longest<'a>(x: &'a str, y: &'a str) -> &'a str
 {
@@ -159,4 +161,37 @@ pub fn longest<'a>(x: &'a str, y: &'a str) -> &'a str
   {
     y
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+/// \ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+/// \brief Lifetime Annotations in Struct Definitions
+/// \details So far, structs we'ved defined all hold owned types. We can define structs to hold
+/// references, but in that case, we'd need to add lifetime annotation on every reference in the
+/// struct's definition.
+//-------------------------------------------------------------------------------------------------
+pub struct ImportantExcerpt<'a>
+{
+  pub part_: &'a str,
+}
+
+//-------------------------------------------------------------------------------------------------
+/// \ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+/// Lifetime elision rules - patterns programmed into Rust's analysis of referencess; the'yre a set
+/// of particular cases that the compiler will consider, and if your code fits these cases, you
+/// don't need to write the lifetimes explicitly.
+//-------------------------------------------------------------------------------------------------
+pub fn first_word(s: &str) -> &str
+{
+  let bytes = s.as_bytes();
+
+  for (i, &item) in bytes.iter().enumerate()
+  {
+    if item == b' '
+    {
+      return &s[0..i];
+    }
+  }
+
+  &s[..]
 }
