@@ -176,6 +176,31 @@ pub struct ImportantExcerpt<'a>
 }
 
 //-------------------------------------------------------------------------------------------------
+/// \ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-method-definitions
+/// \brief Lifetime Annotations in Method Definitions
+//-------------------------------------------------------------------------------------------------
+impl<'a> ImportantExcerpt<'a>
+{
+  pub fn level(&self) -> i32
+  {
+    3
+  }
+
+  // Third lifetime ellision rule applies: if there are multiple input lifetime parameters, but one
+  // of them is &self or &mut self because this is a method, lifetime of self is assigned to all
+  // output lifetime parameters.
+  // There are 2 input lifetimes, so Rust applies first lifetime ellision rule:
+  // First rule is that compiler assigns lifetime parameter to each parameter that's a reference.
+  // This function with 2 parameters gets 2 separate lifetime parameters.
+  // Then, because 1 of the parameters is &self, the return type gets lifetime of &self.
+  pub fn announce_and_return_part(&self, announcement: &str) -> &str
+  {
+    println!("Attention please: {}", announcement);
+    self.part_
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
 /// \ref https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
 /// Lifetime elision rules - patterns programmed into Rust's analysis of referencess; the'yre a set
 /// of particular cases that the compiler will consider, and if your code fits these cases, you
@@ -194,4 +219,29 @@ pub fn first_word(s: &str) -> &str
   }
 
   &s[..]
+}
+
+//-------------------------------------------------------------------------------------------------
+/// \brief Generic Type Parameters, Trait Bounds, and Lifetimes Together
+/// \url https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+/// \details It has an extra parameter named announcement of generic type T, which can be filled in
+/// by any type that implements the Display trait as specified by where clause.
+//-------------------------------------------------------------------------------------------------
+pub fn longest_with_an_announcement<'a, T>(
+  x: &'a str,
+  y: &'a str,
+  announcement: T,) -> &'a str
+// where clause specifies type with Display trait.
+where
+  T: Display,
+{
+  println!("Announcement: {}", announcement);
+  if x.len() > y.len()
+  {
+    x
+  }
+  else
+  {
+    y
+  }
 }

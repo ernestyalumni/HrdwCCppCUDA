@@ -1,3 +1,4 @@
+use package_collections_etc::generics_traits_lifetimes::longest_with_an_announcement;
 use package_collections_etc::generics_traits_lifetimes::first_word;
 use package_collections_etc::generics_traits_lifetimes::longest;
 use package_collections_etc::generics_traits_lifetimes::ImportantExcerpt;
@@ -45,5 +46,33 @@ fn main()
 
   println!("Quote: {}", i.part_);
 
+  // cf. https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-method-definitions
+  // Lifetime Annotations in Method Definitions
+
+  println!("method level: {}", i.level());
+  println!("method announce...: {}", i.announce_and_return_part("Jessu stream"));
+
   println!("First Word: {}", first_word(novel.as_str()));
+
+  //----------------------------------------------------------------------------------------------- 
+  // cf. https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html
+  // The Static Lifetime
+  // 'static - special lifetime which denotes that affected reference can live for the entire
+  // duration of the program.
+  // \url https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#the-static-lifetime
+  // \details Before specifying 'static as the lifetime for a reference, think about whether the
+  // reference you have actually lives the entire lifetime of your program or not, and whether you
+  // want it to.
+  //----------------------------------------------------------------------------------------------- 
+
+  let s: &'static str = "I have a static lifetime.";
+
+  println!("s is static: {}", s); 
+
+  println!(
+    " {} ",
+    longest_with_an_announcement(
+    string1.as_str(),
+    novel.as_str(),
+    "This is an announcement with generic type"));
 }
