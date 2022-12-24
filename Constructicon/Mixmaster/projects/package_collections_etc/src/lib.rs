@@ -15,6 +15,9 @@ pub enum SpreadsheetCell
 
 pub mod generics_traits_lifetimes;
 
+// Object Oriented Programming (oop)
+pub mod oop;
+
 pub fn add(left: usize, right: usize) -> usize {
   left + right
 }
@@ -85,9 +88,9 @@ impl Guess
 //-------------------------------------------------------------------------------------------------
 #[cfg(test)]
 mod tests {
-  // The tests module is a regular module that follows the usualy visibility rules in Ch. 7,
+  // The tests module is a regular module that follows the usual visibility rules in Ch. 7,
   // "Paths for Referring to an Item in the Module Tree" of Rust book.
-  // Because tests module is an ineer module, we need to bring the code under test in the outer
+  // Because tests module is an inner module, we need to bring the code under test in the outer
   // module into scope of inner module.
   use super::*;
 
@@ -171,7 +174,7 @@ mod tests {
   //-----------------------------------------------------------------------------------------------
   #[test]
   // it_works function now has the Result<(), String> return type.
-  fn it_works() -> Result<(), String>
+  fn it_works_with_Result() -> Result<(), String>
   {
     // In body of function, rather than calling assert_eq! macro, we return Ok(()) when test passes
     // and Err with String when test fails.

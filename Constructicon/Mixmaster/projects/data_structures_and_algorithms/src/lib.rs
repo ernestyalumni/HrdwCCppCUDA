@@ -14,7 +14,7 @@
 // Code within a module is private from its parent modules by default. To make a module public,
 // declare it with `pub mod` instead of `mod`.
 
-pub mod arrays;
+pub mod data_structures;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
