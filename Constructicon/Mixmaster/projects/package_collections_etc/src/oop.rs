@@ -47,6 +47,8 @@ impl AveragedCollection
   }
 }
 
+pub mod gui;
+
 #[cfg(test)]
 mod tests
 {
