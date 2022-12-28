@@ -15,6 +15,8 @@ pub enum SpreadsheetCell
 
 pub mod generics_traits_lifetimes;
 
+pub mod anonymous_closures;
+
 // Object Oriented Programming (oop)
 pub mod oop;
 
