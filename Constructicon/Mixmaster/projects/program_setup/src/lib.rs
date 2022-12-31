@@ -1,5 +1,6 @@
 use std::{env};
 use std::ffi::OsStr;
+use std::process::Command;
 
 #[cfg(test)]
 mod tests {
@@ -91,5 +92,18 @@ mod tests {
     let expected_entry_final_component = String::from("lib.rs");
 
     assert!(all_entry_final_components.contains(&expected_entry_final_component));
+  }
+
+  #[test]
+  fn command_runs_system_commands()
+  {
+    {
+      let output = Command::new("ls").arg("-ls").output().expect("Failed to execute process ls");
+      assert!(output.status.success());
+    }
+    {
+      let output = Command::new("echo").arg("'dark'").output().expect("Failed to execute echo");
+      assert!(output.status.success());
+    }
   }
 }
