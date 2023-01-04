@@ -45,6 +45,7 @@ mod tests {
   #[test]
   fn add_all_directory_entries_to_vec()
   {
+    // current_dir() -> Result<PathBuf>
     let current_directory = env::current_dir().expect(
       "Failed to get current directory");
 
@@ -55,9 +56,10 @@ mod tests {
     let mut entries = Vec::new();
 
     // https://doc.rust-lang.org/std/path/struct.PathBuf.html
-
+    // read_dir() -> Result<ReadDir> 
     for entry in current_directory.read_dir().expect("read_dir call failed")
     {
+      // entry is of type DirEntry
       if let Ok(entry) = entry
       {
         entries.push(entry);
@@ -92,6 +94,39 @@ mod tests {
     let expected_entry_final_component = String::from("lib.rs");
 
     assert!(all_entry_final_components.contains(&expected_entry_final_component));
+  }
+
+  // cf. https://blog.logrocket.com/command-line-argument-parsing-rust-using-clap/
+  #[test]
+  fn add_all_directory_file_entries_to_vec_of_tuples()
+  {
+    // error: ? can only be used in a function that returns Result or Option. 
+    // let current_directory = env::current_dir()?;
+    
+    let current_directory = env::current_dir().expect("Failed to get current directory");
+    let current_directory = current_directory.join("src");
+    assert!(current_directory.exists());
+
+    let mut results = Vec::<(String, std::fs::DirEntry)>::new();
+
+    for entry in current_directory.read_dir().expect("read dir call failed")
+    {
+      if let Ok(entry) = entry
+      {
+        // Instead, use is_file directly rather than this:
+        // if !entry.file_type().expect("file_type call failed").is_dir()
+        if entry.file_type().expect("file_type call failed").is_file()
+        {
+          let entry_final_component = String::from(
+            entry.path().file_name().unwrap().to_str().unwrap());
+          results.push((entry_final_component, entry));
+        }
+      }
+    }
+
+    // error: cannot move out of 'k.0' which is behind a shared reference
+    // results.sort_by_key(|k| k.0);
+    results.sort_by(|a, b| a.0.cmp(&b.0));
   }
 
   #[test]

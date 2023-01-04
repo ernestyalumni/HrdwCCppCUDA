@@ -1,8 +1,18 @@
+# cf. https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# Defines the package.
 [package]
+# Name of the package.
 name = "program_setup"
 version = "0.1.0"
+# The Rust edition.
 edition = "2021"
+authors = ["Ernest Yeung <ernestyalumni@gmail.com>",]
+description = "Boilerplate and utility functions for setting up a program"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# cf. https://crates.io/crates/clap
+# cf. https://blog.logrocket.com/command-line-argument-parsing-rust-using-clap/
+clap = { version = "4.0.32", features = ["derive"]}
