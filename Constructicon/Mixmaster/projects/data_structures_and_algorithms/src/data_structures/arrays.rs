@@ -5,7 +5,7 @@
 /// Types with a constant size known at compile time.
 pub struct FixedSizeArray<T: Sized, const N: usize>
 {
-  pub data_: [T; N],
+  pub data: [T; N],
 }
 
 #[cfg(test)]
@@ -22,9 +22,9 @@ mod tests
   {
     {
       let a = FixedSizeArray::<i32, 3> {data_: [1, 2, 3]};
-      assert_eq!(a.data_[0], 1);
-      assert_eq!(a.data_[1], 2);
-      assert_eq!(a.data_[2], 3);
+      assert_eq!(a.data[0], 1);
+      assert_eq!(a.data[1], 2);
+      assert_eq!(a.data[2], 3);
     }
   }
 

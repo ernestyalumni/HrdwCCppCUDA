@@ -16,3 +16,4 @@ description = "Boilerplate and utility functions for setting up a program"
 # cf. https://crates.io/crates/clap
 # cf. https://blog.logrocket.com/command-line-argument-parsing-rust-using-clap/
 clap = { version = "4.0.32", features = ["derive"]}
+# clap = { version = "3.2.23", features = ["derive"]}

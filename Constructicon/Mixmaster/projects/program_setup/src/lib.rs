@@ -132,13 +132,37 @@ mod tests {
   #[test]
   fn command_runs_system_commands()
   {
+    // Command::output() is blocking.
     {
       let output = Command::new("ls").arg("-ls").output().expect("Failed to execute process ls");
       assert!(output.status.success());
+
     }
     {
       let output = Command::new("echo").arg("'dark'").output().expect("Failed to execute echo");
       assert!(output.status.success());
     }
+  }
+
+  #[test]
+  #[should_panic]
+  fn command_panics_when_sudo_is_combined_with_command()
+  {
+    let output = Command::new("sudo ls").arg("-ls").output().expect(
+      "Failed to execute process ls");
+    assert!(output.status.success());
+  }
+
+  // This test passes when the user account has sudo privileges.
+  #[test]
+  fn command_runs_sudo_as_a_command()
+  {
+    /*
+    {
+      let output = Command::new("sudo").arg("ls").arg("-ls").output().expect(
+        "Failed to execute process ls");
+      assert!(output.status.success());
+    }
+    */
   }
 }
