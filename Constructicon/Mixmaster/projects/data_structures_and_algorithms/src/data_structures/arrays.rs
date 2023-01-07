@@ -1,3 +1,5 @@
+pub mod examples;
+
 /// \url https://stackoverflow.com/questions/28136739/is-it-possible-to-control-the-size-of-an-array-using-the-type-parameter-of-a-gen
 /// cf. https://doc.rust-lang.org/std/marker/trait.Sized.html
 /// Trait std::marker::Sized
@@ -21,7 +23,7 @@ mod tests
   fn fixed_size_array_constructs()
   {
     {
-      let a = FixedSizeArray::<i32, 3> {data_: [1, 2, 3]};
+      let a = FixedSizeArray::<i32, 3> {data: [1, 2, 3]};
       assert_eq!(a.data[0], 1);
       assert_eq!(a.data[1], 2);
       assert_eq!(a.data[2], 3);
