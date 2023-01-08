@@ -138,6 +138,7 @@ ADD_EXECUTABLE(Check
   Entrevue/Entrevue_tests.cpp
   Entrevue/LeetCode/LeetCode_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp
+  Entrevue/PageFaults_tests.cpp
   FileIO/ExampleTestValues.cpp
   FileIO/GetFileSize_tests.cpp
   FileIO/OpenFile_tests.cpp
