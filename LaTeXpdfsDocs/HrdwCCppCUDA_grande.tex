@@ -788,6 +788,32 @@ In modern OS's, page tables are usually set up to make the address 0 an invalid 
 
 cf. \href{https://stackoverflow.com/questions/12645647/what-happens-in-os-when-we-dereference-a-null-pointer-in-c}{What happens in OS when we dereference a NULL pointer in C?}
 
+\subsubsection{Page Faults aren't "faults"}
+
+\url{https://scoutapm.com/blog/understanding-page-faults-and-memory-swap-in-outs-when-should-you-worry}
+
+Linux allocates memory to processes by dividing physical memory into pages, and then mapping those physical pages to virtual memory needed by a process. It does this in conjunction with the Memory Management Unit (MMU) in the CPU.
+\begin{itemize}
+	\item Typically a page will represent 4KB of physical memory.
+	\item Statistics and flags are kept about each page to tell Linux the status of that chunk of memory.
+	\item These pages can be in different states; some free (unused), some used to hold executable code, some allocated as data for a program.
+\end{itemize}
+
+For example, consider a large running program on a Linux system.
+
+\begin{itemize}
+	\item Program executable size could be measured in megabytes, but not all that code will run at once.
+	\begin{itemize}
+		\item Some of the code will only be run during initialization or when a special condition occurs
+		\item Over time, Linux can discard pages of memory which hold executable code, if it thinks they're no longer needed or will be used rarely.
+	\end{itemize}
+\end{itemize}
+
+A program is executed by CPU as it steps its way through the machine code.
+\begin{itemize}
+	\item Each instruction is stored in physical memory at a certain address.
+\end{itemize}
+
 \part{C++}  
 
 \section{Pass by reference, pass by value, pointers vs. reference}

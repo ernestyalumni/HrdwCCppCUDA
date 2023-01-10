@@ -42,6 +42,19 @@ mod tests
   #[test]
   fn nucleotide_constructs()
   {
+    let x = Nucleotide::A;
+    match x
+    {
+      Nucleotide::A => assert!(true),
+      Nucleotide::C => assert!(false),
+      Nucleotide::G => assert!(false),
+      Nucleotide::T => assert!(false),
+    }
+  }
+
+  #[test]
+  fn nucleotide_count_constructs()
+  {
     let nucleotide_count = NucleotideCount {a: 14, c: 9, g: 10, t: 12};
     assert_eq!(nucleotide_count[Nucleotide::A], 14);
     assert_eq!(nucleotide_count[Nucleotide::C], 9);
