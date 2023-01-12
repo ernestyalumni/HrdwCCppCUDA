@@ -111,6 +111,7 @@ class Array
       return internal_;
     }
 
+    // TODO: Could this be constexpr instead of const?
     const T* begin() const
     {
       return internal_;
@@ -121,6 +122,7 @@ class Array
       return internal_ + size_;
     }
 
+    // TODO: Could this be constexpr instead of const?
     const T* end() const
     {
       return internal_ + size();
@@ -187,6 +189,8 @@ Array<T>::Array(const size_t N):
 template <typename T>
 Array<T>::Array(const std::initializer_list<T>& input):
   capacity_{std::max(static_cast<size_t>(1), input.size())},
+  // TODO: Weigh doing this vs. having an empty initializer {}, i.e.
+  // internal_{new T[capacity_]{}}
   internal_{new T[capacity_]},
   size_{input.size()}
 {

@@ -184,6 +184,7 @@ class LinkedList
 
     //--------------------------------------------------------------------------
     /// \brief Removing the value at the front of the linked list.
+    /// \details Erase, front O(1).
     //--------------------------------------------------------------------------
     T pop_front();
 

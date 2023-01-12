@@ -1,6 +1,7 @@
 #include "DataStructures/Arrays/Array.h"
 
 #include <boost/test/unit_test.hpp>
+#include <iterator>
 
 using DataStructures::Arrays::DWHarder::Array;
 using DataStructures::Arrays::DWHarder::sum;
@@ -35,6 +36,40 @@ BOOST_AUTO_TEST_CASE(ConstructsFromStdInitializerList)
   BOOST_TEST(a[1] == 25);
   BOOST_TEST(a[2] == 37);
 }
+
+#ifdef FORCE_COMPILE_ERRORS
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// cf. https://stackoverflow.com/questions/1164266/why-are-arrays-of-references-illegal
+// C++ Standard §8.3.2/4:
+// There shall be no references to references, no arrays of references, and no
+// pointers to references.
+// 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StoreReferencesInsideCStyleDynamicArray)
+{
+  Array<int&> x (10);
+
+  BOOST_TEST(true);
+}
+#endif // FORCE_COMPILE_ERRORS
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StdBeginCanMakeAnIterator)
+{
+  Array<int> array {5, 2, 8, 4, 9, 1};
+
+  auto iter = std::begin(array);
+
+  BOOST_TEST(*iter == 5);
+  ++iter;
+  BOOST_TEST(*iter == 2);
+  ++iter;
+  BOOST_TEST(*iter == 8);
+}
+
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
