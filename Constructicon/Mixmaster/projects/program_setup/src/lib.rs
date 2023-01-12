@@ -1,11 +1,11 @@
-use std::{env};
-use std::ffi::OsStr;
-use std::process::Command;
-
 #[cfg(test)]
 mod tests {
   
-  use super::*;
+  //use super::*;
+
+  use std::{env};
+  //use std::ffi::OsStr;
+  use std::process::Command;
 
   #[test]
   fn get_current_directory()
@@ -164,5 +164,36 @@ mod tests {
       assert!(output.status.success());
     }
     */
+  }
+
+  #[test]
+  fn command_can_be_run_again()
+  {
+    let temporary_filename = "./TestData/temporary_test_for_echo.txt";
+
+    // cf. https://www.cyberciti.biz/faq/linux-append-text-to-end-of-file/
+
+    //---------------------------------------------------------------------------------------------
+    // \details echo is not a program found on the computer, it's a shell command. Command::new
+    // takes in an executable to run as a sub-process.
+    // On linux, you can use the bash executable.
+    //---------------------------------------------------------------------------------------------
+
+    let mut echo_command = Command::new("bash");
+    let echo_command = echo_command
+      .args(&["-c", "echo 'Pyka plays great dubstep'"])
+      //.arg("echo")
+      //.arg("'Pyka plays great dubstep'")
+      .arg(">>")
+      .arg(temporary_filename);
+
+    let output = echo_command.output().expect("Failed to execute echo process");
+    assert!(output.status.success());
+
+    let output = echo_command.output().expect("Failed to execute echo process");
+    assert!(output.status.success());
+
+    let output = echo_command.output().expect("Failed to execute echo process");
+    assert!(output.status.success());
   }
 }
