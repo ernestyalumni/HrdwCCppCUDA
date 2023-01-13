@@ -1,5 +1,7 @@
 pub mod examples;
 
+pub mod allocated_array;
+
 /// \url https://stackoverflow.com/questions/28136739/is-it-possible-to-control-the-size-of-an-array-using-the-type-parameter-of-a-gen
 /// cf. https://doc.rust-lang.org/std/marker/trait.Sized.html
 /// Trait std::marker::Sized
