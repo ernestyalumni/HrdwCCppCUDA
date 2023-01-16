@@ -11,6 +11,15 @@ namespace DataStructures
 {
 namespace LinkedLists
 {
+namespace DWHarder
+{
+
+// Forward declaration of class template to be defined later.
+template <typename T>
+class SingleList;
+
+} // namespace DWHarder
+
 namespace Nodes
 {
 
@@ -34,7 +43,10 @@ class SingleNode
 		T retrieve() const;
 		SingleNode* next() const;
 
-		// friend class SingleList<T>;
+		// Friend class forward declaration (elaborated class specified). So
+		// SingleNode friends SingleList, to be defined later.
+		// cf. https://en.cppreference.com/w/cpp/language/friend
+		friend class DataStructures::LinkedLists::DWHarder::SingleList<T>;
 		// friend class CycleList<T>;
 		// friend class SentinelList<T>;
 		// friend class CycleSentinelList<T>;

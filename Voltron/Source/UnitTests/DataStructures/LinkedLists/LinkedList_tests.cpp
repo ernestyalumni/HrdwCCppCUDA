@@ -100,6 +100,8 @@ BOOST_AUTO_TEST_CASE(DefaultConstructsOnStack)
   // Statically. This statement defines ls to be a linked list and compiler
   // deals with memory allocation.
   LinkedList<int> ls;
+
+  BOOST_TEST(ls.size() == 0);
 }
 
 //------------------------------------------------------------------------------
@@ -110,6 +112,8 @@ BOOST_AUTO_TEST_CASE(DefaultConstructsDynamically)
   // OS to store instance of the class.
   LinkedList<int>* ls_ptr {new LinkedList<int>{}};
 
+  BOOST_TEST(ls_ptr->size() == 0);
+
   delete ls_ptr;
 }
 
@@ -119,7 +123,7 @@ BOOST_AUTO_TEST_CASE(DefaultConstructedListReturnsTrueForEmpty)
 {
   LinkedList<int> ls;
 
-  BOOST_TEST(ls.empty());
+  BOOST_TEST(ls.is_empty());
 }
 
 //------------------------------------------------------------------------------
@@ -153,33 +157,6 @@ BOOST_FIXTURE_TEST_CASE(AllocateOnFreeStoreInFunction, CaptureCoutFixture)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(CopyConstructs, DWHarderLinkedListFixture)
-{
-  /*
-  LinkedList<int> ls {ls_};
-
-  BOOST_TEST(ls.pop_front() == 16);
-  BOOST_TEST(!ls.empty());
-  BOOST_TEST(ls.pop_front() == 9);
-  BOOST_TEST(!ls.empty());
-  BOOST_TEST(ls.pop_front() == 4);
-  BOOST_TEST(!ls.empty());
-  BOOST_TEST(ls.pop_front() == 1);
-  BOOST_TEST(ls.empty());
-
-  BOOST_TEST(ls_.pop_front() == 16);
-  BOOST_TEST(!ls_.empty());
-  BOOST_TEST(ls_.pop_front() == 9);
-  BOOST_TEST(!ls_.empty());
-  BOOST_TEST(ls_.pop_front() == 4);
-  BOOST_TEST(!ls_.empty());
-  BOOST_TEST(ls_.pop_front() == 1);
-  BOOST_TEST(ls_.empty());
-  */
-}
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(PushFrontAddsValueToLinkedList)
 {
   LinkedList<int> ls;
@@ -188,44 +165,24 @@ BOOST_AUTO_TEST_CASE(PushFrontAddsValueToLinkedList)
   ls.push_front(94);
   ls.push_front(72);
 
+  BOOST_TEST(ls.size() == 4);
+
   BOOST_TEST(ls.front() == 72);
   BOOST_TEST(ls.pop_front() == 72);
+
+  BOOST_TEST(ls.size() == 3);
   BOOST_TEST(ls.front() == 94);
   BOOST_TEST(ls.pop_front() == 94);
+
+  BOOST_TEST(ls.size() == 2);
   BOOST_TEST(ls.front() == 18);
   BOOST_TEST(ls.pop_front() == 18);
+
+  BOOST_TEST(ls.size() == 1);
   BOOST_TEST(ls.front() == 35);
   BOOST_TEST(ls.pop_front() == 35);
-  BOOST_TEST(ls.empty());
-}
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(AssignmentWithLValue, DWHarderLinkedListFixture)
-{
-  /*
-  LinkedList<int> ls {};
-
-  ls = ls_;
-
-  BOOST_TEST(ls.pop_front() == 16);
-  BOOST_TEST(!ls.empty());
-  BOOST_TEST(ls.pop_front() == 9);
-  BOOST_TEST(!ls.empty());
-  BOOST_TEST(ls.pop_front() == 4);
-  BOOST_TEST(!ls.empty());
-  BOOST_TEST(ls.pop_front() == 1);
-  BOOST_TEST(ls.empty());
-
-  BOOST_TEST(ls_.pop_front() == 16);
-  BOOST_TEST(!ls_.empty());
-  BOOST_TEST(ls_.pop_front() == 9);
-  BOOST_TEST(!ls_.empty());
-  BOOST_TEST(ls_.pop_front() == 4);
-  BOOST_TEST(!ls_.empty());
-  BOOST_TEST(ls_.pop_front() == 1);
-  BOOST_TEST(ls_.empty());
-  */
+  BOOST_TEST(ls.is_empty());
+  BOOST_TEST(ls.size() == 0);
 }
 
 //------------------------------------------------------------------------------
@@ -236,16 +193,16 @@ BOOST_FIXTURE_TEST_CASE(MoveAssigns, DWHarderLinkedListFixture)
 
   ls = std::move(ls_);
 
-  BOOST_TEST(ls_.empty());
+  BOOST_TEST(ls_.is_empty());
 
   BOOST_TEST(ls.pop_front() == 16);
-  BOOST_TEST(!ls.empty());
+  BOOST_TEST(!ls.is_empty());
   BOOST_TEST(ls.pop_front() == 9);
-  BOOST_TEST(!ls.empty());
+  BOOST_TEST(!ls.is_empty());
   BOOST_TEST(ls.pop_front() == 4);
-  BOOST_TEST(!ls.empty());
+  BOOST_TEST(!ls.is_empty());
   BOOST_TEST(ls.pop_front() == 1);
-  BOOST_TEST(ls.empty());
+  BOOST_TEST(ls.is_empty());
 }
 
 //------------------------------------------------------------------------------
@@ -260,13 +217,13 @@ BOOST_FIXTURE_TEST_CASE(Reverses, DWHarderLinkedListFixture)
   BOOST_TEST(head_ptr->next_->next_->next_->value_ == 16);
 
   BOOST_TEST(ls_.pop_front() == 1);
-  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(!ls_.is_empty());
   BOOST_TEST(ls_.pop_front() == 4);
-  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(!ls_.is_empty());
   BOOST_TEST(ls_.pop_front() == 9);
-  BOOST_TEST(!ls_.empty());
+  BOOST_TEST(!ls_.is_empty());
   BOOST_TEST(ls_.pop_front() == 16);
-  BOOST_TEST(ls_.empty());
+  BOOST_TEST(ls_.is_empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END() // LinkedList_tests

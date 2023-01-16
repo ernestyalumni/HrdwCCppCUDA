@@ -7,29 +7,29 @@ using namespace DataStructures::Queues;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Queues)
-BOOST_AUTO_TEST_SUITE(CLRSCircularQueue_tests)
+BOOST_AUTO_TEST_SUITE(CircularQueue_tests)
 BOOST_AUTO_TEST_SUITE(AsHierarchy_tests)
 
 template <typename T>
-class TestCLRSCircularQueueAsHierarchy :
-  public AsHierarchy::CLRSCircularQueue<T>
+class TestCircularQueueAsHierarchy :
+  public AsHierarchy::CLRS::CircularQueue<T>
 {
   public:
 
     // Derived class needs a constructor.
-    using AsHierarchy::CLRSCircularQueue<T>::CLRSCircularQueue;
+    using AsHierarchy::CLRS::CircularQueue<T>::CircularQueue;
 
-    using AsHierarchy::CLRSCircularQueue<T>::get_head;
-    using AsHierarchy::CLRSCircularQueue<T>::get_tail;
-    using AsHierarchy::CLRSCircularQueue<T>::get_array_capacity;
-    using AsHierarchy::CLRSCircularQueue<T>::is_null_array;    
+    using AsHierarchy::CLRS::CircularQueue<T>::get_head;
+    using AsHierarchy::CLRS::CircularQueue<T>::get_tail;
+    using AsHierarchy::CLRS::CircularQueue<T>::get_array_capacity;
+    using AsHierarchy::CLRS::CircularQueue<T>::is_null_array;    
 };
 
-class CLRSCircularQueueAsHierarchyFixture
+class CircularQueueAsHierarchyFixture
 {
   public:
 
-    CLRSCircularQueueAsHierarchyFixture():
+    CircularQueueAsHierarchyFixture():
       rhs_q_{12}
     {
       for (int i {1}; i < 7; ++i)
@@ -49,16 +49,16 @@ class CLRSCircularQueueAsHierarchyFixture
       }
     }
 
-    virtual ~CLRSCircularQueueAsHierarchyFixture() = default;
+    virtual ~CircularQueueAsHierarchyFixture() = default;
 
-    TestCLRSCircularQueueAsHierarchy<int> rhs_q_;
+    TestCircularQueueAsHierarchy<int> rhs_q_;
 };
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DefaultConstructs)
 {
-  TestCLRSCircularQueueAsHierarchy<int> q {};
+  TestCircularQueueAsHierarchy<int> q {};
   BOOST_TEST(q.get_array_capacity() == 10);
   BOOST_TEST(q.size() == 0);
   BOOST_TEST(q.get_head() == 0);
@@ -67,9 +67,9 @@ BOOST_AUTO_TEST_CASE(DefaultConstructs)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(CopyConstructs, CLRSCircularQueueAsHierarchyFixture)
+BOOST_FIXTURE_TEST_CASE(CopyConstructs, CircularQueueAsHierarchyFixture)
 {
-  TestCLRSCircularQueueAsHierarchy q {rhs_q_};
+  TestCircularQueueAsHierarchy q {rhs_q_};
 
   BOOST_TEST(q.get_array_capacity() == 12);
   BOOST_TEST(q.size() == 5);
@@ -86,10 +86,9 @@ BOOST_FIXTURE_TEST_CASE(CopyConstructs, CLRSCircularQueueAsHierarchyFixture)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(CopyAssignmentCopies,
-  CLRSCircularQueueAsHierarchyFixture)
+BOOST_FIXTURE_TEST_CASE(CopyAssignmentCopies, CircularQueueAsHierarchyFixture)
 {
-  TestCLRSCircularQueueAsHierarchy<int> q {};
+  TestCircularQueueAsHierarchy<int> q {};
 
   q = rhs_q_;
 
@@ -110,9 +109,9 @@ BOOST_FIXTURE_TEST_CASE(CopyAssignmentCopies,
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(MoveConstructs, CLRSCircularQueueAsHierarchyFixture)
+BOOST_FIXTURE_TEST_CASE(MoveConstructs, CircularQueueAsHierarchyFixture)
 {
-  TestCLRSCircularQueueAsHierarchy<int> q {std::move(rhs_q_)};
+  TestCircularQueueAsHierarchy<int> q {std::move(rhs_q_)};
 
   BOOST_TEST(q.get_array_capacity() == 12);
   BOOST_TEST(q.size() == 5);
@@ -131,9 +130,9 @@ BOOST_FIXTURE_TEST_CASE(MoveConstructs, CLRSCircularQueueAsHierarchyFixture)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(MoveAssigns, CLRSCircularQueueAsHierarchyFixture)
+BOOST_FIXTURE_TEST_CASE(MoveAssigns, CircularQueueAsHierarchyFixture)
 {
-  TestCLRSCircularQueueAsHierarchy<int> q {};
+  TestCircularQueueAsHierarchy<int> q {};
 
   q = std::move(rhs_q_);
 
@@ -158,7 +157,7 @@ BOOST_FIXTURE_TEST_CASE(MoveAssigns, CLRSCircularQueueAsHierarchyFixture)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(EnqueuesAndDequeues)
 {
-  AsHierarchy::CLRSCircularQueue<int> q {6};
+  AsHierarchy::CLRS::CircularQueue<int> q {6};
 
   q.enqueue(4);
   q.enqueue(1);
@@ -177,7 +176,7 @@ BOOST_AUTO_TEST_CASE(FillsToCapacityAndBack)
   // Remember, full capacity is considered to be when there are N - 1 elements
   // in a N-sized array, see
   // https://stackoverflow.com/questions/16395354/why-q-head-q-tail-1-represents-the-queue-is-full-in-clrs
-  AsHierarchy::CLRSCircularQueue<int> q {17};
+  AsHierarchy::CLRS::CircularQueue<int> q {17};
 
   for (int i {0}; i < 16; ++i)
   {
@@ -205,6 +204,6 @@ BOOST_AUTO_TEST_CASE(FillsToCapacityAndBack)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // AsHierarchy_tests
-BOOST_AUTO_TEST_SUITE_END() // CLRSCircularQueue_tests
+BOOST_AUTO_TEST_SUITE_END() // CircularQueue_tests
 BOOST_AUTO_TEST_SUITE_END() // Queues
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

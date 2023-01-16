@@ -33,11 +33,6 @@ class Node
       return *this;
     }
 
-		// friend class SingleList<T>;
-		// friend class CycleList<T>;
-		// friend class SentinelList<T>;
-		// friend class CycleSentinelList<T>;
-
 		T value_;
 		Node* next_;
 };

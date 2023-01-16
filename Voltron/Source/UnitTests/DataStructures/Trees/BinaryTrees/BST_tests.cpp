@@ -44,7 +44,6 @@ BOOST_AUTO_TEST_CASE(InsertInserts)
 BOOST_AUTO_TEST_CASE(DynamicallyDefaultConstructs)
 {
   // free(): invalid next size (fast)
-  /*
   BinarySearchTree<int>* sample_ptr {new BinarySearchTree<int>{}};
   sample_ptr->insert(10);
   BOOST_TEST(sample_ptr->get_root_ptr()->contains(10));
@@ -65,7 +64,6 @@ BOOST_AUTO_TEST_CASE(DynamicallyDefaultConstructs)
   BOOST_TEST(sample_ptr->get_root_ptr()->contains(1));
 
   delete sample_ptr;
-  */
   BOOST_TEST(true);
 }
 
@@ -75,7 +73,6 @@ BOOST_AUTO_TEST_CASE(InsertsAndRemoves)
 {
   // free(): invalid next size (fast), unknown location(0): fatal error SIGABRT
   // Test Case 1
-  /*
   BinarySearchTree<int> sample {};
   sample.insert(10);
   sample.insert(5);
@@ -103,7 +100,6 @@ BOOST_AUTO_TEST_CASE(InsertsAndRemoves)
   BOOST_TEST(sample.get_root_ptr()->value_ == 12);
   BOOST_TEST(sample.get_root_ptr()->left_->value_ == 5);
   BOOST_TEST(sample.get_root_ptr()->right_->value_ == 15);
-  */
 }
 
 BOOST_AUTO_TEST_SUITE_END() // BinarySearchTree_tests
@@ -194,11 +190,11 @@ BOOST_AUTO_TEST_CASE(RemoveAllWithRemoveRecursiveAlgoexpert)
 }
 */
 
+/*
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ConstructsWithInsertIteratively)
 {
-  /*
   {
     AlgoExpertBST<int> sample {10};
     sample.insert_iteratively(5);
@@ -210,10 +206,8 @@ BOOST_AUTO_TEST_CASE(ConstructsWithInsertIteratively)
     sample.insert_iteratively(14);
     sample.insert_iteratively(1);
   }
-  */
 
   {
-    /*
     AlgoExpertBST<int>* sample_ptr {new AlgoExpertBST<int>{10}};
     sample_ptr->insert_iteratively(5);
     sample_ptr->insert_iteratively(2);
@@ -224,9 +218,10 @@ BOOST_AUTO_TEST_CASE(ConstructsWithInsertIteratively)
     sample_ptr->insert_iteratively(14);
     sample_ptr->insert_iteratively(1);
     delete sample_ptr;
-    */
   }
 }
+*/
+
 BOOST_AUTO_TEST_SUITE_END() // BST_tests
 
 BOOST_AUTO_TEST_SUITE_END() // BinaryTrees

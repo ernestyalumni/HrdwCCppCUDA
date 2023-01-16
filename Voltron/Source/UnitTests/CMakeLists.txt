@@ -111,17 +111,20 @@ ADD_EXECUTABLE(Check
   DataStructures/Graphs/WeightedGraph_tests.cpp
   DataStructures/HashSet_tests.cpp
   DataStructures/HashTables/HashFunctions_tests.cpp
-  DataStructures/LinkedLists/DoublyLinkedList_tests.cpp
   DataStructures/LinkedLists/DoublyLinkedListTestValues.cpp
+  DataStructures/LinkedLists/DoublyLinkedList_tests.cpp
   DataStructures/LinkedLists/LinkedList_tests.cpp
   DataStructures/LinkedLists/Node_tests.cpp
   DataStructures/LinkedLists/ReverseList_tests.cpp
   DataStructures/LinkedLists/SentinelDoublyLinkedList_tests.cpp
+  DataStructures/LinkedLists/SingleList_tests.cpp
   DataStructures/LinkedLists/SingleNode_tests.cpp
-  #DataStructures/LinkedLists_tests.cpp
+  DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
   DataStructures/Queues/CircularQueue_tests.cpp
   DataStructures/Queues/DynamicQueue_tests.cpp
+  DataStructures/Queues/LexicographicPair_tests.cpp
+  DataStructures/Queues/MultiQueue_tests.cpp
   DataStructures/Queues/QueuesImplementations_tests.cpp
   DataStructures/Queues/QueuesWithArrays_tests.cpp
   DataStructures/Queues/Queues_tests.cpp
@@ -133,6 +136,8 @@ ADD_EXECUTABLE(Check
   DataStructures/StaticFreeList_tests.cpp
   DataStructures/Trees/BinaryTrees/BST_tests.cpp
   DataStructures/Trees/BinaryTrees/BinaryNode_tests.cpp
+  DataStructures/Trees/SimpleTreeNode_tests.cpp
+  DataStructures/Trees/SimpleTree_tests.cpp
   DataStructures/Vector_tests.cpp
   DeskCalculator/Token_tests.cpp
   Entrevue/Entrevue_tests.cpp

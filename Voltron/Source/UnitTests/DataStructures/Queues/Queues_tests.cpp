@@ -9,6 +9,7 @@
 using DataStructures::Queues::CircularQueue;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
+BOOST_AUTO_TEST_SUITE(Queues)
 BOOST_AUTO_TEST_SUITE(Queue_tests)
 
 // cf. https://leetcode.com/explore/learn/card/queue-stack/228/first-in-first-out-data-structure/1337/
@@ -29,5 +30,6 @@ BOOST_AUTO_TEST_CASE(CircularQueueIsAQueue)
   BOOST_TEST(queue.rear() == 4);
 }
 
+BOOST_AUTO_TEST_SUITE_END() // Queues
 BOOST_AUTO_TEST_SUITE_END() // Queue_tests
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

@@ -30,7 +30,27 @@ class LinkedList
     //--------------------------------------------------------------------------
     /// \brief Copy constructor.
     //--------------------------------------------------------------------------
-    LinkedList(const LinkedList&);
+    LinkedList(const LinkedList& list):
+      head_{nullptr}
+    {
+      if (list.is_empty())
+      {
+        return;
+      }
+
+      // Copy the first node-we no longer modify head_.
+      push_front(list.front());
+
+      // We modify the next pointer of the node pointed to by copy.
+      for (
+        Node* original {list.begin()->next_}, *copy {begin()};
+        original != list.end();
+        // Then we move each pointer forward.
+        original = original->next_, copy = copy->next_)
+      {
+        copy->next_ = new Node(original->value_, nullptr);
+      }
+    }
 
     //--------------------------------------------------------------------------
     /// \brief Move constructor.
@@ -85,9 +105,9 @@ class LinkedList
 
       // If the right-hand side is empty, it's straightforward: just empty this
       // list.
-      if (rhs.empty())
+      if (rhs.is_empty())
       {
-        while (!empty())
+        while (!is_empty())
         {
           pop_front();
         }
@@ -95,7 +115,7 @@ class LinkedList
         return *this;
       }
 
-      if (empty())
+      if (is_empty())
       {
         head_ = new Node{rhs.front()};
       }      
@@ -110,7 +130,8 @@ class LinkedList
       /// * There's no corresponding node, create a new node and append it.
       //------------------------------------------------------------------------
 
-      Node* this_node {head_}, *rhs_node = rhs.begin()->next_;
+      Node* this_node {head_};
+      Node* rhs_node {rhs.begin()->next_};
 
       while (rhs_node != nullptr)
       {
@@ -147,7 +168,7 @@ class LinkedList
     //--------------------------------------------------------------------------
     LinkedList& operator=(LinkedList&& rhs)
     {
-      while (!empty())
+      while (!is_empty())
       {
         pop_front();
       }
@@ -164,7 +185,7 @@ class LinkedList
     //--------------------------------------------------------------------------   
     virtual ~LinkedList()
     {
-      while (!empty())
+      while (!is_empty())
       {
         pop_front();
       }
@@ -174,31 +195,72 @@ class LinkedList
     /// \brief Adding the value at the front of the linked list.
     /// \details insert, front O(1)
     //--------------------------------------------------------------------------
-    void push_front(const T value);
+    void push_front(const T value)
+    {
+      // When list is empty, head_ == 0, i.e. head_ == nullptr;
+      head_ = new Node(value, head_);      
+    }    
 
     //--------------------------------------------------------------------------
     /// \brief Retrieving the value at the front of the linked list.
     /// \details access, front O(1)
     //--------------------------------------------------------------------------
-    T front() const;
+    T front() const
+    {
+      if (is_empty())
+      {
+        throw std::runtime_error("Attempted front() on empty LinkedList");
+      }
+
+      return head_->value_;      
+    }
 
     //--------------------------------------------------------------------------
     /// \brief Removing the value at the front of the linked list.
     /// \details Erase, front O(1).
     //--------------------------------------------------------------------------
-    T pop_front();
+    T pop_front()
+    {
+      if (is_empty())
+      {
+        throw std::runtime_error("Attempted pop_front() on empty LinkedList");
+      }
+
+      const T result {front()};
+
+      // Assign a temporary pointer to point to the node being deleted.
+      // Because we could have been accessing a node which we have just deleted:
+      // e.g. delete begin(); head_ = begin()->next_;
+
+      Node* head_ptr {head_};
+
+      head_ = head_->next_;
+
+      // Given that delete is approximately 100x slower than most other instructions
+      // (it does call the OS). cf. Slide 76, Destructor. Waterloo Engineering.
+      delete head_ptr;
+
+      return result;
+    }    
 
     //--------------------------------------------------------------------------
     /// \brief Access the head of the linked list.
     //--------------------------------------------------------------------------
-    Node* begin() const;
+    Node* begin() const
+    {
+      // This will always work: if list is empty, it'll return nullptr.
+      return head_;      
+    }
 
     //--------------------------------------------------------------------------
     /// \details The member function Node* end() const equals whatever the last
     /// node in the linked list points to - in this case, nullptr.
     /// \ref 3.05.Linked_lists.pptx, D.W. Harder 2001 Waterloo Engineering.
     //--------------------------------------------------------------------------
-    Node* end() const;
+    Node* end() const
+    {
+      return nullptr;
+    }
 
     //--------------------------------------------------------------------------
     /// \brief Find the number of instances of an integer in the list.
@@ -215,14 +277,27 @@ class LinkedList
     //--------------------------------------------------------------------------
     /// \brief Is the linked list empty?
     //--------------------------------------------------------------------------
-    bool empty() const;
+    bool is_empty() const
+    {
+      return (head_ == nullptr);
+    }
 
     //--------------------------------------------------------------------------
     /// \brief How many objecst are in the list?
     /// \details The list is empty when the head pointer is set to nullptr.
     /// O(N) time.
     //--------------------------------------------------------------------------
-    std::size_t size() const;
+    std::size_t size() const
+    {
+      std::size_t counter {0};
+
+      for (Node* ptr {begin()}; ptr != end(); ptr = ptr->next_)
+      {
+        ++counter;
+      }
+
+      return counter;
+    }
 
     //--------------------------------------------------------------------------
     /// \ref https://www.geeksforgeeks.org/reverse-a-linked-list/
@@ -263,91 +338,6 @@ class LinkedList
 };
 
 template <typename T>
-LinkedList<T>::LinkedList(const LinkedList& list):
-  head_{nullptr}
-{
-  if (list.empty())
-  {
-    return;
-  }
-
-  // Copy the first node-we no longer modify head_.
-  push_front(list.front());
-
-  // We modify the next pointer of the node pointed to by copy.
-  for (
-    Node* original {list.begin()->next_}, *copy {begin()};
-    original != list.end();
-    // Then we move each pointer forward.
-    original = original->next_, copy = copy->next_)
-  {
-    copy->next_ = new Node(original->value_, nullptr);
-  }
-}
-
-template <typename T>
-void LinkedList<T>::push_front(const T value)
-{
-  // When list is empty, head_ == 0, i.e. head_ == nullptr;
-  head_ = new Node(value, head_);
-}
-
-template <typename T>
-T LinkedList<T>::front() const
-{
-  if (empty())
-  {
-    throw std::runtime_error("Attempted front() on empty LinkedList");
-  }
-
-  return head_->value_;
-}
-
-template <typename T>
-T LinkedList<T>::pop_front()
-{
-  if (empty())
-  {
-    throw std::runtime_error("Attempted pop_front() on empty LinkedList");
-  }
-
-  T result {front()};
-
-  // Assign a temporary pointer to point to the node being deleted.
-  // Because we could have been accessing a node which we have just deleted:
-  // e.g. delete begin(); head_ = begin()->next_;
-
-  Node* head_ptr {head_};
-
-  head_ = head_->next_;
-
-  // Given that delete is approximately 100x slower than most other instructions
-  // (it does call the OS). cf. Slide 76, Destructor. Waterloo Engineering.
-  delete head_ptr;
-
-  return result;
-}
-
-template <typename T>
-bool LinkedList<T>::empty() const
-{
-  return (head_ == nullptr);
-}
-
-template <typename T>
-LinkedList<T>::Node* LinkedList<T>::begin() const
-{
-  // This will always work: if list is empty, it'll return nullptr.
-  return head_;
-}
-
-template <typename T>
-LinkedList<T>::Node* LinkedList<T>::end() const
-{
-  return nullptr;
-}
-
-template <typename T>
 std::size_t LinkedList<T>::count(const T value) const
 {
   std::size_t result {0};
@@ -368,7 +358,7 @@ std::size_t LinkedList<T>::erase(const T value)
 {
   std::size_t counter {0};
 
-  if (empty())
+  if (is_empty())
   {
     return counter;
   }
@@ -379,6 +369,7 @@ std::size_t LinkedList<T>::erase(const T value)
 
   while (ptr != end())
   {
+    // We're at the front.
     if (ptr->value_ == value && previous_ptr == nullptr)
     {
       pop_front();
@@ -404,19 +395,6 @@ std::size_t LinkedList<T>::erase(const T value)
       previous_ptr = ptr;
       ptr = ptr->next_;
     }
-  }
-
-  return counter;
-}
-
-template <typename T>
-std::size_t LinkedList<T>::size() const
-{
-  std::size_t counter {0};
-
-  for (Node* ptr {begin()}; ptr != end(); ptr = ptr->next_)
-  {
-    ++counter;
   }
 
   return counter;

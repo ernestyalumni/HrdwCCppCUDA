@@ -22,15 +22,18 @@ namespace Queues
 namespace AsHierarchy
 {
 
+namespace CLRS
+{
+
 template <typename T>
-class CLRSCircularQueue : Queue<T>
+class CircularQueue : Queue<T>
 {
   public:
 
     //--------------------------------------------------------------------------
     /// \brief Default ctor, creating an empty queue.
     //--------------------------------------------------------------------------
-    CLRSCircularQueue(const std::size_t N = 10):
+    CircularQueue(const std::size_t N = 10):
       array_{new T[std::max(N, static_cast<std::size_t>(1))]},
       array_capacity_{std::max(N, static_cast<std::size_t>(1))},
       size_{0},
@@ -41,7 +44,7 @@ class CLRSCircularQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Copy constructor.
     //--------------------------------------------------------------------------
-    CLRSCircularQueue(const CLRSCircularQueue& other):
+    CircularQueue(const CircularQueue& other):
       array_{new T[other.array_capacity_]},
       array_capacity_{other.array_capacity_},
       size_{other.size_},
@@ -57,7 +60,7 @@ class CLRSCircularQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Copy assignment.
     //--------------------------------------------------------------------------
-    CLRSCircularQueue& operator=(const CLRSCircularQueue& other)
+    CircularQueue& operator=(const CircularQueue& other)
     {
       delete[] array_;
       array_ = new T[other.array_capacity_];
@@ -74,7 +77,7 @@ class CLRSCircularQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Move constructor.
     //--------------------------------------------------------------------------
-    CLRSCircularQueue(CLRSCircularQueue&& other):
+    CircularQueue(CircularQueue&& other):
       array_{other.array_},
       array_capacity_{other.array_capacity_},
       size_{other.size_},
@@ -88,8 +91,13 @@ class CLRSCircularQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Move assignment.
     //--------------------------------------------------------------------------
-    CLRSCircularQueue& operator=(CLRSCircularQueue&& other)
+    CircularQueue& operator=(CircularQueue&& other)
     {
+      if (array_ != nullptr)
+      {
+        delete [] array_;
+      }
+
       array_ = other.array_;
 
       array_capacity_ = std::move(other.array_capacity_);
@@ -103,7 +111,7 @@ class CLRSCircularQueue : Queue<T>
       return *this;
     }      
 
-    virtual ~CLRSCircularQueue()
+    virtual ~CircularQueue()
     {
       if (array_ != nullptr)
       {
@@ -136,7 +144,7 @@ class CLRSCircularQueue : Queue<T>
       else
       {
         throw std::runtime_error(
-          "Called dequeue on an empty CLRSCircularQueue");
+          "Called dequeue on an empty CircularQueue");
       }
     }
 
@@ -193,6 +201,8 @@ class CLRSCircularQueue : Queue<T>
     // inserted into the queue.
     std::size_t tail_;
 };
+
+} // namespace CLRS
 
 } // namespace AsHierarchy
 

@@ -10,6 +10,7 @@
 #include <cassert>
 #include <cstddef> // std::size_t
 #include <optional>
+#include <stdexcept>
 
 namespace DataStructures
 {
@@ -32,10 +33,26 @@ class DynamicQueue : Queue<T>
 {
   public:
 
+    constexpr static std::size_t default_size_ {10};
+
     //--------------------------------------------------------------------------
     /// \brief Default ctor, creating an empty queue.
     //--------------------------------------------------------------------------
-    DynamicQueue(const std::size_t N = 10);
+    explicit DynamicQueue():
+      size_{0},
+      front_{0},
+      back_{std::nullopt},
+      array_capacity_{default_size_},
+      array_{new T[default_size_]}
+    {}
+
+    explicit DynamicQueue(const std::size_t N):
+      size_{0},
+      front_{0},
+      back_{std::nullopt},
+      array_capacity_{std::max(N, static_cast<std::size_t>(1))},
+      array_{new T[N]}
+    {}
 
     //--------------------------------------------------------------------------
     /// \brief Copy constructor.
@@ -47,9 +64,23 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     DynamicQueue& operator=(const DynamicQueue&);
 
-    virtual ~DynamicQueue();
+    DynamicQueue(DynamicQueue&&) = delete;
+    DynamicQueue& operator=(DynamicQueue&&) = delete;
 
-    T front() const;    
+    virtual ~DynamicQueue()
+    {
+      delete [] array_;
+    }
+
+    T front() const
+    {
+      if (is_empty())
+      {
+        throw std::runtime_error("Called front on empty DynamicQueue");
+      }
+
+      return array_[front_];
+    }
 
     T head() const
     {
@@ -64,7 +95,32 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Remove the least recently added item.
     //--------------------------------------------------------------------------
-    virtual T dequeue() override;
+    virtual T dequeue() override
+    {
+      if (is_empty())
+      {
+        throw std::runtime_error("Called dequeue on an empty DynamicQueue");
+      }
+
+      if (front_ == *back_)
+      {
+        back_ = std::nullopt;
+        
+        const std::size_t old_front_ = front_;
+        front_ = 0;
+
+        size_ = 0;
+        return array_[old_front_];
+      }
+
+      const std::size_t old_front_ {front_};
+
+      front_ = (front_ + 1) % array_capacity_;
+
+      --size_;
+
+      return array_[old_front_];
+    }
 
     void push(const T& item)
     {
@@ -109,6 +165,12 @@ class DynamicQueue : Queue<T>
 
     std::size_t get_back_index() const
     {
+      if (!back_.has_value())
+      {
+        throw std::runtime_error(
+          "Failed to get value for back index in DynamicQueue");
+      }
+
       return *back_;
     }
 
@@ -175,15 +237,6 @@ class DynamicQueue : Queue<T>
 };
 
 template <typename T>
-DynamicQueue<T>::DynamicQueue(const std::size_t N):
-  size_{0},
-  front_{0},
-  back_{std::nullopt},
-  array_capacity_{std::max(N, static_cast<std::size_t>(1))},
-  array_{new T[N]}
-{}
-
-template <typename T>
 DynamicQueue<T>::DynamicQueue(const DynamicQueue& other):
   size_{other.size_},
   front_{other.front_},
@@ -196,24 +249,6 @@ DynamicQueue<T>::DynamicQueue(const DynamicQueue& other):
     std::end(other.array_),
     std::begin(array_));
 }
-
-template <typename T>
-DynamicQueue<T>::~DynamicQueue()
-{
-  delete [] array_;
-}
-
-template <typename T>
-T DynamicQueue<T>::front() const
-{
-  if (is_empty())
-  {
-    throw std::runtime_error("Called front on empty DynamicQueue");
-  }
-
-  return array_[front_];
-}
-
 
 template <typename T>
 bool DynamicQueue<T>::is_empty() const
@@ -229,46 +264,11 @@ void DynamicQueue<T>::enqueue(const T& item)
     double_capacity();
   }
 
-  if (is_empty())
-  {
-    back_ = 0;
-  }
-  else
-  {
-    back_ = (*back_ + 1) % array_capacity_; 
-  }
+  back_ = is_empty() ? 0 : (*back_ + 1) % array_capacity_;
 
   array_[*back_] = item;
 
   ++size_;
-}
-
-template <typename T>
-T DynamicQueue<T>::dequeue()
-{
-  if (is_empty())
-  {
-    throw std::runtime_error("Called dequeue on an empty DynamicQueue");
-  }
-
-  if (front_ == *back_)
-  {
-    back_ = std::nullopt;
-    
-    const std::size_t old_front_ = front_;
-    front_ = 0;
-
-    size_ = 0;
-    return array_[old_front_];
-  }
-
-  const std::size_t old_front_ {front_};
-
-  front_ = (front_ + 1) % array_capacity_;
-
-  --size_;
-
-  return array_[old_front_];
 }
 
 template <typename T>

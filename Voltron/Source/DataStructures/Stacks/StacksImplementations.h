@@ -83,7 +83,7 @@ class StackAsLinkedList : public Stack<T, StackAsLinkedList<T>>
 
     T pop()
     {
-      if (ls_.empty())
+      if (ls_.is_empty())
       {
         std::runtime_error("StackAsLinkedList: stack is empty when popping.");
       }
@@ -93,7 +93,7 @@ class StackAsLinkedList : public Stack<T, StackAsLinkedList<T>>
 
     bool is_empty() const
     {
-      return ls_.empty();
+      return ls_.is_empty();
     }
 
     std::size_t size() const
