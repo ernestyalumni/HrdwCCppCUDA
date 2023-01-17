@@ -2,9 +2,14 @@
 #define DATA_STRUCTURES_TREES_SIMPLE_TREE_NODE_H
 
 #include <algorithm> // std::max;
+#include <cstddef> // std::size_t
+#include <iostream>
+#include <vector>
 
 #include "DataStructures/LinkedLists/DoublyLinkedList.h"
 #include "DataStructures/LinkedLists/DoubleNode.h"
+#include "DataStructures/Queues/DynamicQueue.h"
+#include "DataStructures/Stacks/DynamicStack.h"
 
 namespace DataStructures
 {
@@ -21,6 +26,12 @@ class SimpleTreeNode
 
     template <typename V>
     using Node = DataStructures::LinkedLists::Nodes::DoubleNode<V>;
+
+    template <typename W>
+    using Queue = DataStructures::Queues::AsHierarchy::DynamicQueue<W>;
+
+    template <typename X>
+    using Stack = DataStructures::Stacks::AsHierarchy::DynamicStack<X>;
 
     SimpleTreeNode(const T& value, SimpleTreeNode* p = nullptr):
       value_{value},
@@ -200,7 +211,151 @@ class SimpleTreeNode
       return depth;
     }
 
-  // protected:
+    //--------------------------------------------------------------------------
+    /// \ref 3.03.Queues.pdf, 2011 D.W. Harder, ECE 250. 3.3.5 Applications.
+    /// \return nullptr if the value is not found.
+    //--------------------------------------------------------------------------
+    SimpleTreeNode* breadth_first_search(const T value)
+    {
+      Queue<SimpleTreeNode*> queue {};
+
+      queue.enqueue(this);
+
+      while (!queue.is_empty())
+      {
+        SimpleTreeNode* v {queue.dequeue()};
+
+        if (v->value() == value)
+        {
+          return v;
+        }
+
+        for (auto* ptr {v->children_.head()}; ptr != nullptr; ptr = ptr->next())
+        {
+          queue.enqueue(ptr->get_value());
+        }
+        // Alternatively, we could've implemented this:
+        //for (std::size_t i {0}; i != v->degree(); ++i)
+        //{
+        //  queue.enqueue(v->child(i));
+        //}
+      }
+
+      // Exited due to queue being empty.
+      return nullptr;
+    }    
+
+    void breadth_first_traversal()
+    {
+      Queue<SimpleTreeNode*> queue {};
+
+      queue.enqueue(this);
+
+      while (!queue.is_empty())
+      {
+        SimpleTreeNode* v {queue.dequeue()};
+
+        std::cout << v->value() << ", ";
+
+        for (auto* ptr {v->children_.head()}; ptr != nullptr; ptr = ptr->next())
+        {
+          queue.enqueue(ptr->get_value());
+        }
+      }
+    }
+
+    friend std::vector<T> preorder_traversal(SimpleTreeNode* v)
+    {
+      std::vector<T> result {};
+
+      if (v == nullptr)
+      {
+        return result;
+      }
+
+      Stack<SimpleTreeNode*> tree_node_ptr_stack {};
+      tree_node_ptr_stack.push(v);
+
+      while (!tree_node_ptr_stack.is_empty())
+      {
+        SimpleTreeNode* current_ptr {tree_node_ptr_stack.pop()};
+
+        // Effectively visit the current node first.
+        result.emplace_back(current_ptr->value());
+
+        if (!current_ptr->is_leaf())
+        {
+          // Push the last child, i.e. push children from "right" to "left" so
+          // that, due to the properties of a stack, "left" is processed before
+          // the "right" child.
+          for (
+            std::size_t ith_child {current_ptr->degree()};
+            ith_child != 0;
+            --ith_child)
+          {
+            // Calling child is zero-based indexing.
+            tree_node_ptr_stack.push(current_ptr->child(ith_child - 1));
+          }
+        }
+      }
+
+      return result;
+    }
+
+    friend std::vector<T> postorder_traversal_recursive(SimpleTreeNode* v)
+    {
+      std::vector<T> result {};
+      postorder_traversal_recursive_step(v, result);
+      return result;
+    }
+
+  protected:
+
+    friend void postorder_traversal_recursive_step(
+      SimpleTreeNode* node_ptr,
+      std::vector<T>& result)
+    {
+      if (node_ptr == nullptr)
+      {
+        return;
+      }
+
+      // Traverse all the children first, from "left" child to "right" child.
+      for (
+        std::size_t ith_child {1};
+        ith_child <= node_ptr->degree();
+        ++ith_child)
+      {
+        postorder_traversal_recursive_step(
+          node_ptr->child(ith_child - 1),
+          result);
+      }
+
+      // Come back here. We know that the nod_ptr is nonempty from above.
+      result.emplace_back(node_ptr->value());
+    }
+
+    friend void postorder_traversal_of_nodes_recursive_step(
+      SimpleTreeNode* node_ptr,
+      Queue<SimpleTreeNode*>& queue)
+    {
+      if (node_ptr == nullptr)
+      {
+        return;
+      }
+
+      for (
+        std::size_t ith_child {1};
+        ith_child <= node_ptr->degree();
+        ++ith_child)
+      {
+        postorder_traversal_of_nodes_recursive_step(
+          node_ptr->child(ith_child - 1),
+          queue);
+      }
+
+      queue.enqueue(node_ptr);
+    }
 
     /* TODO: Determine best way to recursively delete tree.
     void post_order_deletion(SimpleTreeNode* tree_node_ptr)

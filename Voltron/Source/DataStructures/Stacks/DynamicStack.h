@@ -43,16 +43,47 @@ class DynamicStack : DataStructures::Stacks::AsHierarchy::Stack<T>
 
     virtual ~DynamicStack();
 
-    virtual T top() const override;
+    virtual T top() const override
+    {
+      if (is_empty())
+      {
+        throw std::runtime_error("Called top on empty Dynamic Stack");
+      }
+
+      // If there are N objects in the stack, the last is located at index N - 1.
+      return array_[entry_count_ - 1];
+    }
+
     virtual std::size_t size() const override;
-    virtual bool is_empty() const override;
+    virtual bool is_empty() const override
+    {
+      return entry_count_ == 0;
+    }
+
     std::size_t capacity() const;
 
     void swap(DynamicStack& other);
 
     virtual void push(const T item) override;
 
-    virtual T pop() override;
+    //--------------------------------------------------------------------------
+    /// \ref 3.02.Stacks.pptx, Slide 22, D.W. Harder, U. of Waterloo.
+    /// \details Removing an object simply involves reducing the size.
+    /// It's invalid to assign the last entry to "0".
+    /// By decreasing the size, the previous top of the stack is now at the
+    /// location stack size or entry count.
+    //--------------------------------------------------------------------------
+    virtual T pop() override
+    {
+      if (is_empty())
+      {
+        throw std::runtime_error("Called pop on empty DynamicStack");
+      }
+
+      --entry_count_;
+
+      return array_[entry_count_];
+    }
 
     //--------------------------------------------------------------------------
     /// \details Worst case run time O(N) for N copies.
@@ -144,27 +175,9 @@ DynamicStack<T>::~DynamicStack()
 }
 
 template <typename T>
-T DynamicStack<T>::top() const
-{
-  if (is_empty())
-  {
-    throw std::runtime_error("Called top on empty Dynamic Stack");
-  }
-
-  // If there are N objects in the stack, the last is located at index N - 1.
-  return array_[entry_count_ - 1];
-}
-
-template <typename T>
 std::size_t DynamicStack<T>::size() const
 {
   return entry_count_;
-}
-
-template <typename T>
-bool DynamicStack<T>::is_empty() const
-{
-  return entry_count_ == 0;
 }
 
 template <typename T>
@@ -178,27 +191,6 @@ void DynamicStack<T>::push(const T item)
   array_[entry_count_] = item;
   ++entry_count_;
 }
-
-//------------------------------------------------------------------------------
-/// \ref 3.02.Stacks.pptx, Slide 22, D.W. Harder, U. of Waterloo.
-/// \details Removing an object simply involves reducing the size.
-/// It's invalid to assign the last entry to "0".
-/// By decreasing the size, the previous top of the stack is now at the location
-/// stack size or entry count.
-//------------------------------------------------------------------------------
-template <typename T>
-T DynamicStack<T>::pop()
-{
-  if (is_empty())
-  {
-    throw std::runtime_error("Called pop on empty DynamicStack");
-  }
-
-  --entry_count_;
-
-  return array_[entry_count_];
-}
-
 
 template <typename T>
 void DynamicStack<T>::clear()

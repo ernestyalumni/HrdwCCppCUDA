@@ -127,7 +127,6 @@ std::pair<bool, int> balance_max_height_recursive(TreeNode* root);
 //------------------------------------------------------------------------------
 bool is_same_recursive(TreeNode* root1, TreeNode* root2);
 
-
 //------------------------------------------------------------------------------
 /// \brief Symmetric Tree
 /// \brief Given a binary tree, check whether it is a mirror of itself (i.e.

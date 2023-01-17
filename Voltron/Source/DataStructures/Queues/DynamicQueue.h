@@ -90,7 +90,19 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Add an item.
     //--------------------------------------------------------------------------
-    virtual void enqueue(const T& item) override;
+    virtual void enqueue(const T& item) override
+    {
+      if (is_full())
+      {
+        double_capacity();
+      }
+
+      back_ = is_empty() ? 0 : (*back_ + 1) % array_capacity_;
+
+      array_[*back_] = item;
+
+      ++size_;
+    }
 
     //--------------------------------------------------------------------------
     /// \brief Remove the least recently added item.
@@ -254,21 +266,6 @@ template <typename T>
 bool DynamicQueue<T>::is_empty() const
 {
   return !(back_.has_value());
-}
-
-template <typename T>
-void DynamicQueue<T>::enqueue(const T& item)
-{
-  if (is_full())
-  {
-    double_capacity();
-  }
-
-  back_ = is_empty() ? 0 : (*back_ + 1) % array_capacity_;
-
-  array_[*back_] = item;
-
-  ++size_;
 }
 
 template <typename T>

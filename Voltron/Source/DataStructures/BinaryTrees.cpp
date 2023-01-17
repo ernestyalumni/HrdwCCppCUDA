@@ -104,7 +104,7 @@ vector<int> preorder_traversal_iterative(TreeNode* root)
 {
   vector<int> result;
 
-  if  (root == nullptr)
+  if (root == nullptr)
   {
     return result;
   }
