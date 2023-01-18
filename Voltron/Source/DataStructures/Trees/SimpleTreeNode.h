@@ -321,20 +321,18 @@ class SimpleTreeNode
       }
 
       // Traverse all the children first, from "left" child to "right" child.
-      for (
-        std::size_t ith_child {1};
-        ith_child <= node_ptr->degree();
-        ++ith_child)
+      for (std::size_t i {0}; i < node_ptr->degree(); ++i)
       {
-        postorder_traversal_recursive_step(
-          node_ptr->child(ith_child - 1),
-          result);
+        postorder_traversal_recursive_step(node_ptr->child(i), result);
       }
 
       // Come back here. We know that the nod_ptr is nonempty from above.
       result.emplace_back(node_ptr->value());
     }
 
+    // Interestingly, this function can be called by the user, but we will still
+    // mark this as protected to let the developer know that this isn't meant to
+    // be part of the interface.
     friend void postorder_traversal_of_nodes_recursive_step(
       SimpleTreeNode* node_ptr,
       Queue<SimpleTreeNode*>& queue)
@@ -356,29 +354,6 @@ class SimpleTreeNode
 
       queue.enqueue(node_ptr);
     }
-
-    /* TODO: Determine best way to recursively delete tree.
-    void post_order_deletion(SimpleTreeNode* tree_node_ptr)
-    {
-      if (tree_node_ptr->is_leaf())
-      {
-        return;
-      }
-
-      for (std::size_t i {0}; i < degree(); ++i)
-      {
-        post_order_deletion(child(i));
-      }
-
-      // Visit the current node. This is guaranteed to be a parent of all leaves
-      // now because to get to this line of code, the code had to exit the above
-      // for loop by visiting a leaf for all children.
-      while (!children_.is_empty())
-      {
-        children_.pop_front();
-      }
-    }
-    */
 
   private:
 

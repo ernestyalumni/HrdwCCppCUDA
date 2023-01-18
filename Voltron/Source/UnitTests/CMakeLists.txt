@@ -136,6 +136,7 @@ ADD_EXECUTABLE(Check
   DataStructures/StaticFreeList_tests.cpp
   DataStructures/Trees/BinaryTrees/BST_tests.cpp
   DataStructures/Trees/BinaryTrees/BinaryNode_tests.cpp
+  DataStructures/Trees/DynamicTreeNode_tests.cpp
   DataStructures/Trees/SimpleTreeNode_tests.cpp
   DataStructures/Trees/SimpleTree_tests.cpp
   DataStructures/Vector_tests.cpp

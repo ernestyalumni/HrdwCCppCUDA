@@ -5,6 +5,7 @@
 #include "DataStructures/Queues/DynamicQueue.h"
 
 #include <boost/test/unit_test.hpp>
+#include <utility>
 
 using namespace DataStructures::Queues;
 
@@ -47,6 +48,118 @@ BOOST_AUTO_TEST_CASE(Constructs)
 
   BOOST_TEST(q.is_empty());
   BOOST_TEST(q.size() == 0);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CopyConstructorCopiesAndLeavesSourceUnchanged)
+{
+  AsHierarchy::DynamicQueue<int> q {32};
+
+  q.push(3);
+  q.push(5);
+  q.push(2);
+  q.push(15);
+  q.push(42);
+
+  AsHierarchy::DynamicQueue<int> r {q};
+  BOOST_TEST(r.size() == 5);
+  BOOST_TEST(r.dequeue() == 3);
+  BOOST_TEST(r.dequeue() == 5);
+  BOOST_TEST(r.dequeue() == 2);
+  BOOST_TEST(r.dequeue() == 15);
+  BOOST_TEST(r.dequeue() == 42);
+  BOOST_TEST(q.size() == 5);
+  BOOST_TEST(q.dequeue() == 3);
+  BOOST_TEST(q.dequeue() == 5);
+  BOOST_TEST(q.dequeue() == 2);
+  BOOST_TEST(q.dequeue() == 15);
+  BOOST_TEST(q.dequeue() == 42);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CopyAssignmentCopiesAndLeavesSourceUnchanged)
+{
+  AsHierarchy::DynamicQueue<int> q {32};
+
+  q.push(3);
+  q.push(5);
+  q.push(2);
+  q.push(15);
+  q.push(42);
+
+  AsHierarchy::DynamicQueue<int> r {};
+  r.push(42);
+  r.push(69);
+  BOOST_TEST(r.size() == 2);
+  BOOST_TEST(r.head() == 42);
+
+  r = q;
+
+  BOOST_TEST(r.size() == 5);
+  BOOST_TEST(r.dequeue() == 3);
+  BOOST_TEST(r.dequeue() == 5);
+  BOOST_TEST(r.dequeue() == 2);
+  BOOST_TEST(r.dequeue() == 15);
+  BOOST_TEST(r.dequeue() == 42);
+  BOOST_TEST(q.size() == 5);
+  BOOST_TEST(q.dequeue() == 3);
+  BOOST_TEST(q.dequeue() == 5);
+  BOOST_TEST(q.dequeue() == 2);
+  BOOST_TEST(q.dequeue() == 15);
+  BOOST_TEST(q.dequeue() == 42);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MoveConstructorMovesPointerToArrayAndEmptiesSource)
+{
+  AsHierarchy::DynamicQueue<int> q {69};
+
+  q.push(3);
+  q.push(5);
+  q.push(2);
+  q.push(15);
+  q.push(42);
+
+  AsHierarchy::DynamicQueue<int> r {std::move(q)};
+  BOOST_TEST(r.size() == 5);
+  BOOST_TEST(r.dequeue() == 3);
+  BOOST_TEST(r.dequeue() == 5);
+  BOOST_TEST(r.dequeue() == 2);
+  BOOST_TEST(r.dequeue() == 15);
+  BOOST_TEST(r.dequeue() == 42);
+  BOOST_TEST(q.size() == 0);
+  BOOST_TEST(q.is_empty());
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MoveAssignmentMovesPointerToArrayAndEmptiesSource)
+{
+  AsHierarchy::DynamicQueue<int> q {69};
+
+  q.push(3);
+  q.push(5);
+  q.push(2);
+  q.push(15);
+  q.push(42);
+
+  AsHierarchy::DynamicQueue<int> r {};
+
+  r.push(420);
+  r.push(69);
+
+  r = std::move(q);
+  BOOST_TEST(r.size() == 5);
+  BOOST_TEST(r.dequeue() == 3);
+  BOOST_TEST(r.dequeue() == 5);
+  BOOST_TEST(r.dequeue() == 2);
+  BOOST_TEST(r.dequeue() == 15);
+  BOOST_TEST(r.dequeue() == 42);
+  BOOST_TEST(q.size() == 0);
+  BOOST_TEST(q.is_empty());
 }
 
 //------------------------------------------------------------------------------

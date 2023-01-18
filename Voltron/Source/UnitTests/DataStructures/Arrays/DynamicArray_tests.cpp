@@ -3,8 +3,10 @@
 #include <boost/test/unit_test.hpp>
 #include <cstddef> // std::size_t
 #include <string>
+#include <utility> // std::move
 
 using DataStructures::Arrays::DynamicArray;
+using DataStructures::Arrays::PrimitiveDynamicArray;
 using std::string;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
@@ -93,5 +95,82 @@ BOOST_AUTO_TEST_CASE(ConstructsWithStringType)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DynamicArray_tests
+
+BOOST_AUTO_TEST_SUITE(PrimitiveDynamicArray_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CopyConstructorCopiesValuesAndLeavesSourceUnchanged)
+{
+  PrimitiveDynamicArray<int> a (3);
+  a.append(35);
+  a.append(75);
+  PrimitiveDynamicArray<int> b {a};
+
+  BOOST_TEST(b[0] == 35);
+  BOOST_TEST(b[1] == 75);
+
+  BOOST_TEST(a[0] == 35);
+  BOOST_TEST(a[1] == 75);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CopyAssignmentCopiesValuesAndLeavesSourceUnchanged)
+{
+  PrimitiveDynamicArray<int> a (3);
+  a.append(35);
+  a.append(75);
+  PrimitiveDynamicArray<int> b (42);
+  b.append(69);
+  BOOST_TEST(b[0] == 69);
+
+  b = a;
+
+  BOOST_TEST(b[0] == 35);
+  BOOST_TEST(b[1] == 75);
+
+  BOOST_TEST(a[0] == 35);
+  BOOST_TEST(a[1] == 75);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MoveConstructorMovesValuesAndEmptiesSource)
+{
+  PrimitiveDynamicArray<int> a (3);
+  a.append(35);
+  a.append(75);
+  PrimitiveDynamicArray<int> b {std::move(a)};
+
+  BOOST_TEST(b[0] == 35);
+  BOOST_TEST(b[1] == 75);
+
+  BOOST_TEST(!a.has_data());
+  BOOST_TEST(a.size() == 0);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MoveAssignmentMovesValuesAndEmptiesSource)
+{
+  PrimitiveDynamicArray<int> a (3);
+  a.append(35);
+  a.append(75);
+
+  PrimitiveDynamicArray<int> b {};
+  b.append(420);
+
+  b = std::move(a);
+
+  BOOST_TEST(b[0] == 35);
+  BOOST_TEST(b[1] == 75);
+
+  BOOST_TEST(!a.has_data());
+  BOOST_TEST(a.size() == 0);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // PrimitiveDynamicArray_tests
+
 BOOST_AUTO_TEST_SUITE_END() // Arrays
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

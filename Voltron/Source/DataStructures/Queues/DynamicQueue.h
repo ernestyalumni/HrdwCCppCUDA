@@ -57,19 +57,70 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Copy constructor.
     //--------------------------------------------------------------------------
-    DynamicQueue(const DynamicQueue&);
+    DynamicQueue(const DynamicQueue& other):
+      size_{other.size_},
+      front_{other.front_},
+      back_{other.back_},
+      array_capacity_{other.array_capacity_},
+      array_{new T[array_capacity_]}
+    {
+      std::copy(other.array_, other.array_ + other.size(), array_);
+    }
 
     //--------------------------------------------------------------------------
     /// \brief Copy assignment.
     //--------------------------------------------------------------------------
-    DynamicQueue& operator=(const DynamicQueue&);
+    DynamicQueue& operator=(const DynamicQueue& other)
+    {
+      size_ = other.size();
+      front_ = other.front_;
+      back_ = other.back_;
+      array_capacity_ = other.array_capacity_;
 
-    DynamicQueue(DynamicQueue&&) = delete;
-    DynamicQueue& operator=(DynamicQueue&&) = delete;
+      delete[] array_;
+      array_ = new T[other.array_capacity_];
+
+      std::copy(other.array_, other.array_ + other.size(), array_);
+
+      return *this;
+    }
+
+    DynamicQueue(DynamicQueue&& other):
+      size_{other.size_},
+      front_{other.front_},
+      back_{other.back_},
+      array_capacity_{other.array_capacity_},
+      array_{other.array_}
+    {
+      other.array_ = nullptr;
+      other.back_ = std::nullopt;
+      other.size_ = 0;
+    }
+
+    DynamicQueue& operator=(DynamicQueue&& other)
+    {
+      // Remember to delete the target array_ that had been allocated memory
+      // upon its construction.
+      delete[] array_;
+
+      size_ = other.size_;
+      front_ = other.front_;
+      back_ = other.back_;
+      array_capacity_ = other.array_capacity_;
+      array_ = other.array_;
+
+      other.size_ = 0;
+      other.back_ = std::nullopt;
+      other.array_ = nullptr;
+      return *this;
+    }
 
     virtual ~DynamicQueue()
     {
-      delete [] array_;
+      if (array_ != nullptr)
+      {
+        delete [] array_;
+      }
     }
 
     T front() const
@@ -147,12 +198,18 @@ class DynamicQueue : Queue<T>
     //--------------------------------------------------------------------------
     /// \brief Is the queue empty?
     //--------------------------------------------------------------------------
-    virtual bool is_empty() const override;
+    virtual bool is_empty() const override
+    {
+      return !(back_.has_value());
+    }
 
     //--------------------------------------------------------------------------
     /// \brief Number of items in the queue.
     //--------------------------------------------------------------------------
-    virtual std::size_t size() const override;
+    virtual std::size_t size() const override
+    {
+      return size_;
+    }
 
   protected:
 
@@ -247,32 +304,6 @@ class DynamicQueue : Queue<T>
     std::size_t array_capacity_;
     T* array_;
 };
-
-template <typename T>
-DynamicQueue<T>::DynamicQueue(const DynamicQueue& other):
-  size_{other.size_},
-  front_{other.front_},
-  back_{other.back_},
-  array_capacity_{other.array_capacity_},
-  array_{new T[array_capacity_]}
-{
-  std::copy(
-    std::begin(other.array_),
-    std::end(other.array_),
-    std::begin(array_));
-}
-
-template <typename T>
-bool DynamicQueue<T>::is_empty() const
-{
-  return !(back_.has_value());
-}
-
-template <typename T>
-std::size_t DynamicQueue<T>::size() const
-{
-  return size_;
-}
 
 } // namespace AsHierarchy
 

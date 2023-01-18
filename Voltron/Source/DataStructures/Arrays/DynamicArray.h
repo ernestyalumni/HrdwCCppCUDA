@@ -329,6 +329,8 @@ class PrimitiveDynamicArray
     // Move assignment.
     PrimitiveDynamicArray& operator=(PrimitiveDynamicArray&& other)
     {
+      delete[] data_;
+
       data_ = other.data_;
       size_ = other.size_;
       capacity_ = other.capacity_;
@@ -387,7 +389,7 @@ class PrimitiveDynamicArray
     }
 
     // Returns an iterator to the beginning.
-    constexpr T& begin()
+    constexpr T* begin()
     {
       return data_;
     }
