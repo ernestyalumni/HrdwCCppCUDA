@@ -28,6 +28,153 @@ BOOST_AUTO_TEST_SUITE(BinaryTrees)
 
 BOOST_AUTO_TEST_SUITE(BinaryNode_tests)
 
+BOOST_AUTO_TEST_SUITE(DWHarder)
+
+//------------------------------------------------------------------------------
+/// \ref Exercise 10.4-1, Ch. 10 Elementary Data Structures, Cormen, Leiserson,
+/// Rivest, Stein.
+//------------------------------------------------------------------------------
+class BinaryNodeFixture
+{
+  public:
+
+    BinaryNodeFixture():
+      a_06_{new DWHarderBinaryNode<int>{18}},
+      a_01_{new DWHarderBinaryNode<int>{12}},
+      a_04_{new DWHarderBinaryNode<int>{10}},
+      a_03_{new DWHarderBinaryNode<int>{4}},
+      a_07_{new DWHarderBinaryNode<int>{7}},
+      a_10_{new DWHarderBinaryNode<int>{5}},
+      a_05_{new DWHarderBinaryNode<int>{2}},
+      a_09_{new DWHarderBinaryNode<int>{21}}
+    {
+      a_06_->set_left(a_01_);
+      a_06_->set_right(a_04_);
+      a_01_->set_left(a_07_);
+      a_01_->set_right(a_03_);
+      a_03_->set_left(a_10_);
+      a_04_->set_left(a_05_);
+      a_04_->set_right(a_09_);
+    }
+
+    virtual ~BinaryNodeFixture() = default;
+
+    void manually_delete_nodes()
+    {
+      delete a_09_;
+      delete a_05_;
+      delete a_10_;
+      delete a_07_;
+      delete a_03_;
+      delete a_04_;
+      delete a_01_;
+      delete a_06_;
+    }
+
+    DWHarderBinaryNode<int>* a_06_;
+    DWHarderBinaryNode<int>* a_01_;
+    DWHarderBinaryNode<int>* a_04_;
+    DWHarderBinaryNode<int>* a_03_;
+    DWHarderBinaryNode<int>* a_07_;
+    DWHarderBinaryNode<int>* a_10_;
+    DWHarderBinaryNode<int>* a_05_;
+    DWHarderBinaryNode<int>* a_09_;
+};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithValue)
+{
+  DWHarderBinaryNode<int> a {42};
+  BOOST_TEST(a.is_leaf());
+  BOOST_TEST(a.value() == 42);
+  BOOST_TEST(a.left() == nullptr);
+  BOOST_TEST(a.right() == nullptr);
+}
+
+//------------------------------------------------------------------------------
+/// \ref Exercise 10.4-1, Ch. 10 Elementary Data Structures, Cormen, Leiserson,
+/// Rivest, Stein.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DynamicallyConstructBinaryNodes)
+{
+  // free(): invalid next size (fast), unknown location(0) fatal error:
+  DWHarderBinaryNode<int>* a_06 {new DWHarderBinaryNode<int>{18}};
+  DWHarderBinaryNode<int>* a_01 {new DWHarderBinaryNode<int>{12}};
+  DWHarderBinaryNode<int>* a_04 {new DWHarderBinaryNode<int>{10}};
+  a_06->set_left(a_01);
+  a_06->set_right(a_04);
+  DWHarderBinaryNode<int>* a_03 {new DWHarderBinaryNode<int>{4}};
+  DWHarderBinaryNode<int>* a_07 {new DWHarderBinaryNode<int>{7}};
+  a_01->set_left(a_07);
+  a_01->set_right(a_03);
+  DWHarderBinaryNode<int>* a_10 {new DWHarderBinaryNode<int>{5}};
+  a_03->set_left(a_10);
+  DWHarderBinaryNode<int>* a_05 {new DWHarderBinaryNode<int>{2}};
+  DWHarderBinaryNode<int>* a_09 {new DWHarderBinaryNode<int>{21}};
+  a_04->set_left(a_05);
+  a_04->set_right(a_09);
+
+  BOOST_TEST(a_06->value() == 18);
+  BOOST_TEST(a_06->left()->value() == 12);
+  BOOST_TEST(a_06->right()->value() == 10);
+  BOOST_TEST(a_06->left()->left()->value() == 7);
+  BOOST_TEST(a_06->left()->right()->value() == 4);
+  BOOST_TEST(a_06->left()->right()->left()->value() == 5);
+  BOOST_TEST(a_06->right()->left()->value() == 2);
+  BOOST_TEST(a_06->right()->right()->value() == 21);
+
+  delete a_06;
+  delete a_01;
+  delete a_04;
+  delete a_03;
+  delete a_07;
+  delete a_10;
+  delete a_05;
+  delete a_09;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DynamicallyClearBinaryNodes)
+{
+  // free(): invalid next size (fast), unknown location(0) fatal error:
+  DWHarderBinaryNode<int>* a_06 {new DWHarderBinaryNode<int>{18}};
+  DWHarderBinaryNode<int>* a_01 {new DWHarderBinaryNode<int>{12}};
+  DWHarderBinaryNode<int>* a_04 {new DWHarderBinaryNode<int>{10}};
+  a_06->set_left(a_01);
+  a_06->set_right(a_04);
+  DWHarderBinaryNode<int>* a_03 {new DWHarderBinaryNode<int>{4}};
+  DWHarderBinaryNode<int>* a_07 {new DWHarderBinaryNode<int>{7}};
+  a_01->set_left(a_07);
+  a_01->set_right(a_03);
+  DWHarderBinaryNode<int>* a_10 {new DWHarderBinaryNode<int>{5}};
+  a_03->set_left(a_10);
+  DWHarderBinaryNode<int>* a_05 {new DWHarderBinaryNode<int>{2}};
+  DWHarderBinaryNode<int>* a_09 {new DWHarderBinaryNode<int>{21}};
+  a_04->set_left(a_05);
+  a_04->set_right(a_09);
+
+  a_06->clear();
+}
+
+// Resolved: error, malloc_consolidate(): unaligned fastbin chunk detected
+// This was resolved by removing the destructor for the BinaryNodeFixture class
+// because running clear and the destructor leads you to delete twice each of
+// the same addresses.
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(ClearBinaryNodesFromFunction, BinaryNodeFixture)
+{
+  a_06_->clear();
+  BOOST_TEST(true);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // DWHarder
+
 class NodeFixture
 {
   public:
@@ -138,150 +285,6 @@ class NodeTreesFixture : public CaptureCoutFixture
     Node<char> a_08_;
     Node<char> a_09_;
 };
-
-
-BOOST_AUTO_TEST_SUITE(DWHarder)
-
-//------------------------------------------------------------------------------
-/// \ref Exercise 10.4-1, Ch. 10 Elementary Data Structures, Cormen, Leiserson,
-/// Rivest, Stein.
-//------------------------------------------------------------------------------
-class BinaryNodeFixture
-{
-  public:
-
-    BinaryNodeFixture():
-      a_06_{new DWHarderBinaryNode<int>{18}},
-      a_01_{new DWHarderBinaryNode<int>{12}},
-      a_04_{new DWHarderBinaryNode<int>{10}},
-      a_03_{new DWHarderBinaryNode<int>{4}},
-      a_07_{new DWHarderBinaryNode<int>{7}},
-      a_10_{new DWHarderBinaryNode<int>{5}},
-      a_05_{new DWHarderBinaryNode<int>{2}},
-      a_09_{new DWHarderBinaryNode<int>{21}}
-    {
-      a_06_->set_left(a_01_);
-      a_06_->set_right(a_04_);
-      a_01_->set_left(a_07_);
-      a_01_->set_right(a_03_);
-      a_03_->set_left(a_10_);
-      a_04_->set_left(a_05_);
-      a_04_->set_right(a_09_);
-    }
-
-    virtual ~BinaryNodeFixture()
-    {
-      delete a_09_;
-      delete a_05_;
-      delete a_10_;
-      delete a_07_;
-      delete a_03_;
-      delete a_04_;
-      delete a_01_;
-      delete a_06_;
-    }
-
-    DWHarderBinaryNode<int>* a_06_;
-    DWHarderBinaryNode<int>* a_01_;
-    DWHarderBinaryNode<int>* a_04_;
-    DWHarderBinaryNode<int>* a_03_;
-    DWHarderBinaryNode<int>* a_07_;
-    DWHarderBinaryNode<int>* a_10_;
-    DWHarderBinaryNode<int>* a_05_;
-    DWHarderBinaryNode<int>* a_09_;
-};
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(ConstructsWithValue)
-{
-  DWHarderBinaryNode<int> a {42};
-  BOOST_TEST(a.is_leaf());
-  BOOST_TEST(a.value() == 42);
-  BOOST_TEST(a.left() == nullptr);
-  BOOST_TEST(a.right() == nullptr);
-}
-
-//------------------------------------------------------------------------------
-/// \ref Exercise 10.4-1, Ch. 10 Elementary Data Structures, Cormen, Leiserson,
-/// Rivest, Stein.
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DynamicallyConstructBinaryNodes)
-{
-  // free(): invalid next size (fast), unknown location(0) fatal error:
-  DWHarderBinaryNode<int>* a_06 {new DWHarderBinaryNode<int>{18}};
-  DWHarderBinaryNode<int>* a_01 {new DWHarderBinaryNode<int>{12}};
-  DWHarderBinaryNode<int>* a_04 {new DWHarderBinaryNode<int>{10}};
-  a_06->set_left(a_01);
-  a_06->set_right(a_04);
-  DWHarderBinaryNode<int>* a_03 {new DWHarderBinaryNode<int>{4}};
-  DWHarderBinaryNode<int>* a_07 {new DWHarderBinaryNode<int>{7}};
-  a_01->set_left(a_07);
-  a_01->set_right(a_03);
-  DWHarderBinaryNode<int>* a_10 {new DWHarderBinaryNode<int>{5}};
-  a_03->set_left(a_10);
-  DWHarderBinaryNode<int>* a_05 {new DWHarderBinaryNode<int>{2}};
-  DWHarderBinaryNode<int>* a_09 {new DWHarderBinaryNode<int>{21}};
-  a_04->set_left(a_05);
-  a_04->set_right(a_09);
-
-  BOOST_TEST(a_06->value() == 18);
-  BOOST_TEST(a_06->left()->value() == 12);
-  BOOST_TEST(a_06->right()->value() == 10);
-  BOOST_TEST(a_06->left()->left()->value() == 7);
-  BOOST_TEST(a_06->left()->right()->value() == 4);
-  BOOST_TEST(a_06->left()->right()->left()->value() == 5);
-  BOOST_TEST(a_06->right()->left()->value() == 2);
-  BOOST_TEST(a_06->right()->right()->value() == 21);
-
-  delete a_06;
-  delete a_01;
-  delete a_04;
-  delete a_03;
-  delete a_07;
-  delete a_10;
-  delete a_05;
-  delete a_09;
-}
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DynamicallyClearBinaryNodes)
-{
-  // free(): invalid next size (fast), unknown location(0) fatal error:
-  DWHarderBinaryNode<int>* a_06 {new DWHarderBinaryNode<int>{18}};
-  DWHarderBinaryNode<int>* a_01 {new DWHarderBinaryNode<int>{12}};
-  DWHarderBinaryNode<int>* a_04 {new DWHarderBinaryNode<int>{10}};
-  a_06->set_left(a_01);
-  a_06->set_right(a_04);
-  DWHarderBinaryNode<int>* a_03 {new DWHarderBinaryNode<int>{4}};
-  DWHarderBinaryNode<int>* a_07 {new DWHarderBinaryNode<int>{7}};
-  a_01->set_left(a_07);
-  a_01->set_right(a_03);
-  DWHarderBinaryNode<int>* a_10 {new DWHarderBinaryNode<int>{5}};
-  a_03->set_left(a_10);
-  DWHarderBinaryNode<int>* a_05 {new DWHarderBinaryNode<int>{2}};
-  DWHarderBinaryNode<int>* a_09 {new DWHarderBinaryNode<int>{21}};
-  a_04->set_left(a_05);
-  a_04->set_right(a_09);
-
-  a_06->clear();
-}
-
-/* TODO: error, malloc_consolidate(): unaligned fastbin chunk detected
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_FIXTURE_TEST_CASE(ClearBinaryNodesFromFunction, BinaryNodeFixture)
-{
-  a_06_->clear();
-  BOOST_TEST(true);
-}
-*/
-
-BOOST_AUTO_TEST_SUITE_END() // DWHarder
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

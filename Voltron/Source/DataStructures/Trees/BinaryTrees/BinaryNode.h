@@ -34,7 +34,11 @@ class BinaryNode
 
     // Accessors.
 
-    Type value() const;
+    Type value() const
+    {
+      return node_value_;
+    }
+
     BinaryNode* left() const
     {
       return p_left_tree_;
@@ -144,14 +148,6 @@ void BinaryNode<Type>::clear()
 
   // Reach a leaf.
   delete this;
-}
-
-// Accessors.
-
-template <typename Type>
-Type BinaryNode<Type>::value() const
-{
-  return node_value_;
 }
 
 } // namespace DWHarder

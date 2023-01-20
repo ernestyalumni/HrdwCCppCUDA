@@ -42,6 +42,10 @@ install_packages ()
   # double brackets.
   if [[ "$1"="Pop!_OS$" || "$1"="Ubuntu" ]]
   then
+
+    # Setup up necessary apt repositories or libraries to build Voltron; in
+    # particular, libtbb-dev libboost-all-dev are both very necessary for cmake.
+
     sudo apt-get install build-essential ccache cmake libboost-all-dev \
       libtbb-dev
 
@@ -51,9 +55,20 @@ install_packages ()
   fi
 }
 
+install_optional_packages ()
+{
+  if [[ "$1"="Pop!_OS$" || "$1"="Ubuntu" ]]
+  then
+
+    sudo apt-get install valgrind
+  fi
+}
+
 ##########################################################
 #               BEGINNING OF MAIN
 ##########################################################
+
+echo $os_type
 
 install_packages $os_type
 
