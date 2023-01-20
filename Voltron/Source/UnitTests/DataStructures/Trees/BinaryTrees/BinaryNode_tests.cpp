@@ -442,6 +442,15 @@ BOOST_FIXTURE_TEST_CASE(HeightWorksOnSubTrees, NodeFixture)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_FIXTURE_TEST_CASE(LeafCountCountsLeaves, NodeFixture)
+{
+  BOOST_TEST(x_21_.leaf_count() == 8);
+  BOOST_TEST(x_20_.leaf_count() == 5);
+  BOOST_TEST(x_17_.leaf_count() == 3);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_FIXTURE_TEST_CASE(RecursivePreorderPrintWorks, NodeTreesFixture)
 {
   BOOST_TEST(x_01_.value_ == 1);

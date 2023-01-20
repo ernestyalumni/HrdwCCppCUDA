@@ -10,7 +10,7 @@
 #include <cassert>
 #include <cstddef> // std::size_t
 #include <optional>
-#include <stdexcept>
+#include <stdexcept> // std::runtime_error
 
 namespace DataStructures
 {

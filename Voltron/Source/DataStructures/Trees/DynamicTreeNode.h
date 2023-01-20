@@ -110,6 +110,38 @@ class DynamicTreeNode
       children_.push_back(new DynamicTreeNode(value, this));
     }
 
+    //--------------------------------------------------------------------------
+    /// \ref 4.2.2.3 Attaching and Detaching children, 4.02.Abstract_trees.pdf,
+    /// D.W. Harder, 2011, ECE 250
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    /// \details Do nothing if this is root.    
+    //--------------------------------------------------------------------------
+    void detach_from_parent()
+    {
+      if (is_root())
+      {
+        return;
+      }
+
+      parent()->children_.list_delete(this);
+      parent_node_ = nullptr;
+    }
+
+    void attach(DynamicTreeNode<T>* tree)
+    {
+      // First, if tree we're attaching is attached to a different tree, we must
+      // detach it from its parent.
+      if (!tree->is_root())
+      {
+        tree->detach_from_parent();
+      }
+
+      tree->parent_node_ = this;
+      children_.push_back(tree);
+    }
+
     std::size_t size() const
     {
       std::size_t s {1};

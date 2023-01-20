@@ -17,28 +17,99 @@ namespace DWHarder
 
 //------------------------------------------------------------------------------
 /// \ref 5.01.Binary_trees.pptx
+/// https://ece.uwaterloo.ca/~dwharder/aads/Algorithms/Trees/Binary_search_trees/src/Binary_node.h
 //------------------------------------------------------------------------------
 template <typename Type>
 class BinaryNode
 {
   public:
 
-    BinaryNode(const Type&);
+    BinaryNode(const Type& object):
+      node_value_{object},
+      p_left_tree_{nullptr},
+      p_right_tree_{nullptr}
+    {
+      // Empty constructor.
+    }
 
     // Accessors.
 
     Type value() const;
-    BinaryNode* left() const;
-    BinaryNode* right() const;
+    BinaryNode* left() const
+    {
+      return p_left_tree_;
+    }
 
-    bool is_leaf() const;
+    BinaryNode* right() const
+    {
+      return p_right_tree_;
+    }
+
+    bool is_leaf() const
+    {
+      return (left() == nullptr) && (right() == nullptr);
+    }
+
+    //--------------------------------------------------------------------------
+    /// \details 5.1g Write a member function that returns the number of leaf
+    /// nodes that are descendant from the node the member function is called
+    /// on.
+    /// \ref 5.01.Binary_trees.Questions.pdf. D.W. Harder. 
+    //--------------------------------------------------------------------------
+    std::size_t leaf_count() const
+    {
+      if (is_leaf())
+      {
+        return 1;
+      }
+
+      if (left() == nullptr)
+      {
+        return right()->leaf_count();
+      }
+
+      if (right() == nullptr)
+      {
+        return left()->leaf_count();
+      }
+
+      return left()->leaf_count() + right()->leaf_count();
+    }
 
     //--------------------------------------------------------------------------
     /// Recursive size function runs in O(N) time and O(h) memory.
     /// \ref 5.01.Binary_trees.pptx, Slide 15
     //--------------------------------------------------------------------------
-    std::size_t size() const;
-    std::size_t height() const;
+    std::size_t size() const
+    {
+      if (left() == nullptr)
+      {
+        // Reached a leaf or keep going along right subtree.
+        return (right() == nullptr) ? 1 : 1 + right()->size();
+      }
+      else
+      {
+        return (right() == nullptr) ?
+          1 + left()->size() :
+          1 + left()->size() + right()->size();
+      }      
+    }
+
+    std::size_t height() const
+    {
+      if (left() == nullptr)
+      {
+        // Reached a leaf or keep going along right subtree.
+        return (right() == nullptr) ? 0 : 1 + right()->height();
+      }
+      else
+      {
+        return (right() == nullptr) ?
+          1 + left()->height() :
+          1 + std::max(left()->height(), right()->height());
+      }
+    }
+
     void clear();
 
     void set_left(BinaryNode* left)
@@ -57,15 +128,6 @@ class BinaryNode
     BinaryNode* p_left_tree_;
     BinaryNode* p_right_tree_;
 };
-
-template <typename Type>
-BinaryNode<Type>::BinaryNode(const Type& object):
-  node_value_{object},
-  p_left_tree_{nullptr},
-  p_right_tree_{nullptr}
-{
-  // Empty constructor.
-}
 
 template <typename Type>
 void BinaryNode<Type>::clear()
@@ -90,24 +152,6 @@ template <typename Type>
 Type BinaryNode<Type>::value() const
 {
   return node_value_;
-}
-
-template <typename Type>
-BinaryNode<Type>* BinaryNode<Type>::left() const
-{
-  return p_left_tree_;
-}
-
-template <typename Type>
-BinaryNode<Type>* BinaryNode<Type>::right() const
-{
-  return p_right_tree_;
-}
-
-template <typename Type>
-bool BinaryNode<Type>::is_leaf() const
-{
-  return (left() == nullptr) && (right() == nullptr);
 }
 
 } // namespace DWHarder
@@ -140,6 +184,35 @@ class Node
       return (left_ == nullptr) && (right_ == nullptr);
     }
 
+    //--------------------------------------------------------------------------
+    /// \details 5.1g Write a member function that returns the number of leaf
+    /// nodes that are descendant from the node the member function is called
+    /// on.
+    /// \ref 5.01.Binary_trees.Questions.pdf. D.W. Harder. 
+    //--------------------------------------------------------------------------
+    std::size_t leaf_count() const
+    {
+      if (is_leaf())
+      {
+        return 1;
+      }
+
+      if (left_ == nullptr)
+      {
+        return right_->leaf_count();
+      }
+
+      if (right_ == nullptr)
+      {
+        return left_->leaf_count();
+      }
+
+      return left_->leaf_count() + right_->leaf_count();
+    }
+
+    //--------------------------------------------------------------------------
+    /// \details O(n) time complexity, O(h) memory, space complexity.
+    //--------------------------------------------------------------------------
     std::size_t size() const
     {
       if (left_ == nullptr)

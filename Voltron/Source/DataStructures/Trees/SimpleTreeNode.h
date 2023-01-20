@@ -121,14 +121,14 @@ class SimpleTreeNode
         return;
       }
 
-      parent()->children_.erase(this);
+      parent()->children_.list_delete(this);
       parent_node_ = nullptr;
     }
 
     void attach(SimpleTreeNode<T>* tree)
     {
       // First, if tree we're attaching is attached to a different tree, we must
-      // detach i t from its parent.
+      // detach it from its parent.
       if (!tree->is_root())
       {
         tree->detach_from_parent();

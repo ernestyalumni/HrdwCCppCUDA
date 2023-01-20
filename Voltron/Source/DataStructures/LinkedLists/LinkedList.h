@@ -327,6 +327,36 @@ class LinkedList
       return previous;
     }
 
+    //--------------------------------------------------------------------------
+    /// \details Assume 0-based indexing.
+    //--------------------------------------------------------------------------
+    void list_delete(const std::size_t i)
+    {
+      if (i >= size())
+      {
+        throw std::runtime_error("Node to delete is not in the list");
+      }
+
+      if (i == 0)
+      {
+        Node* current {head_};
+        head_ = head_->next_;
+        delete current;
+        return;
+      }
+
+      Node* previous {head_};
+      Node* current {head_->next_};
+      for (std::size_t j {1}; j < i; ++j)
+      {
+        previous = previous->next_;
+        current = current->next_;
+      }
+
+      previous->next_ = current->next_;
+      delete current;
+    }    
+
   private:
 
     //--------------------------------------------------------------------------
