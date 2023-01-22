@@ -7,6 +7,7 @@ ADD_LIBRARY(Algorithms
   Bits/PrintBytes.cpp
   ExpertIo/Level1.cpp
   ExpertIo/Level2.cpp
+  ExpertIo/Level3.cpp
   GarbageCollection/PoolAllocator.cpp
   HackerRank/BubbleSort.cpp
   HackerRank/CountingSort.cpp

@@ -18,6 +18,7 @@ ADD_EXECUTABLE(Check
   Algorithms/DynamicProgramming/Memoization_tests.cpp
   Algorithms/ExpertIo/Level1_tests.cpp
   Algorithms/ExpertIo/Level2_tests.cpp
+  Algorithms/ExpertIo/Level3_tests.cpp
   Algorithms/HackerRank/BitManipulationLonelyInteger_tests.cpp
   Algorithms/HackerRank/BubbleSort_tests.cpp
   Algorithms/HackerRank/CountingSort_tests.cpp

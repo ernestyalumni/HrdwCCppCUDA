@@ -12,6 +12,7 @@ using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(ExpertIo)
+BOOST_AUTO_TEST_SUITE(Level2_tests)
 
 BOOST_AUTO_TEST_SUITE(MergeOverlappingIntervals)
 
@@ -138,6 +139,8 @@ BOOST_AUTO_TEST_CASE(MergeOverlappingIntervalsWorks)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // MergeOverlappingIntervals
+
+BOOST_AUTO_TEST_SUITE_END() // Level2_tests
 
 BOOST_AUTO_TEST_SUITE_END() // ExpertIo
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
