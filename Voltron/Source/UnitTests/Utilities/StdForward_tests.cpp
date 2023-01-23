@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 // \file StdForward_tests.cpp
 //------------------------------------------------------------------------------
+#include "Tools/CaptureCout.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -8,6 +9,8 @@
 #include <memory>
 #include <type_traits>
 #include <utility> // std::forward
+
+using Tools::CaptureCoutFixture;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
 BOOST_AUTO_TEST_SUITE(StdForward_tests)
@@ -53,11 +56,14 @@ std::unique_ptr<T> make_unique2(U&&... u)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DemonstratePerfectForwardingOfParametersAndParameterPacks)
 {
+  CaptureCoutFixture capture_cout {};
+
   int i = 1;
 
   auto t = make_unique2<B>(2, i, 3);
   
-  BOOST_TEST(true);
+  BOOST_TEST(capture_cout.local_oss_.str() ==
+  	"rvalue overload, n=2\nlvalue overload, n=1\nrvalue overload, n=3\n");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // CppReferenceExamples
@@ -105,7 +111,6 @@ void dummy_f1b(const int x)
 	return;
 }
 
-
 /*
 template <
 	typename Function,
@@ -118,7 +123,6 @@ template <
 //{
 //	return std::is_invocable_v<Function, Arg>
 //}
-
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

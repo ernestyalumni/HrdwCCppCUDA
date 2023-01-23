@@ -6,5 +6,7 @@ ADD_LIBRARY(DataStructures
   HashMap.cpp
   HashSet.cpp
   HashTables/HashFunctions.cpp
-  LinkedLists.cpp)
+  LinkedLists.cpp
+  Trees/SuffixTrie.cpp
+  )
 #  Lists.cpp)

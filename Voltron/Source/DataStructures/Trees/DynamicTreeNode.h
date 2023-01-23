@@ -229,14 +229,9 @@ class DynamicTreeNode
         return;
       }
 
-      for (
-        std::size_t ith_child {1};
-        ith_child <= node_ptr->degree();
-        ++ith_child)
+      for (std::size_t i {0}; i < node_ptr->degree(); ++i)
       {
-        postorder_traversal_of_nodes_recursive_step(
-          node_ptr->child(ith_child - 1),
-          queue);
+        postorder_traversal_of_nodes_recursive_step(node_ptr->child(i), queue);
       }
 
       queue.enqueue(node_ptr);

@@ -1,0 +1,124 @@
+#ifndef DATA_STRUCTURES_TREES_TRIE_H
+#define DATA_STRUCTURES_TREES_TRIE_H
+
+#include <cstddef>
+#include <string>
+
+namespace DataStructures
+{
+namespace Trees
+{
+namespace Tries
+{
+
+namespace GeeksForGeeks
+{
+
+//------------------------------------------------------------------------------
+/// cf. https://www.geeksforgeeks.org/trie-insert-and-search/
+/// \details If we store keys (i.e. values) in a binary search tree, the time
+/// needed is M log(N), where M is the maximum string length and N is number of
+/// keys in the tree. This is because let N = 26 letters in the alphabet. For
+/// each character in a word or string, there are M characters in a word. And
+/// for each letter, you decide if it's one of 26 or N letters.
+///
+/// For trie, a word can be searched in O(M) time. Penalty is storage.
+//------------------------------------------------------------------------------
+template <std::size_t ALPHABET_SIZE>
+class TrieNode
+{
+  public:
+
+    TrieNode():
+      children_{nullptr},
+      is_end_of_word_{false}
+    {}
+
+    TrieNode* children_[ALPHABET_SIZE];
+
+    bool is_end_of_word_;
+
+    template <std::size_t M>
+    friend void insert(TrieNode<M>* root, const std::string& word);
+
+    //--------------------------------------------------------------------------
+    /// \details O(M) time complexity where M is the length of the largest word.
+    //--------------------------------------------------------------------------
+    template <std::size_t N>
+    friend bool search(const TrieNode<N>* root, const std::string& word);
+
+    //--------------------------------------------------------------------------
+    /// \brief Do a post-order, depth-first search to properly delete nodes.
+    /// It's up to the user to apply this function on the root.
+    //--------------------------------------------------------------------------
+    template <std::size_t P>
+    friend void destroy(TrieNode<P>* node_ptr);
+};
+
+template <std::size_t M>
+void insert(TrieNode<M>* root, const std::string& word)
+{
+  TrieNode<M>* current_ptr {root};
+
+  for (std::size_t i {0}; i < word.length(); ++i)
+  {
+    const std::size_t index {static_cast<std::size_t>(word[i])};
+
+    if (current_ptr->children_[index] == nullptr)
+    {
+      current_ptr->children_[index] = new TrieNode<M>{};
+    }
+
+    current_ptr = current_ptr->children_[index];
+  }
+
+  // Mark the last child to be the end of the word, as a leaf.
+  current_ptr->is_end_of_word_ = true;
+}
+
+template <std::size_t N>
+bool search(const TrieNode<N>* root_ptr, const std::string& word)
+{
+  const TrieNode<N>* current_ptr {root_ptr};
+  for (std::size_t i {0}; i < word.length(); ++i)
+  {
+    const std::size_t index {static_cast<std::size_t>(word[i])};
+
+    if (current_ptr->children_[index] == nullptr)
+    {
+      return false;
+    }
+
+    current_ptr = current_ptr->children_[index];
+  }
+
+  return current_ptr->is_end_of_word_;
+}
+
+template <std::size_t P>
+void destroy(TrieNode<P>* node_ptr)
+{
+  if (node_ptr == nullptr)
+  {
+    return;
+  }
+
+  for (std::size_t i {0}; i < P; ++i)
+  {
+    if (node_ptr->children_[i] != nullptr)
+    {
+      destroy(node_ptr->children_[i]);
+    }
+  }
+
+  delete node_ptr;
+}
+
+} // namespace GeeksForGeeks
+
+} // namespace Tries
+
+} // namespace Trees
+} // namespace DataStructures
+
+#endif // DATA_STRUCTURES_TREES_TRIE_H
