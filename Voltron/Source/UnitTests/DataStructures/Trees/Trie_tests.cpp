@@ -3,19 +3,21 @@
 #include <boost/test/unit_test.hpp>
 #include <cstddef> // std::size_t
 #include <string>
+#include <vector>
 
 using std::size_t;
 using std::string;
+using std::vector;
 
 using namespace DataStructures::Trees::Tries;
 
 BOOST_AUTO_TEST_SUITE(DataStructures)
 BOOST_AUTO_TEST_SUITE(Trees)
-BOOST_AUTO_TEST_SUITE(Tries_tests)
-
-BOOST_AUTO_TEST_SUITE(GeeksForGeeks_tests)
+BOOST_AUTO_TEST_SUITE(Tries)
 
 constexpr size_t alphabet_size {128};
+
+BOOST_AUTO_TEST_SUITE(GeeksForGeeks_tests)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -141,6 +143,113 @@ BOOST_AUTO_TEST_CASE(SearchFindWords)
 
 BOOST_AUTO_TEST_SUITE_END() // GeeksForGeeks_tests
 
-BOOST_AUTO_TEST_SUITE_END() // Tries_tests
+const vector<string> sample_input_words {
+  "this",
+  "is",
+  "not",
+  "a",
+  "simple",
+  "boggle",
+  "board",
+  "test",
+  "REPEATED",
+  "NOTRE-PEATED"};
+
+BOOST_AUTO_TEST_SUITE(Trie_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DefaultConstructs)
+{
+  Trie<alphabet_size> t {};
+
+  BOOST_TEST(true);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InsertAddsWords)
+{
+  Trie<alphabet_size> t {};
+
+  for (const string& word: sample_input_words)
+  {
+    t.insert(word);
+  }
+
+  for (const string& word: sample_input_words)
+  {
+    BOOST_TEST(t.search(word));
+  }
+
+  BOOST_TEST(!t.search("Killer"));
+  BOOST_TEST(!t.search("Instinct"));
+  BOOST_TEST(!t.search("boggleboard"));
+  BOOST_TEST(!t.search("adream"));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DoPartialSearchReturnsTrueForPartialMatches)
+{
+  Trie<alphabet_size> t {};
+
+  for (const string& word: sample_input_words)
+  {
+    t.insert(word);
+  }
+
+  BOOST_TEST(t.do_partial_search("th"));
+  BOOST_TEST(t.do_partial_search("no"));
+  BOOST_TEST(t.do_partial_search("NO"));
+  BOOST_TEST(t.do_partial_search("bo"));
+  BOOST_TEST(!t.do_partial_search("testa"));
+  BOOST_TEST(!t.do_partial_search("simplepickup"));
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CanBeTraversedFromRoot)
+{
+  Trie<alphabet_size> t {};
+
+  for (const string& word: sample_input_words)
+  {
+    t.insert(word);
+  }
+
+  Trie<alphabet_size>::Node* current_ptr {t.get_root_ptr()};
+
+  BOOST_TEST(current_ptr->children_ != nullptr);
+  BOOST_TEST(!current_ptr->is_end_of_word_);
+
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('b')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->children_ != nullptr);
+  BOOST_TEST(!current_ptr->is_end_of_word_);
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('o')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->children_ != nullptr);
+  BOOST_TEST(!current_ptr->is_end_of_word_);
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('g')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->children_ != nullptr);
+  BOOST_TEST(!current_ptr->is_end_of_word_);
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('g')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->children_ != nullptr);
+  BOOST_TEST(!current_ptr->is_end_of_word_);
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('l')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->children_ != nullptr);
+  BOOST_TEST(!current_ptr->is_end_of_word_);
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('e')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->is_end_of_word_);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // Trie_tests
+
+BOOST_AUTO_TEST_SUITE_END() // Tries
 BOOST_AUTO_TEST_SUITE_END() // Trees
 BOOST_AUTO_TEST_SUITE_END() // DataStructures

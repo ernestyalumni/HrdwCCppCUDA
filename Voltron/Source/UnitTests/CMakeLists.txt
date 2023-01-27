@@ -143,7 +143,7 @@ ADD_EXECUTABLE(Check
   DataStructures/Trees/SimpleTreeNode_tests.cpp
   DataStructures/Trees/SimpleTree_tests.cpp
   DataStructures/Trees/SuffixTrie_tests.cpp
-  DataStructures/Trees/Tries_tests.cpp
+  DataStructures/Trees/Trie_tests.cpp
   DataStructures/Vector_tests.cpp
   DeskCalculator/Token_tests.cpp
   Entrevue/Entrevue_tests.cpp

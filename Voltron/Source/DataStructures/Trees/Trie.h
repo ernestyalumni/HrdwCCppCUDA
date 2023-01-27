@@ -116,6 +116,119 @@ void destroy(TrieNode<P>* node_ptr)
 
 } // namespace GeeksForGeeks
 
+//------------------------------------------------------------------------------
+/// \details N is the alphabet size.
+//------------------------------------------------------------------------------
+template <std::size_t N>
+class Trie
+{
+  public:
+
+    class Node
+    {
+      public:
+
+        Node():
+          children_{nullptr},
+          is_end_of_word_{false}
+        {}
+
+        Node* children_[N];
+        bool is_end_of_word_;
+    };
+
+    Trie():
+      root_ptr_{new Node({})}
+    {}
+
+    ~Trie()
+    {
+      destroy(root_ptr_);
+    }
+
+    Node* get_root_ptr() const
+    {
+      return root_ptr_;
+    }
+
+    void insert(const std::string& word)
+    {
+      Node* current_ptr {root_ptr_};
+
+      for (char ch: word)
+      {
+        const std::size_t index {static_cast<std::size_t>(ch)};
+
+        if (current_ptr->children_[index] == nullptr)
+        {
+          current_ptr->children_[index] = new Node({});
+        }
+
+        current_ptr = current_ptr->children_[index];
+      }
+
+      current_ptr->is_end_of_word_ = true;
+    }
+
+    bool search(const std::string& word)
+    {
+      const Node* current_ptr {root_ptr_};
+      for (char ch: word)
+      {
+        const std::size_t index {static_cast<std::size_t>(ch)};
+
+        if (current_ptr->children_[index] == nullptr)
+        {
+          return false;
+        }
+
+        current_ptr = current_ptr->children_[index];
+      }
+
+      return current_ptr->is_end_of_word_;
+    }
+
+    bool do_partial_search(const std::string& substring)
+    {
+      const Node* current_ptr {root_ptr_};
+      for (char ch: substring)
+      {
+        const std::size_t index {static_cast<std::size_t>(ch)};
+
+        if (current_ptr->children_[index] == nullptr)
+        {
+          return false;
+        }
+
+        current_ptr = current_ptr->children_[index];
+      }
+
+      return true;
+    }
+
+  private:
+
+    void destroy(Node* node_ptr)
+    {
+      if (node_ptr == nullptr)
+      {
+        return;
+      }
+
+      for (std::size_t i {0}; i < N; ++i)
+      {
+        if (node_ptr->children_[i] != nullptr)
+        {
+          destroy(node_ptr->children_[i]);
+        }
+      }
+
+      delete node_ptr;
+    }
+
+    Node* root_ptr_;
+};
+
 } // namespace Tries
 
 } // namespace Trees
