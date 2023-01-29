@@ -180,7 +180,6 @@ class TypeProperties
       is_trivial_{std::is_trivial<T>::value},
       is_trivially_copyable_{std::is_trivially_copyable<T>::value},
       is_standard_layout_{std::is_standard_layout<T>::value},
-      is_literal_type_{std::is_literal_type<T>::value},
 //      has_unique_object_representations_{ // C++17
   //      std::has_unique_object_representations<T>::value}, // C++17
       is_empty_{std::is_empty<T>::value},
@@ -197,7 +196,6 @@ class TypeProperties
     bool is_trivial() const { return is_trivial_; }
     bool is_trivially_copyable() const { return is_trivially_copyable_; }
     bool is_standard_layout() const { return is_standard_layout_; }
-    bool is_literal_type() const { return is_literal_type_; }
 //    bool has_unique_object_representations() const // C++17
 //    { // C++17
   //    return has_unique_object_representations_; // C++17
@@ -221,7 +219,6 @@ class TypeProperties
     const bool is_trivial_;
     const bool is_trivially_copyable_;
     const bool is_standard_layout_;
-    const bool is_literal_type_;
 //    const bool has_unique_object_representations_; // C++17
     const bool is_empty_;
     const bool is_polymorphic_;
@@ -240,7 +237,6 @@ std::ostream& operator<<(std::ostream& os, const TypeProperties<T>& traits)
     " is_trivial : " << traits.is_trivial() <<
     " is_trivially_copyable : " << traits.is_trivially_copyable() <<
     " is_standard_layout : " << traits.is_standard_layout() <<
-    " is_literal_type : " << traits.is_literal_type() <<
 //    " has_unique_object_representations : " << // C++17
 //      traits.has_unique_object_representations() << // C++17
     " is_empty : " << traits.is_empty() <<

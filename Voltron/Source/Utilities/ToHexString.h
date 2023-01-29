@@ -8,6 +8,7 @@
 #define UTILITIES_TO_HEX_STRING_H
 
 #include <algorithm> // std::for_each
+#include <array>
 #include <iomanip> // std::setfill
 #include <limits> // numeric_limits<float>
 #include <list> // list

@@ -41,7 +41,8 @@ void merge_sort(TContainer& a, const std::size_t low, const std::size_t high)
 
   merge_sort(a, low, mid); // Sort array from indices low to mid
   merge_sort(a, mid + 1, high); // Sort array from indices mid + 1 to high
-  merge<TContainer>(a, low, mid, mid + 1, high); // Merge sorted subsections of the array
+  // Merge sorted subsections of the array
+  merge<TContainer>(a, low, mid, mid + 1, high); 
 }
 
 template <class TContainer>
@@ -108,6 +109,13 @@ void merge_sort(TContainer& a)
 {
   Details::merge_sort(a, 0, a.size() - 1);
 }
+
+template <class TContainer, class T>
+void merge(
+  TContainer& a,
+  std::vector<T>& temporary,
+  const std::size_t low,
+  const std::size_t high);
 
 // https://leetcode.com/problems/sort-an-array/discuss/329672/merge-sort
 // cf. https://www.google.com/search?client=firefox-b-1-d&q=merge+sort+hackerrank#kpvalbx=_gy6eX9eJCPTC0PEP5IefgA024

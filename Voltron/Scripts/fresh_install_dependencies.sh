@@ -51,7 +51,7 @@ install_packages ()
 
   elif [[ "$1"="Fedora Linux" ]]
   then
-    sudo dnf install ccache tbb-devel boost-devel
+    sudo dnf install ccache cmake gcc-c++ tbb-devel boost-devel
   fi
 }
 

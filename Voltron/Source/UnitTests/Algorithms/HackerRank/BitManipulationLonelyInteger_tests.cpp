@@ -28,8 +28,6 @@ int findLonely(std::vector<int> arr)
   return 0;
 }
 
-//------------------------------------------------------------------------------
-///
 std::string ltrim(const std::string& str)
 {
   std::string s(str);
@@ -40,7 +38,12 @@ std::string ltrim(const std::string& str)
       s.begin(),
       s.end(),
       //std::not1(ptr_fun<int, int>(std::isspace))));
-      std::not_fn(ptr_fun<int, int>(std::isspace))));
+      //------------------------------------------------------------------------
+      /// \url https://en.cppreference.com/w/cpp/utility/functional/not_fn
+      /// \brief Creates a forwarding call wrapper that returns the negation of
+      /// the callable object it holds.
+      //------------------------------------------------------------------------
+      std::not_fn([](int ch){ return std::isspace(ch); })));
 
   return s;
 }
@@ -54,7 +57,7 @@ std::string rtrim(const std::string& str)
       s.rbegin(),
       s.rend(),
       //not1(ptr_fun<int, int>(std::isspace))).base(),
-      std::not_fn(ptr_fun<int, int>(std::isspace))).base(),
+      std::not_fn([](int ch){ return std::isspace(ch); })).base(),
     s.end());
 
   return s;

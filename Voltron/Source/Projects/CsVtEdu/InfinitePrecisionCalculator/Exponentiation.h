@@ -17,6 +17,13 @@ using DoublyLinkedList = DataStructures::LinkedLists::DoublyLinkedList<T>;
 template <typename T>
 using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 
+template <typename T, typename>
+void recursive_exponentiation(
+  const DoublyLinkedList<T>& base,
+  const int exponent,
+  DoublyLinkedList<T>& previous_result,
+  DoublyLinkedList<T>& result);
+
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 void exponentiate(
   const DoublyLinkedList<T>& base,

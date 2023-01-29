@@ -3,6 +3,8 @@
 
 #include "DataStructures/Arrays/DynamicArray.h"
 
+#include <string>
+
 namespace CsVtEdu
 {
 namespace InfinitePrecisionCalculator

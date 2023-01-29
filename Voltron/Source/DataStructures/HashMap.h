@@ -17,6 +17,7 @@
 #include <memory>
 #include <stdexcept> // std::runtime_error
 #include <utility> // std::pair
+#include <vector>
 
 namespace DataStructures
 {

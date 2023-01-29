@@ -15,6 +15,13 @@ namespace InfinitePrecisionCalculator
 template <typename T>
 using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 
+template <typename T, typename>
+void recursive_addition(
+  Node<T>* operand_ptr_1,
+  Node<T>* operand_ptr_2,
+  Node<T>* previous_1,
+  const T carry_value);
+
 //------------------------------------------------------------------------------
 /// \details
 /// cf. https://en.cppreference.com/w/cpp/types/is_integral value is bool.

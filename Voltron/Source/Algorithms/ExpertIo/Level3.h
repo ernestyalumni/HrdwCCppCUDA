@@ -52,7 +52,7 @@ class TraverseBoggleBoard
       {0, -1},
       {1, -1}};
 
-    preorder_depth_first_traverse(
+    void preorder_depth_first_traverse(
       const std::size_t i,
       const std::size_t j,
       std::vector<std::vector<char>>& board,

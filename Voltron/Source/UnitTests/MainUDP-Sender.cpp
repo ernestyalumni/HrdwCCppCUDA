@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
 	struct sockaddr_in myaddr, remaddr;
 	int fd, i, slen=sizeof(remaddr);
-	char *server = "127.0.0.1";	/* change this to use a different server */
+	char server[] {"127.0.0.1"};	/* change this to use a different server */
 	char buf[BUFLEN];
 
 	std::array<char, BUFLEN> message_buffer; // message buffer
