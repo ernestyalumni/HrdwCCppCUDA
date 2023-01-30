@@ -135,12 +135,20 @@ MESSAGE("DOWNLOAD_EXTRACT_TIMESTAMP before CMAKE_POLICY: "
 # Declare dependency on GoogleTest which is downloaded from GitHub.
 # cf. https://google.github.io/googletest/quickstart-cmake.html
 INCLUDE(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-  # See https://github.com/aminya/project_options/issues/146
-  DOWNLOAD_EXTRACT_TIMESTAMP true
-)
+
+IF ($(CMAKE_VERSION) VERSION_LESS "3.23.0")
+  FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+  )
+ELSE()
+  FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+    # See https://github.com/aminya/project_options/issues/146
+    DOWNLOAD_EXTRACT_TIMESTAMP true
+  )
+ENDIF()
 
 # If you have problems running `cmake ../Source` for instance, it's indicative
 # of a stale CMake configuration, so try a hard removal of the build folder.

@@ -24,9 +24,9 @@ TEST(VectorAddTests, AllocatesOnHostAndGPU)
   float *h_B {static_cast<float*>(malloc(size))};
   float *h_C {static_cast<float*>(malloc(size))};
 
-  EXPECT_NEQ(h_A, nullptr);
-  EXPECT_NEQ(h_B, nullptr);
-  EXPECT_NEQ(h_C, nullptr);
+  EXPECT_NE(h_A, nullptr);
+  EXPECT_NE(h_B, nullptr);
+  EXPECT_NE(h_C, nullptr);
 
   // Free host memory.
   free(h_A);
