@@ -1,8 +1,9 @@
 #include <cstddef>
+#include <cstdlib> // RAND_MAX
 #include <cuda_runtime.h>
 #include <gtest/gtest.h>
 // See https://en.cppreference.com/w/c/memory/malloc
-#include <stdlib.h> // malloc
+#include <stdlib.h> // malloc, rand()
 
 namespace GoogleUnitTests
 {
@@ -27,6 +28,45 @@ TEST(VectorAddTests, AllocatesOnHostAndGPU)
   EXPECT_NE(h_A, nullptr);
   EXPECT_NE(h_B, nullptr);
   EXPECT_NE(h_C, nullptr);
+
+  for (std::size_t i {0}; i < number_of_elements; ++i)
+  {
+    // https://en.cppreference.com/w/cpp/numeric/random/RAND_MAX
+    // RAND_MAX is implementation defined.
+    h_A[i] = rand() / static_cast<float>(RAND_MAX);
+    h_B[i] = rand() / static_cast<float>(RAND_MAX);
+  }
+
+  // Allocate device input vectors.
+
+  float* d_A {nullptr};
+
+  // See https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html
+  // __hist__device__cudaError_t cudaMalloc(void** devPtr, size_t size)
+  cudaError_t err {cudaMalloc(reinterpret_cast<void**>(&d_A), size)};
+  EXPECT_EQ(err, cudaSuccess);
+
+  float* d_B {nullptr};
+  err = cudaMalloc(reinterpret_cast<void**>(&d_B), size);
+  EXPECT_EQ(err, cudaSuccess);
+
+  float* d_C {nullptr};
+  err = cudaMalloc(reinterpret_cast<void**>(&d_C), size);
+  EXPECT_EQ(err, cudaSuccess);
+
+  err = cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
+  EXPECT_EQ(err, cudaSuccess);
+
+  err = cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
+  EXPECT_EQ(err, cudaSuccess);
+
+
+
+  err = cudaFree(d_A);
+  EXPECT_EQ(err, cudaSuccess);
+
+  err = cudaFree(d_B);
+  EXPECT_EQ(err, cudaSuccess);
 
   // Free host memory.
   free(h_A);
