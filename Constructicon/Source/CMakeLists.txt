@@ -88,6 +88,8 @@ FetchContent_Declare(json
 FetchContent_MakeAvailable(json)
 
 # cf. https://www.jibbow.com/posts/rapidjson-cmake/
+# Remember to run git submodule update --init --recursive if you are compiling
+# for the first time.
 SET(RAPIDJSON_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../Dependencies/rapidjson/include)
 INCLUDE_DIRECTORIES(${RAPIDJSON_INCLUDE_DIR})
 
