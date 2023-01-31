@@ -1,11 +1,12 @@
 ENABLE_TESTING()
 
 ADD_EXECUTABLE(Check
+  CUDASamples/Introduction/VectorAdd_tests.cu
   CUDAToolkit/MemoryManagement_tests.cu
-  CUDAIntroduction/VectorAdd_tests.cu
   )
 
 TARGET_LINK_LIBRARIES(Check
+  CUDASamples
   gtest_main)
 
 INCLUDE(GoogleTest)

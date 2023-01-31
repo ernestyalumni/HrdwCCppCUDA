@@ -161,4 +161,5 @@ ENDIF()
 
 FetchContent_MakeAvailable(googletest)
 
+ADD_SUBDIRECTORY(CUDASamples)
 ADD_SUBDIRECTORY(UnitTests)
