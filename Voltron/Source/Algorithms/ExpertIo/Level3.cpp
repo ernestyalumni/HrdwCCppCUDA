@@ -16,6 +16,7 @@ using DataStructures::Trees::Tries::Trie;
 using std::array;
 using std::size_t;
 using std::string;
+using std::unordered_set;
 using std::vector;
 
 namespace Algorithms
@@ -41,7 +42,7 @@ vector<string> solve_boggle_board(vector<vector<char>> board, vector<string> wor
   /// https://medium.com/@gx578007/searching-vector-set-and-unordered-set-6649d1aa7752#:~:text=The%20time%20complexity%20to%20find,overheads%20to%20find%20an%20element.
   //----------------------------------------------------------------------------
 
-  std::unordered_set<string> final_words {};
+  unordered_set<string> found_words {};
 
   vector<vector<bool>> is_visited {};
   for (size_t i {0}; i < board.size(); ++i)
@@ -68,19 +69,12 @@ vector<string> solve_boggle_board(vector<vector<char>> board, vector<string> wor
   // handle that owns it.
   // See https://en.cppreference.com/w/cpp/container/unordered_set/extract
 
-  for (auto iter = final_words.begin(); iter != final_words.end(); ++iter)
+  for (auto iter = found_words.begin(); iter != found_words.end(); ++iter)
   {
-    results.emplace_back(std::move(final_words.extract(iter).value()));
+    results.emplace_back(std::move(found_words.extract(iter).value()));
   }
 
   return results;
-}
-
-void match_word_on_board(vector<vector<char>>& board, string& word)
-{
-  const int M {static_cast<int>(board.size())};
-  const int N {static_cast<int>(board[0].size())};
-
 }
 
 VectorOfCoordinates get_neighbors(
@@ -132,6 +126,46 @@ VectorOfCoordinates get_neighbors(
   }
 
   return results;
+}
+
+void explore(
+  const std::size_t i,
+  const std::size_t j,
+  const vector<vector<char>>& board,
+  const Trie<alphabet_size>::Node* node_ptr,
+  vector<vector<bool>>& is_visited,
+  unordered_set<string>& found_words)
+{
+  if (is_visited[i][j])
+  {
+    return;
+  }
+
+  const char letter {board[i][j]};
+
+  if (!node_ptr->is_in_children(letter))
+  {
+    return;
+  }
+
+  is_visited[i][j] = true;
+
+  node_ptr = node_ptr->children_[static_cast<size_t>(letter)];
+  if (node_ptr->is_end_of_word_)
+  {
+    //found_words
+  }
+
+  VectorOfCoordinates neighbors {
+    get_neighbors(i, j, board.size(), board[0].size())};
+
+  for (const auto neighbor : neighbors)
+  {
+    explore(neighbor[0], neighbor[1], board, node_ptr, is_visited, found_words);
+  }
+
+  // At the end, we must mark as unvisited the starting point.
+  is_visited[i][j] = false;
 }
 
 } // namespace BoggleBoard

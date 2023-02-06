@@ -168,6 +168,17 @@ BOOST_AUTO_TEST_CASE(DefaultConstructs)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DefaultConstructsNodeToNullPtr)
+{
+  Trie<alphabet_size> t {};
+
+  BOOST_TEST(t.get_root_ptr()->children_[0] == nullptr);
+  BOOST_TEST(t.get_root_ptr()->children_[1] == nullptr);
+  BOOST_TEST(t.get_root_ptr()->children_[alphabet_size - 1] == nullptr);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(InsertAddsWords)
 {
   Trie<alphabet_size> t {};
@@ -244,6 +255,30 @@ BOOST_AUTO_TEST_CASE(CanBeTraversedFromRoot)
   BOOST_TEST(current_ptr->children_ != nullptr);
   BOOST_TEST(!current_ptr->is_end_of_word_);
   current_ptr = current_ptr->children_[static_cast<std::size_t>('e')];
+  BOOST_TEST(current_ptr != nullptr);
+  BOOST_TEST(current_ptr->is_end_of_word_);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IsInChildrenFindsLetter)
+{
+  Trie<alphabet_size> t {};
+
+  for (const string& word: sample_input_words)
+  {
+    t.insert(word);
+  }
+
+  Trie<alphabet_size>::Node* current_ptr {t.get_root_ptr()};
+  BOOST_TEST(current_ptr->is_in_children('t'));
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('t')];
+  BOOST_TEST(current_ptr->is_in_children('h'));
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('h')];
+  BOOST_TEST(current_ptr->is_in_children('i'));
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('i')];
+  BOOST_TEST(current_ptr->is_in_children('s'));
+  current_ptr = current_ptr->children_[static_cast<std::size_t>('s')];
   BOOST_TEST(current_ptr != nullptr);
   BOOST_TEST(current_ptr->is_end_of_word_);
 }

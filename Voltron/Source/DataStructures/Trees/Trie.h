@@ -136,6 +136,13 @@ class Trie
           is_end_of_word_{false}
         {}
 
+        bool is_in_children(const char c) const
+        {
+          const std::size_t index {static_cast<std::size_t>(c)};
+
+          return children_[index] == nullptr ? false : true;
+        }
+
         Node* children_[N];
         bool is_end_of_word_;
     };

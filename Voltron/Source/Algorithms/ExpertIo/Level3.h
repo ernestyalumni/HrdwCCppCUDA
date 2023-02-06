@@ -6,6 +6,7 @@
 #include <array>
 #include <cstddef>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace Algorithms
@@ -32,8 +33,10 @@ constexpr std::size_t alphabet_size {128};
 /// node is visited, is O(nm).
 /// Space complexity due to recursion so we have the call stack, is s, for the
 /// largest length of a word as we do depth-first search.
+/// O(nm + ws)
 ///
 /// Time complexity
+/// O(nm * 8^s + ws) time.
 //------------------------------------------------------------------------------
 std::vector<std::string> solve_boggle_board(
   std::vector<std::vector<char>> board,
@@ -75,8 +78,16 @@ VectorOfCoordinates get_neighbors(
   const std::size_t board_height,
   const std::size_t board_length);
 
-void explore(const std::size_t i, const std::size_t j, std::vector<std::vector<bool>>& is_visited);
-//DataStructure::Trees::Tries::Trie<
+//------------------------------------------------------------------------------
+/// \details This is a depth-first search.
+//------------------------------------------------------------------------------
+void explore(
+  const std::size_t i,
+  const std::size_t j,
+  const std::vector<std::vector<char>>& board,
+  const DataStructures::Trees::Tries::Trie<alphabet_size>::Node& node_ptr,
+  std::vector<std::vector<bool>>& is_visited,
+  std::unordered_set<std::string>& found_words);
 
 } // namespace BoggleBoard
 
