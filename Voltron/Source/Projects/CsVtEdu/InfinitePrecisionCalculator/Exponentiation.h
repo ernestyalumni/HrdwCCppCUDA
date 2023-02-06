@@ -17,37 +17,6 @@ using DoublyLinkedList = DataStructures::LinkedLists::DoublyLinkedList<T>;
 template <typename T>
 using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 
-template <typename T, typename>
-void recursive_exponentiation(
-  const DoublyLinkedList<T>& base,
-  const int exponent,
-  DoublyLinkedList<T>& previous_result,
-  DoublyLinkedList<T>& result);
-
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-void exponentiate(
-  const DoublyLinkedList<T>& base,
-  const int exponent,
-  DoublyLinkedList<T>& result)
-{
-  if (exponent <= 0)
-  {
-    result.clear();
-    result.push_front(static_cast<T>(0));
-    return;
-  }
-
-  if (exponent == 1)
-  {
-    result = base;
-    return;
-  }
-
-  DoublyLinkedList<T> previous_result {base};
-
-  recursive_exponentiation<T>(base, exponent, previous_result, result);
-}
-
 template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 void recursive_exponentiation(
   const DoublyLinkedList<T>& base,
@@ -71,6 +40,39 @@ void recursive_exponentiation(
     static_cast<T>(0)};
 
   recursive_exponentiation(base, exponent - 1, previous_result, result);
+}
+
+/* g++ 11 Ubuntu cannot resolve forward declaration.
+template <typename T, typename>
+void recursive_exponentiation(
+  const DoublyLinkedList<T>& base,
+  const int exponent,
+  DoublyLinkedList<T>& previous_result,
+  DoublyLinkedList<T>& result);
+*/
+
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+void exponentiate(
+  const DoublyLinkedList<T>& base,
+  const int exponent,
+  DoublyLinkedList<T>& result)
+{
+  if (exponent <= 0)
+  {
+    result.clear();
+    result.push_front(static_cast<T>(0));
+    return;
+  }
+
+  if (exponent == 1)
+  {
+    result = base;
+    return;
+  }
+
+  DoublyLinkedList<T> previous_result {base};
+
+  recursive_exponentiation<T>(base, exponent, previous_result, result);
 }
 
 } // namespace InfinitePrecisionCalculator

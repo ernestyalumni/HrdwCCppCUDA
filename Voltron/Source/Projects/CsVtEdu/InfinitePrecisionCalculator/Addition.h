@@ -15,36 +15,6 @@ namespace InfinitePrecisionCalculator
 template <typename T>
 using Node = DataStructures::LinkedLists::DoublyLinkedList<T>::Node;
 
-template <typename T, typename>
-void recursive_addition(
-  Node<T>* operand_ptr_1,
-  Node<T>* operand_ptr_2,
-  Node<T>* previous_1,
-  const T carry_value);
-
-//------------------------------------------------------------------------------
-/// \details
-/// cf. https://en.cppreference.com/w/cpp/types/is_integral value is bool.
-/// cf. https://en.cppreference.com/w/cpp/types/enable_if
-/// template <bool B, class T = void>
-/// struct enable_if
-/// type - either T or no such member, depending on value of B.
-/// template <bool B, class T = void>
-/// using enable_if_t = typename enable_if<B, T>::type;
-/// \return void, but operand1 becomes mutated with the resulting summation.
-//------------------------------------------------------------------------------
-template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
-void addition(
-  DataStructures::LinkedLists::DoublyLinkedList<T>& operand1,
-  DataStructures::LinkedLists::DoublyLinkedList<T>& operand2)
-{
-  recursive_addition<T>(
-    operand1.head(),
-    operand2.head(),
-    nullptr,
-    static_cast<T>(0));
-}
-
 //------------------------------------------------------------------------------
 /// \details Assume that the resulting summation is to reside on operand 1.
 //------------------------------------------------------------------------------
@@ -123,6 +93,38 @@ void recursive_addition(
     operand_ptr_2->next_,
     operand_ptr_1,
     new_carry_value);
+}
+
+/* g++ 11 Ubuntu cannot resolve forward declaration.
+template <typename T, typename>
+void recursive_addition(
+  Node<T>* operand_ptr_1,
+  Node<T>* operand_ptr_2,
+  Node<T>* previous_1,
+  const T carry_value);
+*/
+
+//------------------------------------------------------------------------------
+/// \details
+/// cf. https://en.cppreference.com/w/cpp/types/is_integral value is bool.
+/// cf. https://en.cppreference.com/w/cpp/types/enable_if
+/// template <bool B, class T = void>
+/// struct enable_if
+/// type - either T or no such member, depending on value of B.
+/// template <bool B, class T = void>
+/// using enable_if_t = typename enable_if<B, T>::type;
+/// \return void, but operand1 becomes mutated with the resulting summation.
+//------------------------------------------------------------------------------
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+void addition(
+  DataStructures::LinkedLists::DoublyLinkedList<T>& operand1,
+  DataStructures::LinkedLists::DoublyLinkedList<T>& operand2)
+{
+  recursive_addition<T>(
+    operand1.head(),
+    operand2.head(),
+    nullptr,
+    static_cast<T>(0));
 }
 
 } // namespace InfinitePrecisionCalculator

@@ -3,6 +3,7 @@
 
 #include "DataStructures/Trees/Trie.h"
 
+#include <array>
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -14,6 +15,8 @@ namespace ExpertIo
 
 namespace BoggleBoard
 {
+
+constexpr std::size_t alphabet_size {128};
 
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/problems/word-search-ii/
@@ -32,7 +35,7 @@ namespace BoggleBoard
 ///
 /// Time complexity
 //------------------------------------------------------------------------------
-std::vector<std::string> boggle_board(
+std::vector<std::string> solve_boggle_board(
   std::vector<std::vector<char>> board,
   std::vector<std::string> words);
 
@@ -58,6 +61,22 @@ class TraverseBoggleBoard
       std::vector<std::vector<char>>& board,
       std::vector<std::vector<bool>>& is_visited);
 };
+
+using VectorOfCoordinates = std::vector<std::array<std::size_t, 2>>;
+
+//------------------------------------------------------------------------------
+/// \details Assume i, j are legitimate coordinates on the board.
+/// We cannot use template parameters for the board's dimensions, because
+/// template parameters need to be constexpr values for constant parameters.
+//------------------------------------------------------------------------------
+VectorOfCoordinates get_neighbors(
+  const std::size_t i,
+  const std::size_t j,
+  const std::size_t board_height,
+  const std::size_t board_length);
+
+void explore(const std::size_t i, const std::size_t j, std::vector<std::vector<bool>>& is_visited);
+//DataStructure::Trees::Tries::Trie<
 
 } // namespace BoggleBoard
 

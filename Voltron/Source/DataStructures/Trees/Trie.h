@@ -23,6 +23,9 @@ namespace GeeksForGeeks
 /// for each letter, you decide if it's one of 26 or N letters.
 ///
 /// For trie, a word can be searched in O(M) time. Penalty is storage.
+///
+/// If you use TrieNode directly, keep in mind user will have to do the garbage
+/// collection, destruction, manually.
 //------------------------------------------------------------------------------
 template <std::size_t ALPHABET_SIZE>
 class TrieNode
