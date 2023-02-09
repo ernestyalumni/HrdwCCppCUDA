@@ -26,7 +26,7 @@ from Voltron.Algorithms.LeetCode import UTF8Validation
 import pytest
 
 
-def test_sample_case():
+def test_sample_case_on_smallest_difference():
     array_one = [-1, 5, 10, 20, 28, 3]
     array_two = [26, 134, 135, 15, 17]
 
