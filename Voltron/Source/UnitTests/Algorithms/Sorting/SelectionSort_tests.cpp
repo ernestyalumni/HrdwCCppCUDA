@@ -8,6 +8,7 @@ using Algorithms::Sorting::SelectionSort::minimum_value_index;
 using Algorithms::Sorting::SelectionSort::selection_sort_recursive;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
+BOOST_AUTO_TEST_SUITE(Sorting)
 BOOST_AUTO_TEST_SUITE(SelectionSort_tests)
 
 //------------------------------------------------------------------------------
@@ -44,4 +45,5 @@ BOOST_AUTO_TEST_CASE(SelectionSortRecursivelySortsCorrectly)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // SelectionSort_tests
+BOOST_AUTO_TEST_SUITE_END() // Sorting
 BOOST_AUTO_TEST_SUITE_END() // Algorithms

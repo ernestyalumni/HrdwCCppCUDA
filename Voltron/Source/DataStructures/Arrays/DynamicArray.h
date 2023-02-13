@@ -4,6 +4,7 @@
 #include <algorithm> // std::copy, std::fill, std::max
 #include <cassert>
 #include <cstddef> // std::size_t
+#include <initializer_list>
 
 namespace DataStructures
 {
@@ -213,7 +214,7 @@ class DynamicArray
 
     void resize_capacity()
     {
-      // This is an old version; TODO: device to remove code comments or not.
+      // This is an old version; TODO: decide to remove code comments or not.
       /*
       capacity_ = std::max(2 * size_, default_capacity_);
 
@@ -279,6 +280,16 @@ class PrimitiveDynamicArray
       capacity_{std::max(initial_size, default_capacity_)}
     {
       std::fill(data_, data_ + size_, value);
+    }
+
+    void initialize(const std::initializer_list<T> list)
+    {
+      delete[] data_;
+
+      size_ = list.size();
+      capacity_ = list.size();
+      data_ = new T[size_];
+      std::copy(list.begin(), list.end(), data_);
     }
 
     //--------------------------------------------------------------------------

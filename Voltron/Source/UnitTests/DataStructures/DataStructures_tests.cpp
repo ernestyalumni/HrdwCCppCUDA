@@ -168,25 +168,23 @@ std::vector<T> copy_stack(const std::stack<T>& s)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DemonstrateStdStack)
 {
-  {
-    // LIFO
-    std::stack<int> s;
-    s.push(10);
-    s.push(30);
-    s.push(20);
-    s.push(5);
-    s.push(1);
+  // LIFO
+  std::stack<int> s;
+  s.push(10);
+  s.push(30);
+  s.push(20);
+  s.push(5);
+  s.push(1);
 
-    std::vector<int> result {copy_stack(s)};
+  std::vector<int> result {copy_stack(s)};
 
-    BOOST_TEST((result == std::vector<int> {1, 5, 20, 30, 10}));
+  BOOST_TEST((result == std::vector<int> {1, 5, 20, 30, 10}));
 
-    BOOST_TEST(s.size() == 5);
-    BOOST_TEST(s.top() == 1);
-    s.pop();
-    result = copy_stack(s);
-    BOOST_TEST((result == std::vector<int> {5, 20, 30, 10}));        
-  }
+  BOOST_TEST(s.size() == 5);
+  BOOST_TEST(s.top() == 1);
+  s.pop();
+  result = copy_stack(s);
+  BOOST_TEST((result == std::vector<int> {5, 20, 30, 10}));
 }
 
 //------------------------------------------------------------------------------
@@ -261,7 +259,6 @@ BOOST_AUTO_TEST_CASE(DemonstrateStdDeque)
 
     BOOST_TEST(d.back() == 8);
   }
-
 }
 
 BOOST_AUTO_TEST_SUITE_END() // StdDeque_tests

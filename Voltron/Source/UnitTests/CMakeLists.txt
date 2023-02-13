@@ -34,7 +34,9 @@ ADD_EXECUTABLE(Check
   Algorithms/Permutations_tests.cpp
   Algorithms/Recursion_tests.cpp
   Algorithms/Search_tests.cpp
+  Algorithms/Sorting/KeyIndexedCounting_tests.cpp
   Algorithms/Sorting/SelectionSort_tests.cpp
+  Algorithms/Sorting/Strings/LeastSignificantDigitFirst_tests.cpp
   Algorithms/Sorting_tests.cpp
   Categories/AlgebraicDataTypes/ProgramStateExample_tests.cpp
   Categories/AlgebraicDataTypes/WordCountingState_tests.cpp
@@ -97,6 +99,7 @@ ADD_EXECUTABLE(Check
   Cpp/Utilities/SignalHandler_tests.cpp
   Cpp/Utilities/StdInitializerList_tests.cpp
   Cpp/Utilities/SuperBitSet_tests.cpp
+  DataStructures/Alphabet_tests.cpp
   DataStructures/Arrays/ArrayQuestions_tests.cpp
   DataStructures/Arrays/Array_tests.cpp
   DataStructures/Arrays/DynamicArray_tests.cpp

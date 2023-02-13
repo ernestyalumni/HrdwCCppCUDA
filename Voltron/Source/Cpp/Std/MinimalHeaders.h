@@ -23,9 +23,4 @@
 #include <sstream>
 #include <string>
 
-namespace Std
-{
-
-} // namespace Std
-
 #endif // CPP_STD_MINIMAL_HEADERS_H

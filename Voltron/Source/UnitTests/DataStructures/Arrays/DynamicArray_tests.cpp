@@ -1,5 +1,6 @@
 #include "DataStructures/Arrays/DynamicArray.h"
 
+#include <algorithm> // std::copy
 #include <boost/test/unit_test.hpp>
 #include <cstddef> // std::size_t
 #include <string>
@@ -76,7 +77,7 @@ BOOST_AUTO_TEST_CASE(AppendsPastDefaultSize)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(ConstructsWithStringType)
+BOOST_AUTO_TEST_CASE(ConstructsWithStdStringType)
 {
   DynamicArray<string> a {};
 
@@ -97,6 +98,16 @@ BOOST_AUTO_TEST_CASE(ConstructsWithStringType)
 BOOST_AUTO_TEST_SUITE_END() // DynamicArray_tests
 
 BOOST_AUTO_TEST_SUITE(PrimitiveDynamicArray_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConstructsWithStdStringType)
+{
+  PrimitiveDynamicArray<string> a (9);
+
+  BOOST_TEST(a.size() == 0);
+  BOOST_TEST(a.capacity() == 9);
+}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -168,6 +179,64 @@ BOOST_AUTO_TEST_CASE(MoveAssignmentMovesValuesAndEmptiesSource)
 
   BOOST_TEST(!a.has_data());
   BOOST_TEST(a.size() == 0);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(InitializesWithStrings)
+{
+  PrimitiveDynamicArray<string> a (9);
+
+  a.initialize({
+    "4PGC938",
+    "2IYE230",
+    "3CIO720",
+    "1ICK750",
+    "1OHV845",
+    "4JZY524",
+    "1ICK750",
+    "3CIO720",
+    "1OHV845",
+    "1OHV845",
+    "2RLA629",
+    "2RLA629",
+    "3ATW723"});
+
+  BOOST_TEST(a.size() == 13);
+  BOOST_TEST(a.capacity() == 13);
+  BOOST_TEST(a[0] == "4PGC938");
+  BOOST_TEST(a[1] == "2IYE230");
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StdCopyWorksWithBeginAndEnd)
+{
+  PrimitiveDynamicArray<string> old_data {};
+  old_data.initialize({
+    "Armed and dangerous",
+    "ain't too many can bang with us",
+    "Straight up weed",
+    "no angel dust",
+    "label us Notorious"});
+
+  BOOST_TEST(old_data[0] == "Armed and dangerous");
+  BOOST_TEST(old_data[1] == "ain't too many can bang with us");
+  BOOST_TEST(old_data[4] == "label us Notorious");
+
+  PrimitiveDynamicArray<string> new_data {};
+  new_data.initialize({
+    "Spit your game",
+    "talk your ish",
+    "Grab your gat",
+    "call your clique",
+    "Squeeze your clip, hit the right one"});
+
+  std::copy(new_data.begin(), new_data.end(), old_data.begin());
+
+  BOOST_TEST(old_data[0] == "Spit your game");
+  BOOST_TEST(old_data[1] == "talk your ish");
+  BOOST_TEST(old_data[4] == "Squeeze your clip, hit the right one");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // PrimitiveDynamicArray_tests
