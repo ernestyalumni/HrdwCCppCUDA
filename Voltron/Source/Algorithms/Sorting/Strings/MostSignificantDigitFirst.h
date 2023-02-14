@@ -15,74 +15,33 @@ namespace Strings
 namespace MostSignificantDigitFirst
 {
 
-static constexpr
-
-} // namespace MostSignificantDigitFirst
-
-//------------------------------------------------------------------------------
-/// See https://github.com/kevin-wayne/algs4/blob/master/src/main/java/edu/princeton/cs/algs4/MSD.java
-/// \brief Sort an array of strings, on the leading "word_length" characters.
-/// See pp. 706, Ch. 5, Algorithms, 4th Ed. Robert Sedgewick, Kevin Wayne.
-/// See pp. 709. O(WN) time complexity. An input array of N strings that each
-/// have W characters has a total of WN characters, so running time of Least
-/// Significant Digit string sort is linear in size of input.
-//------------------------------------------------------------------------------
-template <typename ContainerT>
-void most_significant_digit_first_sort(
-    ContainerT& a,
-    const std::size_t word_length)
+int char_at(const std::string& s, const std::size_t d)
 {
-  constexpr std::size_t extended_ascii_alphabet_size {256};
+  return d < s.length() ? static_cast<int>(s[d]) : -1;
+}
 
-  ContainerT auxiliary_array (a.size());
+template <typename ContainerT>
+void recursive_step(
+  ContainerT& a,
+  const std::size_t low,
+  const std::size_t high,
+  const std::size_t d)
+{
+  // static means value is maintained between function calls.
+  // See https://stackoverflow.com/questions/177437/what-does-const-static-mean-in-c-and-c  
+  // This is the smallest subarray size before we use insertion sort.
+  static constexpr std::size_t cutoff {15};
 
-  // Sort by key-indexed counting on dth character.
-  for (int d {static_cast<int>(word_length) - 1}; d >= 0; --d)
+  if (high <= low + cutoff)
   {
-    // Compute frequency counts.
-    int count[extended_ascii_alphabet_size + 1] {};
-    std::fill(count, count + extended_ascii_alphabet_size + 1, 0);
-
-    for (auto& entry : a)
-    {
-      count[static_cast<std::size_t>(entry[d]) + 1] += 1;
-    }
-
-    // Compute cumulates.
-    // This gives the index, for each "key" or "letter", to start "adding from"
-    // on the auxiliary array.
-    for (std::size_t r {0}; r <= extended_ascii_alphabet_size; ++r)
-    {
-      count[r + 1] += count[r];
-    }
-
-    // Move data, i.e. distribute the data according to how it should be sorted.
-    for (std::size_t i {0}; i < a.size(); ++i)
-    {
-      const std::size_t key_index {static_cast<std::size_t>(a[i][d])};
-
-      auxiliary_array[count[key_index]] = a[i];
-
-      // Increment count entry for where next item with key value r should be
-      // placed.
-      count[key_index] += 1;
-    }
-
-    // Copy back.
-    // TODO: Why doesn't .end() work with std::copy?
-    std::copy(
-      auxiliary_array.begin(),
-      auxiliary_array.begin() + a.size(),
-      a.begin());
-    // This works as well.
-    /*
-    for (std::size_t i {0}; i < a.size(); ++i)
-    {
-      a[i] = auxiliary_array[i];
-    }
-    */
+    insertion_sort(a, low, high, d);
+    return;
   }
 }
+
+
+
+} // namespace MostSignificantDigitFirst
 
 } // namespace Strings
 } // namespace Sorting

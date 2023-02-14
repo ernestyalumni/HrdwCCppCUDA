@@ -38,7 +38,6 @@ ListNode* insertion_sort_list(ListNode* head)
     return head;
   }
 
-
   ListNode* new_head {head};
   ListNode* temp_ptr {head->next_};
   new_head->next_ = nullptr;
