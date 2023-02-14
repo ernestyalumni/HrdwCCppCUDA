@@ -38,6 +38,8 @@ ADD_EXECUTABLE(Check
   Algorithms/Sorting/KeyIndexedCounting_tests.cpp
   Algorithms/Sorting/SelectionSort_tests.cpp
   Algorithms/Sorting/Strings/LeastSignificantDigitFirst_tests.cpp
+  Algorithms/Sorting/Strings/MostSignificantDigitFirst_tests.cpp
+  Algorithms/Sorting/Strings/TestValues.cpp
   Algorithms/Sorting_tests.cpp
   Categories/AlgebraicDataTypes/ProgramStateExample_tests.cpp
   Categories/AlgebraicDataTypes/WordCountingState_tests.cpp

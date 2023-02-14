@@ -19,4 +19,5 @@ ADD_LIBRARY(Algorithms
   PeakFinding/LoadPeakProblem.cpp
   Permutations.cpp
   Recursion.cpp
+  Sorting/Strings/MostSignificantDigitFirst.cpp
   QuickSort.cpp)
