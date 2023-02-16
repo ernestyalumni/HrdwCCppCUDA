@@ -16,15 +16,26 @@ namespace MostSignificantDigitFirst
 {
 
 //------------------------------------------------------------------------------
-/// \brief Obtain
+/// \brief Obtain integer value of the character at position d (0-based
+/// counting) for the given string.
+/// \return -1 if specified character position is past the end of the string.
 //------------------------------------------------------------------------------
 int char_at(const std::string& s, const std::size_t d);
 
 //------------------------------------------------------------------------------
 /// \details Start comparing from the dth letter or, i.e. dth character.
+/// Strings that have the same characters in the same order, but for the string
+/// that is of shorter length (so it's "truncated"), then it's considered to be
+/// "less than" the other string.
 //------------------------------------------------------------------------------
 bool is_less(const std::string& v, const std::string& w, const std::size_t d);
 
+//------------------------------------------------------------------------------
+/// \details Avoids the cost of reexamining characters that we know to be equal,
+/// so extra argument d so that we assume the first d characters of all strings
+/// to be sorted and known to be equal (though this doesn't depend on this fact
+/// to be true or not).
+//------------------------------------------------------------------------------
 template <typename ContainerT>
 void insertion_sort(
   ContainerT& a,
@@ -64,6 +75,8 @@ void recursive_step(
     return;
   }
 
+  // 0 already signifies "end of string".
+  // Initialize array of the alphabet size, + 2.
   int count[R + 2] {};
 
   // Compute frequency counts.
@@ -101,6 +114,12 @@ void recursive_step(
   {
     recursive_step(a, low + count[r], low + count[r + 1] - 1, d + 1);
   }
+}
+
+template <typename ContainerT>
+void most_significant_digit_first_sort(ContainerT& a)
+{
+  recursive_step(a, 0, a.size() - 1, 0);
 }
 
 } // namespace MostSignificantDigitFirst
