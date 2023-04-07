@@ -24,5 +24,7 @@ mod tests
     v.push(3);
 
     assert!(!v.is_empty());
+
+    assert_eq!(v[0], 3);
   }
 }

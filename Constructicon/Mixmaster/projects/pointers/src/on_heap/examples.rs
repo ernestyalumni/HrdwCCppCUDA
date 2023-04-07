@@ -11,6 +11,13 @@ mod tests
 
     assert_eq!(*b, 5);
     assert_eq!(*b as i32, 5);
-
   }
+
+  //----------------------------------------------------------------------------
+  /// \brief bytes crate example
+  /// \ref https://github.com/paulkernfeld/contiguous-data-in-rust
+  //----------------------------------------------------------------------------
+
+  #[test]
+  fn bytes
 }
