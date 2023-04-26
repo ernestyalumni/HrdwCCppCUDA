@@ -86,7 +86,6 @@ constexpr decltype(auto) forward_a_function(Function&& f)
 
 BOOST_AUTO_TEST_SUITE(VittorioRomeoExamples)
 
-
 BOOST_AUTO_TEST_SUITE_END() // VittorioRomeoExamples
 
 // cf. https://en.cppreference.com/w/cpp/types/is_invocable
