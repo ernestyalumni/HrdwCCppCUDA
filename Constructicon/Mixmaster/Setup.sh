@@ -25,3 +25,6 @@ select yn in "Yes" "No"; do
         No ) exit;;
     esac
 done
+
+# Run the following to access the Rust book offline
+# rustup docs --book 
