@@ -12,6 +12,8 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 ADD_EXECUTABLE(Check
   Main.cpp
   Algorithms/BinarySearch_tests.cpp
+  Algorithms/Bits/BitwiseOperations_tests.cpp
+  Algorithms/Bits/BooleanAlgebra_tests.cpp
   Algorithms/Bits/OnesComplement_tests.cpp
   Algorithms/Bits/PrintBytes_tests.cpp
   Algorithms/Bits/Radix_tests.cpp
@@ -185,7 +187,6 @@ ADD_EXECUTABLE(Check
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
   Utilities/ArithmeticType_tests.cpp
   Utilities/BitsStream_tests.cpp
-  Utilities/BooleanAlgebra_tests.cpp
   Utilities/Debug_tests.cpp
   Utilities/ErrorHandling/ErrorHandling_tests.cpp
   Utilities/ErrorHandling/ErrorNumber_tests.cpp
