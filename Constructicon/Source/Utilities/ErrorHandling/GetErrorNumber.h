@@ -3,12 +3,12 @@
 
 #include <cerrno>
 #include <cstring> // std::strerror
+#include <string>
 
 namespace Utilities
 {
 namespace ErrorHandling
 {
-
 
 //------------------------------------------------------------------------------
 /// \brief Get the error number from the errno variable.
@@ -29,7 +29,7 @@ class GetErrorNumber
       error_number_{errno}
     {}
 
-    void get_error_number()
+    inline void get_error_number()
     {
       error_number_ = errno;
     }
@@ -41,11 +41,10 @@ class GetErrorNumber
     /// errnum usually acquired from errno variable.
     /// \ref https://en.cppreference.com/w/cpp/string/byte/strerror
     //--------------------------------------------------------------------------
-    std::string as_string() const
+    inline std::string as_string() const
     {
       return std::string{std::strerror(error_number_)};
     }
-
 
   private:
 
