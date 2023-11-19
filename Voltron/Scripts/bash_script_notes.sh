@@ -8,12 +8,34 @@
 
 # Do chmod +x bash_script_notes.sh too
 
-# $# is number of arguments. -gt is greater than.
-if [ $# -gt 0 ]; then
-  echo "$# number of arguments, Hello $1"
-else
-  echo "${#} number of arguments"
-fi
+get_number_of_arguments()
+{
+  # $# is number of arguments. -gt is greater than.
+  if [ $# -gt 0 ]; then
+    echo "$# number of arguments, Hello $1"
+  else
+    echo "${#} number of arguments"
+  fi
+}
+
+check_directory_contains_name()
+{
+  # Get current directory path.
+  current_dir="$PWD"
+  echo "Current directory: '$PWD'"
+
+  # Specify directory name you want to check for
+  target_dir="HrdwCCppCUDA"
+
+  # Check if current directory ends with target directory name.
+  if [[ "$current_dir" == *"/$target_dir" ]]; then
+    echo "Current directory ends with '$target_dir'. Performing some operations."
+    return 0
+  else
+    echo "Current directory does not end with '$target_dir'. Skipping operations."
+    return 1
+  fi
+}
 
 # cf. Lecture 02 - Shell Scripting, 15-123S09 CS CMU
 
@@ -40,3 +62,12 @@ fi
 # n1 -eq n2
 # n1 -ne n2
 # n1 -lt n2
+
+# Call function.
+# https://superuser.com/questions/694501/what-does-mean-as-a-bash-script-function-parameter
+# $@ variable expands to all the parameters used when call the function. $@ has
+# each parameter as a separate quoted string, whereas $* has all parameters as a
+# single string.
+get_number_of_arguments "$@"
+
+check_directory_contains_name
