@@ -14,7 +14,6 @@ sighandler_t* SignalHandler::handle_signal(
   sighandler_t* handler)
 {
   struct sigaction action {};
-  struct sigaction old_action {};
 
   action.sa_handler = *handler;
 
@@ -40,12 +39,12 @@ sighandler_t* SignalHandler::handle_signal(
   // SIGSTOP.
   // If act is non-NULL, the new action for signal signum is installed from act.
   // If oldact is non-NULL, the previous action is saved in oldact.
-  if (sigaction(signal_number, &action, &old_action) < 0)
+  if (sigaction(signal_number, &action, &old_action_) < 0)
   {
     GetErrorNumber get_error_number {};
     std::cerr << get_error_number.as_string() << " Signal error\n";
   }
-  return (old_action.sa_handler);
+  return &old_action_.sa_handler;
 }
 
 } // namespace ErrorHandling

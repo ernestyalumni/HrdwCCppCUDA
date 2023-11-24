@@ -13,14 +13,22 @@ namespace ErrorHandling
 /// Programmer's Perspective. Bryant and O'Hallaron.
 /// http://csapp.cs.cmu.edu/3e/code.html
 /// http://csapp.cs.cmu.edu/3e/ics3/code/include/csapp.h
+/// This is a replacement for the Signal function in csapp.c, which is a wrapper
+/// for a Unix signal function.
 //------------------------------------------------------------------------------
 class SignalHandler
 {
   public:
 
-    static sighandler_t* handle_signal(
+    SignalHandler():
+      old_action_{}
+    {}
+
+    sighandler_t* handle_signal(
       const int signal_number,
       sighandler_t* handler);
+
+    struct sigaction old_action_;
 };
 
 } // namespace ErrorHandling
