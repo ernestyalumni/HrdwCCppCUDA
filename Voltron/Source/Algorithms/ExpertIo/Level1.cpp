@@ -148,7 +148,6 @@ bool is_valid_subsequence(vector<int> array, vector<int> sequence)
   return false;
 }
 
-
 vector<int> sorted_squared_array_algorithmic(vector<int> array)
 {
   // https://en.cppreference.com/w/cpp/algorithm/for_each
@@ -506,6 +505,29 @@ int min_unavailable_change(
 */
 
 } // namespace EasyNonConstructibleChange
+
+vector<vector<int>> transpose_matrix(vector<vector<int>> matrix)
+{
+  const size_t M {matrix.size()};
+  const size_t N {matrix[0].size()};
+
+  // O(M*N) space complexity.
+  vector<vector<int>> transposed_matrix {};
+
+  // O(M*N) time complexity.
+  for (size_t i {0}; i < N; ++i)
+  {
+    vector<int> row {};
+    for (size_t j {0}; j < M; ++j)
+    {
+      row.push_back(matrix[j][i]);
+    }
+
+    transposed_matrix.push_back(row);
+  }
+
+  return transposed_matrix;
+}
 
 namespace NthFibonacci
 {

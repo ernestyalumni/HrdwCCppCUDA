@@ -51,8 +51,7 @@ BOOST_AUTO_TEST_CASE(CaptureCoutAcceptsLocalOStringStream)
 
   cout.rdbuf(cout_buffer_ptr);
 
-  const std::string expected_message {"some message"};
-  EXPECT_EQ(local_oss.str(), expected_message);
+  BOOST_TEST(local_oss.str() == "some message");
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Capture_Cout_tests

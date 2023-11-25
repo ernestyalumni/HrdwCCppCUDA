@@ -409,10 +409,9 @@ class WordGameConstants:
     		'w': 4,
     		'x': 8,
     		'y': 4,
-    		'z': 10
-    }
+    		'z': 10}
 
-    Wordlist_Filename = "words.txt"
+		Wordlist_Filename = "words.txt"
 
 
 # -----------------------------------

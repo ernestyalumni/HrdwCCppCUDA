@@ -1,6 +1,51 @@
 from collections import OrderedDict
 
-################################################################################
+def validate_subsequence(array, sequence):
+    """
+    \details Subsequence doesn't have to be adjacent. They have to appear in the
+    same order.
+
+    We're going to have to traverse both of the sequences.
+    Subsequence cares about order so we look for the first element first. Thus,
+    use a "pointer."
+    """
+
+    # O(1) space complexity.
+    array_index = 0
+    sequence_index = 0
+    # O(N) time.
+    while array_index < len(array) and sequence_index < len(sequence):
+        if array[array_index] == sequence[sequence_index]:
+            sequence_index += 1
+        array_index +=1
+
+    # Condition of success is if this is true:
+    return sequence_index == len(sequence)
+
+
+def validate_subsequence_with_for_loop(array, sequence):
+    """
+    \details Subsequence doesn't have to be adjacent. They have to appear in the
+    same order.
+
+    We're going to have to traverse both of the sequences.
+    Subsequence cares about order so we look for the first element first. Thus,
+    use a "pointer."
+    """
+
+    # O(1) space complexity.
+    sequence_index = 0
+    # O(N) time.
+
+    for value in array:
+        if sequence_index == len(sequence):
+            break
+        if sequence[sequence_index] == value:
+            sequence_index += 1
+
+    # Condition of success is if this is true:
+    return sequence_index == len(sequence)
+
 
 def two_number_sum(array, target_sum):
 

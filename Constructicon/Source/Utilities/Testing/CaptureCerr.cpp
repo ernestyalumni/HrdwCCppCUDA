@@ -1,11 +1,11 @@
-#include "CaptureCout.h"
+#include "CaptureCerr.h"
 
 #include <iostream>
 #include <sstream> // std::ostringstream
 #include <streambuf>
 #include <utility> // std::pair
 
-using std::cout;
+using std::cerr;
 using std::ostringstream;
 using std::streambuf;
 
@@ -25,35 +25,35 @@ namespace Testing
 /// returns null pointer.
 //------------------------------------------------------------------------------
 
-streambuf* capture_cout(ostringstream& local_oss)
+streambuf* capture_cerr(ostringstream& local_oss)
 {
-  streambuf* cout_buffer {cout.rdbuf()};
+  streambuf* cerr_buffer {cerr.rdbuf()};
 
-  cout.rdbuf(local_oss.rdbuf());
+  cerr.rdbuf(local_oss.rdbuf());
 
-  return cout_buffer;
+  return cerr_buffer;
 }
 
-CaptureCout::CaptureCout():
+CaptureCerr::CaptureCerr():
   local_oss_{},
-  cout_buffer_ptr_{cout.rdbuf()} // Save previous buffer.
+  cerr_buffer_ptr_{cerr.rdbuf()} // Save previous buffer.
 {
   capture_locally();
 }
 
-CaptureCout::~CaptureCout()
+CaptureCerr::~CaptureCerr()
 {
-  this->restore_cout();
+  this->restore_cerr();
 }
 
-void CaptureCout::capture_locally()
+void CaptureCerr::capture_locally()
 {
-  cout.rdbuf(local_oss_.rdbuf());
+  cerr.rdbuf(local_oss_.rdbuf());
 }
 
-void CaptureCout::restore_cout()
+void CaptureCerr::restore_cerr()
 {
-  cout.rdbuf(cout_buffer_ptr_);
+  cerr.rdbuf(cerr_buffer_ptr_);
 }
 
 } // namespace Testing

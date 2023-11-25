@@ -10,6 +10,8 @@ pytest Utilities/test_level_easy.py
 from Voltron.Algorithms.level_easy import (
     # In order of appearance or usage.
     two_number_sum,
+    validate_subsequence,
+    validate_subsequence_with_for_loop,
     get_nth_fibonacci_recursive,
     fibonacci_no_branch,
     get_nth_fibonacci_recursive_no_branch,
@@ -72,6 +74,13 @@ def test_two_number_sum():
     target_sum = 10
 
     two_number_sum(array, target_sum)
+
+
+def test_validate_subsequence():
+    example_array = [5, 1, 22, 25, 6, -1, 8, 10]
+    example_sequence = [1, 6, -1, 10]
+    assert validate_subsequence(example_array, example_sequence)
+    assert validate_subsequence_with_for_loop(example_array, example_sequence)
 
 
 def test_get_nth_fibonacci_recursive():

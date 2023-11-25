@@ -54,7 +54,6 @@ std::vector<int> sorted_squared_array_algorithmic(std::vector<int> array);
 std::vector<int> sorted_squared_array_with_selection_sort(
   std::vector<int> array);
 
-
 //------------------------------------------------------------------------------
 /// \details Key observation:
 /// We know that the array is already sorted. It's a strong hint that problem
@@ -90,6 +89,9 @@ int min_unavailable_change(
 */
 
 } // namespace EasyNonConstructibleChange
+
+std::vector<std::vector<int>> transpose_matrix(
+  std::vector<std::vector<int>> matrix);
 
 namespace NthFibonacci
 {

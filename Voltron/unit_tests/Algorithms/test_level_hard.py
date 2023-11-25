@@ -1,7 +1,7 @@
 #from Voltron.Algorithms.level_hard import (
     # In order of usage or appearance.
 
-def create_boggle_board_samples()
+def create_boggle_board_samples():
     
     board = [
         ["t", "h", "i", "s", "i", "s", "a"],
