@@ -49,7 +49,6 @@ BOOST_AUTO_TEST_CASE(DemonstrateString)
     std::string target {"A quick red fox jumps over the lazy dog."};
     BOOST_TEST(a_string == target);
   }
-
 }
 
 BOOST_AUTO_TEST_SUITE_END() // StringExamples
@@ -139,7 +138,6 @@ BOOST_AUTO_TEST_CASE(DemonstrateStdRotate)
     string_stream.str(std::string{});
   }
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // Details_tests
 

@@ -45,9 +45,14 @@ BOOST_AUTO_TEST_CASE(CaptureCoutAcceptsLocalOStringStream)
 {
   ostringstream local_oss;
 
-  //auto cout_buffer_ptr = capture_cout(local_oss);
+  auto cout_buffer_ptr = capture_cout(local_oss);
 
-  //cout << "some message";
+  cout << "some message";
+
+  cout.rdbuf(cout_buffer_ptr);
+
+  const std::string expected_message {"some message"};
+  EXPECT_EQ(local_oss.str(), expected_message);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Capture_Cout_tests
@@ -71,7 +76,6 @@ BOOST_AUTO_TEST_CASE(CaptureLocallyUponConstructionCapturesLocally)
 
   BOOST_TEST(capture_cout.local_oss_.str() == "\n Testing Testing \n");
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // CaptureCoutFixture_tests
 
