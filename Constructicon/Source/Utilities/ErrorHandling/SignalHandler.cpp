@@ -9,9 +9,9 @@ namespace Utilities
 namespace ErrorHandling
 {
 
-sighandler_t* SignalHandler::handle_signal(
+sighandler_t SignalHandler::handle_signal(
   const int signal_number,
-  sighandler_t* handler)
+  sighandler_t handler)
 {
   struct sigaction action {};
 
@@ -44,7 +44,7 @@ sighandler_t* SignalHandler::handle_signal(
     GetErrorNumber get_error_number {};
     std::cerr << get_error_number.as_string() << " Signal error\n";
   }
-  return &old_action_.sa_handler;
+  return old_action_.sa_handler;
 }
 
 } // namespace ErrorHandling

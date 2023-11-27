@@ -24,9 +24,16 @@ class SignalHandler
       old_action_{}
     {}
 
-    sighandler_t* handle_signal(
+    //--------------------------------------------------------------------------
+    /// https://www.gnu.org/software/libc/manual/html_node/Basic-Signal-Handling.html
+    /// 24.3.1. Basic Signal Handling
+    /// sighandler_t - data type of signal handler functions. Signal handlers
+    /// take 1 integer argument specifying the signal number, and have return
+    /// type void. 
+    //--------------------------------------------------------------------------
+    sighandler_t handle_signal(
       const int signal_number,
-      sighandler_t* handler);
+      sighandler_t handler);
 
     struct sigaction old_action_;
 };

@@ -67,6 +67,18 @@ def two_number_sum(array, target_sum):
             break
     return solution
 
+def transpose_matrix(matrix):
+    N = len(matrix[0])
+    M = len(matrix)
+
+    transposed_matrix = []
+    for i in range(N):
+        new_row = []
+        for j in range(M):
+            new_row.append(matrix[j][i])
+        transposed_matrix.append(new_row)
+    return matrix
+
 def get_nth_fibonacci_recursive(n):
     """
     @brief nth number is the sum of the (n - 1)th and (n-2)th numbers.

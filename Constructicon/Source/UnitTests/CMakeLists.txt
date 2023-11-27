@@ -4,7 +4,9 @@ ADD_EXECUTABLE(Check
   Concurrency/ThreadPool_tests.cpp
   Dependencies/RapidJson_tests.cpp
   Dependencies/json_tests.cpp
+  IPC/Sockets/InternetAddress_tests.cpp
   Utilities/AsBits_tests.cpp
+  Utilities/ErrorHandling/SignalHandler_tests.cpp
   Utilities/ErrorHandling/signal_child_handler_tests.cpp
   Utilities/FileIO/Filestream_tests.cpp
   Utilities/FileIO/ProjectPaths_tests.cpp
@@ -17,6 +19,7 @@ ADD_EXECUTABLE(Check
 
 TARGET_LINK_LIBRARIES(Check
   Concurrency
+  IPC
   Utilities
   gtest_main
   nlohmann_json::nlohmann_json
