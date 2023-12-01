@@ -1,12 +1,35 @@
 #include "Algorithms/LeetCode/MediumProblems.h"
 
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <vector>
 
+using Algorithms::LeetCode::LongestPalindrome;
+using std::string;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
+
+BOOST_AUTO_TEST_SUITE(LongestPalindrome_5_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BruteForceFindsLongest)
+{
+  // Example 1
+  {
+    const string s {"babad"};
+    const string expected {"bab"};
+
+    const string result {LongestPalindrome::brute_force(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // LongestPalindrome_5_tests
 
 BOOST_AUTO_TEST_SUITE(NumberOfProvinces_547_tests)
 

@@ -28,6 +28,7 @@ ADD_EXECUTABLE(Check
   Algorithms/HackerRank/QuickSort_tests.cpp
   Algorithms/LeetCode/Arrays/MaxProductOfThreeIntegers_tests.cpp
   Algorithms/LeetCode/Course_Schedule_II_210_tests.cpp
+  Algorithms/LeetCode/HardProblems_tests.cpp
   Algorithms/LeetCode/MediumProblems_tests.cpp
   Algorithms/LeetCode/PrintMatrixSpiral_tests.cpp
   Algorithms/LeetCode/SurroundedRegions_130_tests.cpp
