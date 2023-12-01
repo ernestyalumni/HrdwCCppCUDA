@@ -37,14 +37,16 @@ BOOST_AUTO_TEST_CASE(ConstructsFromSystemError)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DefaultConstructorGetsLatestErrnoValue)
 {
+  errno = 0;
+
   ErrorNumber error_number_0 {};
 
-  BOOST_TEST(error_number_0.error_number() == 13);
-  BOOST_TEST(error_number_0.as_string() == "Permission denied");
+  BOOST_TEST(error_number_0.error_number() == 0);
+  BOOST_TEST(error_number_0.as_string() == "Success");
 
   double not_a_number = std::log(-1.0);
 
-  BOOST_TEST(error_number_0.error_number() == 13);
+  BOOST_TEST(error_number_0.error_number() == 0);
 
   ErrorNumber error_number_1 {};
 

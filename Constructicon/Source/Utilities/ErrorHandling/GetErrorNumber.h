@@ -4,6 +4,7 @@
 #include <cerrno>
 #include <cstring> // std::strerror
 #include <string>
+#include <system_error>
 
 namespace Utilities
 {
@@ -29,7 +30,17 @@ class GetErrorNumber
       error_number_{errno}
     {}
 
-    inline void get_error_number()
+    //--------------------------------------------------------------------------
+    /// https://en.cppreference.com/w/cpp/error/system_error/code
+    /// https://en.cppreference.com/w/cpp/error/error_code
+    /// const std:error_code& code() const noexcept, .code() returns
+    /// std::error_code, and value obtains value of the error_code
+    //--------------------------------------------------------------------------
+    explicit GetErrorNumber(const std::system_error& err):
+      error_number_{err.code().value()}
+    {}
+
+    inline void operator()()
     {
       error_number_ = errno;
     }
@@ -44,6 +55,11 @@ class GetErrorNumber
     inline std::string as_string() const
     {
       return std::string{std::strerror(error_number_)};
+    }
+
+    inline int error_number() const
+    {
+      return error_number_;
     }
 
   private:

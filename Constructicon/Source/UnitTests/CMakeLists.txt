@@ -6,6 +6,8 @@ ADD_EXECUTABLE(Check
   Dependencies/json_tests.cpp
   IPC/Sockets/InternetAddress_tests.cpp
   Utilities/AsBits_tests.cpp
+  Utilities/ErrorHandling/GetErrorNumber_tests.cpp
+  Utilities/ErrorHandling/HandleReturnValue_tests.cpp
   Utilities/ErrorHandling/SignalHandler_tests.cpp
   Utilities/ErrorHandling/signal_child_handler_tests.cpp
   Utilities/FileIO/Filestream_tests.cpp

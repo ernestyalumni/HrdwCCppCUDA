@@ -1,4 +1,5 @@
 ADD_LIBRARY(Utilities
+  ErrorHandling/HandleReturnValue.cpp
   ErrorHandling/SignalHandler.cpp
   ErrorHandling/signal_child_handler.cpp
   Testing/CaptureCerr.cpp

@@ -43,7 +43,9 @@ enum class Domain : int
   raw_ATM_PVCs = AF_ATMPVC, // Access to raw ATM PVCs
   appletalk = AF_APPLETALK, // AppleTalk
   packet = AF_PACKET, // low level packet interface 
-  crypto = AF_ALG // Interface to kernel crypto API
+  crypto = AF_ALG, // Interface to kernel crypto API
+  // https://students.mimuw.edu.pl/SO/Linux/Kod/include/linux/socket.h.html
+  maximum = AF_MAX // For now ...
 };
 
 //------------------------------------------------------------------------------
