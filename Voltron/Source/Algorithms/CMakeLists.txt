@@ -14,6 +14,7 @@ ADD_LIBRARY(Algorithms
   HackerRank/InsertionSort.cpp
   HackerRank/QuickSort.cpp
   InsertionSort.cpp
+  LeetCode/EasyProblems.cpp
   LeetCode/HardProblems.cpp
   LeetCode/MediumProblems.cpp
   PeakFinding.cpp

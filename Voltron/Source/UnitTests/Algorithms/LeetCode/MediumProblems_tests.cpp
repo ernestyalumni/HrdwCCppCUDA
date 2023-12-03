@@ -27,6 +27,88 @@ BOOST_AUTO_TEST_CASE(BruteForceFindsLongest)
     BOOST_TEST(result.size(), expected.size());
     BOOST_TEST(result == expected);
   }
+  // Example 2
+  {
+    const string s {"cbbd"};
+    const string expected {"bb"};
+
+    const string result {LongestPalindrome::brute_force(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ExpandAroundCenterFindsLongest)
+{
+  // Example 1
+  {
+    const string s {"babad"};
+    const string expected {"bab"};
+
+    const string result {LongestPalindrome::expand_around_center(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+  // Example 2
+  {
+    const string s {"cbbd"};
+    const string expected {"bb"};
+
+    const string result {LongestPalindrome::expand_around_center(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+  // Test Case 124?
+  {
+    const string s {"ccc"};
+    const string expected {"ccc"};
+
+    const string result {LongestPalindrome::expand_around_center(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DynamicProgrammingFindsLongest)
+{
+  // Example 1
+  {
+    const string s {"babad"};
+    const string expected {"bab"};
+
+    const string result {LongestPalindrome::with_dynamic_programming(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+  // Example 2
+  {
+    const string s {"cbbd"};
+    const string expected {"bb"};
+
+    const string result {LongestPalindrome::with_dynamic_programming(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
+  // Test Case 124?
+  {
+    const string s {"ccc"};
+    const string expected {"ccc"};
+
+    const string result {LongestPalindrome::with_dynamic_programming(s)};
+
+    BOOST_TEST(result.size(), expected.size());
+    BOOST_TEST(result == expected);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END() // LongestPalindrome_5_tests

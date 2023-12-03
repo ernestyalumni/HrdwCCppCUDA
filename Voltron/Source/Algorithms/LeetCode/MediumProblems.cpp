@@ -2,6 +2,7 @@
 
 #include <cstddef> // std::size_t
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include <iostream>
@@ -46,6 +47,125 @@ string LongestPalindrome::brute_force(string s)
       {
         maximum_length = j - i + 1;
         maximum_length_starting_index = i;
+      }
+    }
+  }
+
+  return s.substr(maximum_length_starting_index, maximum_length);
+}
+
+bool LongestPalindrome::is_palindrome(const string& s)
+{
+  int left {0};
+  int right {static_cast<int>(s.size()) - 1};
+
+  // O(N) time complexity.
+  while (left < right)
+  {
+    if (s[left] != s[right])
+    {
+      return false;
+    }
+    ++left;
+    --right;
+  }
+
+  return true;
+}
+
+string LongestPalindrome::expand_around_center(string s)
+{
+  const int N {static_cast<int>(s.size())};
+  int maximum_length {1};
+  int maximum_length_starting_index {0};
+
+  // for loop is O(N) time complexity.
+  for (int i {0}; i < N; ++i)
+  {
+    // O(N) time complexity.
+    const auto odd_length_indices = expand_from_center(s, i, i);
+
+    const int odd_length {
+      std::get<1>(odd_length_indices) - std::get<0>(odd_length_indices) + 1};
+
+    if (odd_length > maximum_length)
+    {
+      maximum_length = odd_length;
+      maximum_length_starting_index = std::get<0>(odd_length_indices);
+    }
+
+    if ((i < N - 1) && (s[i] == s[i + 1]))
+    {
+      // O(N) time complexity.
+      const auto even_length_indices = expand_from_center(s, i, i + 1);
+
+      const int even_length {
+        std::get<1>(even_length_indices) - std::get<0>(even_length_indices) + 1};
+
+      if (even_length > maximum_length)
+      {
+        maximum_length = even_length;
+        maximum_length_starting_index = std::get<0>(even_length_indices);
+      }
+    }
+  }
+
+  return s.substr(maximum_length_starting_index, maximum_length);
+}
+
+std::tuple<int, int> LongestPalindrome::expand_from_center(
+  const std::string& s,
+  const int left,
+  const int right)
+{
+  int l {left};
+  int r {right};
+
+  // O(N) time complexity.
+  while (l >= 0 && r < static_cast<int>(s.size()) && s[l] == s[r])
+  {
+    --l;
+    ++r;
+  }
+
+  return std::make_tuple<int, int>(std::move(l + 1), std::move(r - 1));
+}
+
+string LongestPalindrome::with_dynamic_programming(std::string s)
+{
+  const int N {static_cast<int>(s.size())};
+
+  // O(N^2) space complexity.
+  vector<vector<bool>> is_palindrome (N, vector<bool>(N, false));
+
+  int maximum_length {1};
+  int maximum_length_starting_index {0};
+
+  // Every single character is a palindrome.
+  for (int i {0}; i < N; ++i)
+  {
+    is_palindrome[i][i] = true;
+  }
+
+  // Check for every substring length.
+  // O(N^2) time complexity overall, with 2 for loops.
+  for (int length {2}; length <= N; ++length)
+  {
+    for (int i {0}; i <= N - length; ++i)
+    {
+      int j {i + length - 1};
+
+      // If our "outer" characters, most left and most right letters of our 
+      // substring of length, are equal, and either we are checking a substring
+      // of length 2, or we had a palindrome "beforehand",
+      if (s[i] == s[j] && (length == 2 || is_palindrome[i + 1][j - 1]))
+      {
+        is_palindrome[i][j] = true;
+        if (length > maximum_length)
+        {
+          maximum_length = length;
+          maximum_length_starting_index = i;
+        }
       }
     }
   }
@@ -120,25 +240,6 @@ void LongestPalindrome::find_longest_palindrome(
     longest_palindrome_index,
     s,
     N);
-}
-
-bool LongestPalindrome::is_palindrome(const string& s)
-{
-  int left {0};
-  int right {static_cast<int>(s.size()) - 1};
-
-  // O(N) time complexity.
-  while (left < right)
-  {
-    if (s[left] != s[right])
-    {
-      return false;
-    }
-    ++left;
-    --right;
-  }
-
-  return true;
 }
 
 //------------------------------------------------------------------------------

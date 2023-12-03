@@ -46,7 +46,6 @@ class HandleReturnValue
       return return_value_;
     }
 
-
     inline std::string as_string() const
     {
       return get_error_number_.as_string();

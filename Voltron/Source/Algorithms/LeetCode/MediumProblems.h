@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <string>
+#include <tuple>
 #include <vector>
 
 namespace Algorithms
@@ -28,6 +29,21 @@ class LongestPalindrome
     /// O(N^3) time complexity.
     //--------------------------------------------------------------------------
     static std::string brute_force(std::string s);
+
+    // O(N) time complexity.
+    static bool is_palindrome(const std::string& s);
+
+    static std::string expand_around_center(std::string s);
+
+    // O(N) time complexity.
+    // Assumes that the letters that are included within given inputs left, and
+    // right are a palindrome already.
+    static std::tuple<int, int> expand_from_center(
+      const std::string& s,
+      const int left,
+      const int right);
+
+    static std::string with_dynamic_programming(std::string s);
     
     static std::string longest_palindrome(std::string s);
 
@@ -46,9 +62,6 @@ class LongestPalindrome
     {
       return s[start_index] == s[start_index + current_length - 1];
     }
-
-    // O(N) time complexity.
-    static bool is_palindrome(const std::string& s);
 };
 
 //------------------------------------------------------------------------------
