@@ -70,6 +70,29 @@ class LongestPalindrome
 //------------------------------------------------------------------------------
 int find_number_of_provinces(std::vector<std::vector<int>>& is_connected);
 
+//------------------------------------------------------------------------------
+/// \name 2944. Minimum Number of Coins for Fruits
+/// \url https://leetcode.com/problems/minimum-number-of-coins-for-fruits/
+/// Dynamic programming.
+/// \return minimum number of coins needed to acquire all the fruits.
+/// Given a 1-indexed array prices, where prices[i] denotes number of coins
+/// needed to purchase ith fruit.
+/// If you purchase ith fruit at prices[i] coins, you can get next i fruits for
+/// free.
+/// Constraints:
+/// 1 <= prices.length <= 1000
+/// 1 <= prices[i] <= 10^5.
+//------------------------------------------------------------------------------
+class MinimumNumberOfCoinsForFruits
+{
+  public:
+
+    // O(N^2) time complexity (iterate through all N fruits and for each fruit,
+    // iterate through next i fruits).
+    // O(N) space complexity to hold minimum_cost for each fruit of N fruits.
+    static int minimum_coins(std::vector<int>& prices);
+};
+
 } // namespace LeetCode
 } // namespace Algorithms
 

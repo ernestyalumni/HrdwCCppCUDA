@@ -1,6 +1,7 @@
 #include "MediumProblems.h"
 
 #include <cstddef> // std::size_t
+#include <limits>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -276,6 +277,34 @@ int find_number_of_provinces(vector<vector<int>>& is_connected)
   }
 
   return counter;
+}
+
+int MinimumNumberOfCoinsForFruits::minimum_coins(vector<int>& prices)
+{
+  // N number of fruits (each of different types)
+  const int N {static_cast<int>(prices.size())};
+
+  // Minimum cost to purchase the first i fruits for the ith element.
+  vector<int> minimum_cost (N + 1, std::numeric_limits<int>::max());
+  minimum_cost[0] = 0;
+  // No.
+  // This is the base case as you "must" purchase the first fruit.
+  //minimum_cost[1] = 0;
+
+  // i is for ith fruit with fruits begin 1-indexed.
+  for (int i {1}; i <= N; ++i)
+  {
+    // Consider buying the ith fruit and getting the next i fruits for free.
+    // Fruits you get for free after buying fruit i. j is 1-indexed.
+    for (int j {i}; j <= std::min(N, i + i); ++j)
+    {
+      minimum_cost[j] = std::min(
+        minimum_cost[j],
+        minimum_cost[i - 1] + prices[i - 1]);
+    }
+  }
+
+  return minimum_cost[N];
 }
 
 } // namespace LeetCode

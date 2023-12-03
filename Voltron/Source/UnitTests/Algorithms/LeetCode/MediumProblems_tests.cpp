@@ -5,6 +5,7 @@
 #include <vector>
 
 using Algorithms::LeetCode::LongestPalindrome;
+using Algorithms::LeetCode::MinimumNumberOfCoinsForFruits;
 using std::string;
 using std::vector;
 
@@ -147,6 +148,28 @@ BOOST_AUTO_TEST_CASE(DemonstrateGivenExamples)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // NumberOfProvinces_547_tests
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MinimumNumberOfCoinsForFruitsFindsMinimum)
+{
+  // Example 1
+  {
+    vector<int> prices {3, 1, 2};
+    const int expected {4};
+
+    BOOST_TEST(
+      MinimumNumberOfCoinsForFruits::minimum_coins(prices) == expected);
+  }
+  // Example 2
+  {
+    vector<int> prices {1, 10, 1, 1};
+    const int expected {2};
+
+    BOOST_TEST(
+      MinimumNumberOfCoinsForFruits::minimum_coins(prices) == expected);
+  }
+}
 
 BOOST_AUTO_TEST_SUITE_END() // LeetCode
 BOOST_AUTO_TEST_SUITE_END() // Algorithms
