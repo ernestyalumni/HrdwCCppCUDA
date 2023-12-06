@@ -65,6 +65,25 @@ class LongestPalindrome
 };
 
 //------------------------------------------------------------------------------
+/// \name 11. Container With Most Water
+/// \details Greedy (tag)
+/// \url https://leetcode.com/problems/container-with-most-water/
+/// Constraints:
+/// 2 <= n <= 10^5 where n == height.length.
+/// 0 <= height[i] <= 10^4
+//------------------------------------------------------------------------------
+class ContainerWithMostWater
+{
+  public:
+
+    // O(N^2) time complexity (loop through all possible intervals).
+    static int brute_force(std::vector<int>& height);
+
+    // Greedy Algorithm.
+    int maximum_area(std::vector<int>& height);
+};
+
+//------------------------------------------------------------------------------
 /// \name 547. Number of Provinces
 /// \url https://leetcode.com/problems/number-of-provinces/
 //------------------------------------------------------------------------------

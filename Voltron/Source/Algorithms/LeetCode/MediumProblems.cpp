@@ -243,6 +243,63 @@ void LongestPalindrome::find_longest_palindrome(
     N);
 }
 
+int ContainerWithMostWater::brute_force(vector<int>& height)
+{
+  const int N {static_cast<int>(height.size())};
+
+  int maximum_area {0};
+
+  for (int i {0}; i < N - 1; ++i)
+  {
+    for (int j {i + 1}; j < N; ++j)
+    {
+      maximum_area = std::max(
+        maximum_area,
+        std::min(height[i], height[j]) * (j - i));
+    }
+  }
+
+  return maximum_area;
+}
+
+
+int ContainerWithMostWater::maximum_area(vector<int>& height)
+{
+  const int N {static_cast<int>(height.size())};
+
+  // Initialize 2 points. Place 1 pointer at the beginning and the other at the
+  // end.
+  int l {0};
+  int r {N - 1};
+
+  int maximum_area {0};
+
+  // If l == r, we have 0 water, 0 area.
+  while (l < r)
+  {
+    // Calculate area, and update maximum area if current area is larger.
+    int current_area {(r - l) * std::min(height[l], height[r])};
+
+    maximum_area = std::max(maximum_area, current_area);
+
+    // Move pointers: move pointer pointing to shorter line towards the other
+    // pointer by 1 step. The rationale is that moving the shorter line might
+    // lead to a taller line, potentially increasing the area. Moving the taller
+    // line wouldn't increase the area (EY: possibly?)
+    if (height[l] < height[r])
+    {
+      l++;
+    }
+    else
+    {
+      r--;
+    }
+  }
+
+  return maximum_area;
+}
+
+
 //------------------------------------------------------------------------------
 /// \name 547. Number of Provinces
 /// \url https://leetcode.com/problems/number-of-provinces/
