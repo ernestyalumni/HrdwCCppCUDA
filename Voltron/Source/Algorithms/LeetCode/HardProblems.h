@@ -9,23 +9,13 @@ namespace LeetCode
 {
 
 //------------------------------------------------------------------------------
-/// 2585. Number of Ways to Earn Points.
-/// Test has n types of questions. 
-/// You're given integer target and 0-indexed 2D integer array types where
-/// types[i] = [count, marks] indicates there are count questions of ith type,
-/// and each is worth marks points.
-/// Constraints:
-/// 1 <= n <= 50 where n == types.length.
-/// 1 <= count, marks <= 50
-/// EY: Are the points or marks unique?
+/// 1293. Shortest Path in a Grid with Obstacles Elimination
 //------------------------------------------------------------------------------
-class WaysToEarnPoints
+class ShortestPathInGridWithObstacles
 {
   public:
 
-    static int ways_to_reach_target(
-      int target,
-      std::vector<std::vector<int>>& types);
+    int shortest_path(std::vector<std::vector<int>>& grid, int k);
 };
 
 //------------------------------------------------------------------------------
@@ -47,6 +37,26 @@ class MinimumCostToCutStick
   public:
 
     static int minimum_cost_to_cut_stick(int n, std::vector<int>& cuts);
+};
+
+//------------------------------------------------------------------------------
+/// 2585. Number of Ways to Earn Points.
+/// Test has n types of questions. 
+/// You're given integer target and 0-indexed 2D integer array types where
+/// types[i] = [count, marks] indicates there are count questions of ith type,
+/// and each is worth marks points.
+/// Constraints:
+/// 1 <= n <= 50 where n == types.length.
+/// 1 <= count, marks <= 50
+/// EY: Are the points or marks unique?
+//------------------------------------------------------------------------------
+class WaysToEarnPoints
+{
+  public:
+
+    static int ways_to_reach_target(
+      int target,
+      std::vector<std::vector<int>>& types);
 };
 
 } // namespace LeetCode

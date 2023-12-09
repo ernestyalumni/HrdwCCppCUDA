@@ -11,6 +11,13 @@ namespace Algorithms
 namespace LeetCode
 {
 
+int ShortestPathInGridWithObstacles::shortest_path(
+  vector<vector<int>>& grid,
+  int k)
+{
+  return grid.size() + k; 
+}
+
 int WaysToEarnPoints::ways_to_reach_target(
   int target,
   vector<vector<int>>& types)
