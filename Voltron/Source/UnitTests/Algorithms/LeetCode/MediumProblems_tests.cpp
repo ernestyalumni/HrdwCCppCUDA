@@ -6,6 +6,7 @@
 
 using Algorithms::LeetCode::LongestPalindrome;
 using Algorithms::LeetCode::ContainerWithMostWater;
+using Algorithms::LeetCode::CountNumbersWithUniqueDigits;
 using Algorithms::LeetCode::MinimumNumberOfCoinsForFruits;
 using std::string;
 using std::vector;
@@ -156,6 +157,39 @@ const vector<vector<int>> test_case_66 {
   {0,1,1,0},
   {0,1,1,1},
   {1,0,1,1}};
+
+BOOST_AUTO_TEST_CASE(CountNumbersWithUniqueDigitsCounts)
+{
+  // Example 1
+  {
+    const int n {2};
+    // The answer should be total numbers in range of 0 <= x < 100, excluding
+    // 11, 22, 33, 44, 55, 66, 77, 88, 99.
+
+    const int result {
+      CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(n)};
+    const int output {91};
+    BOOST_TEST(result == output);
+  }
+
+  // Example 2
+  {
+    const int n {0};
+    const int result {
+      CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(n)};
+    const int output {1};
+    BOOST_TEST(result == output);
+  }
+
+  // Example 2
+  {
+    const int n {3};
+    const int result {
+      CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(n)};
+
+    BOOST_TEST(result == 739);
+  }
+}
 
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/problems/number-of-provinces/

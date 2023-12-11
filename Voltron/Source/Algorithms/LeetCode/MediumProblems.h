@@ -84,6 +84,19 @@ class ContainerWithMostWater
 };
 
 //------------------------------------------------------------------------------
+/// \name 357. Count Numbers With Unique Digits
+/// \url https://leetcode.com/problems/count-numbers-with-unique-digits/
+/// Given integer n, return count of all numbers with unique digits, x, where
+/// 0 <= x < 10^n.
+//------------------------------------------------------------------------------
+class CountNumbersWithUniqueDigits
+{
+  public:
+
+    static int count_numbers_with_unique_digits(int n);
+};
+
+//------------------------------------------------------------------------------
 /// \name 547. Number of Provinces
 /// \url https://leetcode.com/problems/number-of-provinces/
 //------------------------------------------------------------------------------

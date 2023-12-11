@@ -1,15 +1,21 @@
 #include "MediumProblems.h"
 
+#include <array>
 #include <cstddef> // std::size_t
 #include <limits>
+#include <stack>
 #include <string>
 #include <tuple>
+#include <unordered_set>
 #include <vector>
 
 #include <iostream>
 
+using std::array;
 using std::size_t;
+using std::stack;
 using std::string;
+using std::unordered_set;
 using std::vector;
 
 namespace Algorithms
@@ -262,7 +268,6 @@ int ContainerWithMostWater::brute_force(vector<int>& height)
   return maximum_area;
 }
 
-
 int ContainerWithMostWater::maximum_area(vector<int>& height)
 {
   const int N {static_cast<int>(height.size())};
@@ -299,6 +304,89 @@ int ContainerWithMostWater::maximum_area(vector<int>& height)
   return maximum_area;
 }
 
+int CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(int n)
+{
+  /*
+  if (n == 0)
+  {
+    return 1;
+  }
+
+  // Is this the most significant digit? (so that it cannot be of value 0)?
+  bool is_first_value {true};
+
+  array<bool, 10> is_used {false};
+
+  // We mean by inner meaning they are digits that are not the most significant
+  // digit (so it's not at the "end");
+  const unordered_set<int> possible_inner_digits {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+  stack<int> s {};
+  for (int i {1}; i < 10; ++i)
+  {
+    s.push(i);
+  }
+
+  int counter {0};
+
+  if (n == 1)
+  {
+    while (!s.empty())
+    {
+      s.pop();
+      ++counter;
+    }
+  }
+
+  while (!s.empty())
+  {
+
+  }
+  */
+  if (n == 0)
+  {
+    return 1;
+  }
+
+  if (n == 1)
+  {
+    return 10;
+  }
+
+  if (n == 2)
+  {
+    return 91;
+  }
+
+  vector<int> number_of_numbers (n + 1, 0);
+  number_of_numbers.at(0) = 1;
+  number_of_numbers.at(1) = 10;
+  number_of_numbers.at(2) = 9 * 9 + number_of_numbers.at(1);
+  number_of_numbers.at(3) = 9 * 9 * 8 + number_of_numbers.at(2);
+
+  if (n == 3)
+  {
+    return number_of_numbers.at(n);
+  }
+
+  // O(n) time complexity.
+  for (int i {4}; i <= n; ++i)
+  {
+    number_of_numbers.at(i) = number_of_numbers.at(i - 1);
+    int numbers_with_length_i {9};
+    int factor {9};
+    // Because this doesn't depend on n, then the overall time complexity is
+    // still O(n)
+    for (int j {i}; j > 1; --j)
+    {
+      numbers_with_length_i *= factor;
+      --factor;
+    }
+    number_of_numbers.at(i) += numbers_with_length_i;
+  }
+
+  return number_of_numbers.at(n);
+}
 
 //------------------------------------------------------------------------------
 /// \name 547. Number of Provinces
