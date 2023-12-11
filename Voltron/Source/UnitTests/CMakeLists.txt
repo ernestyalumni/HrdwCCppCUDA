@@ -119,6 +119,7 @@ ADD_EXECUTABLE(Check
   DataStructures/DataStructures_tests.cpp
   DataStructures/FreeList_tests.cpp
   DataStructures/Graphs/AdjacencyArrayGraph_tests.cpp
+  DataStructures/Graphs/AdjacencyList_tests.cpp
   DataStructures/Graphs/WeightedGraph_tests.cpp
   DataStructures/HashSet_tests.cpp
   DataStructures/HashTables/HashFunctions_tests.cpp

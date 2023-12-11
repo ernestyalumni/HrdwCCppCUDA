@@ -4,6 +4,8 @@ ADD_LIBRARY(DataStructures
   Arrays/ArrayQuestions.cpp
   BinarySearchTrees.cpp
   BinaryTrees.cpp
+  Graphs/AdjacencyList.cpp
+  Graphs/UndirectedAdjacencyList.cpp
   HashMap.cpp
   HashSet.cpp
   HashTables/HashFunctions.cpp
