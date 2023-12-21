@@ -1,17 +1,22 @@
 #include "MediumProblems.h"
 
+#include <algorithm>
 #include <array>
 #include <cstddef> // std::size_t
+#include <limits.h>
 #include <limits>
+#include <map>
+#include <numeric> // std::accumulate
+#include <set>
 #include <stack>
 #include <string>
 #include <tuple>
 #include <unordered_set>
 #include <vector>
 
-#include <iostream>
-
 using std::array;
+using std::max;
+using std::min;
 using std::size_t;
 using std::stack;
 using std::string;
@@ -22,6 +27,48 @@ namespace Algorithms
 {
 namespace LeetCode
 {
+
+int LongestSubstringWithoutRepeating::length_of_longest_substring(string s)
+{
+  const int N {static_cast<int>(s.size())};
+
+  if (N == 0)
+  {
+    return 0;
+  }
+
+  // We need a way to keep track of the characters we've seen.
+  std::map<char, int> seen_characters {};
+
+  int maximum_length {0};
+  int initial_index_pointer {0};
+  int forward_index_pointer {0};
+
+  while (forward_index_pointer < N)
+  {
+    if (
+      (seen_characters.count(s[forward_index_pointer]) != 0) &&
+      // We sanity check if we even need to exclude the prior character.
+      (seen_characters[s[forward_index_pointer]] >= initial_index_pointer))
+    {
+      initial_index_pointer = seen_characters[s[forward_index_pointer]] + 1;
+    }
+
+    // Mark that we've seen this character. Even if we had a duplicate, we now
+    // change the index to the current index seen.
+    seen_characters[s[forward_index_pointer]] = forward_index_pointer;
+
+    maximum_length = max(
+      maximum_length,
+      forward_index_pointer - initial_index_pointer + 1);
+
+    ++forward_index_pointer;
+  }
+
+  return maximum_length;
+}
+
+/// \name 5. Longest Palindromic Substring
 
 string LongestPalindrome::brute_force(string s)
 {
@@ -249,6 +296,8 @@ void LongestPalindrome::find_longest_palindrome(
     N);
 }
 
+/// \name 11. Container With Most Water
+
 int ContainerWithMostWater::brute_force(vector<int>& height)
 {
   const int N {static_cast<int>(height.size())};
@@ -304,6 +353,49 @@ int ContainerWithMostWater::maximum_area(vector<int>& height)
   return maximum_area;
 }
 
+/// \name 209. Minimum Size Subarray Sum
+// Recall that a subarray is a contiguous, non-empty sequence of elements of the
+// array.
+int MinimumSizeSubarraySum::minimum_subarray_length(
+  int target,
+  vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+  int length {INT_MAX};
+  int start {0};
+  // Starting with end = 0 is most logical because we're effectively starting
+  // with an empty subarray at the beginning of the array.
+  int end {0};
+  int total_sum {0};
+
+  // We want the subarray elements to sum equal to or greater than target.
+  // We start from end = 0. We increment end until the condition above is
+  // satisfied. When it's satisfied, then we try to minimize the length from the
+  // "left", increment start.
+  //
+  // In other words, the sliding window expands to include more elements when
+  // necessary and contracts to find minimum length subarray satisfying the sum
+  // condition.
+  while (end < N)
+  {
+    total_sum += nums[end];
+
+    while ((start <= end) && (total_sum >= target))
+    {
+      length = min(length, end - start + 1);
+      total_sum -= nums[start];
+      ++start;
+    }
+
+    ++end;
+  }
+
+  // length == INT_MAX takes care of if the array's elements all of them don't
+  // sum up greater than or equal to target.
+  return length == INT_MAX ? 0 : length;
+}
+
+/// @name 357. Count Numbers With Unique Digits
 int CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(int n)
 {
   /*
@@ -424,6 +516,7 @@ int find_number_of_provinces(vector<vector<int>>& is_connected)
   return counter;
 }
 
+/// \name 2944. Minimum Number of Coins for Fruits
 int MinimumNumberOfCoinsForFruits::minimum_coins(vector<int>& prices)
 {
   // N number of fruits (each of different types)

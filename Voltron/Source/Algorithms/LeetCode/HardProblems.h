@@ -1,12 +1,33 @@
 #ifndef ALGORITHMS_LEETCODE_HARD_PROBLEMS_H
 #define ALGORITHMS_LEETCODE_HARD_PROBLEMS_H
 
+#include <string>
 #include <vector>
 
 namespace Algorithms
 {
 namespace LeetCode
 {
+
+//------------------------------------------------------------------------------
+/// \name 76. Minimum Window Substring
+/// Return minimum window substring of s such that every character in t
+/// (including duplicates) is included in window. If tehre's no such substring,
+/// return empty string "".
+/// Constraints
+/// s and t consist of uppercase and lowercase English letters.
+//------------------------------------------------------------------------------
+class MinimumWindowSubstring
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// \details Sliding Window technique, use hash tables via
+    /// std::unordered_map. O(K) space complexity for K = number of unique
+    /// characters in string t.
+    //--------------------------------------------------------------------------
+    static std::string minimum_window(std::string s, std::string t);
+};
 
 //------------------------------------------------------------------------------
 /// 1293. Shortest Path in a Grid with Obstacles Elimination

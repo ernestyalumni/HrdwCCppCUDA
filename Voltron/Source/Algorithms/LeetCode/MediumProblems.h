@@ -12,6 +12,24 @@ namespace LeetCode
 {
 
 //------------------------------------------------------------------------------
+/// \name 3. Longest Substring Without Repeating Characters
+/// Constraints:
+/// 0 <= s.length <= 5 * 10^4
+/// s consists of English letters, digits, symbols, and spaces
+//------------------------------------------------------------------------------
+class LongestSubstringWithoutRepeating
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// A substring is a contiguous block of characters so a sliding window can
+    /// keep track of a set of contiguous elements and can update the state of
+    /// unique characters as we move along the string.
+    //--------------------------------------------------------------------------
+    static int length_of_longest_substring(std::string s);
+};
+
+//------------------------------------------------------------------------------
 /// \name 5. Longest Palindromic Substring
 /// \url https://leetcode.com/problems/longest-palindromic-substring/
 /// \brief Given a string s, return the longest palindromic substring in s.
@@ -81,6 +99,28 @@ class ContainerWithMostWater
 
     // Greedy Algorithm.
     int maximum_area(std::vector<int>& height);
+};
+
+//------------------------------------------------------------------------------
+/// \name 209. Minimum Size Subarray Sum
+/// We're given an array of positive integers (that are non-zero).
+/// A subarray is a contiguous non-empty sequence of elements within an array.
+/// \url https://leetcode.com/problems/minimum-size-subarray-sum/
+/// Constraints:
+/// 1 <= target <= 10^9
+/// 1 <= nums.length <= 10^5
+/// 1 <= nums[i] <= 10^4
+//------------------------------------------------------------------------------
+class MinimumSizeSubarraySum
+{
+  public:
+
+    /// @brief 
+    /// @param target 
+    /// @param nums 
+    /// Sliding window technique.
+    /// @return 
+    static int minimum_subarray_length(int target, std::vector<int>& nums);
 };
 
 //------------------------------------------------------------------------------

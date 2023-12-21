@@ -1,10 +1,28 @@
 #ifndef ALGORITHMS_LEETCODE_EASY_PROBLEMS_H
 #define ALGORITHMS_LEETCODE_EASY_PROBLEMS_H
 
+#include <vector>
+
 namespace Algorithms
 {
 namespace LeetCode
 {
+
+//------------------------------------------------------------------------------
+/// 1. Two Sum
+/// https://leetcode.com/problems/two-sum/  
+/// Constraints 2 <= nums.length <= 10^4
+/// -10^9 <= nums[i], target <= 10^9
+//------------------------------------------------------------------------------
+class TwoSum
+{
+  public:
+
+    static std::vector<int> brute_force(std::vector<int>& nums, int target);
+
+    static std::vector<int> two_sum(std::vector<int>& nums, int target);
+};
+
 
 //------------------------------------------------------------------------------
 /// 1646. Get Maximum in Generated Array.

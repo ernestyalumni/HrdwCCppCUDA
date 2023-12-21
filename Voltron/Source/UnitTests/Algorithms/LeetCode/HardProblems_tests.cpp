@@ -1,16 +1,48 @@
 #include "Algorithms/LeetCode/HardProblems.h"
 
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <vector>
 
 // Ordered by Leetcode number.
+using Algorithms::LeetCode::MinimumWindowSubstring;
 using Algorithms::LeetCode::WaysToEarnPoints;
 using Algorithms::LeetCode::MinimumCostToCutStick;
+using std::string;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
 
+// 76. Minimum Window Substring
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MinimumWindowSubstringWorksWithSlidingWindow)
+{
+  {
+    const string s {"ADOBECODEBANC"};
+    const string t {"ABC"};
+    const string expected {"BANC"};
+
+    BOOST_TEST(MinimumWindowSubstring::minimum_window(s, t) == expected);
+  }
+  {
+    const string s {"a"};
+    const string t {"a"};
+    const string expected {"a"};
+
+    BOOST_TEST(MinimumWindowSubstring::minimum_window(s, t) == expected);
+  }
+  {
+    const string s {"a"};
+    const string t {"aa"};
+    const string expected {""};
+
+    BOOST_TEST(MinimumWindowSubstring::minimum_window(s, t) == expected);
+  }  
+}
+
+/// 1293. Shortest Path in a Grid with Obstacles Elimination
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(ShortestPathInGridWithObstaclesFindShortest)

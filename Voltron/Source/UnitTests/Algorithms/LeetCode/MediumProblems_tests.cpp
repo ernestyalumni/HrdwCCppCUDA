@@ -5,14 +5,54 @@
 #include <vector>
 
 using Algorithms::LeetCode::LongestPalindrome;
+using Algorithms::LeetCode::LongestSubstringWithoutRepeating;
 using Algorithms::LeetCode::ContainerWithMostWater;
 using Algorithms::LeetCode::CountNumbersWithUniqueDigits;
 using Algorithms::LeetCode::MinimumNumberOfCoinsForFruits;
+using Algorithms::LeetCode::MinimumSizeSubarraySum;
 using std::string;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(LengthOfLongestSubstringGetsLength)
+{
+  {
+    string s {"abcabcbb"};
+    int expected {3};
+
+    BOOST_TEST(
+      LongestSubstringWithoutRepeating::length_of_longest_substring(s) ==
+      expected);
+  }
+  {
+    string s {"bbbbb"};
+    int expected {1};
+
+    BOOST_TEST(
+      LongestSubstringWithoutRepeating::length_of_longest_substring(s) ==
+      expected);
+  }
+  {
+    string s {"pwwkew"};
+    int expected {3};
+
+    BOOST_TEST(
+      LongestSubstringWithoutRepeating::length_of_longest_substring(s) ==
+      expected);
+  }
+  {
+    string s {"tmmzuxt"};
+    int expected {5};
+
+    BOOST_TEST(
+      LongestSubstringWithoutRepeating::length_of_longest_substring(s) ==
+      expected);
+  }
+}
 
 BOOST_AUTO_TEST_SUITE(LongestPalindrome_5_tests)
 
@@ -146,6 +186,50 @@ BOOST_AUTO_TEST_CASE(BruteForceGetsContainerWithMostWater)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ContainerWithMostWater_11_tests
+
+// 209. Minimum Size Subarray Sum
+// arrays, sliding window technique, minimum
+BOOST_AUTO_TEST_SUITE(MinimumSizeSubarraySum_209_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SlidingWindowTechniqueWorks)
+{
+  {
+    int target {7};
+    vector<int> nums {2,3,1,2,4,3};
+    int expected {2};
+    BOOST_TEST(
+      MinimumSizeSubarraySum::minimum_subarray_length(target, nums) ==
+        expected);
+  }
+  {
+    int target {4};
+    vector<int> nums {1,4,4};
+    int expected {1};
+    BOOST_TEST(
+      MinimumSizeSubarraySum::minimum_subarray_length(target, nums) ==
+        expected);
+  }
+  {
+    int target {11};
+    vector<int> nums {1,1,1,1,1,1,1,1};
+    int expected {0};
+    BOOST_TEST(
+      MinimumSizeSubarraySum::minimum_subarray_length(target, nums) ==
+        expected);
+  }
+  {
+    int target {11};
+    vector<int> nums {1,2,3,4,5};
+    int expected {3};
+    BOOST_TEST(
+      MinimumSizeSubarraySum::minimum_subarray_length(target, nums) ==
+        expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // MinimumSizeSubarraySum_209_tests
 
 BOOST_AUTO_TEST_SUITE(NumberOfProvinces_547_tests)
 

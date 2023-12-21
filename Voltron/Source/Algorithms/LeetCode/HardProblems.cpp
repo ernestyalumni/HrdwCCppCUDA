@@ -2,14 +2,98 @@
 
 #include <algorithm>
 #include <climits>
+#include <unordered_map>
+#include <string>
 #include <vector>
 
+using std::string;
+using std::unordered_map;
 using std::vector;
 
 namespace Algorithms
 {
 namespace LeetCode
 {
+
+/// \name 76. Minimum Window Substring
+string MinimumWindowSubstring::minimum_window(string s, string t)
+{
+  const int M {static_cast<int>(s.size())};
+  const int N {static_cast<int>(t.size())};
+
+  // Use unordered_map, implemented as a hash table, over map, implemented as a 
+  // red-black tree, for O(1) amoritized access.
+
+  // Keep count of each character's frequency in 't'. This helps to know how
+  // many of each character we need to find in 's'.
+  unordered_map<char, int> t_letter_to_frequencies {};
+  // Keep count of how many characters of t as they appear in the current
+  // window.
+  unordered_map<char, int> t_letter_to_count_in_window {};
+
+  for (const char c : t)
+  {
+    t_letter_to_frequencies[c]++;
+  }
+
+  // Track number of unique_characters seen from t.
+  int number_of_unique_characters_seen {0};
+ 
+  const int number_of_unique_t_characters {
+    static_cast<int>(t_letter_to_frequencies.size())};
+  int start {0};
+  int end {0};
+  int length {INT_MAX};
+  int min_start {0};
+
+  // We expand the window until we acheive the condition.
+  // O(M) time complexity.
+  while (end < M)
+  {
+    const char c {s[end]};
+
+    if (t_letter_to_frequencies.count(c) != 0)
+    {
+      t_letter_to_count_in_window[c]++;
+
+      if (t_letter_to_count_in_window[c] == t_letter_to_frequencies[c])
+      {
+        number_of_unique_characters_seen += 1;
+      }
+    }
+
+    // We check if we had obtained the condition: every character in t is
+    // included in the window.
+    while (
+      (start <= end) &&
+      (number_of_unique_characters_seen == number_of_unique_t_characters))
+    {
+      if (end - start + 1 < length)
+      {
+        length = end - start + 1;
+        min_start = start;
+      }
+
+      const char c2 {s[start]};
+
+      if (t_letter_to_frequencies.count(c2) != 0)
+      {
+        t_letter_to_count_in_window[c2]--;
+
+        if (t_letter_to_count_in_window[c2] < t_letter_to_frequencies[c2])
+        {
+          number_of_unique_characters_seen--;
+        }
+      }
+
+      start++;
+    }
+
+    end++;
+  }
+
+  return length == INT_MAX ? "" : s.substr(min_start, length);
+}
 
 int ShortestPathInGridWithObstacles::shortest_path(
   vector<vector<int>>& grid,

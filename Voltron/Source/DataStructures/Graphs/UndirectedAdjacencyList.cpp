@@ -11,20 +11,19 @@ namespace DataStructures
 namespace Graphs
 {
 
-auto UndirectedAdjacencyList::add_edge(const size_t u, size_t v)
+void UndirectedAdjacencyList::add_edge(const size_t u, size_t v)
 {
-  const unordered_set<size_t> new_edge {u, v};
-
   // https://en.cppreference.com/w/cpp/container/unordered_set/insert
   // Time Complexity; Average case: O(1), worst O(size())
-  return adjacency_list_.insert(new_edge);
+  adjacency_list_.at(u).insert(v);
+  adjacency_list_.at(v).insert(u);
 }
 
 size_t UndirectedAdjacencyList::delete_edge(const size_t u, const size_t v)
 {
-  const unordered_set<size_t> edge_to_remove {u, v};
+  size_t removed {adjacency_list_.at(u).erase(v)};
 
-  return adjacency_list_.erase(edge_to_remove);
+  return removed + adjacency_list_.at(v).erase(u);
 }
 
 size_t UndirectedAdjacencyList::get_number_of_edges() const
