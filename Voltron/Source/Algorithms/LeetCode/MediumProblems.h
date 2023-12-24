@@ -183,6 +183,25 @@ class PalindromicSubstrings
 };
 
 //------------------------------------------------------------------------------
+/// 739. Daily Temperatures
+/// Key themes: Traversing from the right.
+//------------------------------------------------------------------------------
+class DailyTemperatures
+{
+  public:
+
+    static std::vector<int> brute_force(std::vector<int>& temperatures);
+
+    //--------------------------------------------------------------------------
+    /// Consider using a stack.
+    /// Order preservation: problem requires to find the next occurrence of a
+    /// specific condition (a higher temperature). Stacks are excellent for
+    /// processing elements in reverse order (LIFO).
+    //--------------------------------------------------------------------------
+    static std::vector<int> daily_temperatures(std::vector<int>& temperatures);
+};
+
+//------------------------------------------------------------------------------
 /// \name 2944. Minimum Number of Coins for Fruits
 /// \url https://leetcode.com/problems/minimum-number-of-coins-for-fruits/
 /// Dynamic programming.

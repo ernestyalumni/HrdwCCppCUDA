@@ -676,6 +676,86 @@ bool PalindromicSubstrings::is_palindrome(const string& s)
   return true;
 }
 
+/// \name 739. Daily Temperatures
+
+vector<int> DailyTemperatures::brute_force(vector<int>& temperatures)
+{
+  const int N {static_cast<int>(temperatures.size())};
+  vector<int> answer (N, 0);
+
+  for (int i {0}; i < N - 1; ++i)
+  {
+    int days_to_warmer_temperature {0};
+    const int current_temperature {temperatures[i]};
+    bool is_warmer_temperature_found {false};
+    for (int j {i + 1}; j < N; ++j)
+    {
+      ++days_to_warmer_temperature;
+      if (temperatures[j] > current_temperature)
+      {
+        is_warmer_temperature_found = true;
+        break;
+      }
+    }
+
+    if (is_warmer_temperature_found)
+    {
+      answer[i] = days_to_warmer_temperature;
+    }
+    else
+    {
+      answer[i] = 0;
+    }
+  }
+
+  return answer;
+}
+
+vector<int> DailyTemperatures::daily_temperatures(vector<int>& temperatures)
+{
+  // Store indices for temperatures that haven't found a subsequent warmer day.
+  stack<int> colder_temperatures {};
+
+  const int N {static_cast<int>(temperatures.size())};
+  vector<int> answer (N, 0);
+
+  for (int i {0}; i < N; ++i)
+  {
+    if (!colder_temperatures.empty())
+    {
+      bool is_previous_temperature_warmer {false};
+
+      while (!is_previous_temperature_warmer && !colder_temperatures.empty())
+      {
+        const int previous_index {colder_temperatures.top()};
+
+        if (temperatures[previous_index] < temperatures[i])
+        {
+          answer[previous_index] = i - previous_index;
+          colder_temperatures.pop();
+        }
+        else
+        {
+          is_previous_temperature_warmer = true;
+        }
+      }
+    }
+
+    colder_temperatures.push(i);
+  }
+
+  // Handle the remaining stack - if stack still has indices after iterating
+  // through array, it means those days don't have warmer future temperature.
+  // Mark as 0 in result array.
+  while (!colder_temperatures.empty())
+  {
+    answer[colder_temperatures.top()] = 0;
+    colder_temperatures.pop();
+  }
+
+  return answer;
+}
+
 /// \name 2944. Minimum Number of Coins for Fruits
 int MinimumNumberOfCoinsForFruits::minimum_coins(vector<int>& prices)
 {
