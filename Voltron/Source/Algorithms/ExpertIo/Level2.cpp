@@ -2,6 +2,7 @@
 
 #include <algorithm> // std::sort, std::swap
 #include <cassert>
+#include <vector>
 
 using std::vector;
 
@@ -9,6 +10,51 @@ namespace Algorithms
 {
 namespace ExpertIo
 {
+
+namespace BestSeat
+{
+
+int best_seat(vector<int> seats)
+{
+  const int N {static_cast<int>(seats.size())};
+  int start {0};
+  int end {0};
+
+  int max_start {0};
+  int length {-1};
+  bool is_in_empty_seats {false};
+
+  while (end < N)
+  {
+    if (seats[end] == 1)
+    {
+      if (is_in_empty_seats)
+      {
+        is_in_empty_seats = false;
+
+        if (((end - start) > 1) && (end - start) > length)
+        {
+          length = end - start;
+          max_start = start;
+        }
+      }
+      
+      start = end;
+    }
+    else
+    {
+      if (!is_in_empty_seats)
+      {
+        is_in_empty_seats = true;
+      }
+    }
+    ++end;
+  }
+
+  return length == -1 ? length : max_start + length / 2;
+}
+
+} // namespace BestSeat
 
 namespace MergeOverlappingIntervals
 {

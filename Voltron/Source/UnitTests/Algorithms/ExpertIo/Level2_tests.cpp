@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include <vector>
 
+using Algorithms::ExpertIo::BestSeat::best_seat;
 using Algorithms::ExpertIo::MergeOverlappingIntervals::
   insertion_sort_intervals;
 using Algorithms::ExpertIo::MergeOverlappingIntervals::
@@ -13,6 +14,117 @@ using std::vector;
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(ExpertIo)
 BOOST_AUTO_TEST_SUITE(Level2_tests)
+
+BOOST_AUTO_TEST_SUITE(BestSeat)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BestSeatUsingSlidingWindow)
+{
+  // Test case 2 or Sample.
+  {
+    const vector<int> seats {1, 0, 1, 0, 0, 0, 1};
+    const int expected {4};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 1
+  {
+    const vector<int> seats {1};
+    const int expected {-1};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 3
+  {
+    const vector<int> seats {1, 0, 1};
+    const int expected {1};
+
+    BOOST_TEST(best_seat(seats) == expected);    
+  }
+  // Test case 4
+  {
+    const vector<int> seats {1, 0, 0, 1};
+    const int expected {1};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 5
+  {
+    const vector<int> seats {1, 1, 1};
+    const int expected {-1};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 6
+  {
+    const vector<int> seats {1,0,0,1,0,0,1};
+    const int expected {1};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 7
+  {
+    const vector<int> seats {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1};
+    const int expected {3};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 8
+  {
+    const vector<int> seats {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1};
+    const int expected {4};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 9
+  {
+    const vector<int> seats {
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1};
+    const int expected {4};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 10
+  {
+    const vector<int> seats {
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+    const int expected {13};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 11
+  {
+    const vector<int> seats {
+      1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1};
+    const int expected {13};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 12
+  {
+    const vector<int> seats {1, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+    const int expected {6};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 13
+  {
+    const vector<int> seats {1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1};
+    const int expected {3};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+  // Test case 14
+  {
+    const vector<int> seats {1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1};
+    const int expected {5};
+
+    BOOST_TEST(best_seat(seats) == expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // BestSeat
 
 BOOST_AUTO_TEST_SUITE(MergeOverlappingIntervals)
 

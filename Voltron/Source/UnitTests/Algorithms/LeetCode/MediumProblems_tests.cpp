@@ -4,12 +4,14 @@
 #include <string>
 #include <vector>
 
+using Algorithms::LeetCode::PalindromicSubstrings;
 using Algorithms::LeetCode::LongestPalindrome;
 using Algorithms::LeetCode::LongestSubstringWithoutRepeating;
 using Algorithms::LeetCode::ContainerWithMostWater;
 using Algorithms::LeetCode::CountNumbersWithUniqueDigits;
 using Algorithms::LeetCode::MinimumNumberOfCoinsForFruits;
 using Algorithms::LeetCode::MinimumSizeSubarraySum;
+using Algorithms::LeetCode::SortColors;
 using std::string;
 using std::vector;
 
@@ -54,6 +56,7 @@ BOOST_AUTO_TEST_CASE(LengthOfLongestSubstringGetsLength)
   }
 }
 
+// 5.
 BOOST_AUTO_TEST_SUITE(LongestPalindrome_5_tests)
 
 //------------------------------------------------------------------------------
@@ -156,6 +159,8 @@ BOOST_AUTO_TEST_CASE(DynamicProgrammingFindsLongest)
 
 BOOST_AUTO_TEST_SUITE_END() // LongestPalindrome_5_tests
 
+// 11.
+
 BOOST_AUTO_TEST_SUITE(ContainerWithMostWater_11_tests)
 
 // Testcase 55 of 61.
@@ -186,6 +191,81 @@ BOOST_AUTO_TEST_CASE(BruteForceGetsContainerWithMostWater)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // ContainerWithMostWater_11_tests
+
+// 75. Sort Colors
+// Two Pointers technique, arrays.
+
+BOOST_AUTO_TEST_SUITE(SortColors_0075_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortColorsSortsWithTwoPointers)
+{
+  {
+    vector<int> nums {2,0,2,1,1,0};
+    const vector<int> expected {0,0,1,1,2,2};
+
+    SortColors::sort_colors(nums);
+
+    BOOST_TEST(nums[0] == expected[0]);
+
+    BOOST_TEST(nums == expected);
+  }
+  {
+    vector<int> nums {2,0,1};
+    const vector<int> expected {0,1,2};
+
+    SortColors::sort_colors(nums);
+
+    BOOST_TEST(nums[0] == expected[0]);
+    BOOST_TEST(nums[1] == expected[1]);
+    BOOST_TEST(nums[2] == expected[2]);
+
+    BOOST_TEST(nums == expected);
+  }
+  // Test case 44 / 87
+  {
+    vector<int> nums {1,2,0};
+    const vector<int> expected {0,1,2};
+
+    SortColors::sort_colors(nums);
+
+    BOOST_TEST(nums == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(OnePassSortsWithThreePointers)
+{
+  {
+    vector<int> nums {2,0,2,1,1,0};
+    const vector<int> expected {0,0,1,1,2,2};
+
+    SortColors::one_pass(nums);
+
+    BOOST_TEST(nums == expected);
+  }
+  {
+    vector<int> nums {2,0,1};
+    const vector<int> expected {0,1,2};
+
+    SortColors::one_pass(nums);
+
+    BOOST_TEST(nums == expected);
+  }
+  // Test case 44 / 87
+  {
+    vector<int> nums {1,2,0};
+    const vector<int> expected {0,1,2};
+
+    SortColors::one_pass(nums);
+
+    BOOST_TEST(nums == expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // SortColors_0075_tests
 
 // 209. Minimum Size Subarray Sum
 // arrays, sliding window technique, minimum
@@ -231,17 +311,6 @@ BOOST_AUTO_TEST_CASE(SlidingWindowTechniqueWorks)
 
 BOOST_AUTO_TEST_SUITE_END() // MinimumSizeSubarraySum_209_tests
 
-BOOST_AUTO_TEST_SUITE(NumberOfProvinces_547_tests)
-
-const vector<vector<int>> example_1 {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
-const vector<vector<int>> example_2 {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
-
-const vector<vector<int>> test_case_66 {
-  {1,0,0,1},
-  {0,1,1,0},
-  {0,1,1,1},
-  {1,0,1,1}};
-
 BOOST_AUTO_TEST_CASE(CountNumbersWithUniqueDigitsCounts)
 {
   // Example 1
@@ -275,6 +344,17 @@ BOOST_AUTO_TEST_CASE(CountNumbersWithUniqueDigitsCounts)
   }
 }
 
+BOOST_AUTO_TEST_SUITE(NumberOfProvinces_547_tests)
+
+const vector<vector<int>> example_1 {{1, 1, 0}, {1, 1, 0}, {0, 0, 1}};
+const vector<vector<int>> example_2 {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+
+const vector<vector<int>> test_case_66 {
+  {1,0,0,1},
+  {0,1,1,0},
+  {0,1,1,1},
+  {1,0,1,1}};
+
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/problems/number-of-provinces/
 //------------------------------------------------------------------------------
@@ -298,6 +378,48 @@ BOOST_AUTO_TEST_CASE(DemonstrateGivenExamples)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // NumberOfProvinces_547_tests
+
+// 647. Palindromic Substrings
+
+BOOST_AUTO_TEST_SUITE(PalindromicSubstrings_0647_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BruteForceWorks)
+{
+  {
+    const string s {"abc"};
+    const int expected {3};
+
+    BOOST_TEST(PalindromicSubstrings::brute_force(s) == expected);
+  }
+  {
+    const string s {"aaa"};
+    const int expected {6};
+
+    BOOST_TEST(PalindromicSubstrings::brute_force(s) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ExpandFromCenterForEachElementWorks)
+{
+  {
+    const string s {"abc"};
+    const int expected {3};
+
+    BOOST_TEST(PalindromicSubstrings::count_substrings(s) == expected);
+  }
+  {
+    const string s {"aaa"};
+    const int expected {6};
+
+    BOOST_TEST(PalindromicSubstrings::count_substrings(s) == expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // PalindromicSubstrings_0647_tests
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

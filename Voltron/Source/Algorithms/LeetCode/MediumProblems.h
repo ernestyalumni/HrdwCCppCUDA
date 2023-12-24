@@ -102,6 +102,28 @@ class ContainerWithMostWater
 };
 
 //------------------------------------------------------------------------------
+/// \name 75. Sort Colors
+/// Constraints
+/// * n == nums.length
+/// * 1 <= n <= 300
+/// * nums[i] is either 0, 1, or 2.
+///
+/// In-place sorting suggests manipulating array by swapping elements, which is
+/// a common operation in 2-pointer techniques.
+//------------------------------------------------------------------------------
+class SortColors
+{
+  public:
+
+    static void sort_colors(std::vector<int>& nums);
+  
+    //--------------------------------------------------------------------------
+    /// This is a variant of the Dutch National Flag algorithm with 3 pointers.
+    //--------------------------------------------------------------------------
+    static void one_pass(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// \name 209. Minimum Size Subarray Sum
 /// We're given an array of positive integers (that are non-zero).
 /// A subarray is a contiguous non-empty sequence of elements within an array.
@@ -141,6 +163,24 @@ class CountNumbersWithUniqueDigits
 /// \url https://leetcode.com/problems/number-of-provinces/
 //------------------------------------------------------------------------------
 int find_number_of_provinces(std::vector<std::vector<int>>& is_connected);
+
+//------------------------------------------------------------------------------
+/// \name 647. Palindromic Substrings
+/// Constraints
+/// 1 <= s.length <= 1000
+/// s consists of lowercase English letters.
+//------------------------------------------------------------------------------
+class PalindromicSubstrings
+{
+  public:
+
+    // O(N^2) time complexity overall.
+    static int brute_force(std::string s);
+    static int count_substrings(std::string s);
+
+    // O(N) time complexity.
+    static bool is_palindrome(const std::string& s);
+};
 
 //------------------------------------------------------------------------------
 /// \name 2944. Minimum Number of Coins for Fruits

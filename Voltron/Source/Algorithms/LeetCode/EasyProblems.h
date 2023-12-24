@@ -23,6 +23,20 @@ class TwoSum
     static std::vector<int> two_sum(std::vector<int>& nums, int target);
 };
 
+//------------------------------------------------------------------------------
+/// 88. Merge Sorted Array
+/// Given 2 integer arrrays sorted in non-decreasing order.
+//------------------------------------------------------------------------------
+class MergeSortedArray
+{
+  public:
+
+    static void merge(
+      std::vector<int>& nums1,
+      int m,
+      std::vector<int>& nums2,
+      int n);
+};
 
 //------------------------------------------------------------------------------
 /// 1646. Get Maximum in Generated Array.

@@ -8,6 +8,19 @@ namespace Algorithms
 namespace ExpertIo
 {
 
+namespace BestSeat
+{
+
+//------------------------------------------------------------------------------
+/// Prefer to sit in a seat with the most space and evenly distributed on either
+/// side of you.
+/// \ref https://www.algoexpert.io/questions/best-seat
+//------------------------------------------------------------------------------
+
+int best_seat(std::vector<int> seats);
+
+}
+
 namespace MergeOverlappingIntervals
 {
 

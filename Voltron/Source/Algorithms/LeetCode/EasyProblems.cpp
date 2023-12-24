@@ -56,6 +56,65 @@ vector<int> TwoSum::two_sum(vector<int>& nums, int target)
   return vector<int>{};
 }
 
+/// 88. Merge Sorted Array
+
+void MergeSortedArray::merge(
+  vector<int>& nums1,
+  int m,
+  vector<int>& nums2,
+  int n)
+{
+  if (n == 0)
+  {
+    return;
+  }
+
+  if (m == 0)
+  {
+    nums1 = nums2;
+  }
+
+  // The key insight is to start from the end and we know from the end and
+  // decrementing, we obtain the largest, and non-increasing.
+
+  int current_index_1 {m - 1};
+  int current_index_2 {n - 1};
+  int tail {m + n - 1};
+
+  while (tail >= 0)
+  {
+    if (current_index_1 >= 0 && current_index_2 >= 0)
+    {
+      if (nums1[current_index_1] > nums2[current_index_2])
+      {
+        nums1[tail] = nums1[current_index_1];
+        --current_index_1;
+      }
+      else
+      {
+        nums1[tail] = nums2[current_index_2];
+        --current_index_2;
+      }
+
+      --tail;
+    }
+    else if (current_index_2 >= 0)
+    {
+      while (current_index_2 >= 0)
+      {
+        nums1[tail] = nums2[current_index_2];
+        --current_index_2;
+        --tail;
+      }
+    }
+    // Otherwise nums1 is already in non-decreasing order.
+    else
+    {
+      --tail;
+    }
+  }
+}
+
 int GetMaximumInGeneratedArray::get_maximum_generated(int n)
 {
   if (n == 0 || n == 1)

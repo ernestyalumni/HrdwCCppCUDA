@@ -1,6 +1,6 @@
 #include "MediumProblems.h"
 
-#include <algorithm>
+#include <algorithm> // std::swap;
 #include <array>
 #include <cstddef> // std::size_t
 #include <limits.h>
@@ -20,6 +20,7 @@ using std::min;
 using std::size_t;
 using std::stack;
 using std::string;
+using std::swap;
 using std::unordered_set;
 using std::vector;
 
@@ -353,6 +354,97 @@ int ContainerWithMostWater::maximum_area(vector<int>& height)
   return maximum_area;
 }
 
+/// \name 75. Sort Colors
+
+void SortColors::sort_colors(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+  // Index of the start of a category of a color.
+  int end {0};
+  int current_ptr {0};
+
+  while (current_ptr < N && end < N)
+  {
+    if (nums[current_ptr] == 0)
+    {
+      if (end != current_ptr)
+      {
+        const int original_value {nums[end]};
+        nums[end] = 0;
+        nums[current_ptr] = original_value;
+      }
+
+      end++;
+    }
+
+    current_ptr++;
+  }
+
+  current_ptr = end;
+
+  while (current_ptr < N && end < N)
+  {
+    if (nums[current_ptr] == 1)
+    {
+      if (end != current_ptr)
+      {
+        const int original_value {nums[end]};
+        nums[end] = 1;
+        nums[current_ptr] = original_value;
+      }
+
+      end++;
+    }
+
+    current_ptr++;
+  }
+
+  current_ptr = end;
+
+  while (current_ptr < N && end < N)
+  {
+    if (nums[current_ptr] == 2)
+    {
+      if (end != current_ptr)
+      {
+        const int original_value {nums[end]};
+        nums[end] = 2;
+        nums[current_ptr] = original_value;
+      }
+
+      end++;
+    }
+
+    current_ptr++;
+  }
+}
+
+void SortColors::one_pass(vector<int>& nums)
+{
+  int low_index {0};
+  int current_index {0};
+  int high_index {static_cast<int>(nums.size() - 1)};
+
+  while (current_index <= high_index)
+  {
+    if (nums[current_index] == 0)
+    {
+      swap(nums[low_index], nums[current_index]);
+      low_index++;
+      current_index++;
+    }
+    else if (nums[current_index] == 1)
+    {
+      current_index++;
+    }
+    else
+    {
+      swap(nums[current_index], nums[high_index]);
+      high_index--;
+    }
+  }
+}
+
 /// \name 209. Minimum Size Subarray Sum
 // Recall that a subarray is a contiguous, non-empty sequence of elements of the
 // array.
@@ -514,6 +606,74 @@ int find_number_of_provinces(vector<vector<int>>& is_connected)
   }
 
   return counter;
+}
+
+/// \name 647. Palindromic Substrings
+
+int PalindromicSubstrings::brute_force(string s)
+{
+  const int N {static_cast<int>(s.size())};
+  int number_of_palindromes {0};
+
+  // O(N^2) time complexity overall.
+  for (int i {0}; i < N; ++i)
+  {
+    for (int j {i}; j < N; ++j)
+    {
+      if (is_palindrome(s.substr(i, j - i + 1)))
+      {
+        number_of_palindromes += 1;
+      }
+    }
+  }
+
+  return number_of_palindromes;
+}
+
+int PalindromicSubstrings::count_substrings(string s)
+{
+  const int N {static_cast<int>(s.size())};
+  // Number of palindromic substrings.
+  int count {0};
+
+  // Expand from the center with the center being from both each element of
+  // string s and each adjacent pairs of elements.
+  // Stop the expansion when it's no longer a palindrome!
+  for (int i {0}; i < 2 * N - 1; ++i)
+  {
+    int left {i / 2};
+    int right {left + i % 2};
+
+    while ((0 <= left && right < N) && (s[left] == s[right]))
+    {
+      ++count;
+      --left;
+      ++right;
+    }
+  }
+
+  return count;
+}
+
+bool PalindromicSubstrings::is_palindrome(const string& s)
+{
+  const int N {static_cast<int>(s.size())};
+
+  int start {0};
+  int end {N - 1};
+
+  while (start < end)
+  {
+    if (s[start] != s[end])
+    {
+      return false;
+    }
+
+    ++start;
+    --end;
+  }
+
+  return true;
 }
 
 /// \name 2944. Minimum Number of Coins for Fruits

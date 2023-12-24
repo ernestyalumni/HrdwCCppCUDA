@@ -6,6 +6,7 @@
 
 using Algorithms::LeetCode::GetMaximumInGeneratedArray;
 using Algorithms::LeetCode::TwoSum;
+using Algorithms::LeetCode::MergeSortedArray;
 using std::unordered_set;
 using std::vector;
 
@@ -81,6 +82,60 @@ BOOST_AUTO_TEST_CASE(TwoSumWithMapGetsTarget)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // TwoSum_0001_tests
+
+/// 88. Merge Sorted Array
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MergeSortedArrayWithTwoPointers)
+{
+  {
+    vector<int> nums1 {1,2,3,0,0,0};
+    const int m {3};
+    vector<int> nums2 {2,5,6};
+    const int n {3};
+
+    const vector<int> expected {1,2,2,3,5,6};
+
+    MergeSortedArray::merge(nums1, m, nums2, n);
+
+    BOOST_TEST(nums1 == expected);
+  }
+  {
+    vector<int> nums1 {1};
+    const int m {1};
+    vector<int> nums2 {};
+    const int n {0};
+    const vector<int> expected {1};
+
+    MergeSortedArray::merge(nums1, m, nums2, n);
+
+    BOOST_TEST(nums1 == expected);
+  }
+  {
+    vector<int> nums1 {0};
+    const int m {0};
+    vector<int> nums2 {1};
+    const int n {1};
+    const vector<int> expected {1};
+
+    MergeSortedArray::merge(nums1, m, nums2, n);
+
+    BOOST_TEST(nums1 == expected);
+  }
+  // Test Case 9 / 59
+  {
+    vector<int> nums1 {4,0,0,0,0,0};
+    const int m {1};
+    vector<int> nums2 {1,2,3,5,6};
+    const int n {5};
+    const vector<int> expected {1,2,3,4,5,6};
+
+    MergeSortedArray::merge(nums1, m, nums2, n);
+
+    BOOST_TEST(nums1 == expected);
+  }  
+}
 
 BOOST_AUTO_TEST_SUITE(GetMaximumInGeneratedArray_1646_tests)
 
