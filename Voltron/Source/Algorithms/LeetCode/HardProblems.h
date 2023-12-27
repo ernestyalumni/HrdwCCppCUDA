@@ -10,6 +10,19 @@ namespace LeetCode
 {
 
 //------------------------------------------------------------------------------
+/// 41. First Missing Positive
+/// Constraints
+/// 1 <= nums.length <= 10^5
+/// -2^31 <= nums[i] <= 2^31 - 1
+//------------------------------------------------------------------------------
+class FirstMissingPositive
+{
+  public:
+
+    static int first_missing_positive(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// \name 76. Minimum Window Substring
 /// Return minimum window substring of s such that every character in t
 /// (including duplicates) is included in window. If tehre's no such substring,
@@ -58,6 +71,25 @@ class MinimumCostToCutStick
   public:
 
     static int minimum_cost_to_cut_stick(int n, std::vector<int>& cuts);
+};
+
+//------------------------------------------------------------------------------
+/// 1944. Number of Visible People in a Queue
+/// Key insight is to iterate *from the right* or "from the end" because "A
+/// person can see another person to their right in the queue if everybody in
+/// between is shorter than both of them. More formally, ith person can see the
+/// jth person if i < j and min(heights[i], heights[j]) > max(heights[i+1],
+/// heights[i+2], ..., heights[j-1])"
+///
+/// Keywords: Traversing from the right. Stack.
+///
+/// Another key insight is to use a stack such that Last In First Out applies.
+//------------------------------------------------------------------------------
+class NumberOfVisiblePeopleInAQueue
+{
+  public:
+
+    static std::vector<int> can_see_persons_count(std::vector<int>& heights);
 };
 
 //------------------------------------------------------------------------------

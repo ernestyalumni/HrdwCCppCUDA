@@ -5,14 +5,45 @@
 #include <vector>
 
 // Ordered by Leetcode number.
+using Algorithms::LeetCode::FirstMissingPositive;
 using Algorithms::LeetCode::MinimumWindowSubstring;
 using Algorithms::LeetCode::WaysToEarnPoints;
 using Algorithms::LeetCode::MinimumCostToCutStick;
+using Algorithms::LeetCode::NumberOfVisiblePeopleInAQueue;
 using std::string;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
+
+/// 41. First Missing Positive
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FirstMissingPositiveWorks)
+{
+  {
+    vector<int> nums {1,2,0};
+    const int expected {3};
+
+    BOOST_TEST(
+      FirstMissingPositive::first_missing_positive(nums) == expected);
+  }
+  {
+    vector<int> nums {3,4,-1,1};
+    const int expected {2};
+
+    BOOST_TEST(
+      FirstMissingPositive::first_missing_positive(nums) == expected);
+  }
+  {
+    vector<int> nums {7,8,9,11,12};
+    const int expected {1};
+
+    BOOST_TEST(
+      FirstMissingPositive::first_missing_positive(nums) == expected);
+  }
+}
 
 // 76. Minimum Window Substring
 //------------------------------------------------------------------------------
@@ -68,6 +99,7 @@ BOOST_AUTO_TEST_CASE(ShortestPathInGridWithObstaclesFindShortest)
   }
 }
 
+/// 1547. Minimum Cost to Cut a Stick
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(MinimumCostToCutStickFindsMinimum)
@@ -89,6 +121,30 @@ BOOST_AUTO_TEST_CASE(MinimumCostToCutStickFindsMinimum)
 
     BOOST_TEST(
       MinimumCostToCutStick::minimum_cost_to_cut_stick(n, cuts) == expected);
+  }
+}
+
+/// 1944. Number of Visible People in a Queue
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NumberOfVisiblePeopleInAQueueWorksWithStack)
+{
+  {
+    vector<int> heights {10,6,8,5,11,9};
+    vector<int> expected {3,1,2,1,1,0};
+    const auto output =
+      NumberOfVisiblePeopleInAQueue::can_see_persons_count(heights);
+
+    BOOST_TEST(output == expected);
+  }
+  {
+    vector<int> heights {5,1,2,3,10};
+    vector<int> expected {4,1,1,1,0};
+
+    const auto output =
+      NumberOfVisiblePeopleInAQueue::can_see_persons_count(heights);
+
+    BOOST_TEST(output == expected);
   }
 }
 

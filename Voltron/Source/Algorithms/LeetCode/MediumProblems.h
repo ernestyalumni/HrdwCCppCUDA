@@ -102,6 +102,61 @@ class ContainerWithMostWater
 };
 
 //------------------------------------------------------------------------------
+/// 15. 3Sum
+/// Key idea: Sort the array first.
+/// *Sort the array first.*
+//------------------------------------------------------------------------------
+class ThreeSum
+{
+  public:
+
+    static std::vector<std::vector<int>> three_sum(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 33. Search in Rotated Sorted Array
+/// Given array nums after the possible rotation and an integer target, return
+/// index of target if it's in nums, or -1 if it's not in nums.
+/// Constraints
+/// 1 <= nums.length <= 5000
+//------------------------------------------------------------------------------
+class SearchInRotatedSortedArray
+{
+  public:
+
+    static int search(std::vector<int>& nums, int target);
+};
+
+//------------------------------------------------------------------------------
+/// 53. Maximum Subarray
+// Constraints:
+/// 1 <= nums.length <= 10^5
+/// -10^4 <= nums[i] <= 10^4
+/// Consider Kadane's algorithm, and consider both a local and global maxima.
+//------------------------------------------------------------------------------
+class MaximumSubarray
+{
+  public:
+
+    static int max_subarray(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 56. Merge Intervals
+/// Constraints 1 <= intervals.length <= 10^4
+/// intervals[i].length == 2
+/// 0 <= start_i <= end_i <= 10^4
+/// Key ideas: sort elements of the array first.
+//------------------------------------------------------------------------------
+class MergeIntervals
+{
+  public:
+
+    static std::vector<std::vector<int>> merge(
+      std::vector<std::vector<int>>& intervals);
+};
+
+//------------------------------------------------------------------------------
 /// \name 75. Sort Colors
 /// Constraints
 /// * n == nums.length
@@ -121,6 +176,17 @@ class SortColors
     /// This is a variant of the Dutch National Flag algorithm with 3 pointers.
     //--------------------------------------------------------------------------
     static void one_pass(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 152. Maximum Product Subarray
+//------------------------------------------------------------------------------
+
+class MaximumProductSubarray
+{
+  public:
+
+    static int max_product(std::vector<int>& nums);
 };
 
 //------------------------------------------------------------------------------
@@ -146,6 +212,21 @@ class MinimumSizeSubarraySum
 };
 
 //------------------------------------------------------------------------------
+/// 238. Product of Array Except self
+/// Key ideas: precomputation. We want for each i, p[i] = \Prod_{j = 0}^{N-1}
+/// x[j] such that j != i. Split this product up into p[i] = \Prod_{j= 0}^{i-1}
+/// x[j] * \Prod_{j=i+1}^{N - 1} x[j] = L * R where
+/// L are "left products" and R are "right products"
+//------------------------------------------------------------------------------
+class ProductOfArrayExceptSelf
+{
+  public:
+
+    static std::vector<int> brute_force(std::vector<int>& nums);
+    static std::vector<int> product_except_self(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// \name 357. Count Numbers With Unique Digits
 /// \url https://leetcode.com/problems/count-numbers-with-unique-digits/
 /// Given integer n, return count of all numbers with unique digits, x, where
@@ -156,6 +237,18 @@ class CountNumbersWithUniqueDigits
   public:
 
     static int count_numbers_with_unique_digits(int n);
+};
+
+//------------------------------------------------------------------------------
+/// \name 435. Non-overlapping intervals
+/// Key ideas: sort array.
+//------------------------------------------------------------------------------
+class NonOverlappingIntervals
+{
+  public:
+
+    static int erase_overlap_intervals(
+      std::vector<std::vector<int>>& intervals);
 };
 
 //------------------------------------------------------------------------------
@@ -184,7 +277,8 @@ class PalindromicSubstrings
 
 //------------------------------------------------------------------------------
 /// 739. Daily Temperatures
-/// Key themes: Traversing from the right.
+/// Key themes: Traversing from the right. Stack. Check future values against
+/// elements identified by index or "key" in stack.
 //------------------------------------------------------------------------------
 class DailyTemperatures
 {

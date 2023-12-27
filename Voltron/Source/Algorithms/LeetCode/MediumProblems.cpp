@@ -1,7 +1,8 @@
 #include "MediumProblems.h"
 
-#include <algorithm> // std::swap;
+#include <algorithm> // std::sort, std::swap;
 #include <array>
+#include <climits> // INT_MIN
 #include <cstddef> // std::size_t
 #include <limits.h>
 #include <limits>
@@ -354,6 +355,186 @@ int ContainerWithMostWater::maximum_area(vector<int>& height)
   return maximum_area;
 }
 
+//------------------------------------------------------------------------------
+/// 15. 3Sum
+//------------------------------------------------------------------------------
+vector<vector<int>> ThreeSum::three_sum(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  vector<vector<int>> triplets {};
+
+  // Key insight is to first *sort the array*.
+  sort(nums.begin(), nums.end());
+
+  for (int i {0}; i < N; ++i)
+  {
+    const int current_complement {-nums[i]};
+
+    int l {i + 1};
+    int r {N - 1};
+
+    while (l < r)
+    {
+      const int two_sum {nums[l] + nums[r]};
+
+      if (two_sum > current_complement)
+      {
+        --r;
+      }
+      else if (two_sum < current_complement)
+      {
+        ++l;
+      }
+      else
+      {
+        triplets.push_back({nums[i], nums[l], nums[r]});
+
+        // Skip past any duplicate values from the left and right.
+
+        while ((l < r) && nums[l] == nums[l + 1])
+        {
+          ++l;
+        }
+        while ((l < r) && nums[r] == nums[r - 1])
+        {
+          --r;
+        }
+
+        ++l;
+        --r;
+      }
+    }
+  }
+
+  return triplets;
+}
+
+//------------------------------------------------------------------------------
+/// 33. Search in Rotated Sorted Array
+//------------------------------------------------------------------------------
+int SearchInRotatedSortedArray::search(vector<int>& nums, int target)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  if (nums.size() == 1)
+  {
+    return nums[0] == target ? 0 : -1;
+  }
+
+  int l {0};
+  int r {N - 1};
+
+  while (l <= r)
+  {
+    const int mid { (r - l) / 2 + l};
+
+    if (nums[mid] == target)
+    {
+      return mid;
+    }
+
+    // Check if left side is sorted (the pivot point must be somewhere along the
+    // array or no pivot point at all).
+    if (nums[l] <= nums[mid])
+    {
+      if (target >= nums[l] && target <= nums[mid])
+      {
+        r = mid - 1;
+      }
+      else
+      {
+        l = mid + 1;
+      }
+    }
+    else
+    {
+      if (target >= nums[mid + 1] && target <= nums[r])
+      {
+        l = mid + 1;
+      }
+      else
+      {
+        r = mid - 1;
+      }
+    }
+  }
+
+  return -1;
+};
+
+//------------------------------------------------------------------------------
+/// 53. Maximum Subarray
+//------------------------------------------------------------------------------
+int MaximumSubarray::max_subarray(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  int local_maximum {nums[0]};
+  int global_maximum {nums[0]};
+
+  for (int i {1}; i < N; ++i)
+  {
+    const int current_value {nums[i]};
+
+    local_maximum = max(current_value, local_maximum + current_value);
+    global_maximum = max(local_maximum, global_maximum);
+  }
+
+  return global_maximum;
+}
+
+//------------------------------------------------------------------------------
+/// 56. Merge Intervals
+//------------------------------------------------------------------------------
+vector<vector<int>> MergeIntervals::merge(vector<vector<int>>& intervals)
+{
+  // Sort by first value of each interval. Then we can immediately spot there's
+  // an overlap by when start_i >= end_{i-1}.
+  // O(N log(N)) comparisons.
+  std::sort(
+    intervals.begin(),
+    intervals.end(),
+    [](const auto& a, const auto& b) -> bool
+    {
+      return a[0] < b[0];
+    });
+
+  vector<vector<int>> merged_intervals {};
+
+  bool is_in_interval {false};
+  // Constraint was start_i => 0
+  int merged_start_value {-1};
+  int merged_end_value {-1};
+  for (const auto& interval : intervals)
+  {
+    if (!is_in_interval)
+    {
+      merged_start_value = interval[0];
+      merged_end_value = interval[1];
+      is_in_interval = true;
+    }
+    else
+    {
+      if (interval[0] > merged_end_value)
+      {
+        merged_intervals.emplace_back(
+          vector<int>{merged_start_value, merged_end_value});
+        merged_start_value = interval[0];
+        merged_end_value = interval[1];
+      }
+      else if (interval[1] > merged_end_value)
+      {
+        merged_end_value = interval[1];
+      }
+    }
+  }
+  merged_intervals.emplace_back(
+    vector<int>{merged_start_value, merged_end_value});
+
+  return merged_intervals;
+}
+
 /// \name 75. Sort Colors
 
 void SortColors::sort_colors(vector<int>& nums)
@@ -445,6 +626,35 @@ void SortColors::one_pass(vector<int>& nums)
   }
 }
 
+//------------------------------------------------------------------------------
+/// 152. Maximum Product Subarray
+//------------------------------------------------------------------------------
+int MaximumProductSubarray::max_product(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  int local_maximum {nums[0]};
+  int local_minimum {nums[0]};
+  int global_maximum {nums[0]};
+
+  for (int i {1}; i < N; ++i)
+  {
+    const int current_value {nums[i]};
+
+    if (current_value < 0)
+    {
+      swap(local_maximum, local_minimum);
+    }    
+
+    local_minimum = min(current_value, local_minimum * current_value);
+    local_maximum = max(current_value, local_maximum * current_value);
+
+    global_maximum = max(global_maximum, local_maximum);
+  }
+
+  return global_maximum;
+}
+
 /// \name 209. Minimum Size Subarray Sum
 // Recall that a subarray is a contiguous, non-empty sequence of elements of the
 // array.
@@ -487,7 +697,66 @@ int MinimumSizeSubarraySum::minimum_subarray_length(
   return length == INT_MAX ? 0 : length;
 }
 
-/// @name 357. Count Numbers With Unique Digits
+//------------------------------------------------------------------------------
+/// 238. Product of Array Except self
+//------------------------------------------------------------------------------
+
+vector<int> ProductOfArrayExceptSelf::brute_force(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+  vector<int> products (N, 1);
+
+  for (int i {0}; i < N; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (j != i)
+      {
+        products[j] *= nums[i];
+      }
+    }
+  }
+
+  return products;
+}
+
+vector<int> ProductOfArrayExceptSelf::product_except_self(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+  vector<int> left_products (N, 1);
+  // We'll reuse products for our right products.
+  vector<int> products (N, 1);
+
+  // Left products:
+  // L[i] = \begin{cases} 1 & if i == 0 \\
+  //  L[i-1] * nums[i - 1] & if i > 0
+  
+  for (int j {1}; j < N; ++j)
+  {
+    left_products[j] = left_products[j - 1] * nums[j - 1];
+  }
+
+  // Right products:
+  // R[i] = \begin{cases} 1 & if i == N - 1 \\
+  //  R[i + 1] * nums[i + 1] & if i < N - 1
+
+  for (int j {N - 2}; j >= 0; --j)
+  {
+    products[j] = products[j + 1] * nums[j + 1];
+  }
+
+  for (int i {0}; i < N; ++i)
+  {
+    products[i] *= left_products[i];
+  }
+
+  return products;
+}
+
+//------------------------------------------------------------------------------
+/// 357. Count Numbers With Unique Digits
+//------------------------------------------------------------------------------
+
 int CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(int n)
 {
   /*
@@ -570,6 +839,62 @@ int CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(int n)
   }
 
   return number_of_numbers.at(n);
+}
+
+//------------------------------------------------------------------------------
+/// \name 435. Non-overlapping intervals
+//------------------------------------------------------------------------------
+int NonOverlappingIntervals::erase_overlap_intervals(
+  vector<vector<int>>& intervals)
+{
+  std::sort(
+    intervals.begin(),
+    intervals.end(),
+    [](const auto& a, const auto& b) -> bool
+    {
+      if (a[0] != b[0])
+      {
+        return a[0] < b[0];
+      }
+      else
+      {
+        return a[1] < b[1];
+      }
+    });
+
+  // I'm not able to right now show definitively that this is true, even with
+  // proof by contradiction, that it'll result in less number of intervals to
+  // remove if we eliminate an interval that overlaps with more than 2 intervals
+  // (or by definition, that's the case).
+
+  int current_start_value {INT_MIN};
+  int current_end_value {INT_MIN};
+  int counter {0};
+
+  for (const auto& interval : intervals)
+  {
+    // Overlap detected.
+    if (interval[0] < current_end_value)
+    {
+      ++counter;
+      // TODO: This step isn't mathematically proven definitively that seeking
+      // smaller intevals will lead to less intervals to remove.
+      if (interval[1] < current_end_value)
+      {
+        current_start_value = interval[0];
+        current_end_value = interval[1];
+      }
+    }
+    // No overlap detected, or we start to track an interval for overlaps in the
+    // next iteration.
+    else
+    {
+      current_start_value = interval[0];
+      current_end_value = interval[1];
+    }
+  }
+
+  return counter;
 }
 
 //------------------------------------------------------------------------------

@@ -183,7 +183,6 @@ std::optional<std::size_t> binary_search_inclusive(
 
 int square_root(int x);
 
-
 //------------------------------------------------------------------------------
 /// \url https://leetcode.com/discuss/interview-question/algorithms/124724/facebook-onsite-count-occurrences-of-a-number-in-a-sorted-array
 /// \ref https://www.geeksforgeeks.org/count-number-of-occurrences-or-frequency-in-a-sorted-array/

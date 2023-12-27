@@ -1,12 +1,17 @@
 #include "HardProblems.h"
 
-#include <algorithm>
+#include <algorithm> // std::swap
 #include <climits>
-#include <unordered_map>
+#include <limits.h> // INT_MAX
+#include <stack>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
+using std::min;
+using std::stack;
 using std::string;
+using std::swap;
 using std::unordered_map;
 using std::vector;
 
@@ -14,6 +19,40 @@ namespace Algorithms
 {
 namespace LeetCode
 {
+
+//------------------------------------------------------------------------------
+/// 41. First Missing Positive
+//------------------------------------------------------------------------------
+int FirstMissingPositive::first_missing_positive(vector<int>& nums)
+{
+  // O(N) time complexity if it's not recorded.
+  const int N {static_cast<int>(nums.size())};
+
+  for (int i {0}; i < N; ++i)
+  {
+    while (nums[i] > 0 && nums[i] <= N &&
+      // If nums[i] was in its sorted, "correct", position, then nums[i] ==
+      // i + 1. So then [nums[i] - 1] = [i + 1 - 1] = [i] and so
+      // nums[i] == nums[i].
+      (nums[nums[i] - 1] != nums[i]))
+    {
+      swap(nums[i], nums[nums[i] - 1]);
+
+      // This is guaranteed to stop because each time we swap the value to its
+      // sorted, "correct", position and there are only finite number of nums.
+    }
+  }
+
+  for (int i {0}; i < N; ++i)
+  {
+    if (nums[i] != i + 1)
+    {
+      return i + 1;
+    }
+  }
+
+  return N + 1;
+}
 
 /// \name 76. Minimum Window Substring
 string MinimumWindowSubstring::minimum_window(string s, string t)
@@ -160,6 +199,8 @@ int WaysToEarnPoints::ways_to_reach_target(
   return number_of_ways[target];
 }
 
+/// 1547. Minimum Cost to Cut a Stick.
+
 int MinimumCostToCutStick::minimum_cost_to_cut_stick(int n, vector<int>& cuts)
 {
   const int N {static_cast<int>(cuts.size())};
@@ -213,6 +254,55 @@ int MinimumCostToCutStick::minimum_cost_to_cut_stick(int n, vector<int>& cuts)
   }
 
   return minimum_cost[0][N + 1];
+}
+
+//------------------------------------------------------------------------------
+/// 1944. Number of Visible People in a Queue
+//------------------------------------------------------------------------------
+
+vector<int> NumberOfVisiblePeopleInAQueue::can_see_persons_count(
+  vector<int>& heights)
+{
+  const int N {static_cast<int>(heights.size())};
+  // Tracks the index of each person upon which we still need to consider their
+  // height.
+  // Use a stack for LIFO ordering: we want to check for each current person
+  // the heights of each person on right from the next adjacent right, until
+  // the end.
+  stack<int> unresolved_people {};
+
+  vector<int> visible_persons (N, 0);
+
+  // Key insight was to iterate from the right. It wasn't obvious to me.
+  for (int i {N - 1}; i >= 0; --i)
+  {
+    const int current_height {heights[i]};
+
+    while (!unresolved_people.empty() &&
+      // The current person can see above the previous person on the right.
+      (current_height > heights[unresolved_people.top()]))
+    {
+      visible_persons[i]++;
+      // Since the current person is taller than the previous person on the
+      // right, this person will overshadow them. So for the next person to
+      // consider on the left, we can pop this person.
+      unresolved_people.pop();
+    }
+
+    // Assert that current_height <= heights[unresolved_people.top()], i.e.
+    // there's someone taller from the right that the current person can't see
+    // past.
+    // Increment the number of visible persons because the current person can
+    // the taller person.
+    if (!unresolved_people.empty())
+    {
+      visible_persons[i]++;
+    }
+
+    unresolved_people.push(i);
+  }
+
+  return visible_persons;
 }
 
 } // namespace LeetCode

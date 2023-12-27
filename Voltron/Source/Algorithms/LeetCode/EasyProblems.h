@@ -39,6 +39,29 @@ class MergeSortedArray
 };
 
 //------------------------------------------------------------------------------
+/// 121. Best Time to Buy and Sell Stock
+/// Constraints:
+/// 1 <= prices.length <= 10^5
+/// 0 <= prices[i] <= 10^4
+//------------------------------------------------------------------------------
+class BestTimeToBuyAndSellStock
+{
+  public:
+
+    static int max_profit(std::vector<int>& prices);
+};
+
+//------------------------------------------------------------------------------
+/// 217. Contains Duplicate
+//------------------------------------------------------------------------------
+class ContainsDuplicate
+{
+  public:
+
+    static bool contains_duplicate(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// 1646. Get Maximum in Generated Array.
 /// Given integer n, A 0-indexed integer array nums of length n + 1 is generated
 /// in the following way:

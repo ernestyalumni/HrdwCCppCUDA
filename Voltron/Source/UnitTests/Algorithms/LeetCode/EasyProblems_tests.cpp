@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
+using Algorithms::LeetCode::BestTimeToBuyAndSellStock;
 using Algorithms::LeetCode::GetMaximumInGeneratedArray;
 using Algorithms::LeetCode::TwoSum;
 using Algorithms::LeetCode::MergeSortedArray;
@@ -135,6 +136,53 @@ BOOST_AUTO_TEST_CASE(MergeSortedArrayWithTwoPointers)
 
     BOOST_TEST(nums1 == expected);
   }  
+}
+
+//------------------------------------------------------------------------------
+/// 121. Best Time to Buy and Sell Stock
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IterateOnceKeepingTrackOfMinAndMaxWorks)
+{
+  {
+    vector<int> prices {7,1,5,3,6,4};
+    const int expected {5};
+
+    BOOST_TEST(BestTimeToBuyAndSellStock::max_profit(prices) == expected);
+  }
+  {
+    vector<int> prices {7,6,4,3,1};
+    const int expected {0};
+    BOOST_TEST(BestTimeToBuyAndSellStock::max_profit(prices) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 217. Contains Duplicate
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(UnorderedMapFindsDuplicates)
+{
+  {
+    vector<int> nums {1,2,3,1};
+    const bool expected {true};
+
+    BOOST_TEST(ContainsDuplicate::contains_duplicate(nums));
+  }
+  {
+    vector<int> nums {1,2,3,4};
+    const bool expected {false};
+    BOOST_TEST(!ContainsDuplicate::contains_duplicate(nums));
+  }
+  {
+    vector<int> nums {1,1,1,3,3,4,3,2,4,2};
+    const bool expected {true};
+    BOOST_TEST(ContainsDuplicate::contains_duplicate(nums));
+  }
 }
 
 BOOST_AUTO_TEST_SUITE(GetMaximumInGeneratedArray_1646_tests)
