@@ -7,6 +7,7 @@
 // Ordered by Leetcode number.
 using Algorithms::LeetCode::FirstMissingPositive;
 using Algorithms::LeetCode::MinimumWindowSubstring;
+using Algorithms::LeetCode::SlidingWindowMaximum;
 using Algorithms::LeetCode::WaysToEarnPoints;
 using Algorithms::LeetCode::MinimumCostToCutStick;
 using Algorithms::LeetCode::NumberOfVisiblePeopleInAQueue;
@@ -73,6 +74,35 @@ BOOST_AUTO_TEST_CASE(MinimumWindowSubstringWorksWithSlidingWindow)
   }  
 }
 
+//------------------------------------------------------------------------------
+/// 239. Sliding Window Maximum
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SlidingWindowMaximumWorks)
+{
+  {
+    vector<int> nums {1,3,-1,-3,5,3,6,7};
+    const int k {3};
+    const vector<int> expected {3,3,5,5,6,7};
+    BOOST_TEST(SlidingWindowMaximum::max_sliding_window(nums, k) == expected);
+  }
+  {
+    vector<int> nums {1};
+    const int k {1};
+    const vector<int> expected {1};
+    BOOST_TEST(SlidingWindowMaximum::max_sliding_window(nums, k) == expected);
+  }
+  // Test case 10 / 51
+  {
+    vector<int> nums {7, 2, 4};
+    const int k {2};
+    const vector<int> expected {7, 4};
+    BOOST_TEST(SlidingWindowMaximum::max_sliding_window(nums, k) == expected);
+  }
+}
+
 /// 1293. Shortest Path in a Grid with Obstacles Elimination
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -89,7 +119,6 @@ BOOST_AUTO_TEST_CASE(ShortestPathInGridWithObstaclesFindShortest)
 
     int output {6};
   }
-
   {
     vector<vector<int>> grid {{0, 1, 1}, {1, 1, 1}, {1, 0, 0}};
     int k {1};

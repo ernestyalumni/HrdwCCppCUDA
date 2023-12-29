@@ -1,13 +1,18 @@
 #include "Algorithms/LeetCode/EasyProblems.h"
 
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <unordered_set>
 #include <vector>
 
 using Algorithms::LeetCode::BestTimeToBuyAndSellStock;
+using Algorithms::LeetCode::BinarySearch;
 using Algorithms::LeetCode::GetMaximumInGeneratedArray;
 using Algorithms::LeetCode::TwoSum;
 using Algorithms::LeetCode::MergeSortedArray;
+using Algorithms::LeetCode::ValidAnagram;
+using Algorithms::LeetCode::ValidPalindrome;
+using std::string;
 using std::unordered_set;
 using std::vector;
 
@@ -160,6 +165,34 @@ BOOST_AUTO_TEST_CASE(IterateOnceKeepingTrackOfMinAndMaxWorks)
 }
 
 //------------------------------------------------------------------------------
+/// 125. Valid Palindrome
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ValidPalindromeWorksLinearly)
+{
+  {
+    const string s {"A man, a plan, a canal: Panama"};
+
+    BOOST_TEST(ValidPalindrome::is_palindrome(s));
+  }
+  {
+    const string s {"race a car"};
+    BOOST_TEST(!ValidPalindrome::is_palindrome(s));
+  }
+  {
+    const string s {" "};
+    BOOST_TEST(ValidPalindrome::is_palindrome(s));
+  }
+  // 463 / 485 Test case.
+  {
+    const string s {"0P"};
+    BOOST_TEST(!ValidPalindrome::is_palindrome(s));
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 //------------------------------------------------------------------------------
 
@@ -182,6 +215,50 @@ BOOST_AUTO_TEST_CASE(UnorderedMapFindsDuplicates)
     vector<int> nums {1,1,1,3,3,4,3,2,4,2};
     const bool expected {true};
     BOOST_TEST(ContainsDuplicate::contains_duplicate(nums));
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 242. Valid Anagram
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IsAnagramWorksWithUnorderedMap)
+{
+  {
+    const string s {"anagram"};
+    const string t {"nagaram"};
+
+    BOOST_TEST(ValidAnagram::is_anagram(s, t));
+  }
+  {
+    const string s {"rat"};
+    const string t {"car"};
+
+    BOOST_TEST(!ValidAnagram::is_anagram(s, t));
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 704. Binary Search
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BinarySearchReturnsIndexOrNegative1)
+{
+  {
+    vector<int> nums {-1,0,3,5,9,12};
+    const int target {9};
+    const int expected {4};
+    BOOST_TEST(BinarySearch::search(nums, target) == expected);
+  }
+  {
+    vector<int> nums {-1,0,3,5,9,12};
+    const int target {2};
+    const int expected {-1};
+    BOOST_TEST(BinarySearch::search(nums, target) == expected);
   }
 }
 

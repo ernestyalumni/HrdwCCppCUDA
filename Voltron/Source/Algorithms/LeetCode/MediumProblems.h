@@ -27,6 +27,8 @@ class LongestSubstringWithoutRepeating
     /// unique characters as we move along the string.
     //--------------------------------------------------------------------------
     static int length_of_longest_substring(std::string s);
+
+    static int concise_length_of_longest_substring(std::string s);
 };
 
 //------------------------------------------------------------------------------
@@ -89,6 +91,8 @@ class LongestPalindrome
 /// Constraints:
 /// 2 <= n <= 10^5 where n == height.length.
 /// 0 <= height[i] <= 10^4
+///
+/// Key ideas: Use 2 (index) pointers. Update max area at each step.
 //------------------------------------------------------------------------------
 class ContainerWithMostWater
 {
@@ -103,7 +107,9 @@ class ContainerWithMostWater
 
 //------------------------------------------------------------------------------
 /// 15. 3Sum
-/// Key idea: Sort the array first.
+/// Key idea: Sort the array first. Avoid duplicates by iterating past them.
+/// Iterate through every element. For each element, use the two pointer method
+/// from the left and right.
 /// *Sort the array first.*
 //------------------------------------------------------------------------------
 class ThreeSum
@@ -119,6 +125,9 @@ class ThreeSum
 /// index of target if it's in nums, or -1 if it's not in nums.
 /// Constraints
 /// 1 <= nums.length <= 5000
+///
+/// Still do a binary search, but we check both sides of the midpoint if there's
+/// a pivot or not (then it's sorted).
 //------------------------------------------------------------------------------
 class SearchInRotatedSortedArray
 {
@@ -138,6 +147,9 @@ class MaximumSubarray
 {
   public:
 
+    //--------------------------------------------------------------------------
+    /// Consider 2 single int values, local maximum, global maximum to track.
+    //--------------------------------------------------------------------------
     static int max_subarray(std::vector<int>& nums);
 };
 
@@ -154,6 +166,31 @@ class MergeIntervals
 
     static std::vector<std::vector<int>> merge(
       std::vector<std::vector<int>>& intervals);
+};
+
+//------------------------------------------------------------------------------
+/// 73. Set Matrix Zeroes
+//------------------------------------------------------------------------------
+class SetMatrixZeroes
+{
+  public:
+
+    static void brute_force(std::vector<std::vector<int>>& matrix);
+};
+
+//------------------------------------------------------------------------------
+/// 74. Search a 2D Matrix
+/// Constraints:
+/// m == matrix.length
+/// n == matrix[0].length
+/// 1 <= m, n <= 200
+//------------------------------------------------------------------------------
+class SearchA2DMatrix
+{
+  public:
+    static bool search_matrix(
+      std::vector<std::vector<int>>& matrix,
+      int target);
 };
 
 //------------------------------------------------------------------------------
@@ -190,6 +227,18 @@ class MaximumProductSubarray
 };
 
 //------------------------------------------------------------------------------
+/// 153. Find Minimum in Rotated Sorted Array
+/// Key idea: Still use binary search, but modified, searching or considering on
+/// the side (left side or right side of the midpoint) that's ascending order.
+//------------------------------------------------------------------------------
+class FindMinimumInRotatedSortedArray
+{
+  public:
+
+    static int find_min(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// \name 209. Minimum Size Subarray Sum
 /// We're given an array of positive integers (that are non-zero).
 /// A subarray is a contiguous non-empty sequence of elements within an array.
@@ -209,6 +258,17 @@ class MinimumSizeSubarraySum
     /// Sliding window technique.
     /// @return 
     static int minimum_subarray_length(int target, std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 215. Product of Array Except self
+//------------------------------------------------------------------------------
+class KthLargestElementInAnArray
+{
+  public:
+
+    static int brute_force(std::vector<int>& nums, int k);
+    static int find_kth_largest(std::vector<int>& nums, int k);
 };
 
 //------------------------------------------------------------------------------
@@ -240,7 +300,32 @@ class CountNumbersWithUniqueDigits
 };
 
 //------------------------------------------------------------------------------
-/// \name 435. Non-overlapping intervals
+/// 378. Kth Smallest Element in a Sorted Matrix
+//------------------------------------------------------------------------------
+class KthSmallestElementInASortedMatrix
+{
+  public:
+
+    // https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/solutions/3844831/c-brute/
+    static int brute_force(std::vector<std::vector<int>>& matrix, int k);
+
+    static int kth_smallest(std::vector<std::vector<int>>& matrix, int k);
+};
+
+//------------------------------------------------------------------------------
+/// 424. Longest Repeating Character Replacement
+/// Key idea: Sliding window - maintain a sliding window that can contain the
+/// longest substring with replacement.
+//------------------------------------------------------------------------------
+class LongestRepeatingCharacterReplacement
+{
+  public:
+
+    static int character_replacement(std::string s, int k);
+};
+
+//------------------------------------------------------------------------------
+/// 435. Non-overlapping intervals
 /// Key ideas: sort array.
 //------------------------------------------------------------------------------
 class NonOverlappingIntervals
@@ -249,6 +334,37 @@ class NonOverlappingIntervals
 
     static int erase_overlap_intervals(
       std::vector<std::vector<int>>& intervals);
+};
+
+//------------------------------------------------------------------------------
+/// 438. Find all anagrams in a string
+/// Constraints:
+/// s and p consist of lowercase English letters.
+/// Key ideas: Unordered map to track what unique characters have been seen.
+/// Use 2 hash maps (or arrays) to count characters in p.
+//------------------------------------------------------------------------------
+class FindAllAnagramsInAString
+{
+  public:
+
+    static std::vector<int> find_anagrams(std::string s, std::string p);
+};
+
+//------------------------------------------------------------------------------
+/// 516. Longest Palindromic Subsequence
+/// A subsequence is a sequence that can be derived from another sequence by
+/// deleting some or no elements without changing the order of the remaining
+/// elements.
+/// Constraints:
+/// 1 <= s.length <= 1000
+/// s consists only of lowercase English letters.
+/// Key ideas: dynamic programming.
+//------------------------------------------------------------------------------
+class LongestPalindromicSubsequence
+{
+  public:
+
+    static int longest_palindrome_subsequence(std::string s);
 };
 
 //------------------------------------------------------------------------------

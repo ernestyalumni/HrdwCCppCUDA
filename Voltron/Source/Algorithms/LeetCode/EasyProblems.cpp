@@ -3,11 +3,13 @@
 #include <algorithm> // std::max
 #include <limits.h> // INT_MIN
 #include <map>
+#include <string>
 #include <unordered_set>
 #include <vector>
 
 using std::map;
 using std::max;
+using std::string;
 using std::unordered_set;
 using std::vector;
 
@@ -128,6 +130,8 @@ void MergeSortedArray::merge(
 
 //------------------------------------------------------------------------------
 /// 121. Best Time to Buy and Sell Stock
+/// Key idea: at each step update profit for maximum profit and minimum price in
+/// that order.
 //------------------------------------------------------------------------------
 
 int BestTimeToBuyAndSellStock::max_profit(vector<int>& prices)
@@ -155,6 +159,57 @@ int BestTimeToBuyAndSellStock::max_profit(vector<int>& prices)
 }
 
 //------------------------------------------------------------------------------
+/// 125. Valid Palindrome
+//------------------------------------------------------------------------------
+
+bool ValidPalindrome::is_palindrome(string s)
+{
+  const int valid_min {static_cast<int>('a')};
+  const int valid_max {static_cast<int>('z')};
+
+  // Numbers are ok ("alphanumeric characters include letters and numbers.")
+  const int valid_numbers_min {static_cast<int>('0')};
+  const int valid_numbers_max {static_cast<int>('9')};
+
+  const int valid_upper_case_min {static_cast<int>('A')};
+  const int valid_upper_case_max {static_cast<int>('Z')};
+
+  // O(|s|) space complexity.
+  vector<char> stripped_s {};
+
+  // O(|s|) time complexity.
+  for (const char c : s)
+  {
+    const int c_value {static_cast<int>(c)};
+
+    if ((c_value <= valid_max && c_value >= valid_min) ||
+      (c_value <= valid_numbers_max && c_value >= valid_numbers_min))
+    {
+      stripped_s.emplace_back(c);
+    }
+    else if (c_value <= valid_upper_case_max && c_value >= valid_upper_case_min)
+    {
+      stripped_s.emplace_back(c - ('A' - 'a'));
+    }
+  }
+
+  int l {0};
+  int r {static_cast<int>(stripped_s.size()) - 1};
+  while (l <= r)
+  {
+    if (stripped_s[l] != stripped_s[r])
+    {
+      return false;
+    }
+
+    ++l;
+    --r;
+  }
+
+  return true;
+}
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 //------------------------------------------------------------------------------
 
@@ -176,6 +231,81 @@ bool ContainsDuplicate::contains_duplicate(vector<int>& nums)
   }
 
   return false;
+}
+
+//------------------------------------------------------------------------------
+/// 242. Valid Anagram
+//------------------------------------------------------------------------------
+bool ValidAnagram::is_anagram(string s, string t)
+{
+  if (s.size() != t.size())
+  {
+    return false;
+  }
+  // Use unordered_map for O(1) amoritized access.
+  // For each letter, map it to the number of times it was seen in string s.
+  // O(S) space complexity, where S is number of unique characters in s.
+  std::unordered_map<char, int> letter_to_counts {};
+
+  // O(|s|) time complexity.
+  for (const char c : s)
+  {
+    letter_to_counts[c] += 1;
+  }
+
+  // O(|t|) time complexity.
+  for (const char c : t)
+  {
+    if (letter_to_counts.count(c) != 1)
+    {
+      return false;
+    }
+    else
+    {
+      letter_to_counts[c] -= 1;
+    }
+  }
+
+  for (const auto& [key, counts] : letter_to_counts)
+  {
+    if (letter_to_counts[key] != 0)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+//------------------------------------------------------------------------------
+/// 704. Binary Search
+//------------------------------------------------------------------------------
+int BinarySearch::search(vector<int>& nums, int target)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  int l {0};
+  int r {N - 1};
+
+  while (l <= r)
+  {
+    const int mid { (r - l) / 2 + l};
+
+    if (target == nums[mid])
+    {
+      return mid;
+    }
+    else if (target < nums[mid])
+    {
+      r = mid - 1;
+    }
+    else if (target > nums[mid])
+    {
+      l = mid + 1;
+    }
+  }
+
+  return -1;
 }
 
 //------------------------------------------------------------------------------

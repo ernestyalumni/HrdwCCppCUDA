@@ -1,13 +1,17 @@
 #include "HardProblems.h"
 
 #include <algorithm> // std::swap
+#include <array>
 #include <climits>
-#include <limits.h> // INT_MAX
+#include <deque>
+#include <limits.h> // INT_MAX, INT_MIN
 #include <stack>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
+using std::array;
+using std::deque;
 using std::min;
 using std::stack;
 using std::string;
@@ -133,6 +137,103 @@ string MinimumWindowSubstring::minimum_window(string s, string t)
 
   return length == INT_MAX ? "" : s.substr(min_start, length);
 }
+
+//------------------------------------------------------------------------------
+/// 239. Sliding Window Maximum
+//------------------------------------------------------------------------------
+vector<int> SlidingWindowMaximum::max_sliding_window(vector<int>& nums, int k)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  if (k == 1)
+  {
+    return nums;
+  }
+  else if (k == N)
+  {
+    int maximum_value {INT_MIN};
+
+    for (int i {0}; i < N; ++i)
+    {
+      if (nums[i] > maximum_value)
+      {
+        maximum_value = nums[i];
+      }
+    }
+
+    return {maximum_value};
+  }
+
+  vector<int> maxima {};
+  // Keep the maximum at top by checking for each current element with top().
+  // Place the others at the back, checking the back.
+  // Remember, this keeps the indices of the elements, not the values.
+  deque<int> sorted_window {};
+
+  // From i == 0, fill up the deque until the first k-sized window is filled up.
+  for (int i {0}; i < N; ++i)
+  {
+    const int current_value {nums[i]};
+
+    // Check if our maximum has moved out of the k-sized window. We only care
+    // for the maximum being within the window.
+    while (!sorted_window.empty() && sorted_window.front() <= i - k)
+    {
+      sorted_window.pop_front();
+    }
+
+    // Ensure deque is in descending order by removing any elements from the
+    // back that are smaller or equal to the current element. This ensures the
+    // deque is in descending order of values. Any smaller element in the back
+    // will never be the maximum when the current element in the window is both
+    // larger and more recently added.
+    while (!sorted_window.empty() &&
+      nums[sorted_window.back()] <= current_value)
+    {
+      sorted_window.pop_back();
+    }
+
+    sorted_window.push_back(i);
+
+    // This is also ok.
+    /*
+    while (!sorted_window.empty() && sorted_window.front() <= i - k)
+    {
+      sorted_window.pop_front();
+    }
+    */
+    // This is also ok.
+    /*
+    if (!sorted_window.empty() && sorted_window.front() <= i - k)
+    {
+      sorted_window.pop_front();
+    }
+    */
+
+    // Start adding the maximum once we've seen the first k-sized window.
+    if (i >= k - 1)
+    {
+      maxima.push_back(nums[sorted_window.front()]);
+    }
+  }
+
+  return maxima;
+}
+  /* Before when I didn't know to use a deque.
+  const int K {min(k, N - k)};
+
+  // First element shall always have the maximum value and absolute index.
+  // Second element will have second largest value, and so on.
+  vector<int> sorted_window (K, INT_MIN);
+
+  for (int i {0}; i < N - k; ++i)
+  {
+    if (i == 0)
+    {
+
+    }
+  }
+  */
 
 int ShortestPathInGridWithObstacles::shortest_path(
   vector<vector<int>>& grid,

@@ -1,6 +1,7 @@
 #ifndef ALGORITHMS_LEETCODE_EASY_PROBLEMS_H
 #define ALGORITHMS_LEETCODE_EASY_PROBLEMS_H
 
+#include <string>
 #include <vector>
 
 namespace Algorithms
@@ -43,6 +44,8 @@ class MergeSortedArray
 /// Constraints:
 /// 1 <= prices.length <= 10^5
 /// 0 <= prices[i] <= 10^4
+/// Key idea: at each step update profit for maximum profit and minimum price in
+/// that order.
 //------------------------------------------------------------------------------
 class BestTimeToBuyAndSellStock
 {
@@ -52,13 +55,45 @@ class BestTimeToBuyAndSellStock
 };
 
 //------------------------------------------------------------------------------
+/// 125. Valid Palindrome
+/// Linearly 
+//------------------------------------------------------------------------------
+class ValidPalindrome
+{
+  public:
+
+    static bool is_palindrome(std::string s);
+};
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
+/// Key ideas: unordered_set<int> to track duplicate values. 
 //------------------------------------------------------------------------------
 class ContainsDuplicate
 {
   public:
 
     static bool contains_duplicate(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 242. Valid Anagram
+//------------------------------------------------------------------------------
+class ValidAnagram
+{
+  public:
+
+    static bool is_anagram(std::string s, std::string t);
+};
+
+//------------------------------------------------------------------------------
+/// 704. Binary Search
+//------------------------------------------------------------------------------
+class BinarySearch
+{
+  public:
+
+    static int search(std::vector<int>& nums, int target);
 };
 
 //------------------------------------------------------------------------------

@@ -4,24 +4,29 @@
 #include <array>
 #include <climits> // INT_MIN
 #include <cstddef> // std::size_t
+#include <functional>
 #include <limits.h>
 #include <limits>
 #include <map>
 #include <numeric> // std::accumulate
+#include <queue>
 #include <set>
 #include <stack>
 #include <string>
 #include <tuple>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 using std::array;
 using std::max;
 using std::min;
+using std::priority_queue;
 using std::size_t;
 using std::stack;
 using std::string;
 using std::swap;
+using std::unordered_map;
 using std::unordered_set;
 using std::vector;
 
@@ -29,6 +34,10 @@ namespace Algorithms
 {
 namespace LeetCode
 {
+
+//------------------------------------------------------------------------------
+/// 3. Longest Substring Without Repeating Characters
+//------------------------------------------------------------------------------
 
 int LongestSubstringWithoutRepeating::length_of_longest_substring(string s)
 {
@@ -40,6 +49,7 @@ int LongestSubstringWithoutRepeating::length_of_longest_substring(string s)
   }
 
   // We need a way to keep track of the characters we've seen.
+  // std::map is typically O(log n)
   std::map<char, int> seen_characters {};
 
   int maximum_length {0};
@@ -68,6 +78,42 @@ int LongestSubstringWithoutRepeating::length_of_longest_substring(string s)
   }
 
   return maximum_length;
+}
+
+int LongestSubstringWithoutRepeating::concise_length_of_longest_substring(
+  string s)
+{
+  const int N {static_cast<int>(s.size())};
+  if (N == 0)
+  {
+    return 0;
+  }
+
+  // Keep track of the characters we've seen using std::unordered_set for
+  // O(1) amoritized access.
+  unordered_map<char, int> seen_characters {};
+
+  int length {0};
+  int start {0};
+
+  for (int j {0}; j < N; ++j)
+  {
+    const char current_c {s[j]};
+
+    if (seen_characters.count(current_c) != 0)
+    {
+      // You need to take the max because you could've seen the character before
+      // the beginning of this substring. Consider "tmmzuxt" and the case of the
+      // second "t."
+      start = max(start, seen_characters[current_c] + 1);
+    }
+
+    seen_characters[current_c] = j;
+
+    length = max(length, j - start + 1);
+  }
+
+  return length;
 }
 
 /// \name 5. Longest Palindromic Substring
@@ -369,6 +415,12 @@ vector<vector<int>> ThreeSum::three_sum(vector<int>& nums)
 
   for (int i {0}; i < N; ++i)
   {
+    // Skip duplicate fixed element values.
+    if (i > 0 && nums[i - 1] == nums[i])
+    {
+      continue;
+    }
+
     const int current_complement {-nums[i]};
 
     int l {i + 1};
@@ -438,6 +490,8 @@ int SearchInRotatedSortedArray::search(vector<int>& nums, int target)
     // array or no pivot point at all).
     if (nums[l] <= nums[mid])
     {
+      // Since the left side is sorted in ascending order, check if the target
+      // is in here or not.
       if (target >= nums[l] && target <= nums[mid])
       {
         r = mid - 1;
@@ -465,6 +519,7 @@ int SearchInRotatedSortedArray::search(vector<int>& nums, int target)
 
 //------------------------------------------------------------------------------
 /// 53. Maximum Subarray
+/// Use 2 single int values, local maximum, global maximum to track
 //------------------------------------------------------------------------------
 int MaximumSubarray::max_subarray(vector<int>& nums)
 {
@@ -477,6 +532,8 @@ int MaximumSubarray::max_subarray(vector<int>& nums)
   {
     const int current_value {nums[i]};
 
+    // As we increment forward, any previous summation, local_maximum cannot add
+    // "more" to any future sum, and so eliminate it by max.
     local_maximum = max(current_value, local_maximum + current_value);
     global_maximum = max(local_maximum, global_maximum);
   }
@@ -533,6 +590,89 @@ vector<vector<int>> MergeIntervals::merge(vector<vector<int>>& intervals)
     vector<int>{merged_start_value, merged_end_value});
 
   return merged_intervals;
+}
+
+//------------------------------------------------------------------------------
+/// 73. Set Matrix Zeroes
+//------------------------------------------------------------------------------
+void SetMatrixZeroes::brute_force(vector<vector<int>>& matrix)
+{
+  // For a given maximum of m, n <= 200, then 200 * 200 = 40000. There are 625
+  // numbers of 64 bits each that can each 40000 bits.
+  const int number_of_bits {64};
+  array<uint64_t, 625> is_zero {};
+
+  const int M {static_cast<int>(matrix.size())};
+  const int N {static_cast<int>(matrix[0].size())};
+
+  // O(MN) time complexity.
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (matrix[i][j] == 0)
+      {
+        const int k {i * N + j};
+        is_zero[k / number_of_bits] |=
+          (static_cast<uint64_t>(1) << (k % number_of_bits));
+      }
+    }
+  }
+
+  for (int k {0}; k < M * N; ++k)
+  {
+    if (static_cast<bool>(is_zero[k / number_of_bits] & 
+      (static_cast<uint64_t>(1) << (k % number_of_bits))))
+    {
+      const int I {k / N};
+      const int J {k % N};
+
+      for (int j {0}; j < N; ++j)
+      {
+        matrix[I][j] = 0;
+      }
+
+      for (int i {0}; i < M; ++i)
+      {
+        matrix[i][J] = 0;
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 74. Search a 2D Matrix
+//------------------------------------------------------------------------------
+
+bool SearchA2DMatrix::search_matrix(vector<vector<int>>& matrix, int target)
+{
+  const int M {static_cast<int>(matrix.size())};
+  const int N {static_cast<int>(matrix[0].size())};
+
+  int l {0};
+  int r {M * N - 1};
+
+  while (l <= r)
+  {
+    const int mid {l + (r - l) / 2};
+
+    const int current_value {matrix[mid / N][mid % N]};
+
+    if (current_value == target)
+    {
+      return true;
+    }
+    else if (current_value > target)
+    {
+      r = mid - 1;
+    }
+    else
+    {
+      l = mid + 1;
+    }
+  }
+
+  return false;
 }
 
 /// \name 75. Sort Colors
@@ -655,6 +795,46 @@ int MaximumProductSubarray::max_product(vector<int>& nums)
   return global_maximum;
 }
 
+//------------------------------------------------------------------------------
+/// 153. Find Minimum in Rotated Sorted Array
+//------------------------------------------------------------------------------
+int FindMinimumInRotatedSortedArray::find_min(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  int l {0};
+  int r {N - 1};
+
+  int minimum {INT_MAX};
+
+  while (l <= r)
+  {
+    const int mid {l + (r - l) / 2};
+
+    minimum = min(minimum, nums[mid]);
+
+    // Check if the left side is sorted in ascending order.
+    // <= is needed because of how we choose mid to be floor. The entire left
+    // side might be just a single value but it's still in ascending order. See
+    // Test case 144, nums = {2,3,4,5,6,7,8,9,1}
+    if (mid > 0 && nums[l] <= nums[mid - 1])
+    {
+      minimum = min(minimum, nums[l]);
+      l = mid + 1;
+    }
+    else
+    {
+      if (mid < N - 1)
+      {
+        minimum = min(minimum, nums[mid + 1]);
+      }
+      r = mid - 1;
+    }
+  }
+
+  return minimum;
+}
+
 /// \name 209. Minimum Size Subarray Sum
 // Recall that a subarray is a contiguous, non-empty sequence of elements of the
 // array.
@@ -695,6 +875,78 @@ int MinimumSizeSubarraySum::minimum_subarray_length(
   // length == INT_MAX takes care of if the array's elements all of them don't
   // sum up greater than or equal to target.
   return length == INT_MAX ? 0 : length;
+}
+
+//------------------------------------------------------------------------------
+/// 215. Kth Largest Element in an Array
+//------------------------------------------------------------------------------
+
+int KthLargestElementInAnArray::brute_force(vector<int>& nums, int k)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  // Practice with quick sort.
+
+  std::function<void(vector<int>&, const int, const int)> quick_sort =
+    [&](vector<int>& nums, const int low, const int high) -> void
+  {
+    // low >= high is a stopping condition.
+    if (low < high)
+    {
+      // Choose, arbitrarily, the "last" element as the "pivot" value to compare
+      // other values against.
+      const int pivot {nums[high]};
+
+      // Initialize to be less than low to prepare it to track the next index
+      // (position) to place lesser values in; low - 1 represents that we hadn't
+      // found a lesser value to the pivot at all.
+      int i {low - 1};
+
+      for (int j {low}; j < high; ++j)
+      {
+        // Move all values less than pivot to the left of it.
+        if (nums[j] < pivot)
+        {
+          ++i;
+          swap(nums[j], nums[i]);
+        }
+      }
+
+      // Move the pivot to the end of the lesser values. We're sure that the
+      // values on the right are larger than the pivot.
+      swap(nums[i + 1], nums[high]);
+
+      const int pivot_index {i + 1};
+
+      // The pivot element is in the correct, sorted position, as all elements
+      // to the left of it is smaller and all elements to the right is larger.
+      quick_sort(nums, low, pivot_index - 1);
+      quick_sort(nums, pivot_index + 1, high);
+    }
+  };
+
+  quick_sort(nums, 0, nums.size() - 1);
+
+  return nums[N - k];
+}
+
+int KthLargestElementInAnArray::find_kth_largest(vector<int>& nums, int k)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  priority_queue<int> largest {};
+
+  for (const auto num : nums)
+  {
+    largest.push(num);
+  }
+
+  for (int i {0}; i < k - 1; ++i)
+  {
+    largest.pop();
+  }
+
+  return largest.top();
 }
 
 //------------------------------------------------------------------------------
@@ -842,7 +1094,120 @@ int CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(int n)
 }
 
 //------------------------------------------------------------------------------
-/// \name 435. Non-overlapping intervals
+/// 378. Kth Smallest Element in a Sorted Matrix
+//------------------------------------------------------------------------------
+
+int KthSmallestElementInASortedMatrix::brute_force(
+  vector<vector<int>>& matrix,
+  int k)
+{
+  const int N {static_cast<int>(matrix.size())};
+  vector<int> sorted {};
+
+  for (int i {0}; i < N; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      sorted.emplace_back(matrix[i][j]);
+    }
+  }
+
+  sort(sorted.begin(), sorted.end());
+
+  return sorted[k - 1];
+}
+
+int KthSmallestElementInASortedMatrix::kth_smallest(
+  vector<vector<int>>& matrix,
+  int k)
+{
+  const int N {static_cast<int>(matrix.size())};
+
+  // std::priority_queue expected to default to a max heap and that it auto-
+  // magically does max heapify, swapping each new insert with its parent
+  // until heap condition is restored (all 2 children of each parent is of
+  // lesser value to parent's value).
+  priority_queue<int> max_heap {};
+
+  int start {0};
+
+  for (int i {0}; i < N; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      max_heap.push(matrix[i][j]);
+    }
+  }
+
+  // The max heap will be of size k and the smallest value will be the leaf -
+  // the top will be the kth smallest.
+  while (max_heap.size() > k)
+  {
+    max_heap.pop();
+  }
+
+  return max_heap.top();
+}
+
+//------------------------------------------------------------------------------
+/// 424. Longest Repeating Character Replacement
+/// Key idea: Sliding window technique.
+//------------------------------------------------------------------------------
+int LongestRepeatingCharacterReplacement::character_replacement(string s, int k)
+{
+  const int N {static_cast<int>(s.size())};
+
+  if (k == N)
+  {
+    return N;
+  }
+
+  // Since we're limited to uppercase letters, use an array.
+  array<int, 26> character_value_to_counts {};
+
+  // Use this index to shrink the window.
+  int start {0};
+
+  // Count of the most frequent character seen in the current window.
+  int max_count {0};
+
+  int length {0};
+
+  // Expand the window until the very last element.
+  for (int j {0}; j < N; ++j)
+  {
+    // Account for expanding the window and seeing a new character.
+    const char current_character {s[j]};
+    const int current_character_index {
+      static_cast<int>(current_character - 'A')};
+    character_value_to_counts[current_character_index]++;
+
+    // The window should be expanded if the number of replacements, k, plus the
+    // count of the most frequent character in window is greater than or equal
+    // to window size. If not, shrink window from start.
+
+    max_count = max(
+      max_count,
+      character_value_to_counts[current_character_index]);
+
+    length = max(
+      length,
+      min(max_count + k, j - start + 1));
+
+    if (j - start + 1 > (max_count + k))
+    {
+      character_value_to_counts[static_cast<int>(s[start] - 'A')]--;
+
+      start++;
+    }
+  }
+
+  return length;
+}
+
+//------------------------------------------------------------------------------
+/// 435. Non-overlapping intervals
+/// Key idea: sort array.
 //------------------------------------------------------------------------------
 int NonOverlappingIntervals::erase_overlap_intervals(
   vector<vector<int>>& intervals)
@@ -895,6 +1260,106 @@ int NonOverlappingIntervals::erase_overlap_intervals(
   }
 
   return counter;
+}
+
+//------------------------------------------------------------------------------
+/// 438. Find all anagrams in a string
+//------------------------------------------------------------------------------
+vector<int> FindAllAnagramsInAString::find_anagrams(string s, string p)
+{
+  const int P {static_cast<int>(p.size())};
+  const int S {static_cast<int>(s.size())};
+  if (S < P)
+  {
+    return {};
+  }
+
+  // Use array for O(1) access. We already are given that the letters are only
+  // lowercase letters.
+  array<int, 26> sletter_to_counts {};
+  array<int, 26> pletter_to_counts {};
+
+  // O(|p|) time complexity.
+  for (const char c : p)
+  {
+    pletter_to_counts[static_cast<int>(c - 'a')] += 1;
+  }
+
+  int start {0};
+  vector<int> start_indicies {};
+
+  for (int i {0}; i < S; ++i)
+  {
+    const int current_c {static_cast<int>(s[i] - 'a')};
+
+    sletter_to_counts[current_c] += 1;
+
+    if (i - start == (P - 1))
+    {
+      bool is_match {true};
+
+      for (int i {0}; i < 26; ++i)
+      {
+        if (sletter_to_counts[i] != pletter_to_counts[i])
+        {
+          is_match = false;
+        }
+      }
+
+      if (is_match)
+      {
+        start_indicies.emplace_back(start);
+      }
+
+      sletter_to_counts[static_cast<int>(s[start] - 'a')] -= 1;
+      ++start;
+    }
+  }
+  return start_indicies;
+}
+
+//------------------------------------------------------------------------------
+/// 516. Longest Palindromic Subsequence
+//------------------------------------------------------------------------------
+int LongestPalindromicSubsequence::longest_palindrome_subsequence(string s)
+{
+  const int N {static_cast<int>(s.size())};
+  // O(N^2) space complexity.
+  // 0 <= i, j <= N - 1
+  // Gives the maximum length of a palindromic substring between indices i, j
+  // and is inclusive.
+  vector<vector<int>> max_lengths (N, vector<int>(N, false));
+
+  // Every single character is a palindrome.
+  for (int i {0}; i < N; ++i)
+  {
+    max_lengths[i][i] = 1;
+  }
+
+  // check for every substring length.
+  for (int length {2}; length <= N; ++length)
+  {
+    // Check, for each finite length, each starting point.
+    for (int i {0}; i <= N - length; ++i)
+    {
+      int j {i + length - 1};
+
+      if (s[i] == s[j])
+      {
+        max_lengths[i][j] = 2 + (length == 2 ? 0 : max_lengths[i + 1][j - 1]);
+      }
+      else
+      {
+        // We take care of the case where we can "skip" over letters that don't
+        // make a palindrome by getting the "previous" maximum.
+        // Notice we take the max of either i + 1 or j - 1 because either s[i]
+        // or s[j] contributed to not making a palindrome.
+        max_lengths[i][j] = max(max_lengths[i + 1][j], max_lengths[i][j - 1]);
+      }
+    }
+  }
+
+  return max_lengths[0][N - 1];
 }
 
 //------------------------------------------------------------------------------

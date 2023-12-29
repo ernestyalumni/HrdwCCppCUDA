@@ -43,13 +43,27 @@ class MinimumWindowSubstring
 };
 
 //------------------------------------------------------------------------------
+/// 239. Sliding Window Maximum
+/// Constraints:
+/// 1 <= k <= nums.length
+/// Key ideas: Use a deque and track the sliding window maximum as top of deque.
+/// Keeping adding to deque until it fills up the k sized sliding window.
+//------------------------------------------------------------------------------
+class SlidingWindowMaximum
+{
+  public:
+
+    static std::vector<int> max_sliding_window(std::vector<int>& nums, int k);
+};
+
+//------------------------------------------------------------------------------
 /// 1293. Shortest Path in a Grid with Obstacles Elimination
 //------------------------------------------------------------------------------
 class ShortestPathInGridWithObstacles
 {
   public:
 
-    int shortest_path(std::vector<std::vector<int>>& grid, int k);
+    static int shortest_path(std::vector<std::vector<int>>& grid, int k);
 };
 
 //------------------------------------------------------------------------------
