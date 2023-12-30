@@ -1,5 +1,7 @@
 #include "MediumProblems.h"
 
+#include "DataStructures/BinaryTrees.h"
+
 #include <algorithm> // std::sort, std::swap;
 #include <array>
 #include <climits> // INT_MIN
@@ -18,10 +20,13 @@
 #include <unordered_set>
 #include <vector>
 
+using DataStructures::BinaryTrees::TreeNode;
 using std::array;
+using std::function;
 using std::max;
 using std::min;
 using std::priority_queue;
+using std::queue;
 using std::size_t;
 using std::stack;
 using std::string;
@@ -518,6 +523,67 @@ int SearchInRotatedSortedArray::search(vector<int>& nums, int target)
 };
 
 //------------------------------------------------------------------------------
+/// 48. Rotate Image
+//------------------------------------------------------------------------------
+void RotateImage::rotate(vector<vector<int>>& matrix)
+{
+  const int N {static_cast<int>(matrix.size())};
+
+  if (N == 1)
+  {
+    return;
+  }
+
+  // N is even.
+  int T {N / 2 - 1};
+  int B {N / 2};
+  int L {N / 2 - 1};
+  int R {N / 2};
+
+  // If N odd.
+  if (N % 2 == 1)
+  {
+    T = N / 2 - 1;
+    B = N / 2 + 1;
+    L = N / 2 - 1;
+    R = N / 2 + 1;
+  }
+
+  while (T >= 0 && (B <= N - 1) && (L >= 0) && (R <= N - 1))
+  {
+    // We'll move around clockwise in a spiral in considering what 4 elements to
+    // swap in a square.
+    int top_left {L};
+    int top_right {T};
+    int bottom_right {R};
+    int bottom_left {B};
+
+    while (
+      top_left < R &&
+      top_right < B &&
+      bottom_right > L &&
+      bottom_left > T)
+    {
+      swap(matrix[T][top_left], matrix[bottom_left][L]);
+      swap(matrix[bottom_left][L], matrix[B][bottom_right]);
+      swap(matrix[B][bottom_right], matrix[top_right][R]);
+
+      // Rotate the indices clockwise.
+      ++top_left;
+      ++top_right;
+      --bottom_right;
+      --bottom_left;
+    }
+
+    // Update the spiral outward.
+    T--;
+    B++;
+    L--;
+    R++;
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 53. Maximum Subarray
 /// Use 2 single int values, local maximum, global maximum to track
 //------------------------------------------------------------------------------
@@ -539,6 +605,67 @@ int MaximumSubarray::max_subarray(vector<int>& nums)
   }
 
   return global_maximum;
+}
+
+//------------------------------------------------------------------------------
+/// 54. Spiral Matrix
+//------------------------------------------------------------------------------
+vector<int> SpiralMatrix::spiral_order(vector<vector<int>>& matrix)
+{
+  const int M {static_cast<int>(matrix.size())};
+  const int N {static_cast<int>(matrix[0].size())};
+
+  int top {0};
+  // Left most column to traverse.
+  int l {0};
+  // Right most column to traverse.
+  int r {N - 1};
+  // "lowest" row to traverse.
+  int bottom {M - 1};
+
+  vector<int> spiral_order {};
+
+  while (top <= bottom && l <= r)
+  {
+    for (int j {l}; j <= r; ++j)
+    {
+      spiral_order.emplace_back(matrix[top][j]);
+    }
+    top++;
+
+    for (int i {top}; i <= bottom; ++i)
+    {
+      spiral_order.emplace_back(matrix[i][r]);
+    }
+    r--;
+
+    // If we don't check this, then we could possibly add an element twice.
+    // After we've moved right and down, we need to move left. But if the matrix
+    // was a single row, l and r may still indicate valid elements.
+    if (top <= bottom)
+    {
+      for (int j {r}; j >= l; --j)
+      {
+        spiral_order.emplace_back(matrix[bottom][j]);
+      }
+      bottom--;
+    }
+
+    // If we don't check this, then we oculd possibly add an element twice.
+    // After moving left, we have to move up. But if matrix was a single column,
+    // top and bottom may still indicate valid elements as they've only been
+    // incremented or decremented once.
+    if (l <= r)
+    {
+      for (int i {bottom}; i >= top; --i)
+      {
+        spiral_order.emplace_back(matrix[i][l]);
+      }
+      l++;
+    }
+  }
+
+  return spiral_order;
 }
 
 //------------------------------------------------------------------------------
@@ -635,6 +762,64 @@ void SetMatrixZeroes::brute_force(vector<vector<int>>& matrix)
       for (int i {0}; i < M; ++i)
       {
         matrix[i][J] = 0;
+      }
+    }
+  }
+}
+
+void SetMatrixZeroes::set_zeroes(vector<vector<int>>& matrix)
+{
+  const int number_of_bits {64};
+  // Track which rows will have all zeroes.
+  array<uint64_t, 4> is_row_zeroes {};
+  // Track which columns will have all zeroes.
+  array<uint64_t, 4> is_column_zeroes {};
+
+  const int M {static_cast<int>(matrix.size())};
+  const int N {static_cast<int>(matrix[0].size())};
+
+  // O(MN) time complexity.
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      bool is_row_seen {false};
+
+      if (matrix[i][j] == 0)
+      {
+        if (!is_row_seen)
+        {
+          is_row_zeroes[i / number_of_bits] |=
+            (static_cast<uint64_t>(1) << (i % number_of_bits));
+          is_row_seen = true;
+        }
+
+        is_column_zeroes[j / number_of_bits] |=
+          (static_cast<uint64_t>(1) << (j % number_of_bits));
+      }
+    }
+  }
+
+  for (int i {0}; i < M; ++i)
+  {
+    if (static_cast<bool>(is_row_zeroes[i / number_of_bits] &
+      (static_cast<uint64_t>(1) << (i % number_of_bits))))
+    {
+      for (int j {0}; j < N; ++j)
+      {
+        matrix[i][j] = 0;
+      }
+    }
+  }
+
+  for (int j {0}; j < N; ++j)
+  {
+    if (static_cast<bool>(is_column_zeroes[j / number_of_bits] &
+      (static_cast<uint64_t>(1) << (j % number_of_bits))))
+    {
+      for (int i {0}; i < M; ++i)
+      {
+        matrix[i][j] = 0;
       }
     }
   }
@@ -764,6 +949,92 @@ void SortColors::one_pass(vector<int>& nums)
       high_index--;
     }
   }
+}
+
+//------------------------------------------------------------------------------
+/// 102. Binary Tree Level Order Traversal
+//------------------------------------------------------------------------------
+
+// Also known as preorder or breadth-first traversal.
+
+vector<vector<int>> BinaryTreeLevelOrderTraversal::level_order_iterative(
+  TreeNode* root)
+{
+  vector<vector<int>> traversed_levels {};
+
+  if (root == nullptr)
+  {
+    return traversed_levels;
+  }
+
+  queue<TreeNode*> level_nodes {};
+
+  level_nodes.push(root);
+
+  while (!level_nodes.empty())
+  {
+    const int level_size {static_cast<int>(level_nodes.size())};
+
+    vector<int> traversed_nodes {};
+
+    for (int i {0}; i < level_size; ++i)
+    {
+      traversed_nodes.emplace_back(level_nodes.front()->value_);
+
+      if (level_nodes.front()->left_ != nullptr)
+      {
+        level_nodes.push(level_nodes.front()->left_);
+      }
+
+      if (level_nodes.front()->right_ != nullptr)
+      {
+        level_nodes.push(level_nodes.front()->right_);
+      }
+
+      level_nodes.pop();
+    }
+
+    traversed_levels.emplace_back(traversed_nodes);
+  }
+
+  return traversed_levels;
+}
+
+vector<vector<int>> BinaryTreeLevelOrderTraversal::level_order_recursive(
+  TreeNode* root)
+{
+  int level {0};
+  vector<vector<int>> traversed {};
+
+  function<void(TreeNode*, const int)> step = [&](
+    TreeNode* node,
+    const int level)
+  {
+    // We've reached a leaf's child. Return to get out of this "stack."
+    if (node == nullptr)
+    {
+      return;
+    }
+
+    // Ensure the results or i.e. traversed vector is large enough to hold the
+    // current level and be able to access with operator[].
+    if (level >= static_cast<int>(traversed.size()))
+    {
+      for (int i {0}; i < (level - static_cast<int>(traversed.size()) + 1); ++i)
+      {
+        traversed.emplace_back(vector<int>{});
+      }
+    }
+
+    traversed[level].emplace_back(node->value_);
+
+    step(node->left_, level + 1);
+    step(node->right_, level + 1);
+  };
+
+  step(root, 0);
+
+  return traversed;
 }
 
 //------------------------------------------------------------------------------
@@ -947,6 +1218,93 @@ int KthLargestElementInAnArray::find_kth_largest(vector<int>& nums, int k)
   }
 
   return largest.top();
+}
+
+//------------------------------------------------------------------------------
+/// 235. Lowest Common Ancestor of a Binary Search Tree
+//------------------------------------------------------------------------------
+TreeNode*
+  LowestCommonAncestorOfABinarySearchTree::lowest_common_ancestor_recursive(
+  TreeNode* root,
+  TreeNode* p,
+  TreeNode* q)
+{
+  function<TreeNode*(TreeNode*, TreeNode*, TreeNode*)> step = [&](
+    TreeNode* node,
+    TreeNode* p,
+    TreeNode* q)
+  {
+    if (node == nullptr)
+    {
+      return node;
+    }
+
+    const int current_value {node->value_};
+
+    if (current_value == p->value_ || current_value == q->value_)
+    {
+      return node;
+    }
+
+    // Any common ancestor would be on the left of the current node.
+    if (current_value > p->value_ && current_value > q->value_)
+    {
+      return step(node->left_, p, q);
+    }
+
+    // Any common ancestor would be on the right of the current node.
+    if (current_value < p->value_ && current_value < q->value_)
+    {
+      return step(node->right_, p, q);
+    }
+
+    // Logically, p and q are on opposite sides of the current node. Thus, the
+    // common ancestor would be this node.
+    return node;
+  };
+
+  return step(root, p, q);
+}
+
+TreeNode*
+  LowestCommonAncestorOfABinarySearchTree::lowest_common_ancestor_iterative(
+  TreeNode* root,
+  TreeNode* p,
+  TreeNode* q)
+{
+  TreeNode* node {root};
+
+  while (node != nullptr)
+  {
+    const int current_value {node->value_};
+
+    if (current_value == p->value_ || current_value == q->value_)
+    {
+      return node;
+    }
+
+    // Any common ancestor would be on the left of the current node.
+    if (current_value > p->value_ && current_value > q->value_)
+    {
+      node = node->left_;
+      continue;
+    }
+
+    // Any common ancestor would be on the right of the current node.
+    if (current_value < p->value_ && current_value < q->value_)
+    {
+      node = node->right_;
+      continue;
+    }
+
+    // Logically, p and q are on opposite sides of the current node. Thus, the
+    // common ancestor would be this node.
+    return node;
+  }
+
+  // We expect to be reached if node is a nullptr, indicating no common ancestor
+  // to both p and q (for example, root is a child to both p and q).
+  return node;
 }
 
 //------------------------------------------------------------------------------

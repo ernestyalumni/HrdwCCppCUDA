@@ -1,9 +1,13 @@
 #include "Algorithms/LeetCode/EasyProblems.h"
+#include "DataStructures/BinaryTrees.h"
 
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <unordered_set>
 #include <vector>
+
+// TODO: It may not be necessary to alias the classes because Boost's test
+// brings the namespace in.
 
 using Algorithms::LeetCode::BestTimeToBuyAndSellStock;
 using Algorithms::LeetCode::BinarySearch;
@@ -12,6 +16,7 @@ using Algorithms::LeetCode::TwoSum;
 using Algorithms::LeetCode::MergeSortedArray;
 using Algorithms::LeetCode::ValidAnagram;
 using Algorithms::LeetCode::ValidPalindrome;
+using DataStructures::BinaryTrees::TreeNode;
 using std::string;
 using std::unordered_set;
 using std::vector;
@@ -144,6 +149,114 @@ BOOST_AUTO_TEST_CASE(MergeSortedArrayWithTwoPointers)
 }
 
 //------------------------------------------------------------------------------
+/// 104. Maximum Depth of Binary Tree
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GetMaximumDepthOfBinaryTreeByRecursion)
+{
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {9};
+    TreeNode c1r3 {20};
+    TreeNode c3l4 {15};
+    TreeNode c3r5 {7};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const int expected {3};
+
+    BOOST_TEST(MaximumDepthOfBinaryTree::max_depth_recursive(root) == expected);
+  }
+  {
+    TreeNode example_root {1};
+    TreeNode c1r2 {2};
+    example_root.right_ = &c1r2;
+    TreeNode* root {&example_root};
+    const int expected {2};
+
+    BOOST_TEST(MaximumDepthOfBinaryTree::max_depth_recursive(root) == expected);
+  }
+  // Test case 17 / 39
+  {
+    TreeNode example_root {1};
+    TreeNode c1l2 {2};
+    TreeNode c1r3 {3};
+    TreeNode c2l4 {4};
+    TreeNode c3r5 {5};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const int expected {3};
+
+    BOOST_TEST(MaximumDepthOfBinaryTree::max_depth_recursive(root) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GetMaximumDepthOfBinaryTreeIteratively)
+{
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {9};
+    TreeNode c1r3 {20};
+    TreeNode c3l4 {15};
+    TreeNode c3r5 {7};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const int expected {3};
+
+    BOOST_TEST(MaximumDepthOfBinaryTree::max_depth_iterative(root) == expected);
+  }
+  {
+    TreeNode example_root {1};
+    TreeNode c1r2 {2};
+    example_root.right_ = &c1r2;
+    TreeNode* root {&example_root};
+    const int expected {2};
+
+    BOOST_TEST(MaximumDepthOfBinaryTree::max_depth_iterative(root) == expected);
+  }
+  // Test case 17 / 39
+  {
+    TreeNode example_root {1};
+    TreeNode c1l2 {2};
+    TreeNode c1r3 {3};
+    TreeNode c2l4 {4};
+    TreeNode c3r5 {5};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const int expected {3};
+
+    BOOST_TEST(MaximumDepthOfBinaryTree::max_depth_iterative(root) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 121. Best Time to Buy and Sell Stock
 //------------------------------------------------------------------------------
 
@@ -215,6 +328,114 @@ BOOST_AUTO_TEST_CASE(UnorderedMapFindsDuplicates)
     vector<int> nums {1,1,1,3,3,4,3,2,4,2};
     const bool expected {true};
     BOOST_TEST(ContainsDuplicate::contains_duplicate(nums));
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 226. Invert Binary Tree
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursionInvertsBinaryTree)
+{
+  {
+    TreeNode example_root {4};
+    TreeNode c1l2 {2};
+    TreeNode c1r3 {7};
+    TreeNode c2l4 {1};
+    TreeNode c2r5 {3};
+    TreeNode c3l6 {6};
+    TreeNode c3r7 {9};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1l2.right_ = &c2r5;
+    c1r3.left_ = &c3l6;
+    c1r3.right_ = &c3r7;
+
+    TreeNode* root {&example_root};
+
+    const TreeNode* output {InvertBinaryTree::invert_tree_recursive(root)};
+
+    BOOST_TEST(output->value_ == 4);
+    BOOST_TEST(output->left_->value_ == 7);
+    BOOST_TEST(output->right_->value_ == 2);
+    BOOST_TEST(output->left_->left_->value_ == 9);
+    BOOST_TEST(output->left_->right_->value_ == 6);
+  }
+  {
+    TreeNode example_root {2};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {3};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+
+    TreeNode* root {&example_root};
+
+    const TreeNode* output {InvertBinaryTree::invert_tree_recursive(root)};
+
+    BOOST_TEST(output->value_ == 2);
+    BOOST_TEST(output->left_->value_ == 3);
+    BOOST_TEST(output->right_->value_ == 1);
+  }
+  {
+    TreeNode* root {nullptr};
+    const TreeNode* output {InvertBinaryTree::invert_tree_recursive(root)};
+    BOOST_TEST(output == nullptr);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IterativeStackInvertsBinaryTree)
+{
+  {
+    TreeNode example_root {4};
+    TreeNode c1l2 {2};
+    TreeNode c1r3 {7};
+    TreeNode c2l4 {1};
+    TreeNode c2r5 {3};
+    TreeNode c3l6 {6};
+    TreeNode c3r7 {9};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1l2.right_ = &c2r5;
+    c1r3.left_ = &c3l6;
+    c1r3.right_ = &c3r7;
+
+    TreeNode* root {&example_root};
+
+    const TreeNode* output {InvertBinaryTree::invert_tree_iterative(root)};
+
+    BOOST_TEST(output->value_ == 4);
+    BOOST_TEST(output->left_->value_ == 7);
+    BOOST_TEST(output->right_->value_ == 2);
+    BOOST_TEST(output->left_->left_->value_ == 9);
+    BOOST_TEST(output->left_->right_->value_ == 6);
+  }
+  {
+    TreeNode example_root {2};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {3};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+
+    TreeNode* root {&example_root};
+
+    const TreeNode* output {InvertBinaryTree::invert_tree_iterative(root)};
+
+    BOOST_TEST(output->value_ == 2);
+    BOOST_TEST(output->left_->value_ == 3);
+    BOOST_TEST(output->right_->value_ == 1);
+  }
+  {
+    TreeNode* root {nullptr};
+    const TreeNode* output {InvertBinaryTree::invert_tree_iterative(root)};
+    BOOST_TEST(output == nullptr);
   }
 }
 

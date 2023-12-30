@@ -1,6 +1,8 @@
 #ifndef ALGORITHMS_LEETCODE_EASY_PROBLEMS_H
 #define ALGORITHMS_LEETCODE_EASY_PROBLEMS_H
 
+#include "DataStructures/BinaryTrees.h"
+
 #include <string>
 #include <vector>
 
@@ -40,6 +42,41 @@ class MergeSortedArray
 };
 
 //------------------------------------------------------------------------------
+/// 100. Same Tree
+//------------------------------------------------------------------------------
+class SameTree
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    static bool is_same_tree(TreeNode* p, TreeNode* q);
+};
+
+//------------------------------------------------------------------------------
+/// 104. Maximum Depth of Binary Tree
+/// A binary tree's maximum depth is the number of nodes along the longest path
+/// from the root node down to the farthest leaf node.
+//------------------------------------------------------------------------------
+class MaximumDepthOfBinaryTree
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    //--------------------------------------------------------------------------
+    /// Key idea: solve the easiest base case. Let recursion solve the left case
+    /// and the right child case.
+    //--------------------------------------------------------------------------
+    static int max_depth_recursive(TreeNode* root);
+
+    //--------------------------------------------------------------------------
+    /// Key idea: Use a queue.
+    //--------------------------------------------------------------------------
+    static int max_depth_iterative(TreeNode* root);
+};
+
+//------------------------------------------------------------------------------
 /// 121. Best Time to Buy and Sell Stock
 /// Constraints:
 /// 1 <= prices.length <= 10^5
@@ -74,6 +111,20 @@ class ContainsDuplicate
   public:
 
     static bool contains_duplicate(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 226. Invert Binary Tree
+//------------------------------------------------------------------------------
+class InvertBinaryTree
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    static TreeNode* invert_tree_recursive(TreeNode* root);
+
+    static TreeNode* invert_tree_iterative(TreeNode* root);
 };
 
 //------------------------------------------------------------------------------

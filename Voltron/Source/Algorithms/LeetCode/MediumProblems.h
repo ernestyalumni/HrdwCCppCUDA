@@ -1,6 +1,8 @@
 #ifndef ALGORITHMS_LEETCODE_MEDIUM_PROBLEMS_H
 #define ALGORITHMS_LEETCODE_MEDIUM_PROBLEMS_H
 
+#include "DataStructures/BinaryTrees.h"
+
 #include <cstddef>
 #include <string>
 #include <tuple>
@@ -137,8 +139,21 @@ class SearchInRotatedSortedArray
 };
 
 //------------------------------------------------------------------------------
+/// 48. Rotate Image
+/// Constraints:
+/// * n == matrix.length == matrix[i].length
+/// * 1 <= n <= 20
+//------------------------------------------------------------------------------
+class RotateImage
+{
+  public:
+
+    static void rotate(std::vector<std::vector<int>>& matrix);
+};
+
+//------------------------------------------------------------------------------
 /// 53. Maximum Subarray
-// Constraints:
+/// Constraints:
 /// 1 <= nums.length <= 10^5
 /// -10^4 <= nums[i] <= 10^4
 /// Consider Kadane's algorithm, and consider both a local and global maxima.
@@ -151,6 +166,18 @@ class MaximumSubarray
     /// Consider 2 single int values, local maximum, global maximum to track.
     //--------------------------------------------------------------------------
     static int max_subarray(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 54. Spiral Matrix
+/// Constraints: 1 <= m, n <= 10
+/// Key idea: Move the "boundaries" or the "paths" the spiral moves on along as
+/// we spiral around.
+//------------------------------------------------------------------------------
+class SpiralMatrix
+{
+  public:
+    static std::vector<int> spiral_order(std::vector<std::vector<int>>& matrix);
 };
 
 //------------------------------------------------------------------------------
@@ -176,6 +203,7 @@ class SetMatrixZeroes
   public:
 
     static void brute_force(std::vector<std::vector<int>>& matrix);
+    static void set_zeroes(std::vector<std::vector<int>>& matrix);
 };
 
 //------------------------------------------------------------------------------
@@ -213,6 +241,23 @@ class SortColors
     /// This is a variant of the Dutch National Flag algorithm with 3 pointers.
     //--------------------------------------------------------------------------
     static void one_pass(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 102. Binary Tree Level Order Traversal
+/// Key idea: Use a queue for level order traversal. Use size of queue to get
+/// size of each level, so that we know how many to pop out.
+//------------------------------------------------------------------------------
+
+class BinaryTreeLevelOrderTraversal
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    static std::vector<std::vector<int>> level_order_iterative(TreeNode* root);
+
+    static std::vector<std::vector<int>> level_order_recursive(TreeNode* root);
 };
 
 //------------------------------------------------------------------------------
@@ -269,6 +314,31 @@ class KthLargestElementInAnArray
 
     static int brute_force(std::vector<int>& nums, int k);
     static int find_kth_largest(std::vector<int>& nums, int k);
+};
+
+//------------------------------------------------------------------------------
+/// 235. Lowest Common Ancestor of a Binary Search Tree
+/// Constraints:
+/// All Node.val are unique.
+/// p != q
+/// p and q will exist in the BST.
+/// Key idea: Use recursion. Use property of BST.
+//------------------------------------------------------------------------------
+class LowestCommonAncestorOfABinarySearchTree
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    static TreeNode* lowest_common_ancestor_recursive(
+      TreeNode* root,
+      TreeNode* p,
+      TreeNode* q);
+
+    static TreeNode* lowest_common_ancestor_iterative(
+      TreeNode* root,
+      TreeNode* p,
+      TreeNode* q);
 };
 
 //------------------------------------------------------------------------------

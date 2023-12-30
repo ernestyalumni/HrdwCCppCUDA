@@ -1,4 +1,5 @@
 #include "Algorithms/LeetCode/HardProblems.h"
+#include "DataStructures/BinaryTrees.h"
 
 #include <boost/test/unit_test.hpp>
 #include <string>
@@ -11,6 +12,7 @@ using Algorithms::LeetCode::SlidingWindowMaximum;
 using Algorithms::LeetCode::WaysToEarnPoints;
 using Algorithms::LeetCode::MinimumCostToCutStick;
 using Algorithms::LeetCode::NumberOfVisiblePeopleInAQueue;
+using DataStructures::BinaryTrees::TreeNode;
 using std::string;
 using std::vector;
 
@@ -72,6 +74,48 @@ BOOST_AUTO_TEST_CASE(MinimumWindowSubstringWorksWithSlidingWindow)
 
     BOOST_TEST(MinimumWindowSubstring::minimum_window(s, t) == expected);
   }  
+}
+
+//------------------------------------------------------------------------------
+/// 124. Binary Tree Maximum Path Sum
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BinaryTreeMaximumPathSumFindsMaxSum)
+{
+  {
+    TreeNode example_root {1};
+    TreeNode c1l2 {2};
+    TreeNode c1r3 {3};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+
+    TreeNode* root {&example_root};
+    
+    const int expected {6};
+
+    BOOST_TEST(BinaryTreeMaximumPathSum::max_path_sum(root) == expected);
+  }
+  {
+    TreeNode example_root {-10};
+    TreeNode c1l2 {9};
+    TreeNode c1r3 {20};
+    TreeNode c3l4 {15};
+    TreeNode c3r5 {7};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const int expected {42};
+
+    BOOST_TEST(BinaryTreeMaximumPathSum::max_path_sum(root) == expected);
+  }
 }
 
 //------------------------------------------------------------------------------

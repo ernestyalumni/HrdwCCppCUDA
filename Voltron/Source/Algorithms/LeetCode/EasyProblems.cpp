@@ -1,14 +1,23 @@
 #include "EasyProblems.h"
 
+#include "DataStructures/BinaryTrees.h"
+
 #include <algorithm> // std::max
+#include <functional>
 #include <limits.h> // INT_MIN
 #include <map>
+#include <queue>
+#include <stack>
 #include <string>
 #include <unordered_set>
 #include <vector>
 
+using DataStructures::BinaryTrees::TreeNode;
+using std::function;
 using std::map;
 using std::max;
+using std::queue;
+using std::stack;
 using std::string;
 using std::unordered_set;
 using std::vector;
@@ -129,6 +138,138 @@ void MergeSortedArray::merge(
 }
 
 //------------------------------------------------------------------------------
+/// 100. Same Tree
+//------------------------------------------------------------------------------
+bool SameTree::is_same_tree(TreeNode* p, TreeNode* q)
+{
+  function<bool(TreeNode*, TreeNode*)> step = [&](TreeNode* pp, TreeNode* qq)
+  {
+    // If we reached the leaf at any point, return true.
+    if ((p == nullptr) && (q == nullptr))
+    {
+      return true;
+    }
+
+    // Nodes have to have the same value, and be there, in the same position.
+    if ((p == nullptr) || (q == nullptr) || p->value_ != q->value_)
+    {
+      return false;
+    }
+
+    // Use recursion to solve the subproblem on left and right.
+
+    return step(pp->left_, qq->right_) && step(pp->right_, qq->right_);
+  };
+
+  return step(p, q);
+}
+
+//------------------------------------------------------------------------------
+/// 104. Maximum Depth of Binary Tree
+//------------------------------------------------------------------------------
+int MaximumDepthOfBinaryTree::max_depth_recursive(TreeNode* root)
+{
+  // This was a preorder traversal implementation that didn't work because it
+  // overcounted.
+  /*
+  if (root == nullptr)
+  {
+    return 0;
+  }
+
+  int depth {1};
+  stack<TreeNode*> unvisited_nodes {};
+  unvisited_nodes.push(root);
+
+  while (!unvisited_nodes.empty())
+  {
+    TreeNode* current_node {unvisited_nodes.top()};
+    unvisited_nodes.pop();
+
+    // Push right before left so that, due to the property of a stack, namely
+    // that it's LIFO, left is processed before right.
+
+    if (current_node->right_ != nullptr)
+    {
+      unvisited_nodes.push(current_node->right_);
+    }
+    if (current_node->left_ != nullptr)
+    {
+      unvisited_nodes.push(current_node->left_);
+    }
+
+    if (current_node->right_ != nullptr || current_node->left_ != nullptr)
+    {
+      depth++;
+    }
+  }
+
+  return depth;
+  */
+
+  function<int(TreeNode*)> max_depth_recursive_step = [&](TreeNode* node)
+  {
+    if (node == nullptr)
+    {
+      return 0;
+    }
+    // TreeNode node is a leaf.
+    if (node->left_ == nullptr && node->right_ == nullptr)
+    {
+      return 1;
+    }
+
+    const int left_depth {max_depth_recursive_step(node->left_)};
+    const int right_depth {max_depth_recursive_step(node->right_)};
+
+    // Add 1 to account for the root node itself.
+    return max(left_depth, right_depth) + 1;
+  };
+
+  return max_depth_recursive_step(root);
+}
+
+int MaximumDepthOfBinaryTree::max_depth_iterative(TreeNode* root)
+{
+  if (root == nullptr)
+  {
+    return 0;    
+  }
+
+  int depth {0};
+
+  queue<TreeNode*> unvisited_nodes {};
+  unvisited_nodes.push(root);
+
+  while (!unvisited_nodes.empty())
+  {
+    // Number of nodes at this current level.
+    const int level_size {static_cast<int>(unvisited_nodes.size())};
+    depth++;
+    for (int i {0}; i < level_size; ++i)
+    {
+      // For each node at this level, remove it from the queue and add its
+      // children to the queue.
+      TreeNode* current_node {unvisited_nodes.front()};
+      unvisited_nodes.pop();
+
+      // Add all the children nodes for the next level or i.e. next depth.
+
+      if (current_node->left_ != nullptr)
+      {
+        unvisited_nodes.push(current_node->left_);
+      }
+      if (current_node->right_ != nullptr)
+      {
+        unvisited_nodes.push(current_node->right_);
+      }
+    }
+  }
+
+  return depth;
+}
+
+//------------------------------------------------------------------------------
 /// 121. Best Time to Buy and Sell Stock
 /// Key idea: at each step update profit for maximum profit and minimum price in
 /// that order.
@@ -231,6 +372,74 @@ bool ContainsDuplicate::contains_duplicate(vector<int>& nums)
   }
 
   return false;
+}
+
+//------------------------------------------------------------------------------
+/// 226. Invert Binary Tree
+//------------------------------------------------------------------------------
+TreeNode* InvertBinaryTree::invert_tree_recursive(TreeNode* root)
+{
+  function<TreeNode*(TreeNode*)> invert_tree_step = [&](TreeNode* node)
+  {
+    // Base case: if node is nullptr or a leaf, there's nothing to invert.
+    if (node == nullptr ||
+      ((node->left_ == nullptr) && (node->right_ == nullptr)))
+    {
+      return node;
+    }
+
+    // These are the left and right children, respectively, with their
+    // respective children inverted.
+    TreeNode* left_child_inverted {invert_tree_step(node->left_)};
+    TreeNode* right_child_inverted {invert_tree_step(node->right_)};
+
+    // We do the swap after the recursion step because of 2 reasons:
+    // 1. If you do the swap first, then you run recursion that literally says
+    // to invert the node, they will be swapped twice, and
+    // 2. Consider this test case:
+    //   1
+    //  / \
+    // 2   3
+    node->left_ = right_child_inverted;
+    node->right_ = left_child_inverted;
+
+    return node;
+  };
+
+  return invert_tree_step(root);
+}
+
+TreeNode* InvertBinaryTree::invert_tree_iterative(TreeNode* root)
+{
+  if (root == nullptr ||
+    ((root->left_ == nullptr) && (root->right_ == nullptr)))
+  {
+    return root;
+  }
+
+  // Imitate the recursion stack of the recursive version.
+  stack<TreeNode*> unvisited_nodes {};
+  unvisited_nodes.push(root);
+
+  while (!unvisited_nodes.empty())
+  {
+    TreeNode* current_node {unvisited_nodes.top()};
+    unvisited_nodes.pop();
+
+    // Push the right first after the left because stack is LIFO, so that we'll
+    // pop the left child first.
+    if (current_node != nullptr)
+    {
+      unvisited_nodes.push(current_node->right_);
+      unvisited_nodes.push(current_node->left_);
+
+      TreeNode* temp {current_node->left_};
+      current_node->left_ = current_node->right_;
+      current_node->right_ = temp;
+    }
+  }
+
+  return root;
 }
 
 //------------------------------------------------------------------------------

@@ -1,9 +1,13 @@
 #include "Algorithms/LeetCode/MediumProblems.h"
+#include "DataStructures/BinaryTrees.h"
 
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <unordered_set>
 #include <vector>
+
+// TODO: It may not be necessary to alias the classes because Boost's test
+// brings the namespace in.
 
 using Algorithms::LeetCode::PalindromicSubstrings;
 using Algorithms::LeetCode::KthLargestElementInAnArray;
@@ -26,6 +30,7 @@ using Algorithms::LeetCode::ProductOfArrayExceptSelf;
 using Algorithms::LeetCode::ThreeSum;
 using Algorithms::LeetCode::LongestRepeatingCharacterReplacement;
 using Algorithms::LeetCode::FindAllAnagramsInAString;
+using DataStructures::BinaryTrees::TreeNode;
 using std::string;
 using std::unordered_set;
 using std::vector;
@@ -276,6 +281,29 @@ BOOST_AUTO_TEST_CASE(ThreeSumWithTwoIndexPointers)
 }
 
 //------------------------------------------------------------------------------
+/// 48. Rotate Image
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RotateImageWorksWithConsideringEachSpiral)
+{
+  {
+    vector<vector<int>> matrix {{1,2,3},{4,5,6},{7,8,9}};
+    const vector<vector<int>> outputs {{7,4,1},{8,5,2},{9,6,3}};
+
+    RotateImage::rotate(matrix);
+    BOOST_TEST(matrix == outputs);
+  }
+  {
+    vector<vector<int>> matrix {
+      {5,1,9,11},{2,4,8,10},{13,3,6,7},{15,14,12,16}};
+    const vector<vector<int>> outputs {
+      {15,13,2,5},{14,3,4,1},{12,6,8,9},{16,7,10,11}};
+
+    RotateImage::rotate(matrix);
+    BOOST_TEST(matrix == outputs);
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 53. Maximum Subarray
 //------------------------------------------------------------------------------
 
@@ -300,6 +328,36 @@ BOOST_AUTO_TEST_CASE(TrackLocalAndGlobalMaximaWorks)
     const int expected {23};
 
     BOOST_TEST(MaximumSubarray::max_subarray(nums) == expected);
+  }
+}
+
+
+//------------------------------------------------------------------------------
+/// 54. Spiral Matrix
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SpiralOrderWorksWithMovingBoundaries)
+{
+  {
+    vector<vector<int>> matrix {{1,2,3},{4,5,6},{7,8,9}};
+    const vector<int> expected {1,2,3,6,9,8,7,4,5};
+
+    BOOST_TEST(SpiralMatrix::spiral_order(matrix) == expected);
+  }
+  {
+    vector<vector<int>> matrix {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+    const vector<int> expected {1,2,3,4,8,12,11,10,9,5,6,7};
+
+    BOOST_TEST(SpiralMatrix::spiral_order(matrix) == expected);
+  }
+  // Test case 23 / 25
+  {
+    vector<vector<int>> matrix{{7},{9},{6}};
+    const vector<int> expected {7,9,6};
+
+    BOOST_TEST(SpiralMatrix::spiral_order(matrix) == expected);
   }
 }
 
@@ -343,6 +401,24 @@ BOOST_AUTO_TEST_CASE(BruteForceWorksForSettingMatrices)
     vector<vector<int>> matrix {{0,1,2,0},{3,4,5,2},{1,3,1,5}};
     const vector<vector<int>> expected {{0,0,0,0},{0,4,5,0},{0,3,1,0}};
     SetMatrixZeroes::brute_force(matrix);
+    BOOST_TEST(expected == matrix);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ArraysToTrackRowColumnIndicesWorksForSettingMatrices)
+{
+  {
+    vector<vector<int>> matrix {{1,1,1},{1,0,1},{1,1,1}};
+    const vector<vector<int>> expected {{1,0,1},{0,0,0},{1,0,1}};
+    SetMatrixZeroes::set_zeroes(matrix);
+    BOOST_TEST(expected == matrix);
+  }
+  {
+    vector<vector<int>> matrix {{0,1,2,0},{3,4,5,2},{1,3,1,5}};
+    const vector<vector<int>> expected {{0,0,0,0},{0,4,5,0},{0,3,1,0}};
+    SetMatrixZeroes::set_zeroes(matrix);
     BOOST_TEST(expected == matrix);
   }
 }
@@ -447,6 +523,94 @@ BOOST_AUTO_TEST_CASE(OnePassSortsWithThreePointers)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // SortColors_0075_tests
+
+//------------------------------------------------------------------------------
+/// 102. Binary Tree Level Order Traversal
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_SUITE(BinaryTreeLevelOrderTraversal_0102_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BinaryTreeLevelOrderTraversalWithQueueWorks)
+{
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {9};
+    TreeNode c1r3 {20};
+    TreeNode c3l4 {15};
+    TreeNode c3r5 {7};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const vector<vector<int>> expected {{3}, {9,20},{15, 7}};
+
+    BOOST_TEST(
+      BinaryTreeLevelOrderTraversal::level_order_iterative(root) == expected);
+  }
+  {
+    TreeNode example_root {1};
+    TreeNode* root {&example_root};
+    const vector<vector<int>> expected {{1}};
+
+    BOOST_TEST(
+      BinaryTreeLevelOrderTraversal::level_order_iterative(root) == expected);
+  }
+  {
+    TreeNode* root {nullptr};
+    const vector<vector<int>> expected {};
+
+    BOOST_TEST(
+      BinaryTreeLevelOrderTraversal::level_order_iterative(root) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursiveLeverOrderTraversalTrackingLevelWorks)
+{
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {9};
+    TreeNode c1r3 {20};
+    TreeNode c3l4 {15};
+    TreeNode c3r5 {7};
+
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+
+    TreeNode* root {&example_root};
+
+    const vector<vector<int>> expected {{3}, {9,20},{15, 7}};
+
+    BOOST_TEST(
+      BinaryTreeLevelOrderTraversal::level_order_recursive(root) == expected);
+  }
+  {
+    TreeNode example_root {1};
+    TreeNode* root {&example_root};
+    const vector<vector<int>> expected {{1}};
+
+    BOOST_TEST(
+      BinaryTreeLevelOrderTraversal::level_order_recursive(root) == expected);
+  }
+  {
+    TreeNode* root {nullptr};
+    const vector<vector<int>> expected {};
+
+    BOOST_TEST(
+      BinaryTreeLevelOrderTraversal::level_order_recursive(root) == expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // BinaryTreeLevelOrderTraversal_0102_tests
 
 //------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
@@ -586,6 +750,8 @@ vector<int> test_case_41_nums {1,2,3,4,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 
 // Use this test case 41 /41 with k = 50000;
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(BruteForceWorks)
 {
   {
@@ -606,6 +772,8 @@ BOOST_AUTO_TEST_CASE(BruteForceWorks)
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(MaxHeapWorks)
 {
   {
@@ -634,6 +802,174 @@ BOOST_AUTO_TEST_CASE(MaxHeapWorks)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // KthLargestElementInAnArray_215_tests
+
+//------------------------------------------------------------------------------
+/// 235. Lowest Common Ancestor of a Binary Search Tree
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_SUITE(LowestCommonAncestorOfABinarySearchTree_0235_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursionWorksToFindLowestCommonAncestor)
+{
+  TreeNode example_root {6};
+  TreeNode c1l2 {2};
+  TreeNode c1r3 {8};
+  TreeNode c2l4 {0};
+  TreeNode c2r5 {4};
+  TreeNode c3l6 {7};
+  TreeNode c3r7 {9};
+  TreeNode c5l8 {3};
+  TreeNode c5r9 {5};
+
+  example_root.left_ = &c1l2;
+  example_root.right_ = &c1r3;
+  c1l2.left_ = &c2l4;
+  c1l2.right_ = &c2r5;
+  c1r3.left_ = &c3l6;
+  c1r3.right_ = &c3r7;
+  c2r5.left_ = &c5l8;
+  c2r5.right_ = &c5r9;
+
+  {
+    TreeNode* root {&example_root};
+    TreeNode* p {&c1l2};
+    TreeNode* q {&c1r3};
+
+    const TreeNode* expected {&example_root};
+ 
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_recursive(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+  {
+    TreeNode* root {&example_root};
+    TreeNode* p {&c1l2};
+    TreeNode* q {&c2r5};
+
+    const TreeNode* expected {&c1l2};
+
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_recursive(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+  {
+    TreeNode example_root {2};
+    TreeNode c1l2 {1};
+    example_root.left_ = &c1l2;
+    TreeNode* root {&example_root};
+    TreeNode* p {root};
+    TreeNode* q {&c1l2};
+    const TreeNode* expected {root};
+
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_recursive(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+  // Test case 24 / 30
+  {
+    TreeNode* root {&example_root};
+    TreeNode* p {&c5l8};
+    TreeNode* q {&c5r9};
+
+    const TreeNode* expected {&c2r5};
+
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_recursive(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IterativeWhileLoopWorksToFindLowestCommonAncestor)
+{
+  TreeNode example_root {6};
+  TreeNode c1l2 {2};
+  TreeNode c1r3 {8};
+  TreeNode c2l4 {0};
+  TreeNode c2r5 {4};
+  TreeNode c3l6 {7};
+  TreeNode c3r7 {9};
+  TreeNode c5l8 {3};
+  TreeNode c5r9 {5};
+
+  example_root.left_ = &c1l2;
+  example_root.right_ = &c1r3;
+  c1l2.left_ = &c2l4;
+  c1l2.right_ = &c2r5;
+  c1r3.left_ = &c3l6;
+  c1r3.right_ = &c3r7;
+  c2r5.left_ = &c5l8;
+  c2r5.right_ = &c5r9;
+
+  {
+    TreeNode* root {&example_root};
+    TreeNode* p {&c1l2};
+    TreeNode* q {&c1r3};
+
+    const TreeNode* expected {&example_root};
+ 
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_iterative(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+  {
+    TreeNode* root {&example_root};
+    TreeNode* p {&c1l2};
+    TreeNode* q {&c2r5};
+
+    const TreeNode* expected {&c1l2};
+
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_iterative(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+  {
+    TreeNode example_root {2};
+    TreeNode c1l2 {1};
+    example_root.left_ = &c1l2;
+    TreeNode* root {&example_root};
+    TreeNode* p {root};
+    TreeNode* q {&c1l2};
+    const TreeNode* expected {root};
+
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_iterative(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+  // Test case 24 / 30
+  {
+    TreeNode* root {&example_root};
+    TreeNode* p {&c5l8};
+    TreeNode* q {&c5r9};
+
+    const TreeNode* expected {&c2r5};
+
+    const TreeNode* output {
+      LowestCommonAncestorOfABinarySearchTree::
+        lowest_common_ancestor_iterative(root, p, q)};
+
+    BOOST_TEST(output->value_ == expected->value_);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // LowestCommonAncestorOfABinarySearchTree_0235_tests
 
 //------------------------------------------------------------------------------
 /// 238. Product of Array Except Self

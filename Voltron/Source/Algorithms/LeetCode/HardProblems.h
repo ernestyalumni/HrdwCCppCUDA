@@ -1,6 +1,8 @@
 #ifndef ALGORITHMS_LEETCODE_HARD_PROBLEMS_H
 #define ALGORITHMS_LEETCODE_HARD_PROBLEMS_H
 
+#include "DataStructures/BinaryTrees.h"
+
 #include <string>
 #include <vector>
 
@@ -40,6 +42,21 @@ class MinimumWindowSubstring
     /// characters in string t.
     //--------------------------------------------------------------------------
     static std::string minimum_window(std::string s, std::string t);
+};
+
+//------------------------------------------------------------------------------
+/// 124. Binary Tree Maximum Path Sum
+/// Key ideas: Recursion (almost always with Binary Trees), divide and conquer.
+/// Carry information back up (backtrack and accumulate) the tree by identifying
+/// that negative valued sums don't maximize sum (use 0).
+//------------------------------------------------------------------------------
+class BinaryTreeMaximumPathSum
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    static int max_path_sum(TreeNode* root);
 };
 
 //------------------------------------------------------------------------------

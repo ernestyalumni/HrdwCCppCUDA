@@ -1,17 +1,23 @@
 #include "HardProblems.h"
 
+#include "DataStructures/BinaryTrees.h"
+
 #include <algorithm> // std::swap
 #include <array>
 #include <climits>
 #include <deque>
+#include <functional>
 #include <limits.h> // INT_MAX, INT_MIN
 #include <stack>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
+using DataStructures::BinaryTrees::TreeNode;
 using std::array;
 using std::deque;
+using std::function;
+using std::max;
 using std::min;
 using std::stack;
 using std::string;
@@ -136,6 +142,43 @@ string MinimumWindowSubstring::minimum_window(string s, string t)
   }
 
   return length == INT_MAX ? "" : s.substr(min_start, length);
+}
+
+//------------------------------------------------------------------------------
+/// 124. Binary Tree Maximum Path Sum
+/// Key ideas: Recursion (almost always with Binary Trees), divide and conquer.
+/// Carry information back up (backtrack and accumulate) the tree by identifying
+/// that negative valued sums don't maximize sum (use 0).
+//------------------------------------------------------------------------------
+int BinaryTreeMaximumPathSum::max_path_sum(TreeNode* root)
+{
+  int global_sum {INT_MIN};
+
+  function<int(TreeNode*)> calculate_max_path_sum_from_node = [&](
+    TreeNode* node)
+  {
+    // We've reached the end of a leaf.
+    if (node == nullptr)
+    {
+      return 0;
+    }
+
+    // Comparing against 0 is the same as not including any of those left or
+    // right children in the sum.
+    const int left_sum {max(calculate_max_path_sum_from_node(node->left_), 0)};
+    const int right_sum {
+      max(calculate_max_path_sum_from_node(node->right_), 0)};
+
+    global_sum = max(global_sum, node->value_ + left_sum + right_sum);
+
+    // Add back the current node and the max of going either its left or right
+    // children.
+    return node->value_ + max(left_sum, right_sum);
+  };
+
+  calculate_max_path_sum_from_node(root);
+
+  return global_sum;
 }
 
 //------------------------------------------------------------------------------
