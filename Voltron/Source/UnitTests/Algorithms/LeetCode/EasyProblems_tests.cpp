@@ -483,6 +483,64 @@ BOOST_AUTO_TEST_CASE(BinarySearchReturnsIndexOrNegative1)
   }
 }
 
+//------------------------------------------------------------------------------
+/// 733. Flood Fill
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_SUITE(FloodFill_0733_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursiveDepthFirstSearchFills)
+{
+  {
+    vector<vector<int>> image {{1,1,1},{1,1,0},{1,0,1}};
+    const int sr {1};
+    const int sc {1};
+    const int color {2};
+    const vector<vector<int>> expected {{2,2,2},{2,2,0},{2,0,1}};
+
+    BOOST_TEST(FloodFill::flood_fill(image, sr, sc, color) == expected);
+  }
+  {
+    vector<vector<int>> image {{0,0,0},{0,0,0}};
+    const int sr {0};
+    const int sc {0};
+    const int color {0};
+    const vector<vector<int>> expected {{0,0,0},{0,0,0}};
+
+    BOOST_TEST(FloodFill::flood_fill(image, sr, sc, color) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BreadthFirstSearchWithQueueFills)
+{
+  {
+    vector<vector<int>> image {{1,1,1},{1,1,0},{1,0,1}};
+    const int sr {1};
+    const int sc {1};
+    const int color {2};
+    const vector<vector<int>> expected {{2,2,2},{2,2,0},{2,0,1}};
+
+    BOOST_TEST(FloodFill::flood_fill_with_queue(image, sr, sc, color) ==
+      expected);
+  }
+  {
+    vector<vector<int>> image {{0,0,0},{0,0,0}};
+    const int sr {0};
+    const int sc {0};
+    const int color {0};
+    const vector<vector<int>> expected {{0,0,0},{0,0,0}};
+
+    BOOST_TEST(FloodFill::flood_fill_with_queue(image, sr, sc, color) ==
+      expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // FloodFill_0733_tests
+
 BOOST_AUTO_TEST_SUITE(GetMaximumInGeneratedArray_1646_tests)
 
 //------------------------------------------------------------------------------

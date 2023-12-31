@@ -18,19 +18,25 @@
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility> // std::pair, std::make_pair
 #include <vector>
 
 using DataStructures::BinaryTrees::TreeNode;
 using std::array;
 using std::function;
+using std::get;
+using std::make_pair;
+using std::make_tuple;
 using std::max;
 using std::min;
+using std::pair;
 using std::priority_queue;
 using std::queue;
 using std::size_t;
 using std::stack;
 using std::string;
 using std::swap;
+using std::tuple;
 using std::unordered_map;
 using std::unordered_set;
 using std::vector;
@@ -952,6 +958,74 @@ void SortColors::one_pass(vector<int>& nums)
 }
 
 //------------------------------------------------------------------------------
+/// 98. Validate Binary Search Tree
+//------------------------------------------------------------------------------
+
+bool ValidateBinarySearchTree::is_valid_BST(TreeNode* root)
+{
+  function<bool(TreeNode*, const long long, const long long)> step = [&](
+    TreeNode* node,
+    const long long lower_bound,
+    const long long upper_bound) -> bool
+  {
+    // We reached the end of a node and it's legitmate to have no child.
+    if (node == nullptr)
+    {
+      return true;
+    }
+
+    const int current_value {node->value_};
+
+    if (static_cast<long long>(current_value) <= lower_bound ||
+      static_cast<long long>(current_value) >= upper_bound)
+    {
+      return false;
+    }
+
+    if (node->left_ != nullptr && node->left_->value_ >= current_value)
+    {
+      return false;
+    }
+    else if (node->right_ != nullptr &&
+      node->right_->value_ <= current_value)
+    {
+      return false;
+    }
+
+    return step(
+      node->left_, lower_bound, static_cast<long long>(current_value)) &&
+      step(node->right_, static_cast<long long>(current_value), upper_bound);
+  };
+
+  return step(root, LONG_MIN, LONG_MAX);
+}
+
+bool ValidateBinarySearchTree::is_valid_BST_track_parent_pointer(TreeNode* root)
+{
+  function<bool(TreeNode*, TreeNode*, TreeNode*)> step = [&](
+    TreeNode* l,
+    TreeNode* node,
+    TreeNode* r)
+  {
+    // Base case, we've reached the end of a node.
+    if (node == nullptr)
+    {
+      return true;
+    }
+
+    if ((l != nullptr && l->value_ >= node->value_) ||
+      (r != nullptr && r->value_ <= node->value_))
+    {
+      return false;
+    }
+
+    return step(l, node->left_, node) && step(node, node->right_, r);
+  };
+
+  return step(nullptr, root, nullptr);
+}
+
+//------------------------------------------------------------------------------
 /// 102. Binary Tree Level Order Traversal
 //------------------------------------------------------------------------------
 
@@ -1106,6 +1180,133 @@ int FindMinimumInRotatedSortedArray::find_min(vector<int>& nums)
   return minimum;
 }
 
+//------------------------------------------------------------------------------
+/// 200. Number of Islands
+//------------------------------------------------------------------------------
+
+int NumberOfIslands::number_of_islands_with_depth_first_search(
+  vector<vector<char>>& grid)
+{
+
+  function<void(vector<vector<char>>&, const int, const int)>
+    search_for_an_island = [&](
+      vector<vector<char>>& grid,
+      const int i,
+      const int j)
+  {
+    const int M {static_cast<int>(grid.size())};
+    const int N {static_cast<int>(grid[0].size())};
+
+    // If we hit a boundary (which is water from problem), or hit water, we can
+    // end this traversal because we're out of an island.
+    if ((i < 0) || (i >= M) || (j < 0) || (j >= N) || grid[i][j] == '0')
+    {
+      return;
+    }
+
+    // Key insight: mark as 0 because we've visited this here. The condition
+    // above allows us not to visit this element again.
+    grid[i][j] = '0';
+
+    search_for_an_island(grid, i + 1, j);
+    search_for_an_island(grid, i - 1, j);
+    search_for_an_island(grid, i, j + 1);
+    search_for_an_island(grid, i, j - 1);
+
+    return;
+  };
+
+  const int M {static_cast<int>(grid.size())};
+  const int N {static_cast<int>(grid[0].size())};
+  int count {0};
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (grid[i][j] == '1')
+      {
+        search_for_an_island(grid, i, j);
+        ++count;
+      }
+    }
+  }
+
+  return count;
+}
+
+int NumberOfIslands::number_of_islands_with_breadth_first_search(
+  vector<vector<char>>& grid)
+{
+  const int M {static_cast<int>(grid.size())};
+  const int N {static_cast<int>(grid[0].size())};
+
+  auto is_valid = [&](const int i, const int j)
+  {
+    return (i >= 0 && i < M && 0 <= j && j < N && grid[i][j] != '0');
+  };
+
+  int count {0};
+
+  queue<pair<int, int>> unvisited_cells {};
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (grid[i][j] != '0')
+      {
+        unvisited_cells.push(make_pair(i, j));
+        // Mark as visited immediately, to avoid processing a cell multiple
+        // times.
+        grid[i][j] = '0';
+
+        while (!unvisited_cells.empty())
+        {
+          //const int level_size {static_cast<int>(unvisited_cells.size())};
+
+          //for (int element {0}; element < level_size; ++element)
+          //{
+            const auto ij = unvisited_cells.front();
+            const int I {get<0>(ij)};
+            const int J {get<1>(ij)};
+            unvisited_cells.pop();
+
+            // Remember to check if (i, j) are within the bounds.
+
+            if (is_valid(I + 1, J))
+            {
+              unvisited_cells.push(make_pair(I + 1, J));
+              // Mark immediately as visited.
+              grid[I + 1][J] = '0';
+            }
+            if (is_valid(I - 1, J))
+            {
+              unvisited_cells.push(make_pair(I - 1, J));
+              grid[I - 1][J] = '0';
+            }
+            if (is_valid(I, J + 1))
+            {
+              unvisited_cells.push(make_pair(I, J + 1));
+              grid[I][J + 1] = '0';
+            }
+            if (is_valid(I, J - 1))
+            {
+              unvisited_cells.push(make_pair(I, J - 1));
+              grid[I][J - 1] = '0';
+            }
+          //}
+        }
+
+        // We completed tracing through 1 island.
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
 /// \name 209. Minimum Size Subarray Sum
 // Recall that a subarray is a contiguous, non-empty sequence of elements of the
 // array.
@@ -1218,6 +1419,76 @@ int KthLargestElementInAnArray::find_kth_largest(vector<int>& nums, int k)
   }
 
   return largest.top();
+}
+
+//------------------------------------------------------------------------------
+/// 230. Kth Smallest Element in a BST
+/// Key idea: by the properties of the BST, by induction, we expect that the
+/// smallest element is all the way to the left.
+//------------------------------------------------------------------------------
+int KthSmallestElementInABST::kth_smallest_iterative(TreeNode* root, int k)
+{
+  TreeNode* current_ptr {root};
+  stack<TreeNode*> unvisited_nodes {};
+  int count {k};
+
+  while (current_ptr != nullptr || !unvisited_nodes.empty())
+  {
+    // From the current node, traverse all the left-most nodes because it will
+    // be the smallest. We'll not only do this from the root, but also any
+    // "right" side child we encounter because we want the kth smallest.
+    while (current_ptr != nullptr)
+    {
+      unvisited_nodes.push(current_ptr);
+      current_ptr = current_ptr->left_;
+    }
+
+    current_ptr = unvisited_nodes.top();
+    unvisited_nodes.pop();
+
+    --count;
+    if (count == 0)
+    {
+      return current_ptr->value_;
+    }
+
+    current_ptr = current_ptr->right_;
+  }
+
+  // We only expect to reach this if the length of the tree is less than k.
+  return -1;
+}
+
+int KthSmallestElementInABST::kth_smallest_recursive(TreeNode* root, int k)
+{
+  int count {k};
+  int result {-1};
+
+  function<void(TreeNode*, int&, int&)> step = [&](
+    TreeNode* node,
+    int& count,
+    int& result)
+  {
+    // We reached the ends of a traversal.
+    if (node == nullptr)
+    {
+      return;
+    }
+
+    step(node->left_, count, result);
+
+    --count;
+    if (count == 0)
+    {
+      result = node->value_;
+    }
+
+    step(node->right_, count, result);
+  };
+
+  step(root, count, result);
+
+  return result;
 }
 
 //------------------------------------------------------------------------------

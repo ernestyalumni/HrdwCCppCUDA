@@ -525,6 +525,167 @@ BOOST_AUTO_TEST_CASE(OnePassSortsWithThreePointers)
 BOOST_AUTO_TEST_SUITE_END() // SortColors_0075_tests
 
 //------------------------------------------------------------------------------
+/// 98. Validate Binary Search Tree
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_SUITE(ValidateBinarySearchTree_0098_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursionAtEachNodeWorksToValidateBinarySearchTree)
+{
+  {
+    TreeNode example_root {2};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {3};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(ValidateBinarySearchTree::is_valid_BST(root));
+  }
+  {
+    TreeNode example_root {5};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {4};
+    TreeNode c3l4 {3};
+    TreeNode c3r5 {6};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(!ValidateBinarySearchTree::is_valid_BST(root));
+  }
+  // Test case 76 / 83
+  {
+    TreeNode example_root {5};
+    TreeNode c1l2 {4};
+    TreeNode c1r3 {6};
+    TreeNode c3l4 {3};
+    TreeNode c3r5 {7};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(!ValidateBinarySearchTree::is_valid_BST(root));
+  }
+  // Test case 76 / 83
+  {
+    TreeNode example_root {2147483647};
+
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(ValidateBinarySearchTree::is_valid_BST(root));
+  }
+  // Test case 81 / 83
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {5};
+    TreeNode c2l4 {0};
+    TreeNode c2r5 {2};
+    TreeNode c3l6 {4};
+    TreeNode c3r7 {6};
+    TreeNode c5r8 {3};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1l2.right_ = &c2r5;
+    c1r3.left_ = &c3l6;
+    c1r3.right_ = &c3r7;
+    c2r5.right_ = &c5r8;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(!ValidateBinarySearchTree::is_valid_BST(root));
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursionWithThreePointersWorksToValidateBinarySearchTree)
+{
+  {
+    TreeNode example_root {2};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {3};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(
+      ValidateBinarySearchTree::is_valid_BST_track_parent_pointer(root));
+  }
+  {
+    TreeNode example_root {5};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {4};
+    TreeNode c3l4 {3};
+    TreeNode c3r5 {6};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(
+      !ValidateBinarySearchTree::is_valid_BST_track_parent_pointer(root));
+  }
+  // Test case 76 / 83
+  {
+    TreeNode example_root {5};
+    TreeNode c1l2 {4};
+    TreeNode c1r3 {6};
+    TreeNode c3l4 {3};
+    TreeNode c3r5 {7};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1r3.left_ = &c3l4;
+    c1r3.right_ = &c3r5;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(
+      !ValidateBinarySearchTree::is_valid_BST_track_parent_pointer(root));
+  }
+  // Test case 76 / 83
+  {
+    TreeNode example_root {2147483647};
+
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(
+      ValidateBinarySearchTree::is_valid_BST_track_parent_pointer(root));
+  }
+  // Test case 81 / 83
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {5};
+    TreeNode c2l4 {0};
+    TreeNode c2r5 {2};
+    TreeNode c3l6 {4};
+    TreeNode c3r7 {6};
+    TreeNode c5r8 {3};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1l2.right_ = &c2r5;
+    c1r3.left_ = &c3l6;
+    c1r3.right_ = &c3r7;
+    c2r5.right_ = &c5r8;
+    TreeNode* root {&example_root};
+
+    BOOST_TEST(
+      !ValidateBinarySearchTree::is_valid_BST_track_parent_pointer(root));
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // ValidateBinarySearchTree_0098_tests
+
+//------------------------------------------------------------------------------
 /// 102. Binary Tree Level Order Traversal
 //------------------------------------------------------------------------------
 
@@ -696,6 +857,120 @@ BOOST_AUTO_TEST_CASE(BinarySearchFindsMinimumInRotatedSortedArray)
   }
 }
 
+//------------------------------------------------------------------------------
+/// 200. Number of Islands
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_SUITE(NumberOfIslands_200_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NumberOfIslandsWorksWithDepthFirstSearch)
+{
+  {
+    vector<vector<char>> grid {
+      {'1','1','1','1','0'},
+      {'1','1','0','1','0'},
+      {'1','1','0','0','0'},
+      {'0','0','0','0','0'}};
+
+    const int expected {1};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_depth_first_search(grid) ==
+        expected);
+  }
+  {
+    vector<vector<char>> grid {
+      {'1','1','0','0','0'},
+      {'1','1','0','0','0'},
+      {'0','0','1','0','0'},
+      {'0','0','0','1','1'}};
+
+    const int expected {3};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_depth_first_search(grid) ==
+        expected);
+  }
+  // Test case 40 / 49
+  {
+    vector<vector<char>> grid {{'1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','0','1','1'},{'0','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','0'},{'1','0','1','1','1','0','0','1','1','0','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','0','1','1','1','1','1','1','0','1','1','1','0','1','1','1','0','1','1','1'},{'0','1','1','1','1','1','1','1','1','1','1','1','0','1','1','0','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','1','1'},{'1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'0','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','0','1','1','1','1','1','1','1','0','1','1','1','1','1','1'},{'1','0','1','1','1','1','1','0','1','1','1','0','1','1','1','1','0','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','0'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','0'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'}};
+
+    const int expected {1};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_depth_first_search(grid) ==
+        expected); 
+  }
+  // Test case 43 / 49
+  {
+    vector<vector<char>> grid {
+    {'1','0','0','1','1','1','0','1','1','0','0','0','0','0','0','0','0','0','0','0'},{'1','0','0','1','1','0','0','1','0','0','0','1','0','1','0','1','0','0','1','0'},{'0','0','0','1','1','1','1','0','1','0','1','1','0','0','0','0','1','0','1','0'},{'0','0','0','1','1','0','0','1','0','0','0','1','1','1','0','0','1','0','0','1'},{'0','0','0','0','0','0','0','1','1','1','0','0','0','0','0','0','0','0','0','0'},{'1','0','0','0','0','1','0','1','0','1','1','0','0','0','0','0','0','1','0','1'},{'0','0','0','1','0','0','0','1','0','1','0','1','0','1','0','1','0','1','0','1'},{'0','0','0','1','0','1','0','0','1','1','0','1','0','1','1','0','1','1','1','0'},{'0','0','0','0','1','0','0','1','1','0','0','0','0','1','0','0','0','1','0','1'},{'0','0','1','0','0','1','0','0','0','0','0','1','0','0','1','0','0','0','1','0'},{'1','0','0','1','0','0','0','0','0','0','0','1','0','0','1','0','1','0','1','0'},{'0','1','0','0','0','1','0','1','0','1','1','0','1','1','1','0','1','1','0','0'},{'1','1','0','1','0','0','0','0','1','0','0','0','0','0','0','1','0','0','0','1'},{'0','1','0','0','1','1','1','0','0','0','1','1','1','1','1','0','1','0','0','0'},{'0','0','1','1','1','0','0','0','1','1','0','0','0','1','0','1','0','0','0','0'},{'1','0','0','1','0','1','0','0','0','0','1','0','0','0','1','0','1','0','1','1'},{'1','0','1','0','0','0','0','0','0','1','0','0','0','1','0','1','0','0','0','0'},{'0','1','1','0','0','0','1','1','1','0','1','0','1','0','1','1','1','1','0','0'},{'0','1','0','0','0','0','1','1','0','0','1','0','1','0','0','1','0','0','1','1'},{'0','0','0','0','0','0','1','1','1','1','0','1','0','0','0','1','1','0','0','0'}};
+
+    const int expected {58};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_depth_first_search(grid) ==
+        expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NumberOfIslandsWorksWithBreadthFirstSearch)
+{
+  {
+    vector<vector<char>> grid {
+      {'1','1','1','1','0'},
+      {'1','1','0','1','0'},
+      {'1','1','0','0','0'},
+      {'0','0','0','0','0'}};
+
+    const int expected {1};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_breadth_first_search(grid) ==
+        expected);
+  }
+  {
+    vector<vector<char>> grid {
+      {'1','1','0','0','0'},
+      {'1','1','0','0','0'},
+      {'0','0','1','0','0'},
+      {'0','0','0','1','1'}};
+
+    const int expected {3};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_breadth_first_search(grid) ==
+        expected);
+  }
+  // Test case 40 / 49
+  {
+    vector<vector<char>> grid {{'1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','0','1','1'},{'0','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','0'},{'1','0','1','1','1','0','0','1','1','0','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','0','1','1','1','1','1','1','0','1','1','1','0','1','1','1','0','1','1','1'},{'0','1','1','1','1','1','1','1','1','1','1','1','0','1','1','0','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','1','1'},{'1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'0','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','0','1','1','1','1','1','1','1','0','1','1','1','1','1','1'},{'1','0','1','1','1','1','1','0','1','1','1','0','1','1','1','1','0','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','0'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','0'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'},{'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'}};
+
+    const int expected {1};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_breadth_first_search(grid) ==
+        expected); 
+  }
+  // Test case 43 / 49
+  {
+    vector<vector<char>> grid {
+    {'1','0','0','1','1','1','0','1','1','0','0','0','0','0','0','0','0','0','0','0'},{'1','0','0','1','1','0','0','1','0','0','0','1','0','1','0','1','0','0','1','0'},{'0','0','0','1','1','1','1','0','1','0','1','1','0','0','0','0','1','0','1','0'},{'0','0','0','1','1','0','0','1','0','0','0','1','1','1','0','0','1','0','0','1'},{'0','0','0','0','0','0','0','1','1','1','0','0','0','0','0','0','0','0','0','0'},{'1','0','0','0','0','1','0','1','0','1','1','0','0','0','0','0','0','1','0','1'},{'0','0','0','1','0','0','0','1','0','1','0','1','0','1','0','1','0','1','0','1'},{'0','0','0','1','0','1','0','0','1','1','0','1','0','1','1','0','1','1','1','0'},{'0','0','0','0','1','0','0','1','1','0','0','0','0','1','0','0','0','1','0','1'},{'0','0','1','0','0','1','0','0','0','0','0','1','0','0','1','0','0','0','1','0'},{'1','0','0','1','0','0','0','0','0','0','0','1','0','0','1','0','1','0','1','0'},{'0','1','0','0','0','1','0','1','0','1','1','0','1','1','1','0','1','1','0','0'},{'1','1','0','1','0','0','0','0','1','0','0','0','0','0','0','1','0','0','0','1'},{'0','1','0','0','1','1','1','0','0','0','1','1','1','1','1','0','1','0','0','0'},{'0','0','1','1','1','0','0','0','1','1','0','0','0','1','0','1','0','0','0','0'},{'1','0','0','1','0','1','0','0','0','0','1','0','0','0','1','0','1','0','1','1'},{'1','0','1','0','0','0','0','0','0','1','0','0','0','1','0','1','0','0','0','0'},{'0','1','1','0','0','0','1','1','1','0','1','0','1','0','1','1','1','1','0','0'},{'0','1','0','0','0','0','1','1','0','0','1','0','1','0','0','1','0','0','1','1'},{'0','0','0','0','0','0','1','1','1','1','0','1','0','0','0','1','1','0','0','0'}};
+
+    const int expected {58};
+
+    BOOST_TEST(
+      NumberOfIslands::number_of_islands_with_breadth_first_search(grid) ==
+        expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // NumberOfIslands_200_tests
+
 // 209. Minimum Size Subarray Sum
 // arrays, sliding window technique, minimum
 BOOST_AUTO_TEST_SUITE(MinimumSizeSubarraySum_209_tests)
@@ -802,6 +1077,94 @@ BOOST_AUTO_TEST_CASE(MaxHeapWorks)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // KthLargestElementInAnArray_215_tests
+
+//------------------------------------------------------------------------------
+/// 230. Kth Smallest Element in a BST
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_SUITE(KthSmallestElementInABST_0230_tests)
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(StackAndPointerWorksToFindKthSmallestInBST)
+{
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {4};
+    TreeNode c2r4 {2};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.right_ = &c2r4;
+    TreeNode* root {&example_root};
+    const int k {1};
+    const int expected {1};
+
+    BOOST_TEST(
+      KthSmallestElementInABST::kth_smallest_iterative(root, k) == expected);
+  }
+  {
+    TreeNode example_root {5};
+    TreeNode c1l2 {3};
+    TreeNode c1r3 {6};
+    TreeNode c2l4 {2};
+    TreeNode c2r5 {4};
+    TreeNode c4l6 {1};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1l2.right_ = &c2r5;
+    c2l4.left_ = &c4l6;
+    TreeNode* root {&example_root};
+    const int k {3};
+    const int expected {3};
+
+    BOOST_TEST(
+      KthSmallestElementInABST::kth_smallest_iterative(root, k) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RecursionWorksToFindKthSmallestInBST)
+{
+  {
+    TreeNode example_root {3};
+    TreeNode c1l2 {1};
+    TreeNode c1r3 {4};
+    TreeNode c2r4 {2};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.right_ = &c2r4;
+    TreeNode* root {&example_root};
+    const int k {1};
+    const int expected {1};
+
+    BOOST_TEST(
+      KthSmallestElementInABST::kth_smallest_recursive(root, k) == expected);
+  }
+  {
+    TreeNode example_root {5};
+    TreeNode c1l2 {3};
+    TreeNode c1r3 {6};
+    TreeNode c2l4 {2};
+    TreeNode c2r5 {4};
+    TreeNode c4l6 {1};
+    example_root.left_ = &c1l2;
+    example_root.right_ = &c1r3;
+    c1l2.left_ = &c2l4;
+    c1l2.right_ = &c2r5;
+    c2l4.left_ = &c4l6;
+    TreeNode* root {&example_root};
+    const int k {3};
+    const int expected {3};
+
+    BOOST_TEST(
+      KthSmallestElementInABST::kth_smallest_recursive(root, k) == expected);
+  }
+}
+
+BOOST_AUTO_TEST_SUITE_END() // KthSmallestElementInABST_0230_tests
 
 //------------------------------------------------------------------------------
 /// 235. Lowest Common Ancestor of a Binary Search Tree

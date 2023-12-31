@@ -10,12 +10,15 @@
 #include <stack>
 #include <string>
 #include <unordered_set>
+#include <utility> // std::pair, std::make_pair
 #include <vector>
 
 using DataStructures::BinaryTrees::TreeNode;
 using std::function;
+using std::make_pair;
 using std::map;
 using std::max;
+using std::pair;
 using std::queue;
 using std::stack;
 using std::string;
@@ -515,6 +518,112 @@ int BinarySearch::search(vector<int>& nums, int target)
   }
 
   return -1;
+}
+
+//------------------------------------------------------------------------------
+/// 733. Flood Fill
+//------------------------------------------------------------------------------
+
+vector<vector<int>> FloodFill::flood_fill(
+  vector<vector<int>>& image,
+  int sr,
+  int sc,
+  int color)
+{
+  if (image[sr][sc] == color)
+  {
+    return image;
+  }
+  const int M {static_cast<int>(image.size())};
+  const int N {static_cast<int>(image[0].size())};
+
+  const int original_color {image[sr][sc]};
+
+  function<void(const int, const int)> search_depth = [&](
+    const int i,
+    const int j)
+  {
+    // Base case: if it's not a pixel on the image or a pixel of the starting
+    // color, do nothing.
+    if (0 > i || i >= M || 0 > j || j > N || image[i][j] != original_color)
+    {
+      return;
+    }
+
+    image[i][j] = color;
+
+    search_depth(i + 1, j);
+    search_depth(i - 1, j);
+    search_depth(i, j + 1);
+    search_depth(i, j - 1);
+  };
+
+  search_depth(sr, sc);
+
+  return image;
+}
+
+vector<vector<int>> FloodFill::flood_fill_with_queue(
+  vector<vector<int>>& image,
+  int sr,
+  int sc,
+  int color)
+{
+  if (image[sr][sc] == color)
+  {
+    return image;
+  }
+  const int M {static_cast<int>(image.size())};
+  const int N {static_cast<int>(image[0].size())};
+
+  const int original_color {image[sr][sc]};
+
+  auto is_valid = [&](const int i, const int j)
+  {
+    return (
+      0 <= i && i < M && 0 <= j && j < N && image[i][j] == original_color);
+  };
+
+  queue<pair<int, int>> unvisited_pixels {};
+  unvisited_pixels.push(make_pair(sr, sc));
+  // Immediately mark the target pixel as being visited by coloring it.
+  image[sr][sc] = color;
+
+  while (!unvisited_pixels.empty())
+  {
+    const auto ij = unvisited_pixels.front();
+    unvisited_pixels.pop();
+
+    const int I {get<0>(ij)};
+    const int J {get<1>(ij)};
+
+    if (is_valid(I + 1, J))
+    {
+      unvisited_pixels.push(make_pair(I + 1, J));
+      // Mark pixel immediately upon pushing into the queue with color.
+      image[I + 1][J] = color;
+    }
+    if (is_valid(I - 1, J))
+    {
+      unvisited_pixels.push(make_pair(I - 1, J));
+      // Mark pixel immediately upon pushing into the queue with color.
+      image[I - 1][J] = color;
+    }
+    if (is_valid(I, J + 1))
+    {
+      unvisited_pixels.push(make_pair(I, J + 1));
+      // Mark pixel immediately upon pushing into the queue with color.
+      image[I][J + 1] = color;
+    }
+    if (is_valid(I, J - 1))
+    {
+      unvisited_pixels.push(make_pair(I, J - 1));
+      // Mark pixel immediately upon pushing into the queue with color.
+      image[I][J - 1] = color;
+    }
+  }
+
+  return image;
 }
 
 //------------------------------------------------------------------------------

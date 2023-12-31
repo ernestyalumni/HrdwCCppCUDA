@@ -148,6 +148,20 @@ class BinarySearch
 };
 
 //------------------------------------------------------------------------------
+/// 733. Flood Fill
+//------------------------------------------------------------------------------
+class FloodFill
+{
+  public:
+
+    static std::vector<std::vector<int>> flood_fill(
+      std::vector<std::vector<int>>& image, int sr, int sc, int color);
+
+    static std::vector<std::vector<int>> flood_fill_with_queue(
+      std::vector<std::vector<int>>& image, int sr, int sc, int color);
+};
+
+//------------------------------------------------------------------------------
 /// 1646. Get Maximum in Generated Array.
 /// Given integer n, A 0-indexed integer array nums of length n + 1 is generated
 /// in the following way:

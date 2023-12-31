@@ -244,6 +244,25 @@ class SortColors
 };
 
 //------------------------------------------------------------------------------
+/// 98. Validate Binary Search Tree
+/// Key ideas: Recursion on left subtree, right subtree. Keep track of 2 int's
+/// for lower bound and upper bound so all values in subtree is either smaller
+/// (on left subtree) or greater (on right subtree) of node.
+//------------------------------------------------------------------------------
+class ValidateBinarySearchTree
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    static bool is_valid_BST(TreeNode* root);
+
+    // Use two more TreeNode pointers in the arguments to track lower and upper
+    // bounds.
+    static bool is_valid_BST_track_parent_pointer(TreeNode* root);
+};
+
+//------------------------------------------------------------------------------
 /// 102. Binary Tree Level Order Traversal
 /// Key idea: Use a queue for level order traversal. Use size of queue to get
 /// size of each level, so that we know how many to pop out.
@@ -284,6 +303,27 @@ class FindMinimumInRotatedSortedArray
 };
 
 //------------------------------------------------------------------------------
+/// 200. Number of Islands
+/// Key idea: Graph. Map each matrix element / matrix cell to a vertex on the
+/// graph. Map the allowed (watch for boundaries) directions, up, down, left,
+/// right, i.e. horizontal, vertical adjacent, to edges between vertices.
+/// An island is surrounded by water, so if we hit water, we can end looking
+/// from there.
+/// Key insight is to reuse the grid and that it's ok to mark a visited element
+/// with a '0' for seen.
+//------------------------------------------------------------------------------
+class NumberOfIslands
+{
+  public:
+
+    static int number_of_islands_with_depth_first_search(
+      std::vector<std::vector<char>>& grid);
+
+    static int number_of_islands_with_breadth_first_search(
+      std::vector<std::vector<char>>& grid);
+};
+
+//------------------------------------------------------------------------------
 /// \name 209. Minimum Size Subarray Sum
 /// We're given an array of positive integers (that are non-zero).
 /// A subarray is a contiguous non-empty sequence of elements within an array.
@@ -314,6 +354,29 @@ class KthLargestElementInAnArray
 
     static int brute_force(std::vector<int>& nums, int k);
     static int find_kth_largest(std::vector<int>& nums, int k);
+};
+
+//------------------------------------------------------------------------------
+/// 230. Kth Smallest Element in a BST
+/// Key idea: by the property of the BST, by induction, we expect that the
+/// smallest element is all the way to the left.
+//------------------------------------------------------------------------------
+class KthSmallestElementInABST
+{
+  public:
+
+    using TreeNode = DataStructures::BinaryTrees::TreeNode;
+
+    //--------------------------------------------------------------------------
+    /// Key idea: Use a current TreeNode* pointer to track the smallest
+    /// elements.
+    /// From each node, check the most left path of only left children for the
+    /// smallest. Use a stack to push into the stack all the left children of
+    /// this path.
+    //--------------------------------------------------------------------------
+    static int kth_smallest_iterative(TreeNode* root, int k);
+
+    static int kth_smallest_recursive(TreeNode* root, int k);
 };
 
 //------------------------------------------------------------------------------
