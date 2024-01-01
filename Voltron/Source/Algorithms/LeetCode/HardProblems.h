@@ -105,6 +105,21 @@ class MinimumCostToCutStick
 };
 
 //------------------------------------------------------------------------------
+/// 1799. Maximize Score After N Operations
+/// Key idea: gcd implementation depends on a recursive version using the
+/// Euclidean algorithm for GCD - from number theory, gcd(a, b) = gcd(b, a mod
+/// b). Since a = bq + r, or a - bq = r, any number that divides a, b must
+/// divide b, r.
+
+//------------------------------------------------------------------------------
+class MaximumScoreAfterNOperations
+{
+  public:
+
+    static int max_score(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// 1944. Number of Visible People in a Queue
 /// Key insight is to iterate *from the right* or "from the end" because "A
 /// person can see another person to their right in the queue if everybody in

@@ -197,6 +197,31 @@ BOOST_AUTO_TEST_CASE(MinimumCostToCutStickFindsMinimum)
   }
 }
 
+//------------------------------------------------------------------------------
+/// 1799. Maximize Score After N Operations
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MaximizeScoreAfterNOperationsWorksWithDynamicProgramming)
+{
+  {
+    vector<int> nums {1, 2};
+    const int expected {1};
+    BOOST_TEST(MaximumScoreAfterNOperations::max_score(nums) == expected);
+  }
+  {
+    vector<int> nums {3,4,6,8};
+    const int expected {11};
+    BOOST_TEST(MaximumScoreAfterNOperations::max_score(nums) == expected);
+  }
+  {
+    vector<int> nums {1,2,3,4,5,6};
+    const int expected {14};
+    BOOST_TEST(MaximumScoreAfterNOperations::max_score(nums) == expected);
+  }
+}
+
 /// 1944. Number of Visible People in a Queue
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

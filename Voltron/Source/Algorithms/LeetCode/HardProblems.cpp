@@ -4,6 +4,7 @@
 
 #include <algorithm> // std::swap
 #include <array>
+#include <bitset>
 #include <climits>
 #include <deque>
 #include <functional>
@@ -398,6 +399,70 @@ int MinimumCostToCutStick::minimum_cost_to_cut_stick(int n, vector<int>& cuts)
   }
 
   return minimum_cost[0][N + 1];
+}
+
+//------------------------------------------------------------------------------
+/// 1799. Maximize Score After N Operations
+//------------------------------------------------------------------------------
+int MaximumScoreAfterNOperations::max_score(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size()) / 2};
+
+  function<int(const int, const int)> gcd = [&](const int a, const int b)
+  {
+    // Any number that divides both a, b also divide b, r = a - bq.
+    return b ? gcd(b, a % b) : a;
+  };
+
+  unordered_map<int, int> mask_to_max_score {};
+
+  function<int(const int, vector<int>&)> step = [&](
+    const int mask,
+    vector<int>& nums)
+  {
+    // Return the precalculated state if already computed.
+    if (mask_to_max_score.count(mask) != 0)
+    {
+      return mask_to_max_score[mask];
+    }
+
+    // All elements have been picked; return 0 as there are no more elements
+    // left.
+    if (mask == ((1 << (2 * N)) - 1))
+    {
+      return 0;
+    }
+
+    const int operation_number {
+      static_cast<int>(std::bitset<32>(mask).count()) / 2 + 1};
+    int maximum_score {0};
+
+    for (int i {0}; i < 2 * N; ++i)
+    {
+      // If the current element isn't picked so far, pick it.
+      if ((mask & (1 << i)) == 0)
+      {
+        // Find a pair for the picked element.
+        for (int j {i + 1}; j < 2 * N; ++j)
+        {
+          // Check if it's not picked yet already. 
+          if ((mask & (1 << j)) == 0)
+          {
+            const int new_mask {mask | (1 << i) | (1 << j)};
+            const int score {operation_number * gcd(nums[i], nums[j])};
+            maximum_score = max(maximum_score, step(new_mask, nums) + score);
+          }
+        }
+        // Only need to pick the first available element, so we break.
+        break;
+      }
+    }
+
+    mask_to_max_score[mask] = maximum_score;
+    return maximum_score;
+  };
+
+  return step(0, nums);
 }
 
 //------------------------------------------------------------------------------
