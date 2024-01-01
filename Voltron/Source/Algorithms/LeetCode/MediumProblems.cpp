@@ -127,7 +127,9 @@ int LongestSubstringWithoutRepeating::concise_length_of_longest_substring(
   return length;
 }
 
+//------------------------------------------------------------------------------
 /// \name 5. Longest Palindromic Substring
+//------------------------------------------------------------------------------
 
 string LongestPalindrome::brute_force(string s)
 {

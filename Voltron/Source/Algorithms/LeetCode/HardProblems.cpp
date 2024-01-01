@@ -286,64 +286,6 @@ int ShortestPathInGridWithObstacles::shortest_path(
   return grid.size() + k; 
 }
 
-int WaysToEarnPoints::ways_to_reach_target(
-  int target,
-  vector<vector<int>>& types)
-{
-  /*
-  std::sort(
-    types.begin(),
-    types.end(),
-    [](const vector<int>& a, const vector<int>&b)
-    {
-      // https://en.cppreference.com/w/cpp/algorithm/sort
-      // Elements are compared using operator<.
-      return a[1] < b[1];
-    });
-  */
-
-  // Each index is the desired target value, and the value at an index is the
-  // number of ways to obtain that target value. We just want all possible
-  // target values up to a given target.
-  vector<int> number_of_ways (target + 1, 0);
-  // This is the base case for combinations, "there's exactly one way to achieve
-  // 0 by not selecting any questions", and
-  // it's the starting point of accumulation, by having this as the starting
-  // point for the recursive relationship.
-  number_of_ways[0] = 1;
-
-  // Key insight is the necessity to track the number of questions left.
-  /*
-  vector<int> number_of_questions_left (types.size());
-  std::transform(
-    types.begin(),
-    types.end(),
-    number_of_questions_left.begin(),
-    [](const std::vector<int>& types_element)
-  {
-    return types_element[0];
-  })
-  */
-
-  // O(N) time.
-  for (const auto& count_and_mark : types)
-  {
-    // O(T)
-    for (int j {target}; j >= count_and_mark[1]; --j)
-    {
-      // O(C)
-      for (int k {1}; k <= count_and_mark[0] && k * count_and_mark[1] <= j; ++k)
-      {
-        number_of_ways[j] = (
-          number_of_ways[j] +
-            number_of_ways[j - k * count_and_mark[1]]) % 1'000'000'007;
-      }
-    }
-  }
-
-  return number_of_ways[target];
-}
-
 /// 1547. Minimum Cost to Cut a Stick.
 
 int MinimumCostToCutStick::minimum_cost_to_cut_stick(int n, vector<int>& cuts)
@@ -512,6 +454,68 @@ vector<int> NumberOfVisiblePeopleInAQueue::can_see_persons_count(
   }
 
   return visible_persons;
+}
+
+//------------------------------------------------------------------------------
+/// 2585. NumberOfWaysToEarnPoints
+//------------------------------------------------------------------------------
+
+int WaysToEarnPoints::ways_to_reach_target(
+  int target,
+  vector<vector<int>>& types)
+{
+  /*
+  std::sort(
+    types.begin(),
+    types.end(),
+    [](const vector<int>& a, const vector<int>&b)
+    {
+      // https://en.cppreference.com/w/cpp/algorithm/sort
+      // Elements are compared using operator<.
+      return a[1] < b[1];
+    });
+  */
+
+  // Each index is the desired target value, and the value at an index is the
+  // number of ways to obtain that target value. We just want all possible
+  // target values up to a given target.
+  vector<int> number_of_ways (target + 1, 0);
+  // This is the base case for combinations, "there's exactly one way to achieve
+  // 0 by not selecting any questions", and
+  // it's the starting point of accumulation, by having this as the starting
+  // point for the recursive relationship.
+  number_of_ways[0] = 1;
+
+  // Key insight is the necessity to track the number of questions left.
+  /*
+  vector<int> number_of_questions_left (types.size());
+  std::transform(
+    types.begin(),
+    types.end(),
+    number_of_questions_left.begin(),
+    [](const std::vector<int>& types_element)
+  {
+    return types_element[0];
+  })
+  */
+
+  // O(N) time.
+  for (const auto& count_and_mark : types)
+  {
+    // O(T)
+    for (int j {target}; j >= count_and_mark[1]; --j)
+    {
+      // O(C)
+      for (int k {1}; k <= count_and_mark[0] && k * count_and_mark[1] <= j; ++k)
+      {
+        number_of_ways[j] = (
+          number_of_ways[j] +
+            number_of_ways[j - k * count_and_mark[1]]) % 1'000'000'007;
+      }
+    }
+  }
+
+  return number_of_ways[target];
 }
 
 } // namespace LeetCode
