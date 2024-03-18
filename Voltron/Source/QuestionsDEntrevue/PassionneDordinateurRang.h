@@ -37,7 +37,6 @@ std::vector<int> count_fountains_by_memo(std::vector<int>& emplacements);
 
 std::string couper_gauche(const std::string&);
 
-
 } // namespace ActivezLesFontaines
 
 } // namespace PassionneDordinateurRang
