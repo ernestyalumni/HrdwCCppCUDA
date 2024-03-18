@@ -11,7 +11,7 @@ int page_faults(const int n, const int c, int pages[])
   // Initialize count to 0.
   int count {0};
 
-  // To store elemtns in memory of size c.
+  // To store elements in memory of size c.
   std::vector<int> v;
   for (int i {0}; i < n; ++i)
   {
