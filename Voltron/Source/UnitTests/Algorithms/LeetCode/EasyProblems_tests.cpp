@@ -306,6 +306,38 @@ BOOST_AUTO_TEST_CASE(ValidPalindromeWorksLinearly)
 }
 
 //------------------------------------------------------------------------------
+/// 169. Majority Element
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MajorityElementWithMapGetsMajorityElement)
+{
+  {
+    vector<int> nums {3, 2, 3};
+    const int expected {3};
+
+    BOOST_CHECK_EQUAL(
+      MajorityElement::majority_element_with_map(nums),
+      expected);
+  }
+  {
+    vector<int> nums {2,2,1,1,1,2,2}; 
+    const int expected {2};
+    BOOST_CHECK_EQUAL(
+      MajorityElement::majority_element_with_map(nums),
+      expected);
+  }
+  {
+    vector<int> nums {1};
+    const int expected {1};
+    BOOST_CHECK_EQUAL(
+      MajorityElement::majority_element_with_map(nums),
+      expected);
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 //------------------------------------------------------------------------------
 

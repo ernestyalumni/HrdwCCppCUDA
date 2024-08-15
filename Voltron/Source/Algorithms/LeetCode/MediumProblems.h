@@ -196,6 +196,34 @@ class MergeIntervals
 };
 
 //------------------------------------------------------------------------------
+/// 57. Insert Interval
+/// Given array of non-overlapping intervals, and intervals is sorted in
+/// ascending order by start_i. You're also given an interval newInterval.
+///
+/// Insert newInterval into intervals such that intervals is still sorted in
+/// ascending order by start and intervals still doesn't have any overlapping
+/// intervals (merge overlapping intervals if necessary).
+//------------------------------------------------------------------------------
+class InsertInterval
+{
+  public:
+
+    static std::size_t binary_search(
+      std::vector<std::vector<int>>& intervals,
+      std::vector<int>& new_interval);
+
+    /*
+    static std::vector<std::vector<int>> insert_with_binary_search(
+      std::vector<std::vector<int>>& intervals,
+      std::vector<int>& new_interval);
+    */
+
+    static std::vector<std::vector<int>> insert(
+      std::vector<std::vector<int>>& intervals,
+      std::vector<int>& new_interval);
+};
+
+//------------------------------------------------------------------------------
 /// 73. Set Matrix Zeroes
 //------------------------------------------------------------------------------
 class SetMatrixZeroes
@@ -498,6 +526,18 @@ class LongestPalindromicSubsequence
   public:
 
     static int longest_palindrome_subsequence(std::string s);
+};
+
+//------------------------------------------------------------------------------
+/// \name 542. 01 Matrix
+/// \url https://leetcode.com/problems/01-matrix/
+//------------------------------------------------------------------------------
+class Update01Matrix
+{
+  public:
+
+    static std::vector<std::vector<int>> update_matrix(
+      std::vector<std::vector<int>>& mat);
 };
 
 //------------------------------------------------------------------------------

@@ -29,6 +29,7 @@ using std::make_pair;
 using std::make_tuple;
 using std::max;
 using std::min;
+using std::move;
 using std::pair;
 using std::priority_queue;
 using std::queue;
@@ -725,6 +726,132 @@ vector<vector<int>> MergeIntervals::merge(vector<vector<int>>& intervals)
     vector<int>{merged_start_value, merged_end_value});
 
   return merged_intervals;
+}
+
+//------------------------------------------------------------------------------
+/// 57. Insert Interval
+//------------------------------------------------------------------------------
+size_t InsertInterval::binary_search(
+  vector<vector<int>>& intervals,
+  vector<int>& new_interval)
+{
+  size_t l {0};
+  size_t r {intervals.size() - 1};
+
+  const int target_value {new_interval[0]};
+
+  while (l < r)
+  {
+    const size_t midpoint_index {(r + l) / 2};
+    const int midpoint_value {intervals[midpoint_index][0]};
+
+    if (target_value == midpoint_value)
+    {
+      return midpoint_index;
+    }
+
+    if (target_value < midpoint_value)
+    {
+      r = midpoint_index;
+    }
+    else
+    {
+      l = midpoint_index + 1;
+    }
+  }
+
+  return l;
+}
+
+/*
+vector<vector<int>> InsertInterval::insert_with_binary_search(
+  vector<vector<int>>& intervals,
+  vector<int>& new_interval)
+{
+  // O(1) time.
+  auto is_overlapping = [](const vector<int>& a, const vector<int>& b) -> bool
+  {
+    return (a[1] < b[0] || b[1] < a[0]) ? false : true;
+  };
+
+  // O(1) time.
+  auto merge_overlapping_intervals = [](
+    const vector<int>& a,
+    const vector<int>& b) -> vector<int>
+  {
+    const int l {a[0] <= b[0] ? a[0] : b[0]};
+    const int r {a[1] <= b[1] ? b[1] : a[1]};
+    return vector<int>{l, r};
+  };
+
+  // O(log(N)) time.
+  size_t new_place {
+    InsertInterval::binary_search(intervals, new_interval)};
+
+  vector<vector<int>> result (intervals.begin(), intervals.begin() + new_place);
+
+  for (size_t i {new_place}; i < intervals.size(); ++i)
+  {
+    if (!is_overlapping(intervals[i], new_interval))
+    {
+      if (new_interval[0] < intervals[i][0])
+      {
+        result.push_back(new_interval);
+        new_place = i;
+        break;
+      }
+      result.push_back(intervals[i]);
+    }
+    else
+    {
+      new_interval = merge_overlapping_intervals(intervals[i], new_interval);
+    }
+  }
+
+  if (result.empty() || result.back()[1] < new_interval[0])
+  {
+    result.push_back(new_interval);
+  }
+  else
+  {
+    result.back() = merge_overlapping_intervals(result.back(), new_interval);
+  }
+
+  result.insert(result.end(), intervals.begin() + new_place, intervals.end());
+
+  return result;
+}
+*/
+
+vector<vector<int>> InsertInterval::insert(
+  vector<vector<int>>& intervals,
+  vector<int>& new_interval)
+{
+  vector<vector<int>> result {};
+
+  for (const auto& interval : intervals)
+  {
+    // No overlap, and new_interval is to be placed after current interval.
+    if (interval[1] < new_interval[0])
+    {
+      result.push_back(interval);
+    }
+    // No overlap, and new_interval is to be placed here.
+    else if (interval[0] > new_interval[1])
+    {
+      result.push_back(new_interval);
+      // Assign the remaining intervals to be added.
+      new_interval = interval;
+    }
+    // Overlap, and so merge into a new_interval.
+    else
+    {
+      new_interval[0] = std::min(new_interval[0], interval[0]);
+      new_interval[1] = std::max(new_interval[1], interval[1]);
+    }
+  }
+  result.push_back(new_interval);
+  return result;
 }
 
 //------------------------------------------------------------------------------
@@ -1991,6 +2118,116 @@ int LongestPalindromicSubsequence::longest_palindrome_subsequence(string s)
   }
 
   return max_lengths[0][N - 1];
+}
+
+//------------------------------------------------------------------------------
+/// \name 542. 01 Matrix
+/// \url https://leetcode.com/problems/01-matrix/
+//------------------------------------------------------------------------------
+vector<vector<int>> Update01Matrix::update_matrix(vector<vector<int>>& mat)
+{
+  static const vector<array<int, 2>> directions {
+    {1, 0},
+    {0, 1},
+    {-1, 0},
+    {0, -1}};
+
+  const int M {static_cast<int>(mat.size())};
+  const int N {static_cast<int>(mat[0].size())};
+
+  vector<vector<int>> distances (M, vector<int>(N, INT_MAX));
+
+  auto is_in_bound = [M, N](const int i, const int j)
+  {
+    return (i >= 0) && (j >= 0) && (i < M) && (j < N);
+  };
+
+  // Add indices of cells with 0.
+  queue<pair<int, int>> q {};
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (mat[i][j] == 0)
+      {
+        q.push({i, j});
+        distances[i][j] = 0;
+      }
+    }
+  }
+
+  while (!q.empty())
+  {
+    auto [i, j] = q.front();
+    q.pop();
+
+    for (const auto& [di, dj] : directions)
+    {
+      int new_i {i + di};
+      int new_j {j + dj};
+
+      if (is_in_bound(new_i, new_j))
+      {
+        if (distances[new_i][new_j] > distances[i][j] + 1)
+        {
+          distances[new_i][new_j] = distances[i][j] + 1;
+          q.push({new_i, new_j});
+        }
+      }
+    }
+  }
+
+  return distances;
+
+
+      /*
+      const int current_value {mat[i][j]};
+
+      if (current_value != 0)
+      {
+        int minimum_distance {1};
+
+        queue<pair<int, int>> to_visit {};
+        to_visit.push(make_pair<int, int>(move(i), move(j)));
+
+        while (!to_visit.empty())
+        {
+          const auto current_ij = to_visit.front();
+          to_visit.pop();
+
+          for (const auto& direction : directions)
+          {
+            int new_i {current_ij.first + direction[0]};
+            int new_j {current_ij.second + direction[1]};
+
+            if (is_in_bound(new_i, new_j) && mat[new_i][new_j] == 0)
+            {
+              // Empty queue because we no longer have to visit cells.
+              while (!to_visit.empty())
+              {
+                to_visit.pop();
+              }
+              break;
+            }
+            else if (is_in_bound(new_i, new_j))
+            {
+              to_visit.push(make_pair<int, int>(move(new_i), move(new_j)));
+            }
+          }
+
+          if (!to_visit.empty())
+          {
+            minimum_distance += 1;
+          }
+        }
+        mat[i][j] = minimum_distance;
+      }
+    }
+  }
+
+  return mat;
+      */
 }
 
 //------------------------------------------------------------------------------

@@ -58,7 +58,6 @@ vector<int> two_number_sum_with_map(vector<int> array, int target_sum)
 
   map<int, int> result_number;
 
-
   // O(N) time complexity. O(N) space complexity for result_number.
   for (const auto& x : array)
   {

@@ -354,6 +354,72 @@ bool ValidPalindrome::is_palindrome(string s)
 }
 
 //------------------------------------------------------------------------------
+/// 169. Majority Element
+//------------------------------------------------------------------------------
+
+int MajorityElement::majority_element_with_map(vector<int>& nums)
+{
+  const size_t N {nums.size()};
+
+  if (N == 1)
+  {
+    return nums.at(0);
+  }
+
+  const size_t floor_half_of_N {N / 2};
+
+  std::unordered_map<int, int> element_to_count {};
+
+  // O(N) time complexity.
+  for (int num : nums)
+  {
+    // O(1) amoritized (each hash map operation, insertion and lookup, is O(1)
+    // amoritized).
+    if (element_to_count.count(num) == 0)
+    {
+      element_to_count[num] = 1;
+    }
+    else if (element_to_count[num] == floor_half_of_N)
+    {
+      return num;
+    }
+    else
+    {
+      element_to_count[num] += 1;
+    }
+  }
+
+  return INT_MIN;
+}
+
+int MajorityElement::majority_element_with_voting(vector<int>& nums)
+{
+  const size_t N {nums.size()};
+  const size_t floor_half_of_N {N / 2};
+
+  int candidate {nums.at(0)};
+  int count {1};
+
+  for (size_t i {1}; i < N; ++i)
+  {
+    if (nums[i] == candidate)
+    {
+      if (++count > floor_half_of_N)
+      {
+        return candidate;
+      }
+    }
+    else if (--count == 0)
+    {
+      candidate = nums[i];
+      count = 1;
+    }
+  }
+
+  return candidate;
+}
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 //------------------------------------------------------------------------------
 

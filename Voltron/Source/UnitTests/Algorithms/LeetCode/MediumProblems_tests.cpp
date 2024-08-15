@@ -25,11 +25,15 @@ using Algorithms::LeetCode::SearchInRotatedSortedArray;
 using Algorithms::LeetCode::SortColors;
 using Algorithms::LeetCode::DailyTemperatures;
 using Algorithms::LeetCode::MergeIntervals;
+// 57. Insert Interval
+using Algorithms::LeetCode::InsertInterval;
 using Algorithms::LeetCode::NonOverlappingIntervals;
 using Algorithms::LeetCode::ProductOfArrayExceptSelf;
 using Algorithms::LeetCode::ThreeSum;
 using Algorithms::LeetCode::LongestRepeatingCharacterReplacement;
 using Algorithms::LeetCode::FindAllAnagramsInAString;
+// 542. 01 Matrix
+using Algorithms::LeetCode::Update01Matrix;
 using DataStructures::BinaryTrees::TreeNode;
 using std::string;
 using std::unordered_set;
@@ -364,9 +368,6 @@ BOOST_AUTO_TEST_CASE(SpiralOrderWorksWithMovingBoundaries)
 //------------------------------------------------------------------------------
 /// 56. Merge Intervals
 //------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(MergeIntervalWorksWithSort)
 {
   {
@@ -378,6 +379,122 @@ BOOST_AUTO_TEST_CASE(MergeIntervalWorksWithSort)
     vector<vector<int>> intervals {{1,4},{4,5}};
     const vector<vector<int>> expected {{1,5}};
     BOOST_TEST(MergeIntervals::merge(intervals) == expected);
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 57. Insert Interval
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(BinarySearchFindsStartingPosition)
+{
+  {
+    vector<vector<int>> intervals {{1,3},{6,9}};
+    vector<int> new_interval {2, 5};
+
+    BOOST_CHECK_EQUAL(
+      InsertInterval::binary_search(intervals, new_interval),
+      1);
+  }
+  {
+    vector<vector<int>> intervals {
+      {1,2},{3,5},{6,7},{8,10},{12,16}};
+    vector<int> new_interval {4, 8};
+    BOOST_CHECK_EQUAL(
+      InsertInterval::binary_search(intervals, new_interval),
+      2);
+  }
+  {
+    vector<vector<int>> intervals {{1,3},{6,9}};
+    vector<int> new_interval {0, 5};
+
+    BOOST_CHECK_EQUAL(
+      InsertInterval::binary_search(intervals, new_interval),
+      0);
+  }
+  {
+    vector<vector<int>> intervals {{1,3},{6,9}};
+    vector<int> new_interval {7, 10};
+
+    BOOST_CHECK_EQUAL(
+      InsertInterval::binary_search(intervals, new_interval),
+      1);
+  }
+}
+
+/*
+BOOST_AUTO_TEST_CASE(InsertIntervalWithBinarySearchWorks)
+{
+  {
+    vector<vector<int>> intervals {{1,3},{6,9}};
+    vector<int> new_interval {2, 5};
+    vector<vector<int>> expected {{1,5},{6,9}};
+
+    const auto result = InsertInterval::insert_with_binary_search(
+      intervals,
+      new_interval);
+
+    for (size_t i {0}; i < expected.size(); ++i)
+    {
+      for (size_t j {0}; j < 2; ++j)
+      {
+        BOOST_CHECK_EQUAL(result[i][j], expected[i][j]);
+      }
+    }
+  }
+  {
+    vector<vector<int>> intervals {
+      {1,2},{3,5},{6,7},{8,10},{12,16}};
+    vector<int> new_interval {4, 8};
+    vector<vector<int>> expected {{1,2},{3,10},{12,16}};
+
+    const auto result = InsertInterval::insert_with_binary_search(
+      intervals,
+      new_interval);
+
+    for (size_t i {0}; i < expected.size(); ++i)
+    {
+      for (size_t j {0}; j < 2; ++j)
+      {
+        BOOST_CHECK_EQUAL(result[i][j], expected[i][j]);
+      }
+    }
+  }
+}
+*/
+
+BOOST_AUTO_TEST_CASE(InsertIntervalWorks)
+{
+  {
+    vector<vector<int>> intervals {{1,3},{6,9}};
+    vector<int> new_interval {2, 5};
+    vector<vector<int>> expected {{1,5},{6,9}};
+
+    const auto result = InsertInterval::insert(intervals, new_interval);
+
+    for (size_t i {0}; i < expected.size(); ++i)
+    {
+      for (size_t j {0}; j < 2; ++j)
+      {
+        BOOST_CHECK_EQUAL(result[i][j], expected[i][j]);
+      }
+    }
+  }
+  {
+    vector<vector<int>> intervals {
+      {1,2},{3,5},{6,7},{8,10},{12,16}};
+    vector<int> new_interval {4, 8};
+    vector<vector<int>> expected {{1,2},{3,10},{12,16}};
+
+    const auto result = InsertInterval::insert(intervals, new_interval);
+
+    for (size_t i {0}; i < expected.size(); ++i)
+    {
+      for (size_t j {0}; j < 2; ++j)
+      {
+        BOOST_CHECK_EQUAL(result[i][j], expected[i][j]);
+      }
+    }
   }
 }
 
@@ -1602,6 +1719,47 @@ BOOST_AUTO_TEST_CASE(DynamicProgrammingUsedForLongestPalindromicSubsequence)
         expected);
   }
 }
+
+//------------------------------------------------------------------------------
+/// \name 542. 01 Matrix
+/// \url https://leetcode.com/problems/01-matrix/description/
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(Update01MatrixUpdates)
+{
+  {
+    vector<vector<int>> mat {{0,0,0},{0,1,0},{0,0,0}};
+    vector<vector<int>> expected {{0,0,0},{0,1,0},{0,0,0}};
+
+    const auto result = Update01Matrix::update_matrix(mat);
+
+    for (size_t i {0}; i < expected[0].size(); ++i)
+    {
+      BOOST_TEST(expected[i] == result[i]);
+    }
+  }
+  {
+    vector<vector<int>> mat {{0,0,0},{0,1,0},{1,1,1}};
+    vector<vector<int>> expected {{0,0,0},{0,1,0},{1,2,1}};
+
+    const auto result = Update01Matrix::update_matrix(mat);
+
+    for (size_t i {0}; i < expected[0].size(); ++i)
+    {
+      BOOST_TEST(expected[i] == result[i]);
+    }
+  }
+  {
+    vector<vector<int>> mat {
+      {1,0,1,1,0,0,1,0,0,1},{0,1,1,0,1,0,1,0,1,1},{0,0,1,0,1,0,0,1,0,0},{1,0,1,0,1,1,1,1,1,1},{0,1,0,1,1,0,0,0,0,1},{0,0,1,0,1,1,1,0,1,0},{0,1,0,1,0,1,0,0,1,1},{1,0,0,0,1,1,1,1,0,1},{1,1,1,1,1,1,1,0,1,0},{1,1,1,1,0,1,0,0,1,1}
+    };
+    
+    vector<vector<int>> expected {
+      {1,0,1,1,0,0,1,0,0,1},{0,1,1,0,1,0,1,0,1,1},{0,0,1,0,1,0,0,1,0,0},{1,0,1,0,1,1,1,1,1,1},{0,1,0,1,1,0,0,0,0,1},{0,0,1,0,1,1,1,0,1,0},{0,1,0,1,0,1,0,0,1,1},{1,0,0,0,1,3,1,1,0,1},{3,1,1,1,1,2,1,0,1,0},{5,3,2,1,0,1,0,0,1,1}
+    };
+
+  }
+}
+
 
 BOOST_AUTO_TEST_SUITE(NumberOfProvinces_547_tests)
 

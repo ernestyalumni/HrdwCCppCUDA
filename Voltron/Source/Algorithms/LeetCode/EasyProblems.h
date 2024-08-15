@@ -103,6 +103,30 @@ class ValidPalindrome
 };
 
 //------------------------------------------------------------------------------
+/// 169. Majority Element
+/// Array - Linear traversal.
+/// 1. Use std::unordered_map for O(1) amoritized lookup and insertion and count
+/// frequencies.
+/// 2. Boyer-Moore Voting Algorithm - you are guaranteed a majority element that
+/// appears more than floor(n/2) times in an array. Let all other elements be a
+/// non-majority element, x[j]. Let a majority element be x[i].
+/// For each x[j], there exists x[i]. Pair each x[j] with an x[i]. Because there
+/// is more majority elements than any non-majority element, there exists at
+/// least one x[i] that won't be paired up with an x[j].
+/// i.e. since x[i] appears more than floor(n/2) times, the candidate will
+/// eventually revert to x[i] and accumulate more counts than any other element,
+/// regardless of order.
+//------------------------------------------------------------------------------
+class MajorityElement
+{
+  public:
+
+    static int majority_element_with_map(std::vector<int>& nums);
+
+    static int majority_element_with_voting(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 /// Key ideas: unordered_set<int> to track duplicate values. 
 //------------------------------------------------------------------------------
