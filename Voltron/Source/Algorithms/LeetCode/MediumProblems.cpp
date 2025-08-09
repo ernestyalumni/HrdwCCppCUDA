@@ -7,12 +7,15 @@
 #include <climits> // INT_MIN
 #include <cstddef> // std::size_t
 #include <functional>
+#include <iomanip> // std::setfill, std::setw
 #include <limits.h>
 #include <limits>
 #include <map>
 #include <numeric> // std::accumulate
+#include <optional>
 #include <queue>
 #include <set>
+#include <sstream>
 #include <stack>
 #include <string>
 #include <tuple>
@@ -34,9 +37,12 @@ using std::pair;
 using std::priority_queue;
 using std::queue;
 using std::size_t;
+using std::sort;
 using std::stack;
 using std::string;
+using std::stringstream;
 using std::swap;
+using std::to_string;
 using std::tuple;
 using std::unordered_map;
 using std::unordered_set;
@@ -425,6 +431,7 @@ vector<vector<int>> ThreeSum::three_sum(vector<int>& nums)
   vector<vector<int>> triplets {};
 
   // Key insight is to first *sort the array*.
+  // O(N log N) complexity.
   sort(nums.begin(), nums.end());
 
   for (int i {0}; i < N; ++i)
@@ -591,6 +598,190 @@ void RotateImage::rotate(vector<vector<int>>& matrix)
     R++;
   }
 }
+
+
+//------------------------------------------------------------------------------
+/// 49. Group Anagrams
+/// https://leetcode.com/problems/group-anagrams/description/
+/// https://neetcode.io/problems/anagram-groups
+//------------------------------------------------------------------------------
+
+// TODO: Doesn't work, not sure why? :(
+/*
+vector<vector<string>> GroupAnagrams::group_anagrams(vector<string>& strs)
+{
+  unordered_map<string, vector<string>> str_to_anagrams {};
+
+  for (const string& str : strs)
+  {
+    if (str_to_anagrams.count(str) != 0)
+    {
+      str_to_anagrams[str].push_back(str);
+    }
+    else
+    {
+      for (const auto& [key, _] : str_to_anagrams)
+      {
+        if (GroupAnagrams::is_anagram_open_ai(key, str))
+        {
+          str_to_anagrams[key].push_back(str);
+        }
+      }
+
+      str_to_anagrams[str] = {};
+    }
+  }
+
+  std::cout << "\n str_to_anagrams.size(): " << str_to_anagrams.size() << "\n";
+
+  vector<vector<string>> results {};
+
+  for (const auto& [key, _] : str_to_anagrams)
+  {
+    str_to_anagrams[key].push_back(key);
+
+    results.push_back(str_to_anagrams[key]);
+  }
+
+  return results;
+}
+*/
+
+vector<vector<string>> GroupAnagrams::group_anagrams_by_sorting(
+  vector<string>& strs)
+{
+  unordered_map<string, vector<string>> anagram_to_group {};
+
+  // For each string, make a copy, sort it so letters in order, and use that as
+  // a classification for what anagram it is, what anagram group it belongs to.
+  for (const string& str : strs)
+  {
+    string sorted_string = str;
+    sort(sorted_string.begin(), sorted_string.end());
+    anagram_to_group[sorted_string].push_back(str);
+  }
+
+  vector<vector<string>> results {};
+
+  for (auto& [_, group] : anagram_to_group)
+  {
+    results.push_back(group);
+  }
+
+  return results;
+}
+
+vector<vector<string>> GroupAnagrams::group_anagrams_by_frequency(
+  vector<string>& strs)
+{
+  unordered_map<string, vector<string>> frequency_count_to_group {};
+
+  for (const string& str : strs)
+  {
+    array<int, 26> frequency_count {};
+    for (const char c : str)
+    {
+      frequency_count[static_cast<int>(c - 'a')]++;
+    }
+
+    string key {};
+
+    // Transform frequency_count into a string
+    for (int i {0}; i < 26; ++i)
+    {
+      // "#" added to avoid collisions.
+      key += "#" + to_string(frequency_count[i]); 
+    }
+
+    frequency_count_to_group[key].push_back(str);
+  }
+
+  vector<vector<string>> results {};
+
+  for (auto& [_, group] : frequency_count_to_group)
+  {
+    results.push_back(group);
+  }
+
+  return results;
+}
+
+bool GroupAnagrams::is_anagram_open_ai(const string& s, const string& t)
+{
+  if (s.size() != t.size())
+  {
+    return false;
+  }
+
+  unordered_map<char, int> letter_to_count {};
+
+  // O(|s|) time.
+  for (size_t i {0}; i < s.size(); ++i)
+  {
+    letter_to_count[s[i]]++;
+    letter_to_count[t[i]]--;
+  }
+
+  // Check if all values for each letter is zero (that would've shown up each
+  // letter of s, t).
+  for (const auto& [letter, count] : letter_to_count)
+  {
+    if (count != 0)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool GroupAnagrams::is_anagram_neet_code(const string& s, const string& t)
+{
+  if (s.size() != t.size())
+  {
+    return false;
+  }
+
+  unordered_map<char, int> s_letter_to_count {};
+  unordered_map<char, int> t_letter_to_count {};
+
+  // O(|s|) time.
+  for (size_t i {0}; i < s.size(); ++i)
+  {
+    if (s_letter_to_count.count(s[i]) != 0)
+    {
+      s_letter_to_count[s[i]] += 1;
+    }
+    else
+    {
+      s_letter_to_count[s[i]] = 1;
+    }
+    if (t_letter_to_count.count(t[i]) != 0)
+    {
+      t_letter_to_count[t[i]] += 1;
+    }
+    else
+    {
+      t_letter_to_count[t[i]] = 1;
+    }
+  }
+
+  for (const char c : s)
+  {
+    if (s_letter_to_count.count(c) != t_letter_to_count.count(c))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// https://en.cppreference.com/w/cpp/utility/hash/operator()
+// std::hash<Key>::operator()
+// Takes a single argument key of type Key
+// returns value of type std::size_t that represents the hash value of key.
+
 
 //------------------------------------------------------------------------------
 /// 53. Maximum Subarray
@@ -1241,6 +1432,64 @@ vector<vector<int>> BinaryTreeLevelOrderTraversal::level_order_recursive(
 }
 
 //------------------------------------------------------------------------------
+/// 128. Longest Consecutive Sequence
+//------------------------------------------------------------------------------
+int LongestConsecutiveSequence::longest_consecutive_with_set(vector<int>& nums)
+{
+  unordered_set<int> nums_as_set {};
+
+  // O(N) time.
+  for (const int num : nums)
+  {
+    // O(1) amoritized to insert.
+    nums_as_set.insert(num);
+  }
+
+  int max_length {0};
+
+  // O(N) time.
+  for (const int num : nums)
+  {
+    if (max_length == 0)
+    {
+      max_length = 1;
+    }
+
+    // Don't start to count sequence length if element is not a "right end" such
+    // that it has a right neighbor.
+    if (nums_as_set.count(num + 1) != 0)
+    {
+      continue;
+    }
+
+    int current_length {1};
+    int current_value {num};
+
+    bool is_consecutive {true};
+
+    // O(1) amoritized.
+    while (is_consecutive)
+    {
+      // O(1) amoritized to find a key in a set.
+      if (nums_as_set.count(current_value - 1) != 0)
+      {
+        current_length += 1;
+        current_value -= 1;
+      }
+      else
+      {
+        is_consecutive = false;
+        break;
+      }
+    }
+
+    max_length = max_length < current_length ? current_length : max_length;
+  }
+
+  return max_length;
+}
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 int MaximumProductSubarray::max_product(vector<int>& nums)
@@ -1307,6 +1556,79 @@ int FindMinimumInRotatedSortedArray::find_min(vector<int>& nums)
   }
 
   return minimum;
+}
+
+//------------------------------------------------------------------------------
+/// 155. Min Stack
+//------------------------------------------------------------------------------
+MinStack::MinStack():
+  array_(MAXIMUM_CALLS_),
+  // Use -1 to indicate empty stack.
+  top_index_{-1},
+  minimum_value_and_count_{std::nullopt}
+{}
+
+void MinStack::push(int val)
+{
+  if (is_empty())
+  {
+    minimum_value_and_count_ = {val, 1};
+  }
+
+  ++top_index_;
+
+  array_[top_index_] = val;
+}
+
+bool MinStack::is_empty()
+{
+  return top_index_ == -1;
+}
+
+void MinStack::pop()
+{
+  if (is_empty())
+  {
+    return;
+  }
+
+  --top_index_;
+
+  // Heap?
+}
+
+//------------------------------------------------------------------------------
+/// 167. Two Sum II - Input Array Is Sorted
+/// Return the indices of the two numbers, index1 and index2, added by one as an
+/// integer array [index1, index2] of length 2.
+//------------------------------------------------------------------------------
+vector<int> TwoSumII::two_sum(vector<int>& numbers, int target)
+{
+  int l {0};
+  int r {static_cast<int>(numbers.size() - 1)};
+
+  while (l < r)
+  {
+    int current_sum {numbers[l] + numbers[r]};
+    if (current_sum == target)
+    {
+      return {l + 1, r + 1};
+    }
+
+    if (current_sum < target)
+    {
+      // Take advantage of the fact that array is already sorted in
+      // non-decreasing order so we can try to increase the sum by moving up the
+      // choice of "left" element.
+      l++;
+    }
+    else
+    {
+      r--;
+    }
+  }
+
+  return {};
 }
 
 //------------------------------------------------------------------------------
@@ -1764,6 +2086,240 @@ vector<int> ProductOfArrayExceptSelf::product_except_self(vector<int>& nums)
 }
 
 //------------------------------------------------------------------------------
+/// 271. String Encode and Decode
+//------------------------------------------------------------------------------
+string StringEncodeAndDecode::encode(vector<string>& strs)
+{
+  stringstream header_stream {};
+
+  // Given strs.length < 100,
+  // Dedicate 2 digits to the total size of strs; pad by 0 for a single digit
+  // size.
+  header_stream << std::setw(2) << std::setfill('0') << strs.size();
+
+  string data {};
+
+  // Because 1 byte = 2^8 (8 bits) = 256, we can represent the length of each
+  // str in strs by 1 byte. Consider 1 byte * 100 = 100 bytes. A hexadecimal
+  // number of 2 digits represents 1 byte.
+  for (const string& str : strs)
+  {
+    header_stream << std::hex << std::setw(2) << std::setfill('0') <<
+      str.size();
+
+    data += str;
+  }
+
+  return header_stream.str() + data;
+}
+
+vector<string> StringEncodeAndDecode::decode(string s)
+{
+  stringstream ss {};
+
+  // Decode first 2 chars to be the total length of the resulting list of
+  // strings, N.
+  ss << s.substr(0, 2);
+  size_t N {};
+  ss >> N;
+
+  // Given the total length N, we expect N 2-digit hexadecimal values until the
+  // data payload.
+  // Pointer to the start of the header after the total size N.
+  const char* header_sizes {s.c_str() + 2};
+  const char* data {s.c_str() + 2 + N * 2};
+  vector<string> extracted_strings {};
+
+  for (size_t i {0}; i < N; ++i)
+  {
+    // Extract 2 characters (hexadecimal size)
+    // Get the next 2 chars.
+    string hex_size_str(header_sizes, 2);
+
+    // Move pointer forward by 2.
+    header_sizes += 2;
+
+    // You NEED to create a new stringstream so to effectively clear the
+    // previous stringstream or simply create a new stringstream.
+    stringstream hex_ss {};
+    size_t hex_size {};
+    hex_ss << std::hex << hex_size_str;
+    hex_ss >> hex_size;
+
+    string str(data, hex_size);
+
+    extracted_strings.push_back(str);
+
+    data += hex_size;
+  }
+
+  return extracted_strings;
+}
+
+string StringEncodeAndDecode::encode_with_prefix_neet(vector<string>& strs)
+{
+  string encoded {};
+
+  stringstream header_stream {};
+
+  for (const string& str : strs)
+  {
+    header_stream << std::hex << std::setw(2) << std::setfill('0')
+      << str.size();
+
+    encoded += header_stream.str();
+    encoded += "#";
+    encoded += str;
+
+    // Clear any error flags (e.g. EOF flags).
+    header_stream.clear();
+    // Reset content of stringstream.
+    header_stream.str("");
+  }
+
+  return encoded;
+}
+
+vector<string> StringEncodeAndDecode::decode_with_prefix_neet(string s)
+{
+  // Consider using 2 iterations to check if we've gotten to the end of the
+  // string s. Maybe during transmission, the string s was corrupted so the
+  // sizes of strings aren't exact.
+
+  const size_t N {s.size()};
+
+  const char* ptr {s.c_str()};
+
+  size_t i {0};
+
+  stringstream header_stream {};
+
+  vector<string> extracted_strings {};
+
+  while (*ptr != '\0' && i < N)
+  {
+    string str_hex_size(ptr, 2);
+
+    header_stream << std::hex << str_hex_size;
+    size_t str_size {};
+    header_stream >> str_size;
+
+    i += 3;
+    ptr += 3;
+
+    extracted_strings.push_back(string(ptr, str_size));
+
+    i += str_size;
+    ptr += str_size;
+
+    header_stream.clear();
+    header_stream.str("");
+  }
+
+  return extracted_strings;
+}
+
+//------------------------------------------------------------------------------
+/// 347. Top K Frequent Elements
+//------------------------------------------------------------------------------
+/*
+vector<int> TopKFrequentElements::top_k_frequent(vector<int>& nums, int k)
+{
+  return nums;
+}
+*/
+
+vector<int> TopKFrequentElements::brute_force(vector<int>& nums, int k)
+{
+  unordered_map<int, int> number_to_count {};
+
+  for (const int num : nums)
+  {
+    number_to_count[num]++;
+  }
+
+  vector<pair<int, int>> number_to_counts {};
+
+  for (const auto [number, count] : number_to_count)
+  {
+    number_to_counts.push_back({number, count});
+  }
+
+  sort(
+    number_to_counts.begin(),
+    number_to_counts.end(),
+    [](const auto pair1, const auto pair2)
+    {
+      return pair1.second > pair2.second;
+    });
+
+  vector<int> results {};
+
+  for (int l {0}; l < k; ++l)
+  {
+    if (l < number_to_counts.size())
+    {
+      results.push_back(number_to_counts[l].first);
+    }
+  }
+
+  return results;
+}
+
+// O(N) time complexity.
+// https://youtu.be/YPTqKIgVk-k?si=KbHT9oTwGare3dkl
+vector<int> TopKFrequentElements::bucket_sort(vector<int>& nums, int k)
+{
+  // For each num in nums, use hash map (unordered_map) to map num to count
+  // (frequency).
+  unordered_map<int, int> num_to_count {};
+  // O(N) time complexity
+  for (const int num : nums)
+  {
+    num_to_count[num]++;
+  }
+
+  // Because nums.length <= 10^5, for bucket sort to work it needs a count to
+  // std::vector<int> collection of num's with that count.
+  // Be careful of total number of indices where each index is count. Since a
+  // single number can show up nums.size() times, count=nums.size() must be
+  // accounted for.
+  // index=0...(nums.size()).
+  vector<vector<int>> count_to_nums (nums.size() + 1, vector<int>{});
+
+  // O(N) time complexity.
+  for (const auto [num, count] : num_to_count)
+  {
+    count_to_nums[count].push_back(num);
+  }
+
+  // Because the array is inherently sorted by its index, which represents count
+  // in this case, access array until k most frequent elements obtained.
+  int lth_most_frequent {k};
+  int count_index {static_cast<int>(nums.size())};
+
+  vector<int> result {};
+
+  // O(N) time complexity. We may need to go through entire list of buckets to
+  // collect k elements.
+  while (lth_most_frequent > 0 && count_index >= 0)
+  {
+    for (const int num : count_to_nums[count_index])
+    {
+      result.push_back(num);
+      lth_most_frequent--;
+      if (lth_most_frequent == 0)
+      {
+        break;
+      }
+    }
+    count_index--;
+  }
+
+  return result;
+}
+
+//------------------------------------------------------------------------------
 /// 357. Count Numbers With Unique Digits
 //------------------------------------------------------------------------------
 
@@ -1909,6 +2465,7 @@ int KthSmallestElementInASortedMatrix::kth_smallest(
 
 //------------------------------------------------------------------------------
 /// 424. Longest Repeating Character Replacement
+/// https://leetcode.com/problems/longest-repeating-character-replacement/description/
 /// Key idea: Sliding window technique.
 //------------------------------------------------------------------------------
 int LongestRepeatingCharacterReplacement::character_replacement(string s, int k)
@@ -2264,6 +2821,104 @@ int find_number_of_provinces(vector<vector<int>>& is_connected)
   }
 
   return counter;
+}
+
+//------------------------------------------------------------------------------
+/// \name 567. Permutation in String
+/// https://leetcode.com/problems/permutation-in-string/
+/// Given two strings s1 and s2, return true if s2 contains a permutation of s1,
+/// or false otherwise.
+///
+/// In other words, return true if one of s1's permutations is the substring of
+/// s2.
+/// s1 and s2 consist of lowercase English letters.
+/// https://youtu.be/UbyhOgBN834?si=vu09VPh6pdTqUu05
+//------------------------------------------------------------------------------
+bool PermutationInString::check_inclusion(string s1, string s2)
+{
+  // Use the fact that we only have lowercase English letters.
+  array<int, 26> s1_letter_index_to_count {};
+
+  for (const char c : s1)
+  {
+    s1_letter_index_to_count[static_cast<int>(c-'a')]++;
+  }
+
+  array<int, 26> letter_index_to_count {};
+
+  // "left" pointer to the sliding window.
+  int start_index {0};
+
+  const int Ns1 {static_cast<int>(s1.size())};
+
+  for (int r {0}; r < static_cast<int>(s2.size()); ++r)
+  {
+    ++letter_index_to_count[static_cast<int>(s2[r] - 'a')];
+
+    if ((r  - start_index + 1) == Ns1)
+    {
+      if (letter_index_to_count == s1_letter_index_to_count)
+      {
+        return true;
+      }
+
+      --letter_index_to_count[static_cast<int>(s2[start_index] - 'a')];
+      ++start_index;
+    }
+  }
+
+  return false;
+
+  /*
+  unordered_map<char, int> s1_char_to_count {};
+  // O(s) time
+  for (const char c : s1)
+  {
+    ++s1_char_to_count[c];
+  }
+
+  int start_index {0};
+
+  unordered_map<char, int> char_to_count {s1_char_to_count};
+
+  int start_index {0};
+  for (int r {0}; r < static_cast<int>(s2.size()); ++r)
+  {
+    if (s1_char_to_count.count(s2[r]) == 0)
+    {
+      start_index = r + 1;      
+      char_to_count = s1_char_to_count;
+    }
+    else
+    {
+      if (char_to_count[s2[r]] == 0)
+      {
+        //char_to_count[s2[start_index]] += 1;
+        start_index += 1;
+      }
+      else
+      {
+        char_to_count[s2[r]]--;
+
+        if (r - start_index + 1 == static_cast<int>(s1.size()))
+        {
+          for (int i {start_index}; i <= r; ++i)
+          {
+            if (char_to_count[s2[i]] != 0)
+            {
+              char_to_count[s2[start_index]] += 1;
+              start_index += 1;              
+              break;
+            }
+          }
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+  */
 }
 
 /// \name 647. Palindromic Substrings

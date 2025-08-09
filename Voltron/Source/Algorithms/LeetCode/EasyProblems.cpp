@@ -9,6 +9,7 @@
 #include <queue>
 #include <stack>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility> // std::pair, std::make_pair
 #include <vector>
@@ -20,8 +21,10 @@ using std::map;
 using std::max;
 using std::pair;
 using std::queue;
+using std::sort;
 using std::stack;
 using std::string;
+using std::unordered_map;
 using std::unordered_set;
 using std::vector;
 
@@ -77,6 +80,54 @@ vector<int> TwoSum::two_sum(vector<int>& nums, int target)
   }
 
   return vector<int>{};
+}
+
+//------------------------------------------------------------------------------
+/// 20. Valid Parentheses
+/// https://leetcode.com/problems/valid-parentheses/
+/// s consists of parentheses only '()[]{}'.
+//------------------------------------------------------------------------------
+bool ValidParentheses::is_valid(string s)
+{
+  unordered_map<char, char> right_bracket_to_left_bracket {
+    {')', '('},
+    {'}', '{'},
+    {']', '['}};
+
+  stack<char> parentheses {};
+
+  for (const char c : s)
+  {
+    if (right_bracket_to_left_bracket.count(c) == 0)
+    {
+      parentheses.push(c);
+    }
+    else
+    {
+      if (parentheses.empty())
+      {
+        return false;
+      }
+
+      if (parentheses.top() == right_bracket_to_left_bracket[c])
+      {
+        parentheses.pop();
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+
+  if (!parentheses.empty())
+  {
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -423,10 +474,12 @@ int MajorityElement::majority_element_with_voting(vector<int>& nums)
 /// 217. Contains Duplicate
 //------------------------------------------------------------------------------
 
+// time: O(N), space O(N)
 bool ContainsDuplicate::contains_duplicate(vector<int>& nums)
 {
   unordered_set<int> seen_numbers {};
 
+  // O(N) time.
   for (const auto num : nums)
   {
     // O(1) time complexity, amoritized.
@@ -435,6 +488,21 @@ bool ContainsDuplicate::contains_duplicate(vector<int>& nums)
       seen_numbers.emplace(num);
     }
     else
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool ContainsDuplicate::sort_first(vector<int>& nums)
+{
+  sort(nums.begin(), nums.end());
+
+  for (size_t i {1}; i < nums.size(); ++i)
+  {
+    if (nums[i - 1] == nums[i])
     {
       return true;
     }
@@ -510,6 +578,32 @@ TreeNode* InvertBinaryTree::invert_tree_iterative(TreeNode* root)
 
   return root;
 }
+
+//------------------------------------------------------------------------------
+/// 231. Power of Two
+//------------------------------------------------------------------------------
+bool PowerOfTwo::is_power_of_two_and(int n)
+{
+  if (n <= 0)
+  {
+    return false;
+  }
+
+  if (n == 1)
+  {
+    return true;
+  }
+
+  // We want numbers of the form, in bits, 100...00, only 1 1 in MSD (most 
+  // significant digit).
+  // if n is of this form, (n - 1) must be of the form 011...11.
+  // Bitwise operators return an int, not a bool; so we can't use XOR (it would
+  // return nonzero for even a non-power of 2).
+  // & (and) returns 0 for each 0,1 or 1,0.
+
+  return (n & (n - 1)) == 0;
+}
+
 
 //------------------------------------------------------------------------------
 /// 242. Valid Anagram

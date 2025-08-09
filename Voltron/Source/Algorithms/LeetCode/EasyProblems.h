@@ -27,6 +27,18 @@ class TwoSum
 };
 
 //------------------------------------------------------------------------------
+/// 20. Valid Parentheses
+/// https://leetcode.com/problems/valid-parentheses/
+/// s consists of parentheses only '()[]{}'.
+//------------------------------------------------------------------------------
+class ValidParentheses
+{
+  public:
+
+    static bool is_valid(std::string s);
+};
+
+//------------------------------------------------------------------------------
 /// 88. Merge Sorted Array
 /// Given 2 integer arrrays sorted in non-decreasing order.
 //------------------------------------------------------------------------------
@@ -129,12 +141,17 @@ class MajorityElement
 //------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 /// Key ideas: unordered_set<int> to track duplicate values. 
+/// Or you can sort. Then 1 pass is enough. Because the duplicate would be next
+/// to the digit.
 //------------------------------------------------------------------------------
 class ContainsDuplicate
 {
   public:
 
     static bool contains_duplicate(std::vector<int>& nums);
+
+    // O(nlogn) (with sorting), O(1) space.
+    static bool sort_first(std::vector<int>& nums);
 };
 
 //------------------------------------------------------------------------------
@@ -150,6 +167,16 @@ class InvertBinaryTree
 
     static TreeNode* invert_tree_iterative(TreeNode* root);
 };
+
+//------------------------------------------------------------------------------
+/// 231. Power of Two
+//------------------------------------------------------------------------------
+class PowerOfTwo
+{
+  public:
+    static bool is_power_of_two_and(int n);
+};
+
 
 //------------------------------------------------------------------------------
 /// 242. Valid Anagram

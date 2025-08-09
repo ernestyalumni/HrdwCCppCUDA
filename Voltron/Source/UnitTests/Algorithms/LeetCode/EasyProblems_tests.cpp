@@ -94,6 +94,46 @@ BOOST_AUTO_TEST_CASE(TwoSumWithMapGetsTarget)
 
 BOOST_AUTO_TEST_SUITE_END() // TwoSum_0001_tests
 
+//------------------------------------------------------------------------------
+/// 20. Valid Parentheses
+/// https://leetcode.com/problems/valid-parentheses/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ValidParenthesesReturnsValidParentheses)
+{
+  // https://leetcode.com/problems/valid-parentheses/description/
+  {
+    string s {"()"};
+
+    BOOST_TEST(ValidParentheses::is_valid(s));
+  }
+  {
+    string s {"()[]{}"};
+    BOOST_TEST(ValidParentheses::is_valid(s));
+  }
+  {
+    string s {"(]"};
+    BOOST_TEST(!ValidParentheses::is_valid(s));
+  }
+  {
+    string s {"([])"};
+    BOOST_TEST(ValidParentheses::is_valid(s));
+  }
+  // 6 / 99 testcases passed
+  {
+    string s {"["};
+    BOOST_TEST(!ValidParentheses::is_valid(s));    
+  }
+
+  // EY 20240921
+  {
+    string s {"}"};
+    BOOST_TEST(!ValidParentheses::is_valid(s));    
+  }
+}
+
 /// 88. Merge Sorted Array
 
 //------------------------------------------------------------------------------
@@ -364,6 +404,28 @@ BOOST_AUTO_TEST_CASE(UnorderedMapFindsDuplicates)
 }
 
 //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SortingFirstFindsDuplicates)
+{
+  {
+    vector<int> nums {1,2,3,1};
+    const bool expected {true};
+
+    BOOST_TEST(ContainsDuplicate::sort_first(nums));
+  }
+  {
+    vector<int> nums {1,2,3,4};
+    const bool expected {false};
+    BOOST_TEST(!ContainsDuplicate::sort_first(nums));
+  }
+  {
+    vector<int> nums {1,1,1,3,3,4,3,2,4,2};
+    const bool expected {true};
+    BOOST_TEST(ContainsDuplicate::sort_first(nums));
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 226. Invert Binary Tree
 //------------------------------------------------------------------------------
 
@@ -469,6 +531,33 @@ BOOST_AUTO_TEST_CASE(IterativeStackInvertsBinaryTree)
     const TreeNode* output {InvertBinaryTree::invert_tree_iterative(root)};
     BOOST_TEST(output == nullptr);
   }
+}
+
+//------------------------------------------------------------------------------
+/// 231. Power of Two
+/// https://leetcode.com/problems/power-of-two/description/
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(PowerOfTwoAnd)
+{
+  // Example 1
+  int n {1};
+  BOOST_TEST(PowerOfTwo::is_power_of_two_and(n));
+
+  // Case 2
+  n = 16;
+  BOOST_TEST(PowerOfTwo::is_power_of_two_and(n));
+
+  // Case 3
+  n = 3;
+  BOOST_TEST(!PowerOfTwo::is_power_of_two_and(n));
+
+  // Case 595
+  n = 6;
+  BOOST_TEST(!PowerOfTwo::is_power_of_two_and(n));
+
+  // Case 1110
+  n = 0;
+  BOOST_TEST(!PowerOfTwo::is_power_of_two_and(n));
 }
 
 //------------------------------------------------------------------------------

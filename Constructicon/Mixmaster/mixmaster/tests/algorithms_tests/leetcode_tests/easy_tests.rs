@@ -7,7 +7,9 @@ pub mod easy_tests
     // 20.
     ValidParentheses,
     // 121.
-    BestTimeToBuyAndSellStock};
+    BestTimeToBuyAndSellStock,
+    // 125.
+    ValidPalindrome};
 
   use std::collections::HashSet;
 
@@ -119,6 +121,35 @@ pub mod easy_tests
     let prices = vec![7,6,4,3,1];
     let expected = 0;
     assert_eq!(BestTimeToBuyAndSellStock::max_profit(prices), expected);
+  }
+
+  //----------------------------------------------------------------------------
+  /// 125. Valid Palindrome
+  //----------------------------------------------------------------------------
+  #[test]
+  fn test_is_palindrome()
+  {
+    let input = String::from("A man, a plan, a canal: Panama");
+
+    assert!(ValidPalindrome::is_palindrome(input));
+
+    let input = String::from("race a car");
+
+    assert!(!ValidPalindrome::is_palindrome(input));
+
+    let input = String::from(" ");
+
+    assert!(ValidPalindrome::is_palindrome(input));
+
+    // https://neetcode.io/problems/is-palindrome
+
+    let input = String::from("Was it a car or a cat I saw?");
+
+    assert!(ValidPalindrome::is_palindrome(input));
+
+    let input = String::from("tab a cat");
+
+    assert!(!ValidPalindrome::is_palindrome(input));
   }
 }
 

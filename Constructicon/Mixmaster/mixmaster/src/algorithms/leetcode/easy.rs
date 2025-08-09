@@ -1,6 +1,8 @@
 pub struct TwoSum;
 pub struct ValidParentheses;
 pub struct BestTimeToBuyAndSellStock;
+// 125. Valid Palindrome
+pub struct ValidPalindrome;
 
 //------------------------------------------------------------------------------
 /// 1. Two Sum.
@@ -126,5 +128,66 @@ impl BestTimeToBuyAndSellStock
     }
 
     profit
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 125. Valid Palindrome
+/// A phrase is a palindrome if, after converting all uppercase letters into
+/// lowercase letters and removing all non-alphanumeric characters, it reads the
+/// same forward and backward. Alphanumeric characters include letters and
+/// numbers.
+/// s consists only of printable ASCII characters.
+/// https://leetcode.com/problems/valid-palindrome/description/
+//------------------------------------------------------------------------------
+impl ValidPalindrome
+{
+  //----------------------------------------------------------------------------
+  /// 
+  //----------------------------------------------------------------------------
+  pub fn is_palindrome(s: String) -> bool
+  {
+    let N = s.len();
+    let mut l_ptr = 0;
+    let mut r_ptr = N - 1;
+
+    // String is a collection of UTF-8 encoded bytes, and not single char
+    // elements.
+    let chars: Vec<char> = s.chars().collect();
+
+    let mut result = true;
+
+    while l_ptr < r_ptr
+    {
+      // Skip non-alphanumeric characters on the left.
+      while l_ptr < r_ptr && !chars[l_ptr].is_alphanumeric()
+      {
+        l_ptr += 1;
+      }
+
+      // Skip non-alphanumeric characters on the right.
+      while r_ptr > l_ptr && !chars[r_ptr].is_alphanumeric()
+      {
+        r_ptr -= 1;
+      }
+
+      // If pointers have crossed, break out of loop.
+      if l_ptr >= r_ptr
+      {
+        break;
+      }
+
+      if chars[l_ptr].to_ascii_lowercase() !=
+        chars[r_ptr].to_ascii_lowercase()
+      {
+          result = false;
+          break;
+      }
+
+      l_ptr += 1;
+      r_ptr -= 1;
+    }
+
+    result
   }
 }

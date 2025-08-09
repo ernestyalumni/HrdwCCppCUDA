@@ -4,8 +4,10 @@
 #include "DataStructures/BinaryTrees.h"
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <tuple>
+#include <utility>
 #include <vector>
 
 namespace Algorithms
@@ -149,6 +151,46 @@ class RotateImage
   public:
 
     static void rotate(std::vector<std::vector<int>>& matrix);
+};
+
+//------------------------------------------------------------------------------
+/// 49. Group Anagrams
+/// https://leetcode.com/problems/group-anagrams/description/
+/// https://neetcode.io/problems/anagram-groups
+//------------------------------------------------------------------------------
+class GroupAnagrams
+{
+  public:
+
+    // TODO: doesn't work, not sure why? :(
+    /*
+    static std::vector<std::vector<std::string>> group_anagrams(
+      std::vector<std::string>& strs);
+    */
+
+    static std::vector<std::vector<std::string>> group_anagrams_by_sorting(
+      std::vector<std::string>& strs);
+
+    //--------------------------------------------------------------------------
+    /// Distinguish between (types of) anagrams by counting the frequency (
+    /// number of appearances?) of a letter for each anagram.
+    ///
+    /// We were given "strs[i] consists of lowercase English letters", so number
+    /// of possible letters is bounded.
+    //--------------------------------------------------------------------------
+    static std::vector<std::vector<std::string>> group_anagrams_by_frequency(
+      std::vector<std::string>& strs);
+
+    static bool is_anagram_neet_code(
+      const std::string& s,
+      const std::string& t);
+
+    static bool is_anagram_open_ai(const std::string& s, const std::string& t);
+
+    // https://en.cppreference.com/w/cpp/utility/hash/operator()
+    // std::hash<Key>::operator()
+    // Takes a single argument key of type Key
+    // returns value of type std::size_t that represents the hash value of key.
 };
 
 //------------------------------------------------------------------------------
@@ -308,6 +350,27 @@ class BinaryTreeLevelOrderTraversal
 };
 
 //------------------------------------------------------------------------------
+/// 128. Longest Consecutive Sequence
+/// Given an unsorted array of integers nums, return the length of the longest
+/// consecutive elements sequence.
+///
+/// You must write an algorithm that runs in O(n) time.
+/// https://leetcode.com/problems/longest-consecutive-sequence/description/
+/// https://neetcode.io/problems/longest-consecutive-sequence
+/// https://youtu.be/P6RZZMu_maU?si=lxavcMLBZPAunM7M
+/// Key idea is that each sequence is separated by at least one element, i.e.
+/// each start element has no left neighbor; likewise each end element has no
+/// right neighbor.
+//------------------------------------------------------------------------------
+
+class LongestConsecutiveSequence
+{
+  public:
+
+    static int longest_consecutive_with_set(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 
@@ -328,6 +391,69 @@ class FindMinimumInRotatedSortedArray
   public:
 
     static int find_min(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 155. Min Stack
+/// https://leetcode.com/problems/min-stack/
+/// Design a stack that supports push, pop, top, and retrieving the minimum
+/// element in constant time.
+///
+/// Implement the MinStack class:
+///
+///    MinStack() initializes the stack object.
+///    void push(int val) pushes the element val onto the stack.
+///    void pop() removes the element on the top of the stack.
+///    int top() gets the top element of the stack.
+///    int getMin() retrieves the minimum element in the stack.
+///
+/// You must implement a solution with O(1) time complexity for each function.
+//------------------------------------------------------------------------------
+class MinStack
+{
+  public:
+
+    MinStack();
+
+    void push(int val);
+    
+    void pop();
+    
+    int top();
+    
+    int getMin();
+
+  protected:
+
+    static constexpr int MAXIMUM_CALLS_ {30'000};
+
+    bool is_empty();
+
+  private:
+
+    std::vector<int> array_;
+
+    int top_index_;
+
+    std::optional<std::pair<int, int>> minimum_value_and_count_;
+};
+
+//------------------------------------------------------------------------------
+/// 167. Two Sum II - Input Array Is Sorted
+/// The tests are generated such that there is exactly one solution. You may not
+/// use the same element twice.
+/// https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/description/
+///
+/// Return the indices of the two numbers, index1 and index2, added by one as an
+/// integer array [index1, index2] of length 2.
+///
+/// numbers is sorted in non-decreasing order.
+//------------------------------------------------------------------------------
+class TwoSumII
+{
+  public:
+
+    static std::vector<int> two_sum(std::vector<int>& numbers, int target);
 };
 
 //------------------------------------------------------------------------------
@@ -448,6 +574,54 @@ class ProductOfArrayExceptSelf
 };
 
 //------------------------------------------------------------------------------
+/// 271. String Encode and Decode
+/// https://neetcode.io/problems/string-encode-and-decode
+/// https://leetcode.com/problems/encode-and-decode-strings/description/
+/// Design an algorithm to encode a list of strings to a single string. The
+/// encoded string is then decoded back to the original list of strings.
+/// Constraints:
+/// 0 <= strs.length < 100
+/// 0 <= strs[i].length < 200
+/// strs[i] contains only UTF-8 characters.
+//------------------------------------------------------------------------------
+class StringEncodeAndDecode
+{
+  public:
+
+    static std::string encode(std::vector<std::string>& strs);
+
+    static std::vector<std::string> decode(std::string s);
+
+    // https://youtu.be/B1k_sxOSgv8
+
+    static std::string encode_with_prefix_neet(std::vector<std::string>& strs);
+
+    static std::vector<std::string> decode_with_prefix_neet(std::string s);
+};
+
+//------------------------------------------------------------------------------
+/// \name 347. Top K Frequent Elements
+/// Given an integer array nums and an integer k, return the k most frequent
+/// elements. You may return the answer in any order.
+///
+/// 1 <= nums.length <= 10^5
+/// EY: But with if nums.length is 10^9 (billions)? This is the case of for
+/// example a billion+ Youtube videos and you want to obtain the K most popular
+/// Youtube videos.
+//------------------------------------------------------------------------------
+class TopKFrequentElements
+{
+  public:
+
+    //std::vector<int> top_k_frequent(std::vector<int>& nums, int k);
+
+    static std::vector<int> brute_force(std::vector<int>& nums, int k);
+
+    // https://youtu.be/YPTqKIgVk-k?si=KbHT9oTwGare3dkl
+    static std::vector<int> bucket_sort(std::vector<int>& nums, int k);
+};
+
+//------------------------------------------------------------------------------
 /// \name 357. Count Numbers With Unique Digits
 /// \url https://leetcode.com/problems/count-numbers-with-unique-digits/
 /// Given integer n, return count of all numbers with unique digits, x, where
@@ -477,6 +651,7 @@ class KthSmallestElementInASortedMatrix
 /// 424. Longest Repeating Character Replacement
 /// Key idea: Sliding window - maintain a sliding window that can contain the
 /// longest substring with replacement.
+/// https://leetcode.com/problems/longest-repeating-character-replacement/description/
 //------------------------------------------------------------------------------
 class LongestRepeatingCharacterReplacement
 {
@@ -545,6 +720,29 @@ class Update01Matrix
 /// \url https://leetcode.com/problems/number-of-provinces/
 //------------------------------------------------------------------------------
 int find_number_of_provinces(std::vector<std::vector<int>>& is_connected);
+
+//------------------------------------------------------------------------------
+/// \name 567. Permutation in String
+/// Given two strings s1 and s2, return true if s2 contains a permutation of s1,
+/// or false otherwise.
+///
+/// In other words, return true if one of s1's permutations is the substring of
+/// s2.
+/// https://leetcode.com/problems/permutation-in-string/description/
+///
+/// s1 and s2 consist of lowercase English letters.
+//------------------------------------------------------------------------------
+class PermutationInString
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// Idea: Keep 2 arrays for 0(1) look up of lowercase letter to count for
+    /// each strings s1, s2 and compare them after the window length is of s1.
+    /// https://youtu.be/UbyhOgBN834?si=_LVBkImAFusoN8DK
+    //--------------------------------------------------------------------------
+    static bool check_inclusion(std::string s1, std::string s2);
+};
 
 //------------------------------------------------------------------------------
 /// \name 647. Palindromic Substrings
