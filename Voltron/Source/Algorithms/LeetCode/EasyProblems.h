@@ -139,6 +139,21 @@ class MajorityElement
 };
 
 //------------------------------------------------------------------------------
+/// 191. Number of 1 Bits
+/// Returns number of set bits in its binary representation (also known as
+/// Hamming weight)
+/// http://en.wikipedia.org/wiki/Hamming_weight
+//------------------------------------------------------------------------------
+class NumberOf1Bits
+{
+  public:
+
+    static int hamming_weight_loop_all_bits(int n);
+    static int hamming_weight_kernighan_trick(int n);
+};
+
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 /// Key ideas: unordered_set<int> to track duplicate values. 
 /// Or you can sort. Then 1 pass is enough. Because the duplicate would be next

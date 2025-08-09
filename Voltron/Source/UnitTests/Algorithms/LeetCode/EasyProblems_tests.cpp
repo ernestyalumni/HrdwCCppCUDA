@@ -378,6 +378,53 @@ BOOST_AUTO_TEST_CASE(MajorityElementWithMapGetsMajorityElement)
 }
 
 //------------------------------------------------------------------------------
+/// 191. Number of 1 Bits
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NumberOf1BitsLoopAllBits)
+{
+  // Example 1
+  int n {11};
+  int expected_output {3};
+  BOOST_TEST(NumberOf1Bits::hamming_weight_loop_all_bits(n) == expected_output);
+
+  // Example 2
+  n = 128;
+  expected_output = 1;
+  BOOST_TEST(NumberOf1Bits::hamming_weight_loop_all_bits(n) == expected_output);
+
+  // Example 
+  n = 2147483645;
+  expected_output = 30;
+  BOOST_TEST(NumberOf1Bits::hamming_weight_loop_all_bits(n) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(NumberOf1BitsKernighanTrick)
+{
+  // Example 1
+  int n {11};
+  int expected_output {3};
+  BOOST_TEST(
+    NumberOf1Bits::hamming_weight_kernighan_trick(n) == expected_output);
+
+  // Example 2
+  n = 128;
+  expected_output = 1;
+  BOOST_TEST(
+    NumberOf1Bits::hamming_weight_kernighan_trick(n) == expected_output);
+
+  // Example 
+  n = 2147483645;
+  expected_output = 30;
+  BOOST_TEST(
+    NumberOf1Bits::hamming_weight_kernighan_trick(n) == expected_output);
+}
+
+//------------------------------------------------------------------------------
 /// 217. Contains Duplicate
 //------------------------------------------------------------------------------
 

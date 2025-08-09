@@ -2,7 +2,11 @@
 
 #include "DataStructures/BinaryTrees.h"
 
+#include <iostream>
+
+
 #include <algorithm> // std::max
+#include <cmath>
 #include <functional>
 #include <limits.h> // INT_MIN
 #include <map>
@@ -468,6 +472,52 @@ int MajorityElement::majority_element_with_voting(vector<int>& nums)
   }
 
   return candidate;
+}
+
+//------------------------------------------------------------------------------
+/// 191. Number of 1 Bits
+//------------------------------------------------------------------------------
+
+int NumberOf1Bits::hamming_weight_loop_all_bits(int n)
+{
+  if (n == 0)
+  {
+    return n;
+  }
+  // 2^k = x, log_2(x) = k
+  // k needs to be total number bit positions and we need to include a position
+  // for the 1st, least significant bit.  
+  const int k {static_cast<int>(ceil(log2(n))) + 1};
+
+  int count {0};
+
+  int shifting_n {n};
+  for (int i {0}; i < k; ++i)
+  {
+    if (shifting_n & 1)
+    {
+      count++;
+    }
+    shifting_n >>= 1;
+  }
+  return count;
+}
+
+int NumberOf1Bits::hamming_weight_kernighan_trick(int n)
+{
+  int count {0};
+
+  // n & (n - 1) clears the rightmost bit. This is because if for n, least
+  // significant bit (lsb) is 1, then -1 results in 0 for lsb. If lsb is 0, then
+  // -1 will result in all above bits to be 1 (e.g. ..11110) until next largest
+  // bit that's 1.
+  while (n > 0)
+  {
+    (n &= (n - 1));
+    count++;
+  }
+
+  return count;
 }
 
 //------------------------------------------------------------------------------
