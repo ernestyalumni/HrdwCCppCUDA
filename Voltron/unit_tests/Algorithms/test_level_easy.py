@@ -9,6 +9,14 @@ pytest Utilities/test_level_easy.py
 """
 from Voltron.Algorithms.level_easy import (
     # In order of appearance or usage.
+    # 1. Two Sum
+    TwoSum,
+    # 121. Best Time to Buy and Sell Stock
+    BestTimeToBuyAndSellStock,
+    # 217. Contains Duplicate
+    ContainsDuplicate,
+    # 242. Valid Anagram
+    ValidAnagram,
     two_number_sum,
     validate_subsequence,
     validate_subsequence_with_for_loop,
@@ -67,6 +75,106 @@ def bubble_sort_test_cases_fixture():
         -7, 2, 3, 8, -10, 4, -6, -10, -2, -7, 10, 5, 2, 9, -9, -5, 3, 8]
 
     return test_cases
+
+def test_two_sum():
+    """
+    1. Two Sum
+    """
+    # https://leetcode.com/problems/two-sum/description/
+
+    nums = [2,7,11,15]; target = 9
+
+    assert set(TwoSum.two_sum(nums, target)) == set([0,1])
+
+    nums = [3,2,4]; target = 6
+
+    assert set(TwoSum.two_sum(nums, target)) == set([1,2])
+
+    nums = [3,3]; target = 6
+
+    assert set(TwoSum.two_sum(nums, target)) == set([0,1])
+
+    # https://neetcode.io/problems/two-integer-sum
+
+    nums = [3,4,5,6]; target = 7
+
+    assert set(TwoSum.two_sum(nums, target)) == set([0,1])
+
+    nums = [4,5,6]; target = 10
+
+    assert set(TwoSum.two_sum(nums, target)) == set([0,2])
+
+    nums = [5,5]; target = 10
+
+    assert set(TwoSum.two_sum(nums, target)) == set([0,1])
+
+def test_best_time_to_buy_and_sell_stock_max_profit():
+    """
+    121. Best Time to Buy and Sell Stock
+    """
+    prices = [7,1,5,3,6,4]
+    expected = 5
+    assert BestTimeToBuyAndSellStock.max_profit(prices) == expected
+
+    prices = [7,6,4,3,1]
+    expected = 0
+    assert BestTimeToBuyAndSellStock.max_profit(prices) == expected
+
+    # https://neetcode.io/problems/buy-and-sell-crypto    
+
+    prices = [10,1,5,6,7,1]
+    expected = 6
+    assert BestTimeToBuyAndSellStock.max_profit(prices) == expected
+
+    prices = [10,8,7,5,2]
+    expected = 0
+    assert BestTimeToBuyAndSellStock.max_profit(prices) == expected
+
+
+def test_contains_duplicates():
+    """
+    217. Contains Duplicate
+
+    Given an integer array nums, return true if any value appears at least
+    twice in the array, and return false if every element is distinct.
+
+    Ideas: Array.    
+    """
+    nums = [1,2,3,1]
+    assert ContainsDuplicate.contains_duplicate(nums)
+
+    nums = [1,2,3,4]
+    assert not ContainsDuplicate.contains_duplicate(nums)
+
+    nums = [1,1,1,3,3,4,3,2,4,2]
+    assert ContainsDuplicate.contains_duplicate(nums)
+
+def test_valid_anagram():
+    """
+    242. Valid Anagram.
+
+    Given two strings s and t, return true if the two strings are anagrams of
+    each other, otherwise return false.
+    """
+    s = "anagram"
+    t = "nagaram"
+
+    assert ValidAnagram.is_anagram(s, t)
+
+    s = "rat"
+    t = "car"
+
+    assert not ValidAnagram.is_anagram(s, t)
+
+    # https://neetcode.io/problems/is-anagram
+    s = "racecar"
+    t = "carrace"
+
+    assert ValidAnagram.is_anagram(s, t)
+
+    s = "jar"; t = "jam"
+
+    assert not ValidAnagram.is_anagram(s, t)
 
 
 def test_two_number_sum():

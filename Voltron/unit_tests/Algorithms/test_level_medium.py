@@ -4,9 +4,18 @@
 
 from Voltron.Algorithms.level_medium import (
     # In order of usage or appearance.
-    smallest_difference,
+    # 3. Longest Substring Without Repeating Characters
+    LongestSubstringWithoutRepeatingCharacters,
+    # 11. Container With Most Water
+    ContainerWithMostWater,
+    # 15. 3Sum
     three_number_sum,
     three_number_sum_with_sorted_array,
+    # 238. Product of Array Except Self
+    ProductOfArrayExceptSelf,
+    # 424. Longest Repeating Substring With Replacement
+    LongestRepeatingCharacterReplacement,
+    smallest_difference,
     move_element_to_end,
     is_monotonic,
     spiral_traverse,
@@ -25,18 +34,51 @@ from Voltron.Algorithms.LeetCode import UTF8Validation
 
 import pytest
 
+def test_longest_substring_without_repeating_characters_work():
+    """
+    3. Longest Substring Without Repeating Characters
+    https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+    """
+    s = "abcabcbb"
+    expected = 3
+    assert \
+        LongestSubstringWithoutRepeatingCharacters.length_of_longest_substring(s) == \
+            expected
 
-def test_sample_case_on_smallest_difference():
-    array_one = [-1, 5, 10, 20, 28, 3]
-    array_two = [26, 134, 135, 15, 17]
+    s = "bbbbb"
+    expected = 1
+    assert \
+        LongestSubstringWithoutRepeatingCharacters.length_of_longest_substring(s) == \
+            expected
 
-    result = smallest_difference(array_one, array_two)    
+    s = "pwwkew"
+    expected = 3
+    assert \
+        LongestSubstringWithoutRepeatingCharacters.length_of_longest_substring(s) == \
+            expected
 
-    assert result[0] == 28
-    assert result[1] == 26
+
+def test_container_with_most_water_max_area():
+    """
+    11. Container With Most Water
+    """
+    height = [1,8,6,2,5,4,8,3,7]    
+    expected = 49
+    assert ContainerWithMostWater.max_area(height) == expected
+
+    height = [1,1]
+    expected = 1
+    assert ContainerWithMostWater.max_area(height) == expected
 
 
 def test_three_number_sum():
+    """
+    15. 3Sum
+    https://leetcode.com/problems/3sum/
+
+    Three Integer Sum
+    https://neetcode.io/problems/three-integer-sum
+    """
 
     # Sample Input and Test Case 1
     array = [12, 3, 1, 2, -6, 5, -8, 6]
@@ -73,6 +115,13 @@ def test_three_number_sum():
 
 
 def test_three_number_sum_with_sorted_array():
+    """
+    15. 3Sum
+    https://leetcode.com/problems/3sum/
+
+    Three Integer Sum
+    https://neetcode.io/problems/three-integer-sum
+    """
 
     # Sample Input and Test Case 1
     array = [12, 3, 1, 2, -6, 5, -8, 6]
@@ -106,6 +155,85 @@ def test_three_number_sum_with_sorted_array():
 
     results = three_number_sum_with_sorted_array(array, target)
     assert results == [[-2, 10, 49]]
+
+
+def test_product_except_self():
+
+    # 238. Product of Array Except Self
+
+    # https://neetcode.io/problems/products-of-array-discluding-self
+
+    nums = [1,2,4,6]
+    expected = [48,24,12,8]
+    assert ProductOfArrayExceptSelf.product_except_self(nums) == expected
+
+    nums = [-1,0,1,2,3]    
+    expected = [0,-6,0,0,0]
+    assert ProductOfArrayExceptSelf.product_except_self(nums) == expected
+
+    # https://leetcode.com/problems/product-of-array-except-self/description/
+
+    nums = [1,2,3,4]    
+    expected = [24,12,8,6]
+    assert ProductOfArrayExceptSelf.product_except_self(nums) == expected
+
+    nums = [-1,1,0,-3,3]
+    expected = [0,0,9,0,0]
+    assert ProductOfArrayExceptSelf.product_except_self(nums) == expected
+
+
+def test_longest_repeating_character_replacement():
+    """
+    424. Longest Repeating Substring With Replacement
+
+    https://youtu.be/gqXU1UyA8pk?si=BgYHCLVVMt7P3na7
+    """
+    # https://neetcode.io/problems/longest-repeating-substring-with-replacement
+
+    s = "XYYX"; k = 2
+    expected = 4
+
+    assert LongestRepeatingCharacterReplacement.character_replacement(s, k) == \
+        expected
+
+    s = "AAABABB"; k = 1
+    expected = 5
+
+    assert LongestRepeatingCharacterReplacement.character_replacement(s, k) == \
+        expected
+
+    # https://leetcode.com/problems/longest-repeating-character-replacement/description/
+
+    s = "ABAB"; k = 2
+    expected = 4
+
+    assert LongestRepeatingCharacterReplacement.character_replacement(s, k) == \
+        expected
+
+    s = "AABABBA"; k = 1
+    expected = 4
+
+    assert LongestRepeatingCharacterReplacement.character_replacement(s, k) == \
+        expected
+
+    # Passed test cases: 9 / 23 
+    s="BAAA"
+    k=0
+
+    expected = 3
+
+    assert LongestRepeatingCharacterReplacement.character_replacement(s, k) == \
+        expected
+
+
+def test_sample_case_on_smallest_difference():
+    array_one = [-1, 5, 10, 20, 28, 3]
+    array_two = [26, 134, 135, 15, 17]
+
+    result = smallest_difference(array_one, array_two)    
+
+    assert result[0] == 28
+    assert result[1] == 26
 
 
 def test_smallest_difference():

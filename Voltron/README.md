@@ -276,3 +276,11 @@ Then from `HrdwCCppCUDA/Voltron` (*not* from `HrdwCCppCUDA`),
 // Run this to launch/run Visual Studio Code.
 code .
 ```
+
+Note that to create a Python virtual environment, you have to run
+
+```
+python3 -m venv ./venv
+```
+
+from the directory `HrdwCCppCUDA/Voltron/`, for example.

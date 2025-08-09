@@ -1,4 +1,91 @@
+class LongestSubstringWithoutRepeatingCharacters:
+    """
+    3. Longest Substring Without Repeating Characters
+
+    https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+    """
+    @staticmethod
+    def length_of_longest_substring(s: str) -> int:
+
+        seen_character_to_place = {}        
+
+        maximum_length = 0
+        start_index = 0
+
+        N = len(s)
+
+        # Original logic, deal with each case.
+        """
+        for i in range(N):
+            if s[i] not in seen_character_to_place.keys():
+                seen_character_to_place[s[i]] = i
+                if (maximum_length < (i - start_index + 1)):
+                    maximum_length = (i - start_index + 1)
+            elif seen_character_to_place[s[i]] >= start_index:
+                # When a repeating character is found, start index should be
+                # updated to position right after the last occurrence of the
+                # repeating character.
+                start_index = seen_character_to_place[s[i]] + 1
+                seen_character_to_place[s[i]] = i
+            else:
+                seen_character_to_place[s[i]] = i
+                if (maximum_length < (i - start_index + 1)):
+                    maximum_length = (i - start_index + 1)
+        """
+        for i in range(N):
+
+            if (s[i] in seen_character_to_place.keys() and \
+                seen_character_to_place[s[i]] >= start_index):
+                # When a repeating character is found, start index should be
+                # updated to position right after the last occurrence of the
+                # repeating character.
+                start_index = seen_character_to_place[s[i]] + 1
+
+            seen_character_to_place[s[i]] = i
+
+            maximum_length = max(maximum_length, i - start_index + 1)
+
+        return maximum_length        
+
+class ContainerWithMostWater:
+    """
+    11. Container With Most Water
+    """
+    @staticmethod
+    def max_area(height):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        l = 0
+        r = len(height) - 1
+        max_area = 0
+
+        while (l < r):
+
+            area = min(height[l], height[r]) * (r - l)
+            max_area = max(area, max_area)
+
+            if (height[l] < height[r]):
+                l += 1
+            elif (height[r] < height[l]):
+                r -= 1
+            else:
+                # TODO: why is it arbitrary which one we move when both heihgts 
+                # are equal?
+                r -= 1
+
+        return max_area
+
+
 def three_number_sum(array, target_sum):
+    """
+    15. 3Sum
+    https://leetcode.com/problems/3sum/
+
+    Three Integer Sum
+    https://neetcode.io/problems/three-integer-sum
+    """
     output = set()
     N = len(array)
 
@@ -26,6 +113,13 @@ def three_number_sum(array, target_sum):
 
 
 def three_number_sum_with_sorted_array(array, target_sum):
+    """
+    15. 3Sum
+    https://leetcode.com/problems/3sum/
+
+    Three Integer Sum
+    https://neetcode.io/problems/three-integer-sum
+    """
     output = []
     N = len(array)
     array.sort()
@@ -53,6 +147,111 @@ def three_number_sum_with_sorted_array(array, target_sum):
                 left_index += 1
 
     return output
+
+
+class ProductOfArrayExceptSelf:
+    """
+    https://leetcode.com/problems/product-of-array-except-self/
+    https://neetcode.io/problems/products-of-array-discluding-self
+
+    238. Product of Array Except Self
+    """
+    @staticmethod
+    def product_except_self(nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        
+        Idea:, given a target product,
+        prod_{j=0, i\neq j}^{N-1} a[j], split the product into a "left" product
+        and "right" product:
+        prod_{j=0}^{i-1} a[j] if i > 0, else 1 and
+        prod_{j=i+1}^{N-1} a[j] if i < N-1, else 1
+        """        
+        N = len(nums)
+
+        # Use output also as an intermediary for left products.
+        output = [1 for i in range(N)]
+
+        # Reuse nums to be the right product.
+        for i, num in enumerate(nums):
+
+            for j in range(i + 1, N):
+                output[j] *= num
+            for j in range(0, i):
+                nums[j] *= num
+            nums[i] = 1
+
+        for i in range(N):
+            # Multiply left and right products
+            output[i] *= nums[i]
+
+        return output
+
+
+class LongestRepeatingCharacterReplacement:
+    """
+    424. Longest Repeating Character Replacement
+
+    Return the length of the longest substring containing the same letter you
+    can get after performing the above operations.
+
+    https://leetcode.com/problems/longest-repeating-character-replacement/description/    
+    
+    The key idea was to recognize that we only care about the total length of
+    the string and not what characters are being replaced.
+
+    Other key insight is that s consists only of uppercase English letters.
+
+    Another insight is that the number of characters counted will only be the
+    characters within the sliding window, as long as we decrement when we move
+    the left pointer.
+
+    https://youtu.be/gqXU1UyA8pk?si=GL5U6iIh3TUqHXmX
+    """
+
+    @staticmethod
+    def character_replacement(s: str, k: int) -> int:
+        N = len(s)
+
+        if (N == k):
+            return N
+
+        character_index_to_count = [0 for i in range(26)]
+
+        # Gets count of character with maximum number of counts.
+        # O(26)
+        def get_max_count():
+            max_count = 0
+            for i in range(26):
+                max_count = max(max_count, character_index_to_count[i])
+            return max_count
+
+        # Use this index to shrink the window from the left.
+        starting_index = 0
+
+        max_length = 0
+
+        # O(N) time.
+        for i in range(N):
+
+            character_index = ord(s[i]) - ord('A')
+
+            character_index_to_count[character_index] += 1
+
+            # Check if sliding window is valid.
+            # O(26) time.
+            if (i - starting_index + 1) - get_max_count() > k:
+                # Remember to decrement the count of the character corresponding
+                # to s[starting_index], not starting_index.
+                character_index_to_count[ord(s[starting_index]) - ord('A')] -= 1
+                starting_index += 1
+
+            # We want to update the length for the longest substring. Update
+            # against the length of the sliding window.
+            max_length = max(max_length, i - starting_index + 1)
+
+        return max_length
 
 
 def _find_closest_value_index(array, target_value, l, r):

@@ -1,8 +1,143 @@
 from collections import OrderedDict
+from typing import List
+import sys
+
+class TwoSum(object):
+    """
+    1. Two Sum
+    Given an array of integers nums and an integer target, return the indices i
+    and j such that nums[i] + nums[j] == target and i != j.    
+
+    https://neetcode.io/problems/two-integer-sum
+    https://leetcode.com/problems/two-sum/description/    
+
+    Idea: Array (traversing) with Hash map to store precomputed solution. BUT,
+    don't add all complimentary values to hash map (Python dictionary), rather
+    in one pass, add values if they aren't on the hash map. This solution is
+    guaranteed to work since a unique solution is guaranteed (you'll save the
+    first index in the hash map).
+    """
+    @staticmethod
+    def two_sum(nums: List[int], target: int) -> List[int]:
+
+        # For each x in nums, store target - x and its index in nums.
+        #complimentary_value_to_index = {}
+
+        # We're given the assumption that "each input would have exactly one
+        # solution, and you may not use the same element twice."
+        #for i in range(len(nums)):
+        #    complimentary_value_to_index[target - nums[i]] = i
+
+        #for i in range(len(nums)):
+        #    if nums[i] in complimentary_value_to_index.keys():
+        #        return i, complimentary_value_to_index[nums[i]]
+
+        # https://youtu.be/KLlXCFG5TnA?si=PtHiNVJmqzdktV0r&t=287
+
+        value_to_index = {}
+        for i, num in enumerate(nums):
+            complimentary_value = target - nums[i]
+            if complimentary_value in value_to_index.keys():
+                return value_to_index[complimentary_value], i
+            else:
+                value_to_index[num] = i
+
+        return None
+
+class BestTimeToBuyAndSellStock(object):
+    """
+    121. Best Time to Buy and Sell Stock
+    https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+    """
+    @staticmethod
+    def max_profit(prices: List[int]) -> int:
+
+        minimum_price = prices[0]
+        max_profit = 0
+        
+        # Consider minimum price to be prices[I] for 0 <= I and that for all
+        # i <= J, prices[i] >= prices[I] with J >= I. Suppose now that
+        # prices[J + 1] < prices[I]. We take prices[J + 1] to be the new minimum
+        # because for any j > J + 1, prices[j] - prices[J+1] will necessarily
+        # be bigger than prices[j] - prices[I].
+
+        for price in prices:
+            profit = price - minimum_price
+            if (profit > max_profit):
+                max_profit = profit
+            if minimum_price > price:
+                minimum_price = price
+        return max_profit
+
+
+class ContainsDuplicate(object):
+    @staticmethod
+    def contains_duplicate(nums):
+        """
+        217. Contains Duplicate
+
+        Given an integer array nums, return true if any value appears at least
+        twice in the array, and return false if every element is distinct.
+
+        Ideas: Array
+
+        :type nums: List[int]
+        :rtype: bool
+        """
+        seen = set()
+        # O(N) time complexity.
+        for num in nums:
+            # O(1) amoritized.
+            if num in seen:
+                return True
+            else:
+                # O(1) amoritized.
+                seen.add(num)
+        return False
+
+class ValidAnagram(object):
+    """
+    242. Valid Anagram
+
+    Given two strings s and t, return true if the two strings are anagrams of
+    each other, otherwise return false.
+    """
+
+    @staticmethod
+    def is_anagram(s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+
+        # O(|t|) space
+        s_letter_to_count = {}
+        # O(|s|) time
+        for letter in s:
+            if letter in s_letter_to_count.keys():
+                s_letter_to_count[letter] += 1
+            else:
+                s_letter_to_count[letter] = 1
+
+        # O(|t|) space
+        t_letter_to_count = {}
+        # O(|t|) time
+        for letter in t:
+            if letter in t_letter_to_count.keys():
+                t_letter_to_count[letter] += 1
+            else:
+                t_letter_to_count[letter] = 1
+
+        for letter in s_letter_to_count.keys():
+            if letter not in t_letter_to_count.keys():
+                return False
+            if s_letter_to_count[letter] != t_letter_to_count[letter]:
+                return False
+
+        return True
+
 
 def validate_subsequence(array, sequence):
     """
-    \details Subsequence doesn't have to be adjacent. They have to appear in the
+    @details Subsequence doesn't have to be adjacent. They have to appear in the
     same order.
 
     We're going to have to traverse both of the sequences.
@@ -25,7 +160,7 @@ def validate_subsequence(array, sequence):
 
 def validate_subsequence_with_for_loop(array, sequence):
     """
-    \details Subsequence doesn't have to be adjacent. They have to appear in the
+    @details Subsequence doesn't have to be adjacent. They have to appear in the
     same order.
 
     We're going to have to traverse both of the sequences.
