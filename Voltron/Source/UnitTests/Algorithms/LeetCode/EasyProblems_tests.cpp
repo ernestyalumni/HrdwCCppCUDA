@@ -346,6 +346,49 @@ BOOST_AUTO_TEST_CASE(ValidPalindromeWorksLinearly)
 }
 
 //------------------------------------------------------------------------------
+/// 136. Single Number
+/// Given a non-empty array of integers (nums), every element appears twice
+/// except for one. Find that single one.
+/// https://leetcode.com/problems/single-number/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SingleNumberWithSet)
+{
+  // Example 1
+  vector<int> nums {2,2,1};
+  int expected_output {1};
+  BOOST_TEST(SingleNumber::single_number_with_set(nums) == expected_output);
+
+  nums = {4,1,2,1,2};
+  expected_output = 4;
+  BOOST_TEST(SingleNumber::single_number_with_set(nums) == expected_output);
+
+  nums = {1};
+  expected_output = 1;
+  BOOST_TEST(SingleNumber::single_number_with_set(nums) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SingleNumberWithXOR)
+{
+  // Example 1
+  vector<int> nums {2,2,1};
+  int expected_output {1};
+  BOOST_TEST(SingleNumber::single_number_xor(nums) == expected_output);
+
+  nums = {4,1,2,1,2};
+  expected_output = 4;
+  BOOST_TEST(SingleNumber::single_number_xor(nums) == expected_output);
+
+  nums = {1};
+  expected_output = 1;
+  BOOST_TEST(SingleNumber::single_number_xor(nums) == expected_output);
+}
+
+//------------------------------------------------------------------------------
 /// 169. Majority Element
 //------------------------------------------------------------------------------
 
@@ -375,6 +418,56 @@ BOOST_AUTO_TEST_CASE(MajorityElementWithMapGetsMajorityElement)
       MajorityElement::majority_element_with_map(nums),
       expected);
   }
+}
+
+//------------------------------------------------------------------------------
+/// 190. Reverse Bits
+/// https://leetcode.com/problems/reverse-bits/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ReverseBitsLoopThrough)
+{
+  // Example 1
+  int n {43261596};
+  int expected_output {964176192};
+  BOOST_TEST(ReverseBits::reverse_bits_loop_through(n) == expected_output);
+
+  // Example 2
+  n = 2147483644;
+  expected_output = 1073741822;
+  BOOST_TEST(ReverseBits::reverse_bits_loop_through(n) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ReverseBitsGetAndShiftLSB)
+{
+  // Example 1
+  int n {43261596};
+  int expected_output {964176192};
+  BOOST_TEST(ReverseBits::reverse_bits_get_and_shift_lsb(n) == expected_output);
+
+  // Example 2
+  n = 2147483644;
+  expected_output = 1073741822;
+  BOOST_TEST(ReverseBits::reverse_bits_get_and_shift_lsb(n) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ReverseBitsSwapHalves)
+{
+  // Example 1
+  int n {43261596};
+  int expected_output {964176192};
+  BOOST_TEST(ReverseBits::reverse_bits_swap_halves(n) == expected_output);
+
+  // Example 2
+  n = 2147483644;
+  expected_output = 1073741822;
+  BOOST_TEST(ReverseBits::reverse_bits_swap_halves(n) == expected_output);
 }
 
 //------------------------------------------------------------------------------

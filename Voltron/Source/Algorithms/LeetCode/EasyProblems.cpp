@@ -6,6 +6,7 @@
 
 
 #include <algorithm> // std::max
+#include <array>
 #include <cmath>
 #include <functional>
 #include <limits.h> // INT_MIN
@@ -409,6 +410,48 @@ bool ValidPalindrome::is_palindrome(string s)
 }
 
 //------------------------------------------------------------------------------
+/// 136. Single Number
+//------------------------------------------------------------------------------
+
+int SingleNumber::single_number_with_set(vector<int>& nums)
+{
+  unordered_set<int> numbers_first_seen {};
+
+  for (const auto num : nums)
+  {
+    if (numbers_first_seen.find(num) == numbers_first_seen.end())
+    {
+      numbers_first_seen.insert(num);
+    }
+    else
+    {
+      numbers_first_seen.erase(num);
+    }
+  }
+
+  // We don't expect to reach this condition given the problem's constraints.
+  if (numbers_first_seen.empty())
+  {
+    return -1;
+  }
+  else
+  {
+    return *(numbers_first_seen.cbegin());
+  }
+}
+
+int SingleNumber::single_number_xor(vector<int>& nums)
+{
+  int result {0};
+  for (const auto num : nums)
+  {
+    result ^= num;
+  }
+
+  return result;
+}
+
+//------------------------------------------------------------------------------
 /// 169. Majority Element
 //------------------------------------------------------------------------------
 
@@ -472,6 +515,94 @@ int MajorityElement::majority_element_with_voting(vector<int>& nums)
   }
 
   return candidate;
+}
+
+//------------------------------------------------------------------------------
+/// 190. Reverse Bits
+//------------------------------------------------------------------------------
+
+int ReverseBits::reverse_bits_loop_through(int n)
+{
+  static constexpr int NUMBER_OF_BITS {32};
+
+  std::array<bool, NUMBER_OF_BITS> bit_values {};
+
+  int mask {1};
+  for (int i {0}; i < NUMBER_OF_BITS; ++i)
+  {
+    const bool value {(n & mask) != 0};
+    bit_values[i] = static_cast<bool>(value);
+    mask <<= 1;
+  }
+
+  // 32 / 2 = 16
+  for (int i {0}; i < (NUMBER_OF_BITS / 2); ++i)
+  {
+    const bool lsb_value {bit_values[i]};
+    // Last index is NUMBER_OF_BITS - 1, for i = 0.
+    const bool msb_value {bit_values[NUMBER_OF_BITS - 1 - i]};
+    bit_values[i] = msb_value;
+    bit_values[NUMBER_OF_BITS - 1 - i] = lsb_value;
+  }
+
+  int result {0};
+  for (int i {0}; i < NUMBER_OF_BITS; ++i)
+  {
+    if (bit_values[i] == true)
+    {
+      result += (1 << i);
+    }
+  }
+
+  return result;
+}
+
+int ReverseBits::reverse_bits_get_and_shift_lsb(int n)
+{
+  static constexpr int NUMBER_OF_BITS {32};
+
+  int result {0};
+  int mask {1};
+  // Iterate through each least significant bit (lsb) of n.
+  for (int i {0}; i < NUMBER_OF_BITS; ++i)
+  {
+    // (n & mask) get the lsb of n.
+    // For a single bit, bitwise or (|) can add it to result, as long as we move
+    // result bitwise shift left to "make room".
+    result = (result << 1) | (n & mask);
+
+    // Shift n to the next lsb.
+    n >>= 1;
+  }
+
+  return result;
+}
+
+int ReverseBits::reverse_bits_swap_halves(int n)
+{
+  // Time complexity: O(1)
+
+  // Swap 16-bit halves.
+  // After each bitshifts, fill in the new 0's with the values of the other half.
+  n = (n >> 16) | (n << 16);
+
+  // Swap 8-bit halves within each group of 16.
+  // 11111111 = ff
+  n = ((n & 0xff00ff00) >> 8) | ((n & 0x00ff00ff) << 8);
+
+  // Swap 4-bit halves within each group of 8.
+  // 00001111 = 0f
+  n = ((n & 0x0f0f0f0f) << 4) | ((n & 0xf0f0f0f0) >> 4);
+
+  // Swap 2-bit halves within each group of 4.
+  // 0011 = 3, 1100 = c
+  n = ((n & 0x33333333) << 2) | ((n & 0xcccccccc) >> 2);
+
+  // Swap 1-bit half within each pair of bits.
+  // 0101 = 5, 1010 = a
+  n = ((n & 0x55555555) << 1) | ((n & 0xaaaaaaaa) >> 1);
+
+  return n;
 }
 
 //------------------------------------------------------------------------------

@@ -115,6 +115,32 @@ class ValidPalindrome
 };
 
 //------------------------------------------------------------------------------
+/// 136. Single Number
+/// Given a non-empty array of integers (nums), every element appears twice
+/// except for one. Find that single one.
+/// https://leetcode.com/problems/single-number/description/
+//------------------------------------------------------------------------------
+class SingleNumber
+{
+  public:
+
+    static int single_number_with_set(std::vector<int>& nums);
+    //--------------------------------------------------------------------------
+    /// Key insight: XOR is a group operator for the group of 32-bit vectors,
+    /// such that
+    /// 1. identity exists, 0 (x ^ 0 = x)
+    /// 2. associativity
+    /// 3. commutativity
+    /// 4. self-inverse, for each x, inverse is itself (x ^ x = 0)
+    /// So for this problem,
+    /// a ^ b ^ ... ^ b ^ a ... ^ s = (a ^ a) ^ (b ^ b) ^ ... ^ s = 0 ^ 0 ^ s =
+    /// s.
+    //--------------------------------------------------------------------------
+    static int single_number_xor(std::vector<int>& nums);
+};
+
+
+//------------------------------------------------------------------------------
 /// 169. Majority Element
 /// Array - Linear traversal.
 /// 1. Use std::unordered_map for O(1) amoritized lookup and insertion and count
@@ -139,6 +165,20 @@ class MajorityElement
 };
 
 //------------------------------------------------------------------------------
+/// 190. Reverse Bits
+/// Reverse bits of a given 32 bits unsigned integer.
+/// https://leetcode.com/problems/reverse-bits/description/
+//------------------------------------------------------------------------------
+class ReverseBits
+{
+  public:
+
+    static int reverse_bits_loop_through(int n);
+    static int reverse_bits_get_and_shift_lsb(int n);
+    static int reverse_bits_swap_halves(int n);
+};
+
+//------------------------------------------------------------------------------
 /// 191. Number of 1 Bits
 /// Returns number of set bits in its binary representation (also known as
 /// Hamming weight)
@@ -151,7 +191,6 @@ class NumberOf1Bits
     static int hamming_weight_loop_all_bits(int n);
     static int hamming_weight_kernighan_trick(int n);
 };
-
 
 //------------------------------------------------------------------------------
 /// 217. Contains Duplicate
