@@ -723,23 +723,126 @@ BOOST_AUTO_TEST_CASE(IsAnagramWorksWithUnorderedMap)
 }
 
 //------------------------------------------------------------------------------
+/// 268. Missing Number
+/// https://leetcode.com/problems/missing-number/description/
+/// The idea is to use XOR.
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MissingNumberXOR)
+{
+  // Example 1
+  vector<int> nums {3,0,1};
+  int expected_output {2};
+  BOOST_TEST(MissingNumber::missing_number_xor(nums) == expected_output);
+
+  // Example 2
+  nums = {0,1};
+  expected_output = 2;
+  BOOST_TEST(MissingNumber::missing_number_xor(nums) == expected_output);
+
+  // Example 3
+  nums = {9,6,4,2,3,5,7,0,1};
+  expected_output = 8;
+  BOOST_TEST(MissingNumber::missing_number_xor(nums) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MissingNumberSumFormula)
+{
+  // Example 1
+  vector<int> nums {3,0,1};
+  int expected_output {2};
+  BOOST_TEST(
+    MissingNumber::missing_number_sum_formula(nums) == expected_output);
+
+  // Example 2
+  nums = {0,1};
+  expected_output = 2;
+  BOOST_TEST(
+    MissingNumber::missing_number_sum_formula(nums) == expected_output);
+
+  // Example 3
+  nums = {9,6,4,2,3,5,7,0,1};
+  expected_output = 8;
+  BOOST_TEST(
+    MissingNumber::missing_number_sum_formula(nums) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+/// 338. Counting Bits
+/// https://leetcode.com/problems/counting-bits/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CountingBitsMemoization)
+{
+  // Example 1
+  int n {2};
+  vector<int> expected_output {0, 1, 1};
+
+  BOOST_TEST(CountingBits::count_bits_memoization(n) == expected_output);
+
+  // Example 2
+  n = 5;
+  expected_output = {0 ,1, 1, 2, 1, 2};
+  BOOST_TEST(CountingBits::count_bits_memoization(n) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+/// 405. Convert a Number to Hexadecimal
+/// https://leetcode.com/problems/convert-a-number-to-hexadecimal/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ConvertANumberToHexadecimalConvertsToHexadecimal)
+{
+  // Example 1
+  int num {26};
+  string expected_output {"1a"};
+
+  BOOST_TEST(ConvertToHexadecimal::to_hex(num) == expected_output);
+
+  // Example 2
+  num = -1;
+  expected_output = "ffffffff";
+  BOOST_TEST(ConvertToHexadecimal::to_hex(num) == expected_output);
+
+  // Case 100
+  num = 0;
+  expected_output = "0";
+  BOOST_TEST(ConvertToHexadecimal::to_hex(num) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+/// 461. Hamming Distance
+/// https://leetcode.com/problems/hamming-distance/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(HammingDistanceCounts)
+{
+  // Example 1
+  int x {1};
+  int y {4};
+  int expected_output {2};
+  BOOST_TEST(HammingDistance::hamming_distance(x, y) == expected_output);
+
+  // Example 2
+  x = 3;
+  y = 1;
+  expected_output = 1;
+  BOOST_TEST(HammingDistance::hamming_distance(x, y) == expected_output);
+}
+
+//------------------------------------------------------------------------------
 /// 697. Degree of an Arrays
 //------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(BinarySearchReturnsIndexOrNegative1)
-{
-  {
-    vector<int> nums {1,2,2,3,1};
-    const int expected_output {2};
-  }
-  {
-    vector<int> nums {1,2,2,3,1,4,2};
-    const int expected output {6};
-
-  }
-}
 
 //------------------------------------------------------------------------------
 /// 704. Binary Search

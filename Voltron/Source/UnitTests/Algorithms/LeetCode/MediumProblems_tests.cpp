@@ -1133,6 +1133,43 @@ BOOST_AUTO_TEST_CASE(LongestConsecutiveSequenceGetsMaximumLength)
 }
 
 //------------------------------------------------------------------------------
+/// 137. Single Number II
+/// https://leetcode.com/problems/single-number-ii/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SingleNumberIICountsPerBit)
+{
+  vector<int> nums {2,2,3,2};
+  int expected_output {3};
+
+  BOOST_TEST(
+    SingleNumberII::single_number_count_per_bit(nums) == expected_output);
+
+  nums = {0,1,0,1,0,1,99};
+  expected_output = 99;
+  BOOST_TEST(
+    SingleNumberII::single_number_count_per_bit(nums) == expected_output);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SingleNumberIITracksSeenNumbers)
+{
+  vector<int> nums {2,2,3,2};
+  int expected_output {3};
+
+  BOOST_TEST(
+    SingleNumberII::single_number_track_seen(nums) == expected_output);
+
+  nums = {0,1,0,1,0,1,99};
+  expected_output = 99;
+  BOOST_TEST(
+    SingleNumberII::single_number_track_seen(nums) == expected_output);
+}
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 
@@ -1363,6 +1400,102 @@ BOOST_AUTO_TEST_CASE(NumberOfIslandsWorksWithBreadthFirstSearch)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // NumberOfIslands_200_tests
+
+//------------------------------------------------------------------------------
+/// 201. Bitwise AND of Numbers Range
+/// https://leetcode.com/problems/bitwise-and-of-numbers-range/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// BOOST_AUTO_TEST_CASE(BitwiseANDOfNumbersRangeNaiveLoop)
+// {
+//   // Example 1
+//   int left {5};
+//   int right {7};
+//   int expected_output {4};
+//   BOOST_TEST(
+//     BitwiseANDOfNumbersRange::naive_loop(left, right) == expected_output);
+
+//   // Example 2
+//   left = 0;
+//   right = 0;
+//   expected_output = 0;
+//   BOOST_TEST(
+//     BitwiseANDOfNumbersRange::naive_loop(left, right) == expected_output);
+
+//   // Example 3
+//   // TODO: This test takes too long.
+//   // left = 1;
+//   // right = 2147483647;
+//   // expected_output = 0;
+//   // BOOST_TEST(
+//   //   BitwiseANDOfNumbersRange::naive_loop(left, right) == expected_output);
+
+//   // Case 8067 / 8272
+//   left = 1;
+//   right = 2;
+// }
+
+// //------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------
+// BOOST_AUTO_TEST_CASE(BitwiseANDOfNumbersRangeShiftingBothWorks)
+// {
+//   // Example 1
+//   int left {5};
+//   int right {7};
+//   int expected_output {4};
+//   BOOST_TEST(
+//     BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+
+//   // Example 2
+//   left = 0;
+//   right = 0;
+//   expected_output = 0;
+//   BOOST_TEST(
+//     BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+
+//   // Example 3
+//   // left = 1;
+//   // right = 2147483647;
+//   // expected_output = 0;
+//   // BOOST_TEST(
+//   //   BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+
+//   // Case 8067 / 8272
+//   left = 1;
+//   right = 2;
+// }
+
+// //------------------------------------------------------------------------------
+// //------------------------------------------------------------------------------
+// BOOST_AUTO_TEST_CASE(BitwiseANDOfNumbersRangeCommonMask)
+// {
+//   // Example 1
+//   int left {5};
+//   int right {7};
+//   int expected_output {4};
+//   BOOST_TEST(
+//     BitwiseANDOfNumbersRange::common_mask(left, right) == expected_output);
+
+//   // Example 2
+//   left = 0;
+//   right = 0;
+//   expected_output = 0;
+//   BOOST_TEST(
+//     BitwiseANDOfNumbersRange::common_mask(left, right) == expected_output);
+
+//   // Example 3
+//   // left = 1;
+//   // right = 2147483647;
+//   // expected_output = 0;
+//   // BOOST_TEST(
+//   //   BitwiseANDOfNumbersRange::common_mask(left, right) == expected_output);
+
+//   // Case 8067 / 8272
+//   left = 1;
+//   right = 2;
+// }
 
 // 209. Minimum Size Subarray Sum
 // arrays, sliding window technique, minimum
@@ -1777,6 +1910,28 @@ BOOST_AUTO_TEST_CASE(ComputingLeftAndRightProductsWorks)
 BOOST_AUTO_TEST_SUITE_END() // ProductOfArrayExceptSelf_238_tests
 
 //------------------------------------------------------------------------------
+/// 260. Single Number III
+/// https://leetcode.com/problems/single-number-iii/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SingleNumberIIIGetsSingleNumbers)
+{
+  // Example 1
+  vector<int> nums {1,2,1,3,2,5};
+  unordered_set<int> expected_output {3, 5};
+
+  // Example 2
+  nums = {-1, 0};
+  expected_output = {-1, 0};
+
+  // Example 3
+  nums = {0, 1};
+  expected_output = {1, 0};
+}
+
+//------------------------------------------------------------------------------
 /// 271. String Encode and Decode
 //------------------------------------------------------------------------------
 
@@ -1972,6 +2127,34 @@ BOOST_AUTO_TEST_CASE(CountNumbersWithUniqueDigitsCounts)
 
     BOOST_TEST(result == 739);
   }
+}
+
+//------------------------------------------------------------------------------
+/// 371. Sum of Two Integers
+/// https://leetcode.com/problems/sum-of-two-integers/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SumOfTwoIntgersGetsSum)
+{
+  // Example 1
+  int a {1};
+  int b {2};
+  int expected_output {3};
+  BOOST_TEST(SumOfTwoIntegers::get_sum(a, b) == expected_output);
+
+  // Example 2
+  a = 2;
+  b = 3;
+  expected_output = 5;
+  BOOST_TEST(SumOfTwoIntegers::get_sum(a, b) == expected_output);
+
+  // Case 26
+  a = -1;
+  b = 1;
+  expected_output = 0;
+  BOOST_TEST(SumOfTwoIntegers::get_sum(a, b) == expected_output);
 }
 
 //------------------------------------------------------------------------------

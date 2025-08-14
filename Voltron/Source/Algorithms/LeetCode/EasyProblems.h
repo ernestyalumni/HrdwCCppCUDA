@@ -231,7 +231,6 @@ class PowerOfTwo
     static bool is_power_of_two_and(int n);
 };
 
-
 //------------------------------------------------------------------------------
 /// 242. Valid Anagram
 //------------------------------------------------------------------------------
@@ -240,6 +239,58 @@ class ValidAnagram
   public:
 
     static bool is_anagram(std::string s, std::string t);
+};
+
+//------------------------------------------------------------------------------
+/// 268. Missing Number
+/// https://leetcode.com/problems/missing-number/description/
+//------------------------------------------------------------------------------
+class MissingNumber
+{
+  public:
+
+    static int missing_number_xor(std::vector<int>& nums);
+    static int missing_number_sum_formula(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
+/// 338. Counting Bits
+/// https://leetcode.com/problems/counting-bits/description/
+/// Given an integer n, return an array ans of length n + 1 such that for each
+/// i (0 <= i <= n), ans[[i] is the number of 1's in the binary representation
+/// of i.
+//------------------------------------------------------------------------------
+class CountingBits
+{
+  public:
+
+    static std::vector<int> count_bits_memoization(int n);
+};
+
+//------------------------------------------------------------------------------
+/// 405. Convert a Number to Hexadecimal
+/// https://leetcode.com/problems/convert-a-number-to-hexadecimal/description/
+/// Given a 32-bit integer num, return a string representing its hexadecimal
+/// representation. For negative integers, two's complement method is used.
+//------------------------------------------------------------------------------
+class ConvertToHexadecimal
+{
+  public:
+
+    static std::string to_hex(int num);
+};
+
+//------------------------------------------------------------------------------
+/// 461. Hamming Distance
+/// https://leetcode.com/problems/hamming-distance/description/
+/// The Hamming distance between 2 integers is the number of positions at which
+/// the corresponding bits are different.
+//------------------------------------------------------------------------------
+class HammingDistance
+{
+  public:
+
+    static int hamming_distance(int x, int y);
 };
 
 //------------------------------------------------------------------------------

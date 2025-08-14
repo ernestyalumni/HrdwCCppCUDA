@@ -2,12 +2,10 @@
 
 #include "DataStructures/BinaryTrees.h"
 
-#include <iostream>
-
-
 #include <algorithm> // std::max
 #include <array>
 #include <cmath>
+#include <cstdint>
 #include <functional>
 #include <limits.h> // INT_MIN
 #include <map>
@@ -828,6 +826,193 @@ bool ValidAnagram::is_anagram(string s, string t)
   }
 
   return true;
+}
+
+//------------------------------------------------------------------------------
+/// 268. Missing Number
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/// Use the fact that xor is a group operation on 32-bit integers and group
+/// property of self-inverse, a ^ a = 0, so that
+/// 0 ^ 1 ^ 2 ^ ... ^ n ^ a_1 ^ a_2 ^ ... ^ a_n = a_{n-1} where a_{n-1} is the
+/// missing number, while each other number pairs up with a number in the full
+/// [0, n] range.
+//------------------------------------------------------------------------------
+int MissingNumber::missing_number_xor(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+
+  int result {0};
+
+  for (int i {0}; i <= N; ++i)
+  {
+    result ^= i;
+    result ^= (i < N ? nums[i] : 0);
+  }
+
+  return result;
+}
+
+//------------------------------------------------------------------------------
+/// Use the sum formula, N (N + 1) / 2 for 1 + 2 + ... + N
+//------------------------------------------------------------------------------
+int MissingNumber::missing_number_sum_formula(vector<int>& nums)
+{
+  const int N {static_cast<int>(nums.size())};
+  const int expected_sum {N * (N + 1) / 2};
+
+  int result {expected_sum};
+
+  for (const auto num : nums)
+  {
+    result -= num;
+  }
+
+  return result;
+}
+
+//------------------------------------------------------------------------------
+/// 338. Counting Bits
+/// https://leetcode.com/problems/counting-bits/description/
+//------------------------------------------------------------------------------
+vector<int> CountingBits::count_bits_memoization(int n)
+{
+  vector<int> one_bits_per_index (n + 1);
+
+  one_bits_per_index[0] = 0;
+  if (n == 0)
+  {
+    return one_bits_per_index;
+  }
+  else if (n >= 1)
+  {
+    one_bits_per_index[1] = 1;
+    if (n == 1)
+    {
+      return one_bits_per_index;
+    }
+  }
+
+  for (int i {2}; i < (n + 1); ++i)
+  {
+    int count {0};
+    int target_number {i};
+    target_number &= (target_number - 1);
+    count++;
+    if (target_number == 0)
+    {
+      one_bits_per_index[i] = count;
+      continue;
+    }
+
+    for (int j {i - 1}; j >= 0; --j)
+    {
+      if (target_number == j)
+      {
+        count += one_bits_per_index[j];
+        one_bits_per_index[i] = count;
+        continue;
+      }
+    }
+  }
+
+  return one_bits_per_index;
+}
+
+//------------------------------------------------------------------------------
+/// 405. Convert a Number to Hexadecimal
+/// A hexadecimal "digit", from 0,1,...f, is 16 values, represented by 4 bits,
+/// since 2^4=16. We can directly obtain each 4 bits of a 32 bit number by a
+/// mask.
+//------------------------------------------------------------------------------
+string ConvertToHexadecimal::to_hex(int num)
+{
+  if (num == 0)
+  {
+    return "0";
+  }
+  static const string index_to_char {"0123456789abcdef"};
+  const uint32_t unsigned_number {static_cast<uint32_t>(num)};
+
+  // In the direction of msb (most significant bit) to lsb (least significant
+  // bit), we can track when the first nonzero value is obtained.
+  bool is_started {false};
+
+  string result {""};
+
+  for (int k {28}; k >= 0; k -= 4)
+  {
+    uint32_t masked_value {unsigned_number & (0xf << k)};
+    masked_value >>= k;
+
+    if (!is_started)
+    {
+      if (masked_value != 0)
+      {
+        is_started = true;
+        result += index_to_char[masked_value];
+      }
+    }
+    else
+    {
+      result += index_to_char[masked_value];
+    }
+  }
+
+  return result;
+
+  // static constexpr int DIVISOR {16};
+  // static constexpr int STRING_LENGTH_32BIT {8};
+
+  // array<char, DIVISOR> index_to_char {
+  //   {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}
+  // };
+
+  // if (num == 0)
+  // {
+  //   return "0";
+  // }
+  // if (num > 0)
+  // {
+  //   array<char, STRING_LENGTH_32BIT> base_16 {};
+  //   int index {0};
+  //   while ((num > 0) or (index < STRING_LENGTH_32BIT))
+  //   {
+  //     const int remainder {num % DIVISOR};
+  //     const int factor {num / DIVISOR};
+  //     base_16[index] = index_to_char[remainder];
+  //     num = factor;
+  //     index++;
+  //   }
+
+  //   string result {""};
+  //   for (int i {STRING_LENGTH_32BIT - 1}; i >= 0; --i)
+  //   {
+  //     if (base_16[i] != '0')
+  //     {
+  //       result 
+  //     }
+  //   }
+  // }
+}
+
+
+//------------------------------------------------------------------------------
+/// 461. Hamming Distance
+//------------------------------------------------------------------------------
+int HammingDistance::hamming_distance(int x, int y)
+{
+  int z {x ^ y};
+  int count {0};
+  while (z > 0)
+  {
+    // Zero out right-most bit, lsb, leaving next lsb.
+    z &= (z - 1);
+    count++;
+  }
+
+  return count;
 }
 
 //------------------------------------------------------------------------------

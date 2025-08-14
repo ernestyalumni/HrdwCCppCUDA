@@ -371,6 +371,20 @@ class LongestConsecutiveSequence
 };
 
 //------------------------------------------------------------------------------
+/// 137. Single Number II
+/// https://leetcode.com/problems/single-number-ii/description/
+/// Given an integer array nums where every element appears 3 times except for
+/// one, which appears exactly once. Find single element and return it.
+//------------------------------------------------------------------------------
+class SingleNumberII
+{
+  public:
+
+    static int single_number_count_per_bit(std::vector<int>& nums);
+    static int single_number_track_seen(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 
@@ -478,6 +492,22 @@ class NumberOfIslands
 };
 
 //------------------------------------------------------------------------------
+/// 201. Bitwise AND of Numbers Range
+/// https://leetcode.com/problems/bitwise-and-of-numbers-range/description/
+/// Given 2 integers left and right that represent the range [left, right],
+/// return bitwise AND of all numbers in this range, inclusive.
+//------------------------------------------------------------------------------
+class BitwiseANDOfNumbersRange
+{
+  public:
+
+    static int naive_loop(int left, int right);
+
+    static int range_bitwise_and(int left, int right);
+    static int common_mask(int left, int right);
+};
+
+//------------------------------------------------------------------------------
 /// \name 209. Minimum Size Subarray Sum
 /// We're given an array of positive integers (that are non-zero).
 /// A subarray is a contiguous non-empty sequence of elements within an array.
@@ -574,6 +604,20 @@ class ProductOfArrayExceptSelf
 };
 
 //------------------------------------------------------------------------------
+/// 260. Single Number III
+/// https://leetcode.com/problems/single-number-iii/description/
+/// Given an integer array nums, in which exactly 2 elements appear only once
+/// and all other elements appear exactly twice. Find the 2 elements that appear
+/// only once.
+//------------------------------------------------------------------------------
+class SingleNumberIII
+{
+  public:
+
+    std::vector<int> single_number(std::vector<int>& nums);
+};
+
+//------------------------------------------------------------------------------
 /// 271. String Encode and Decode
 /// https://neetcode.io/problems/string-encode-and-decode
 /// https://leetcode.com/problems/encode-and-decode-strings/description/
@@ -632,6 +676,17 @@ class CountNumbersWithUniqueDigits
   public:
 
     static int count_numbers_with_unique_digits(int n);
+};
+
+//------------------------------------------------------------------------------
+/// 371. Sum of Two Integers
+/// https://leetcode.com/problems/sum-of-two-integers/description/
+//------------------------------------------------------------------------------
+class SumOfTwoIntegers
+{
+  public:
+
+    static int get_sum(int a, int b);
 };
 
 //------------------------------------------------------------------------------

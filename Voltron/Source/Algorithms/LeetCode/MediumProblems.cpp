@@ -6,6 +6,7 @@
 #include <array>
 #include <climits> // INT_MIN
 #include <cstddef> // std::size_t
+#include <cstdint>
 #include <functional>
 #include <iomanip> // std::setfill, std::setw
 #include <limits.h>
@@ -1490,6 +1491,64 @@ int LongestConsecutiveSequence::longest_consecutive_with_set(vector<int>& nums)
 }
 
 //------------------------------------------------------------------------------
+/// 137. Single Number II
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+/// For each bit, if an element appears 3 times, the ith bit with have a sum of
+/// 3. 3 % 3 = 0. But for one element, appearing exactly once, ith bit could
+/// possibly be only once. After modulo 3 arithmetic on sum, reconstitute the
+/// bits. 
+//------------------------------------------------------------------------------
+int SingleNumberII::single_number_count_per_bit(vector<int>& nums)
+{
+  // Use the 32 bits to store bit values.
+  uint32_t result {0};
+
+  static constexpr int NUMBER_OF_BITS {32};
+  for (int i {0}; i < NUMBER_OF_BITS; ++i)
+  {
+    const uint32_t mask {1u << i};
+
+    int ith_count {0};
+
+    for (const auto num : nums)
+    {
+      const uint32_t value {(num & mask) >> i};
+      ith_count += value;
+    }
+
+    const int ith_value {ith_count % 3};
+    if (ith_value == 1)
+    {
+      result |= (1u << i);
+    }
+  }
+
+  return static_cast<int>(result);
+}
+
+//------------------------------------------------------------------------------
+/// Take advantage of XOR's property for self-inverse. For number n, if seen the
+/// first time, then XOR into some number a, a ^ n. If seen a second time, then
+/// XOR into some number b, b ^ n, while for a, (n ^ n) = 0. Observe that we can
+/// exclude numbers in b from a and vice versa, by bitwise and & and complement.
+//------------------------------------------------------------------------------
+int SingleNumberII::single_number_track_seen(vector<int>& nums)
+{
+  int first_seen {0};
+  int second_seen {0};
+
+  for (const auto num : nums)
+  {
+    (first_seen ^= num) &= (~second_seen);
+    (second_seen ^= num) &= (~first_seen);
+  }
+
+  return first_seen;
+}
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 int MaximumProductSubarray::max_product(vector<int>& nums)
@@ -1801,6 +1860,69 @@ int MinimumSizeSubarraySum::minimum_subarray_length(
 }
 
 //------------------------------------------------------------------------------
+/// 201. Bitwise AND of Numbers Range
+//------------------------------------------------------------------------------
+
+int BitwiseANDOfNumbersRange::naive_loop(int left, int right)
+{
+  if (left == right)
+  {
+    return left;
+  }
+
+  const int increment {right > left ? 1 : -1};
+
+  int result {left};
+
+  // O(n) time complexity.
+  for (int k {left + increment}; k != right; k += increment)
+  {
+    result &= k;
+  }
+
+  result &= right;
+
+  return result;
+}
+
+//------------------------------------------------------------------------------
+/// Key insight: because of the numbers in between left, and right, which toggle
+/// between 0 and 1 in bits lower than the msb's (most significant bit) common
+/// to both left and right, we need to just get those common bits.
+/// e.g. 5 (101), 7 (111)
+/// We want to get the msb's that are common to both left and right, the common
+/// and highest prefix.
+//------------------------------------------------------------------------------
+int BitwiseANDOfNumbersRange::range_bitwise_and(int left, int right)
+{
+  // Continue to shift left and right down until they are equal and then restore
+  // the original value.
+  int shift {0};
+  while (left != right)
+  {
+    left >> 1u;
+    right >> 1u;
+    shift++;
+  }
+
+  return left << shift;
+}
+
+int BitwiseANDOfNumbersRange::common_mask(int left, int right)
+{
+  // In bits, this is 11..1.
+  uint32_t mask {~0u};
+
+  // Stop condition is 0 = 0.
+  while ((left & mask) != (right & mask))
+  {
+    mask << 1u;
+  }
+
+  return (left & mask);
+}
+
+//------------------------------------------------------------------------------
 /// 215. Kth Largest Element in an Array
 //------------------------------------------------------------------------------
 
@@ -2083,6 +2205,21 @@ vector<int> ProductOfArrayExceptSelf::product_except_self(vector<int>& nums)
   }
 
   return products;
+}
+
+//------------------------------------------------------------------------------
+/// 260. Single Number III
+/// https://leetcode.com/problems/single-number-iii/description/
+/// Recall XOR (^) operator and its group properties,
+/// self-inverse, associativity, commutativity, 0 identity.
+/// e.g. 1,1,3,5. 3=11, 5=101 (bit values, respectively). 3^5=(110)
+/// Once you have 
+//------------------------------------------------------------------------------
+vector<int> SingleNumberIII::as_32_bits(vector<int>& nums)
+{
+  static constexpr int NUMBER_OF_BITS {32};
+  array<int, NUMBER_OF_BITS> bit_count {};
+
 }
 
 //------------------------------------------------------------------------------
@@ -2406,6 +2543,40 @@ int CountNumbersWithUniqueDigits::count_numbers_with_unique_digits(int n)
 
   return number_of_numbers.at(n);
 }
+
+//------------------------------------------------------------------------------
+/// 371. Sum of Two Integers
+/// XOR, since 0^0=1^1=0, and 0^1=1^0=1, XOR immediately gives the bits of the
+/// resulting sum, but not any carry.
+/// Key insight: & (and) finds where carry bits should be generated; only 1&1=1.
+//------------------------------------------------------------------------------
+
+int SumOfTwoIntegers::get_sum(int a, int b)
+{
+  // Example 2 + 3 = 5. 1,0 + 1,1 \equiv 10 + 11.
+  // carry: 10. sum: 01. carry <<= 1 = 100. sum ^= carry = 101.
+
+  // Has a 1 bit where the next "left" or next higher bit should have a carry.
+  int carry {a & b};
+
+  carry <<= 1;
+
+  // Has bit values if there was no carry.
+  int sum {a ^ b};
+
+  // If an integer is overly negative, the carry can be negative as well, not
+  // necessarily strictly positive.
+  while (carry != 0)
+  {
+    const int previous_sum {sum};
+    sum ^= carry;
+    carry &= previous_sum;
+    carry <<= 1;
+  }
+
+  return sum;
+}
+
 
 //------------------------------------------------------------------------------
 /// 378. Kth Smallest Element in a Sorted Matrix
