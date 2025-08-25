@@ -6,6 +6,7 @@ SET_TARGET_PROPERTIES(DaysOld
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/")
 
 ADD_LIBRARY(QuestionsDEntrevue
+  CameraCSIDataParser.cpp
   LeetCode/LeetCodeQuestions.cpp
   PageFaults.cpp
   PassionneDordinateurRang.cpp)

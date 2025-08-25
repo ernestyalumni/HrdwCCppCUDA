@@ -2215,11 +2215,12 @@ vector<int> ProductOfArrayExceptSelf::product_except_self(vector<int>& nums)
 /// e.g. 1,1,3,5. 3=11, 5=101 (bit values, respectively). 3^5=(110)
 /// Once you have 
 //------------------------------------------------------------------------------
-vector<int> SingleNumberIII::as_32_bits(vector<int>& nums)
+vector<int> SingleNumberIII::single_number(vector<int>& nums)
 {
   static constexpr int NUMBER_OF_BITS {32};
   array<int, NUMBER_OF_BITS> bit_count {};
 
+  return {};
 }
 
 //------------------------------------------------------------------------------

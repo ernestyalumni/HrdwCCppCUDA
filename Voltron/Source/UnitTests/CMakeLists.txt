@@ -157,6 +157,7 @@ ADD_EXECUTABLE(Check
   DataStructures/Trees/Trie_tests.cpp
   DataStructures/Vector_tests.cpp
   DeskCalculator/Token_tests.cpp
+  Entrevue/CameraCSIDataParser_tests.cpp
   Entrevue/Entrevue_tests.cpp
   Entrevue/LeetCode/LeetCode_tests.cpp
   Entrevue/MiscellaneousQuestions_tests.cpp
