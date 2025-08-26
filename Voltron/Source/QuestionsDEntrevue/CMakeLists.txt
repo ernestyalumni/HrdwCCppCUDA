@@ -9,5 +9,7 @@ ADD_LIBRARY(QuestionsDEntrevue
   CameraCSIDataParser.cpp
   LeetCode/LeetCodeQuestions.cpp
   PageFaults.cpp
-  PassionneDordinateurRang.cpp)
+  PassionneDordinateurRang.cpp
+  Streams/FireAlertParser.cpp
+  TirePressureSensor.cpp)
 
