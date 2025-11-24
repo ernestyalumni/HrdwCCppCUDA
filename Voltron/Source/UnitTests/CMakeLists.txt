@@ -36,6 +36,7 @@ ADD_EXECUTABLE(Check
   Algorithms/PeakFinding/LoadPeakProblem_tests.cpp
   Algorithms/PeakFinding_tests.cpp
   Algorithms/Permutations_tests.cpp
+  Algorithms/PreEasyExercises_tests.cpp
   Algorithms/Recursion_tests.cpp
   Algorithms/Search_tests.cpp
   Algorithms/Sorting/InsertionSort_tests.cpp

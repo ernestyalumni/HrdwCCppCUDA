@@ -9,6 +9,7 @@
 
 #include <cstddef> // std::size_t, std::byte
 #include <cstdio> // printf
+#include <cstdint> // uint16_t
 #include <string>
 
 namespace Utilities
