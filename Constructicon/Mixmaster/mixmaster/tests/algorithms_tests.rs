@@ -1,1 +1,1 @@
-pub mod leetcode_tests;
+#[path = "algorithms_tests/leetcode_tests.rs"] pub mod leetcode_tests;

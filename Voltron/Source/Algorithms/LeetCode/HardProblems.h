@@ -74,6 +74,25 @@ class SlidingWindowMaximum
 };
 
 //------------------------------------------------------------------------------
+/// 295. Find Median from Data Stream
+/// https://leetcode.com/problems/find-median-from-data-stream/description/
+/// https://neetcode.io/problems/find-median-in-a-data-stream?list=blind75
+/// Heap / Priority Queue
+//------------------------------------------------------------------------------
+class MedianFinder
+{
+  public:
+
+    MedianFinder()
+    {}
+
+    void add_num(int num);
+
+    double find_median();
+};
+
+
+//------------------------------------------------------------------------------
 /// 1293. Shortest Path in a Grid with Obstacles Elimination
 //------------------------------------------------------------------------------
 class ShortestPathInGridWithObstacles
