@@ -3,6 +3,8 @@
 
 #include <concepts> // std::integral
 #include <iostream>
+#include <limits> // std::numeric_limits
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 
@@ -270,35 +272,137 @@ class ArrayIndexing
     //--------------------------------------------------------------------------
     /// 8. Traverse the Perimeter of a Matrix
     /// Print the elements along the outer edge (perimeter) of a 2D array.
+    ///
+    /// std::ranges::range_value_t<OuterContainer>> extracts value type of
+    /// OuterContainer. So e.g. for vector<vector<int>>, it extracts vector<int>
+    /// requires std::ranges::random_access_range<
+    ///   std::ranges::range_value_t<OuterContainer>>
+    /// ensures that each row supports random access (e.g. array[i])
+    /// For vector<vector<int>>, ranges::range_value_t<OuterContainer> is
+    /// vector<int> and requires then checks random_access_range<vector<int>>,
+    /// which is true.
     //--------------------------------------------------------------------------
-    template <typename Container, typename T>
-    static std::vector<T> traverse_perimeter(
-      const Container& array,
+
+    template <std::ranges::random_access_range OuterContainer>
+      requires std::ranges::random_access_range<
+        std::ranges::range_value_t<OuterContainer>>
+    static std::vector<std::ranges::range_value_t<std::ranges::range_value_t<
+      OuterContainer>>> traverse_perimeter(
+      const OuterContainer& array,
       const bool is_print = false)
     {
-      std::vector<T> result {};
+      using ElementType = std::ranges::range_value_t<
+        std::ranges::range_value_t<OuterContainer>>;
+      std::vector<ElementType> result {};
+
       const int M {static_cast<int>(std::ranges::size(array))};
       if (M == 0)
       {
         return result;
       }
 
-      const int N {static_cast<int>(std::ranges::size(array[0]))};
-      int m_up {0};
-      int m_down {M - 1};
-      int n_left {0};
-      int n_right {N - 1};
-
-      auto is_traverse_complete =
-        [](int m_up, int m_down, int n_left, int n_right) -> bool
+      for (const auto& element : array[0])
+      {
+        result.push_back(element);
+        if (is_print)
         {
-          return m_up > m_down || n_left > n_right;
-        };
+          std::cout << element << ' ';
+        }
+      }
+
+      if (M == 1)
+      {
+        return result;
+      }
+
+      const int N {static_cast<int>(std::ranges::size(array[0]))};
+
+      for (std::size_t i {1}; i < M; ++i)
+      {
+        result.push_back(array[i][N - 1]);
+        if (is_print)
+        {
+          std::cout << array[i][N - 1] << ' ';
+        }
+      }
+
+      if (N == 1)
+      {
+        return result;
+      }
+
+      for (int j {static_cast<int>(N - 2)}; j >= 0; --j)
+      {
+        result.push_back(array[M - 1][j]);
+        if (is_print)
+        {
+          std::cout << array[M - 1][j] << ' ';
+        }
+      }
+
+      for (int i {static_cast<int>(M - 2)}; i >= 1; --i)
+      {
+        result.push_back(array[i][0]);
+        if (is_print)
+        {
+          std::cout << array[i][0] << ' ';
+        }
+      }
+
+      return result;
+    }
+
+    //--------------------------------------------------------------------------
+    /// 9. Traverse Elements in Spiral Order
+    /// Print elements of a 2D array in spiral order, starting from the top-left
+    /// corner and moving inward.
+    //--------------------------------------------------------------------------
+    template <std::ranges::random_access_range OuterContainer>
+      requires std::ranges::random_access_range<
+        std::ranges::range_value_t<OuterContainer>>
+    static std::vector<std::ranges::range_value_t<std::ranges::range_value_t<
+      OuterContainer>>> traverse_spiral_clockwise(
+      const OuterContainer& array,
+      const bool is_print = false)
+    {
+      using ElementType = std::ranges::range_value_t<
+        std::ranges::range_value_t<OuterContainer>>;
+      std::vector<ElementType> result {};
+
+      const auto M = std::ranges::size(array);
+      if (M == 0)
+      {
+        return result;
+      }
+
+      const auto N = std::ranges::size(array[0]);
+      if (N == 0)
+      {
+        return result;
+      }
+
+      std::size_t m_up {0};
+      std::size_t m_down {M - 1};
+      std::size_t n_left {0};
+      std::size_t n_right {N - 1};
+
+      auto is_traverse_complete = 
+        [](
+          const std::size_t m_up,
+          const std::size_t m_down,
+          const std::size_t n_left,
+          const std::size_t n_right) -> bool
+      {
+        return m_up > m_down || n_left > n_right;
+      };
 
       while (!is_traverse_complete(m_up, m_down, n_left, n_right))
       {
-        // Traverse top row, stopping before "right" column.
-        for (int j {n_left}; j < n_right; ++j)
+        // Initially, we'll get all of the top row. And then in subsequent
+        // traversals, we'll start from the "second" element in given row or
+        // column.
+        // Traverse top row.
+        for (std::size_t j {n_left}; j <= n_right; ++j)
         {
           result.push_back(array[m_up][j]);
           if (is_print)
@@ -308,8 +412,13 @@ class ArrayIndexing
         }
         ++m_up;
 
-        // Traverse right column, stopping before "down" row.
-        for (int i {m_up}; i < m_down; ++i)
+        if (is_traverse_complete(m_up, m_down, n_left, n_right))
+        {
+          break;
+        }
+
+        // Traverse right column.
+        for (std::size_t i {m_up}; i <= m_down; ++i)
         {
           result.push_back(array[i][n_right]);
           if (is_print)
@@ -317,13 +426,238 @@ class ArrayIndexing
             std::cout << array[i][n_right] << ' ';
           }
         }
+        --n_right;
+
+        if (is_traverse_complete(m_up, m_down, n_left, n_right))
+        {
+          break;
+        }
+
+        // Traverse bottom row.
+        // Shift by +1 on the j index since std::size_t is unsigned.
+        for (std::size_t j {n_right + 1}; j >= n_left + 1; --j)
+        {
+          result.push_back(array[m_down][j - 1]);
+          if (is_print)
+          {
+            std::cout << array[m_down][j - 1] << ' ';
+          }
+        }
+        --m_down;
+
+        if (is_traverse_complete(m_up, m_down, n_left, n_right))
+        {
+          break;
+        }
+
+        // Traverse left column.
+        for (std::size_t i {m_down}; i >= m_up; --i)
+        {
+          result.push_back(array[i][n_left]);
+          if (is_print)
+          {
+            std::cout << array[i][n_left] << ' ';
+          }
+        }
+
+        ++n_left;
       }
 
+      return result;
     }
+
+    //--------------------------------------------------------------------------
+    /// 10. Traverse the Lower Triangle of a Matrix
+    /// Print the elements below and including the main diagonal of a square matrix.
+    //--------------------------------------------------------------------------
+    template <std::ranges::random_access_range OuterContainer>
+      requires std::ranges::random_access_range<
+        std::ranges::range_value_t<OuterContainer>>
+    static std::vector<std::ranges::range_value_t<std::ranges::range_value_t<
+      OuterContainer>>> traverse_lower_triangle(
+      const OuterContainer& array,
+      const bool is_print = false)
+    {
+      using ElementType = std::ranges::range_value_t<
+        std::ranges::range_value_t<OuterContainer>>;
+      std::vector<ElementType> result {};
+
+      const auto M = std::ranges::size(array);
+      if (M == 0)
+      {
+        return result;
+      }
+
+      const auto N = std::ranges::size(array[0]);
+      if (N == 0)
+      {
+        return result;
+      }
+
+      for (std::size_t i {0}; i < M; ++i)
+      {
+        for (std::size_t j {0}; j <= i; ++j)  
+        {
+          result.push_back(array[i][j]);
+          if (is_print)
+          {
+            std::cout << array[i][j] << ' ';
+          }
+        }
+      }
+      return result;
+    }
+};
+
+//------------------------------------------------------------------------------
+/// https://blog.faangshui.com/p/before-leetcode
+/// 2. Accumulator Variables
+/// Learn how to keep track of values during iteration. 
+//------------------------------------------------------------------------------
+class AccumulatorVariables
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// 1. Calculate the Sum of an Array
+    /// Write a function that calculates the sum of all elements in an array by
+    /// accumulating the total as you iterate.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static auto calculate_sum(const Container& array)
+      requires std::integral<std::ranges::range_value_t<Container>>
+    {
+      auto sum = 0;
+      for (const auto& element : array)
+      {
+        sum += element;
+      }
+
+      return sum;
+    }
+
+    //--------------------------------------------------------------------------
+    /// 2. Find the Minimum and Maximum Elements
+    /// Find the smallest and largest numbers in an array by updating minimum
+    /// and maximum variables during iteration.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::tuple<
+     std::ranges::range_value_t<Container>,
+     std::ranges::range_value_t<Container>> find_min_max(const Container& array)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+      auto min_value {std::numeric_limits<ElementType>::max()};
+      auto max_value {std::numeric_limits<ElementType>::min()};
+
+      for (const auto& element : array)
+      {
+        if (element < min_value)
+        {
+          min_value = element;
+        }
+        if (element > max_value)
+        {
+          max_value = element;
+        }
+      }
+      return std::make_tuple(min_value, max_value);
+    }
+
+    //--------------------------------------------------------------------------
+    /// 3. Find the Indices of the Min and Max Elements
+    /// In addition to finding the min and max values, keep track of their
+    /// positions (indices) in the array.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::tuple<int, int> find_min_max_indices(const Container& array)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+      auto min_value {std::numeric_limits<ElementType>::max()};
+      auto max_value {std::numeric_limits<ElementType>::min()};
+      int min_index {-1};
+      int max_index {-1};
+
+      int index {0};
+      for (const auto& element : array)
+      {
+        if (element < min_value)
+        {
+          min_value = element;
+          min_index = index;
+        }
+        if (element > max_value)
+        {
+          max_value = element;
+          max_index = index;
+        }
+        ++index;
+      }
+      return std::make_tuple(min_index, max_index);
+    }
+
+    //--------------------------------------------------------------------------
+    /// 4. Find the Two Smallest/Largest Elements Without Sorting
+    /// Modify your approach to keep track of the two smallest and two largest
+    /// elements during a single pass through the array.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::tuple<int, int, int, int> find_two_min_max_indices(
+      const Container& array)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+      auto min_value {std::numeric_limits<ElementType>::max()};
+      auto max_value {std::numeric_limits<ElementType>::min()};
+      auto min_value_2 {std::numeric_limits<ElementType>::max()};
+      auto max_value_2 {std::numeric_limits<ElementType>::min()};
+      auto min_index {-1};
+      auto max_index {-1};
+      auto min_index_2 {-1};
+      auto max_index_2 {-1};
+
+      int index {0};
+      for (const auto& element : array)
+      {
+        if (element < min_value)
+        {
+          min_value_2 = min_value;
+          min_index_2 = min_index;
+          min_value = element;
+          min_index = index;
+        }
+        else if (element < min_value_2)
+        {
+          min_value_2 = element;
+          min_index_2 = index;
+        }
+
+        if (element > max_value)
+        {
+          max_value_2 = max_value;
+          max_index_2 = max_index;
+          max_value = element;
+          max_index = index;
+        }
+        else if (element > max_value_2)
+        {
+          max_value_2 = element;
+          max_index_2 = index;
+        }
+
+        ++index;
+      }
+      return std::make_tuple(min_index, min_index_2, max_index, max_index_2);
+    }
+
+    //--------------------------------------------------------------------------
+    /// 5. Count Occurrences of a Specific Element
+    /// Count how many times a given element appears in the array by
+    /// incrementing a counter whenever you encounter it.
+    //--------------------------------------------------------------------------
+
 
 };
 
 } // namespace PreEasyExercises
 } // namespace Algorithms
-
 #endif // ALGORITHMS_PRE_EASY_EXERCISES_H
