@@ -1437,36 +1437,40 @@ BOOST_AUTO_TEST_SUITE_END() // NumberOfIslands_200_tests
 //   right = 2;
 // }
 
-// //------------------------------------------------------------------------------
-// //------------------------------------------------------------------------------
-// BOOST_AUTO_TEST_CASE(BitwiseANDOfNumbersRangeShiftingBothWorks)
-// {
-//   // Example 1
-//   int left {5};
-//   int right {7};
-//   int expected_output {4};
-//   BOOST_TEST(
-//     BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(BitwiseANDOfNumbersRangeShiftingBothWorks)
+{
+  // Example 1
+  int left {5};
+  int right {7};
+  int expected_output {4};
+  BOOST_TEST(
+    BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
 
-//   // Example 2
-//   left = 0;
-//   right = 0;
-//   expected_output = 0;
-//   BOOST_TEST(
-//     BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+  // Example 2
+  left = 0;
+  right = 0;
+  expected_output = 0;
+  BOOST_TEST(
+    BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
 
-//   // Example 3
-//   // left = 1;
-//   // right = 2147483647;
-//   // expected_output = 0;
-//   // BOOST_TEST(
-//   //   BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+  //Example 3
+  left = 1;
+  right = 2147483647;
+  expected_output = 0;
+  BOOST_TEST(
+    BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
 
-//   // Case 8067 / 8272
-//   left = 1;
-//   right = 2;
-// }
+  // Case 8067 / 8272
+  left = 1;
+  right = 2;
+  expected_output = 0;
+  BOOST_TEST(
+    BitwiseANDOfNumbersRange::range_bitwise_and(left, right) == expected_output);
+}
 
+// TODO: Unit test takes too long.
 // //------------------------------------------------------------------------------
 // //------------------------------------------------------------------------------
 // BOOST_AUTO_TEST_CASE(BitwiseANDOfNumbersRangeCommonMask)
@@ -1922,13 +1926,25 @@ BOOST_AUTO_TEST_CASE(SingleNumberIIIGetsSingleNumbers)
   vector<int> nums {1,2,1,3,2,5};
   unordered_set<int> expected_output {3, 5};
 
+  auto output {SingleNumberIII::single_number(nums)};
+  unordered_set<int> set_output(output.begin(), output.end());
+  BOOST_TEST(set_output == expected_output);
+
   // Example 2
   nums = {-1, 0};
   expected_output = {-1, 0};
 
+  output = SingleNumberIII::single_number(nums);
+  set_output = unordered_set<int>{output.begin(), output.end()};
+  BOOST_TEST(set_output == expected_output);
+
   // Example 3
   nums = {0, 1};
   expected_output = {1, 0};
+
+  output = SingleNumberIII::single_number(nums);
+  set_output = unordered_set<int>{output.begin(), output.end()};
+  BOOST_TEST(set_output == expected_output);
 }
 
 //------------------------------------------------------------------------------

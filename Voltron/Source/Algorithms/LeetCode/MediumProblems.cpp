@@ -1863,6 +1863,7 @@ int MinimumSizeSubarraySum::minimum_subarray_length(
 /// 201. Bitwise AND of Numbers Range
 //------------------------------------------------------------------------------
 
+// TODO: Unit test takes too long.
 int BitwiseANDOfNumbersRange::naive_loop(int left, int right)
 {
   if (left == right)
@@ -1898,16 +1899,18 @@ int BitwiseANDOfNumbersRange::range_bitwise_and(int left, int right)
   // Continue to shift left and right down until they are equal and then restore
   // the original value.
   int shift {0};
+  // O(log(n)) complexity, since shifting divides number by power of 2.
   while (left != right)
   {
-    left >> 1u;
-    right >> 1u;
+    left >>= 1;
+    right >>= 1;
     shift++;
   }
 
   return left << shift;
 }
 
+// TODO: Unit test takes too long.
 int BitwiseANDOfNumbersRange::common_mask(int left, int right)
 {
   // In bits, this is 11..1.
@@ -1916,7 +1919,7 @@ int BitwiseANDOfNumbersRange::common_mask(int left, int right)
   // Stop condition is 0 = 0.
   while ((left & mask) != (right & mask))
   {
-    mask << 1u;
+    mask << 1;
   }
 
   return (left & mask);
@@ -2213,14 +2216,38 @@ vector<int> ProductOfArrayExceptSelf::product_except_self(vector<int>& nums)
 /// Recall XOR (^) operator and its group properties,
 /// self-inverse, associativity, commutativity, 0 identity.
 /// e.g. 1,1,3,5. 3=11, 5=101 (bit values, respectively). 3^5=(110)
-/// Once you have 
+/// Once you have the 2 unique values XOR'ed x^y, recall 0^1=1^0=1 and 0
+/// otherwise. Use a single 1 bit of x^y to distinguish x from y.
 //------------------------------------------------------------------------------
 vector<int> SingleNumberIII::single_number(vector<int>& nums)
 {
-  static constexpr int NUMBER_OF_BITS {32};
-  array<int, NUMBER_OF_BITS> bit_count {};
+  int xor_all {0};
+  for (const auto num : nums)
+  {
+    xor_all ^= num;
+  }
+  // Now xor_all is x^y. Separate by a differing bit; let's just choose the
+  // rightmost bit.
+  // Recall, by 2's complement, -xor_all will be the complement and +1. The +1
+  // will create a carry of 1 up until the rightmost bit.
+  const int mask {xor_all & (-xor_all)};
 
-  return {};
+  int x {0};
+  int y {0};
+  for (const auto num : nums)
+  {
+    // We XOR each to cancel pairs.
+    if (num & mask)
+    {
+      x ^= num;
+    }
+    else
+    {
+      y ^= num;
+    }
+  }
+
+  return {x, y};
 }
 
 //------------------------------------------------------------------------------

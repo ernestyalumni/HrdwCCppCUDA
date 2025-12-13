@@ -614,7 +614,7 @@ class SingleNumberIII
 {
   public:
 
-    std::vector<int> single_number(std::vector<int>& nums);
+    static std::vector<int> single_number(std::vector<int>& nums);
 };
 
 //------------------------------------------------------------------------------
