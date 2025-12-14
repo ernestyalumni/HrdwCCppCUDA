@@ -16,7 +16,7 @@
  * sufficiently crowdfunded, under the open-source MIT license: 
  * 	feel free to copy, edit, paste, make your own versions, share, use as you wish.    
  * Peace out, never give up! -EY
- * 
+ *
  * */
 #include <iostream> 
 

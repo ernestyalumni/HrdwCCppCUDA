@@ -2,7 +2,9 @@
 #define ALGORITHMS_PRE_EASY_EXERCISES_H
 
 #include <concepts> // std::integral
+#include <cstdint>
 #include <iostream>
+#include <iterator> // std::next, std::prev
 #include <limits> // std::numeric_limits
 #include <tuple>
 #include <unordered_map>
@@ -654,7 +656,596 @@ class AccumulatorVariables
     /// Count how many times a given element appears in the array by
     /// incrementing a counter whenever you encounter it.
     //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static int count_occurrences(
+      const Container& array,
+      const typename std::ranges::range_value_t<Container> target)
+    {
+      int count {0};
+      for (const auto& element : array)
+      {
+        if (element == target)
+        {
+          ++count;
+        }
+      }
+      return count;
+    }
 
+    //--------------------------------------------------------------------------
+    /// 6. Count Occurrences of All Elements
+    /// Use a dictionary or map to count the number of times each unique element
+    /// appears in the array during a single iteration.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::unordered_map<
+      std::ranges::range_value_t<
+        Container>,
+        int> count_occurrences_of_all(const Container& array)
+    {
+      std::unordered_map<std::ranges::range_value_t<Container>, int> result {};
+      for (const auto& element : array)
+      {
+        result[element]++;
+      }
+      return result;
+    }
+
+    //--------------------------------------------------------------------------
+    /// 7. Find the Two Most Frequent Elements
+    /// Find the two elements that appear the most number of times in an array.
+    /// Do 2 passes: 1 to create a frequency map, and 2 to find the two most
+    /// frequent.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::tuple<
+      std::ranges::range_value_t<Container>,
+      std::ranges::range_value_t<Container>> find_two_most_frequent(
+        const Container& array)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+
+      std::unordered_map<ElementType, int> element_to_count {};
+
+      for (const auto& element : array)
+      {
+        element_to_count[element]++;
+      }
+
+      int max_count {-1};
+      int second_max_count {-1};
+      ElementType max_value {};
+      ElementType second_max_value {};
+
+      for (const auto& [element, count] : element_to_count)
+      {
+        if (count > max_count)
+        {
+          second_max_count = max_count;
+          second_max_value = max_value;
+          max_count = count;
+          max_value = element;
+        }
+        else if (count > second_max_count)
+        {
+          second_max_count = count;
+          second_max_value = element;
+        }
+      }
+
+      // Handle case where there's only one unique element. This occurs because
+      // as you iterate in the for loop through each element, count in
+      // element_to_count, if there's only 1 unique element, there's only 1
+      // element, count pair to iterate on and the else if statement is never
+      // called.
+      if (second_max_count == -1)
+      {
+        second_max_value = max_value;
+      }
+
+      return std::make_tuple(max_value, second_max_value);
+    }
+
+    //--------------------------------------------------------------------------
+    /// 8. Compute Prefix Sums
+    /// Create an array where each element at index i is the sum of all elements
+    /// up to that index in the original array. We call this array prefix sums
+    /// array.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::vector<
+      std::ranges::range_value_t<Container>> compute_prefix_sums(
+      const Container& array)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+      std::vector<ElementType> result {};
+      ElementType running_total {0};
+      for (auto element : array)
+      {
+        running_total += element;
+        result.push_back(running_total);
+      }
+      return result;
+    }
+
+    //--------------------------------------------------------------------------
+    /// 9. Find the Sum of Elements in a Given Range
+    /// Given a range (start and end indices), write a function that calculates
+    /// the sum of elements within that range by iterating from the start to the
+    /// end index and accumulating the sum.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::ranges::range_value_t<Container> find_sum_in_range(
+      const Container& array,
+      const std::size_t start_index,
+      const std::size_t end_index)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+      const auto N = std::ranges::size(array);
+      if (start_index >= N)
+      {
+        return ElementType {};
+      }
+
+      ElementType running_sum {0};
+      for (std::size_t i {start_index}; i <= std::min(end_index, N - 1); ++i)
+      {
+        running_sum += array[i];
+      }
+      return running_sum;
+    }
+
+    //--------------------------------------------------------------------------
+    /// 10. Efficient Range Sum Queries Using Prefix Sums
+    /// After computing the prefix sums array, answer multiple range sum queries
+    /// efficiently:
+    /// Instead of summing elements for each query, use the prefix sums array to
+    /// compute the sum of elements between indices i and j in constant time.
+    ///
+    /// Hint: The sum from index i to j can be calculated as prefix_sum[j] -
+    /// prefix_sum[i - 1]. This method requires understanding how to manipulate
+    /// indices and handle edge cases when i is 0.
+    //--------------------------------------------------------------------------
+    template <std::ranges::range Container>
+    static std::ranges::range_value_t<Container> efficient_range_sum_queries(
+      const Container& array,
+      const std::size_t start_index,
+      const std::size_t end_index)
+    {
+      using ElementType = std::ranges::range_value_t<Container>;
+      const auto N = std::ranges::size(array);
+      if (start_index >= N)
+      {
+        return ElementType {};
+      };
+
+      std::vector<ElementType> prefix_sums {};
+      ElementType prefix_sum_running_total {};
+      for (const auto element : array)
+      {
+        prefix_sum_running_total += element;
+        prefix_sums.push_back(prefix_sum_running_total);
+      }
+
+      if (start_index == 0)
+      {
+        return prefix_sums[end_index];
+      }
+      else
+      {
+        return prefix_sums[end_index] - prefix_sums[start_index - 1];
+      }
+    }
+};
+
+//------------------------------------------------------------------------------
+/// https://blog.faangshui.com/p/before-leetcode
+/// 3. Recursion
+/// Get comfortable with functions that call themselves
+//------------------------------------------------------------------------------
+
+class Recursion
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// 1. Calculate the nth Fibonacci Number
+    /// Write a recursive function to find the nth Fibonacci number, where each
+    /// number is the sum of the two preceding ones.     
+    ///
+    /// 12.1.6 constexpr Functions Ch. 12 Functions; Bjarne Stroustrup, The C++
+    /// Programming Language, 4th Ed., Stroustrup
+    ///
+    /// 3 "laws" of recursion:
+    /// 1. base case
+    /// 2. must change its state and move toward base case
+    /// 3. must call itself, recursively.
+    ///
+    /// Fibonacci numbers (sequence) as recurrence relation: 
+    /// F_n = F_{n-1} + F_{n-2}
+    /// F_1 = 1, F_0 = 1 (base cases)
+    ///
+    /// since constexpr function, cannot have branching (i.e. if, elses)
+    //--------------------------------------------------------------------------
+    template <typename T>
+    static constexpr T calculate_fibonacci_number(const T n)
+    {
+      return (n <= static_cast<T>(2)) ?
+        static_cast<T>(1) :
+          (calculate_fibonacci_number<T>(n - static_cast<T>(1)) +
+            calculate_fibonacci_number<T>(n - static_cast<T>(2)));
+    }
+
+    //--------------------------------------------------------------------------
+    /// 2. Sum of an Array Using Recursion
+    /// Find the sum of all elements in an array by recursively summing the
+    /// first element and the sum of the rest of the array.
+    /// Time: O(n), Space: O(n) due to recursion stack
+    //--------------------------------------------------------------------------
+
+    template <typename Iterator>
+    static auto sum_recursive_helper(Iterator begin_it, Iterator end_it)
+    {
+      if (begin_it == end_it)
+      {
+        return 0;
+      }
+      return *begin_it + sum_recursive_helper(std::next(begin_it), end_it);
+    }
+
+    template <std::ranges::range Container>
+    static auto sum_recursive(const Container& array)
+    {
+      return sum_recursive_helper(
+        std::ranges::begin(array),
+        std::ranges::end(array));
+    }
+
+    //--------------------------------------------------------------------------
+    /// 3. Find the Minimum Element in an Array Using Recursion 
+    /// Find the smallest element in an array without using loops by comparing
+    /// the first element with the minimum of the rest of the array.
+    //--------------------------------------------------------------------------
+
+    template <typename Iterator, typename T>
+    static auto min_helper(Iterator begin_it, Iterator end_it, T min_value)
+    {
+      if (begin_it == end_it)
+      {
+        return min_value;
+      }
+
+      const auto current_value = *begin_it;
+      if (current_value < min_value)
+      {
+        min_value = current_value;
+      }
+      return min_helper(std::next(begin_it), end_it, min_value);
+    }
+
+    template <std::ranges::range Container>
+    static auto find_min(const Container& array)
+    {
+      return min_helper(
+        std::ranges::begin(array),
+        std::ranges::end(array),
+        std::numeric_limits<std::ranges::range_value_t<Container>>::max());
+    }
+    
+    //--------------------------------------------------------------------------
+    /// 4. Reverse a String Using Recursion
+    /// Reverse a given string by recursively swapping characters from the ends
+    /// towards the center.
+    //--------------------------------------------------------------------------
+
+    template <typename Iterator>
+    static void reverse_string_helper(Iterator begin_it, Iterator end_it)
+    {
+      if (begin_it == end_it || std::distance(begin_it, end_it) < 0)
+      {
+        return;
+      }
+      std::swap(*begin_it, *end_it);
+      reverse_string_helper(std::next(begin_it), std::prev(end_it));
+    }
+
+    template <std::ranges::range Container>
+    static void reverse_string(Container& array)
+    {
+      reverse_string_helper(
+        std::ranges::begin(array),
+        std::prev(std::ranges::end(array)));
+    }
+
+    //--------------------------------------------------------------------------
+    /// 5. Check if a String is a Palindrome Using Recursion
+    /// Determine if a string reads the same backward as forward by comparing
+    /// characters from the outside in.
+    //--------------------------------------------------------------------------
+
+    template <typename Iterator>
+    static bool is_palindrome_helper(
+      Iterator begin_it,
+      Iterator end_it,
+      bool is_palindrome = true)
+    {
+      if (begin_it == end_it || std::distance(begin_it, end_it) < 0)
+      {
+        return is_palindrome;
+      }
+
+      if (*begin_it != *end_it)
+      {
+        is_palindrome = false;
+      }
+      return is_palindrome_helper(
+        std::next(begin_it),
+        std::prev(end_it),
+        is_palindrome);
+    }
+
+    template <std::ranges::range Container>
+    static bool is_palindrome(const Container& array)
+    {
+      return is_palindrome_helper(
+        std::ranges::begin(array),
+        std::prev(std::ranges::end(array)),
+        true);
+    }
+
+    //--------------------------------------------------------------------------
+    /// 6. Generate All Permutations of a String
+    /// Recursively generate all permutations of the characters in a string by
+    /// swapping characters.
+    /// Time: O(n! * n), Space: O(n) for recursion stack
+    /// n! permutations, and n swaps to build each permutation.
+    //--------------------------------------------------------------------------
+
+  private:
+
+    template <typename Iterator, typename Container>
+    static void generate_all_permutations_helper(
+      Iterator begin_iter,
+      Iterator end_iter,
+      Container& mutable_copy,
+      std::vector<Container>& permutations)
+    {
+      // Base case, we've processed all the characters for this permutation and
+      // so we add it.
+      if (begin_iter == end_iter)
+      {
+        permutations.push_back(mutable_copy);
+        return;
+      }
+
+      // Try each character at the current position.
+      for (auto iter = begin_iter; iter != end_iter; ++iter)
+      {
+        // Fix character at current position.
+        std::swap(*begin_iter, *iter);
+
+        // Recursively generate permutations for remaining characters.
+        generate_all_permutations_helper(
+          std::next(begin_iter),
+          end_iter,
+          mutable_copy,
+          permutations);
+
+        // Backtrack: restore original order.
+        std::swap(*begin_iter, *iter);
+      }
+    }
+
+  public:
+
+    template <std::ranges::range Container>
+    static std::vector<Container> generate_all_permutations(
+      Container& container)
+    {
+      std::vector<Container> permutations {};
+
+      if (std::ranges::empty(container))
+      {
+        return permutations;
+      }
+
+      // Create mutable copy for swapping
+      Container mutable_copy(
+        std::ranges::begin(container),
+        std::ranges::end(container));
+
+      generate_all_permutations_helper(
+        std::ranges::begin(mutable_copy),
+        std::ranges::end(mutable_copy),
+        mutable_copy,
+        permutations);
+      return permutations;
+    }
+
+    //--------------------------------------------------------------------------
+    /// 7. Generate All Subsets of a Set
+    ///
+    /// Generate all possible subsets (the power set) of a set of numbers by
+    /// including or excluding each element recursively.
+    //--------------------------------------------------------------------------
+
+  private:
+    
+    static void generate_all_subsets_helper_with_bitfield(
+      std::size_t begin_index,
+      std::size_t end_index,
+      uint64_t subset_bitfield,
+      std::vector<uint64_t>& subsets)
+    {
+      // base case
+      if (begin_index > end_index)
+      {
+        subsets.push_back(subset_bitfield);
+        return;
+      }
+
+      // Option 1: Don't include element at index (bit stays 0)
+      generate_all_subsets_helper_with_bitfield(
+        begin_index + 1,
+        end_index,
+        subset_bitfield,
+        subsets);
+
+      // Option 2: Include element at index (set bit to 1)
+      subset_bitfield |= (1ULL << begin_index);
+      generate_all_subsets_helper_with_bitfield(
+        begin_index + 1,
+        end_index,
+        subset_bitfield,
+        subsets);      
+
+    }
+
+  public:
+
+    template <typename Set>
+    static std::vector<Set> generate_all_subsets_with_bitfield(const Set& set)
+    {
+      std::vector<Set> power_set {};
+      const auto N = set.size();
+
+      if (N == 0)
+      {
+        power_set.push_back(Set {});
+        return power_set;
+      }
+
+      if (N > 64)
+      {
+        // Bitfield approach limited to 64 bits.
+        return power_set;
+      }
+
+      std::vector<uint64_t> power_set_bitfields {};
+      uint64_t subset_bitfield {0};
+      generate_all_subsets_helper_with_bitfield(
+        0,
+        N - 1,
+        subset_bitfield,
+        power_set_bitfields);
+
+      std::vector<std::ranges::range_value_t<Set>> set_list (
+        std::ranges::begin(set),
+        std::ranges::end(set));
+
+      for (const auto bitfield : power_set_bitfields)
+      {
+        Set subset {};
+        for (std::size_t i {0}; i < N; ++i)
+        {
+          if (bitfield & (1 << i))
+          {
+            subset.insert(set_list[i]);
+          }
+        }
+        power_set.push_back(subset);
+      }
+      return power_set;
+    }
+
+  private:
+    // Recursive helper: build subsets by including/excluding each element
+    template <typename Set, typename Iterator>
+    static void generate_all_subsets_helper(
+      Iterator current,
+      Iterator end,
+      Set& current_subset,  // Current subset being built
+      std::vector<Set>& power_set)  // All subsets collected so far
+    {
+      // Base case: processed all elements, add current subset
+      if (current == end)
+      {
+        power_set.push_back(current_subset);
+        return;
+      }
+
+      // For each element, I havet 2 choices, include or exclude it.
+      // Recursively build subsets by making these choices.
+
+      // Option 1: Don't include current element
+      generate_all_subsets_helper<Set>(
+        std::next(current),
+        end,
+        current_subset,
+        power_set);
+
+      // Option 2: Include current element
+      current_subset.insert(*current);
+      generate_all_subsets_helper<Set>(
+        std::next(current),
+        end,
+        current_subset,
+        power_set);
+
+      // Backtrack: remove current element to restore state
+      current_subset.erase(*current);
+    }
+
+  public:
+
+    //--------------------------------------------------------------------------
+    /// Generate All Subsets of a Set
+    /// Generate all possible subsets (the power set) of a set by including or
+    /// excluding each element recursively.
+    /// Time: O(2^n * n), Space: O(2^n * n) for storing all subsets
+    //--------------------------------------------------------------------------
+    template <typename Set>
+    static std::vector<Set> generate_all_subsets(const Set& set)
+    {
+      std::vector<Set> power_set {};
+
+      if (std::ranges::empty(set))
+      {
+        power_set.push_back(Set{});  // Empty set is a subset
+        return power_set;
+      }
+
+      // Convert set to vector for indexed iteration
+      using ElementType = std::ranges::range_value_t<Set>;
+      std::vector<ElementType> elements(
+        std::ranges::begin(set),
+        std::ranges::end(set));
+
+      // Build subsets recursively
+      Set current_subset {};
+      generate_all_subsets_helper<Set>(
+        elements.cbegin(),  // Use const iterators
+        elements.cend(),
+        current_subset,
+        power_set);
+
+      return power_set;
+    }
+
+    template <typename Set>
+    static std::vector<Set> generate_all_subsets_iteratively(const Set& set)
+    {
+      std::vector<Set> power_set {};
+      // Start with empty subset
+      power_set.push_back(Set{});
+
+      // For each element, double the number of subsets by adding it to existing
+      // ones
+      for (const auto& element : set)
+      {
+        const std::size_t current_size {power_set.size()};
+        for (std::size_t i {0}; i < current_size; ++i)
+        {
+          // Copy existing subset.
+          Set new_subset {power_set[i]};  
+          // Add current element.
+          new_subset.insert(element);     
+          power_set.push_back(new_subset);
+        }
+      }
+
+      return power_set;
+    }
 
 };
 

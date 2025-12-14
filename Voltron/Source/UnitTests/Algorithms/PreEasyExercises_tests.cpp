@@ -1,11 +1,14 @@
 #include "Algorithms/PreEasyExercises.h"
 
 #include <boost/test/unit_test.hpp>
+#include <string>
 #include <tuple>
+#include <unordered_set>
 #include <vector>
 
 using Algorithms::PreEasyExercises::AccumulatorVariables;
 using Algorithms::PreEasyExercises::ArrayIndexing;
+using Algorithms::PreEasyExercises::Recursion;
 using std::get;
 using std::vector;
 
@@ -269,6 +272,463 @@ BOOST_AUTO_TEST_CASE(FindTwoMinMaxIndicesFindsTwoMinMaxIndices)
 //------------------------------------------------------------------------------
 /// 5. Count Occurrences of a Specific Element
 //------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CountOccurrencesCountsOccurrences)
+{
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array, 1) == 1);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array, 2) == 1);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array, 3) == 1);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array, 0) == 0);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array_2, 4) == 1);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array_2, 7) == 1);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(array_2, 13) == 0);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(all_same, 5) == 4);
+  BOOST_TEST(AccumulatorVariables::count_occurrences(all_same, 6) == 0);
+}
+
+//------------------------------------------------------------------------------
+/// 6. Count Occurrences of All Elements
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CountOccurrencesOfAllCountsOccurrencesOfAll)
+{
+  auto result = AccumulatorVariables::count_occurrences_of_all(array);
+  BOOST_TEST(result[1] == 1);
+  BOOST_TEST(result[2] == 1);
+  BOOST_TEST(result[3] == 1);
+  BOOST_TEST(result[4] == 1);
+  BOOST_TEST(result[5] == 1);
+  BOOST_TEST(result[0] == 0);
+  BOOST_TEST(result[6] == 0);
+  BOOST_TEST(result[7] == 0);
+
+  result = AccumulatorVariables::count_occurrences_of_all(array_2);
+  BOOST_TEST(result[4] == 1);
+  BOOST_TEST(result[7] == 1);
+  BOOST_TEST(result[9] == 1);
+  BOOST_TEST(result[1] == 1);
+  BOOST_TEST(result[21] == 0);
+  BOOST_TEST(result[22] == 0);
+  BOOST_TEST(result[23] == 0);
+  BOOST_TEST(result[24] == 0);
+
+  result = AccumulatorVariables::count_occurrences_of_all(all_same);
+  BOOST_TEST(result[5] == 4);
+  BOOST_TEST(result[6] == 0);
+}
+
+//------------------------------------------------------------------------------
+/// 7. Find the Two Most Frequent Elements
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindTwoMostFrequentFindsTwoMostFrequent)
+{
+  BOOST_TEST(get<0>(AccumulatorVariables::find_two_most_frequent(array)) == 5);
+  BOOST_TEST(get<1>(AccumulatorVariables::find_two_most_frequent(array)) == 4);
+
+  BOOST_TEST(get<0>(AccumulatorVariables::find_two_most_frequent(array_2)) == 1);
+  BOOST_TEST(get<1>(AccumulatorVariables::find_two_most_frequent(array_2)) == 9);
+
+  BOOST_TEST(get<0>(AccumulatorVariables::find_two_most_frequent(all_same)) == 5);
+  BOOST_TEST(get<1>(AccumulatorVariables::find_two_most_frequent(all_same)) == 5);
+}
+
+//------------------------------------------------------------------------------
+/// 8. Compute Prefix Sums
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ComputePrefixSumsComputesPrefixSums)
+{
+  BOOST_TEST(
+    (AccumulatorVariables::compute_prefix_sums(array) ==
+      vector<int> {1, 3, 6, 10, 15}));
+  BOOST_TEST(
+    (AccumulatorVariables::compute_prefix_sums(array_2) ==
+      vector<int> {4, 11, 20, 21}));
+  BOOST_TEST(
+    (AccumulatorVariables::compute_prefix_sums(all_same) ==
+      vector<int> {5, 10, 15, 20}));
+}
+
+//------------------------------------------------------------------------------
+/// 9. Find the Sum of Elements in a Given Range
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindSumInRangeFindsSumInRange)
+{
+  BOOST_TEST(AccumulatorVariables::find_sum_in_range(array, 0, 4) == 15);
+  BOOST_TEST(AccumulatorVariables::find_sum_in_range(array_2, 0, 3) == 21);
+  BOOST_TEST(AccumulatorVariables::find_sum_in_range(all_same, 0, 3) == 20);
+
+  BOOST_TEST(AccumulatorVariables::find_sum_in_range(array, 1, 3) == 9);
+  BOOST_TEST(AccumulatorVariables::find_sum_in_range(array_2, 1, 2) == 16);
+  BOOST_TEST(AccumulatorVariables::find_sum_in_range(all_same, 1, 2) == 10);
+}
+
+//------------------------------------------------------------------------------
+/// 10. Efficient Range Sum Queries Using Prefix Sums
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(EfficientRangeSumQueriesFindsSumInRange)
+{
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array, 0, 4) == 15);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array_2, 0, 3) == 21);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(all_same, 0, 3) == 20);
+
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array, 1, 3) == 9);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array_2, 1, 2) == 16);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(all_same, 1, 2) == 10);
+
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array, 0, 0) == 1);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array_2, 0, 0) == 4);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(all_same, 0, 0) == 5);
+
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array, 4, 4) == 5);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array_2, 3, 3) == 1);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(array_2, 3, 3) == 1);
+  BOOST_TEST(
+    AccumulatorVariables::efficient_range_sum_queries(all_same, 3, 3) == 5);
+}
+
+//------------------------------------------------------------------------------
+/// 1. Calculate the nth Fibonacci Number
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CalculateNthFibonacciNumberFindsNthFibonacciNumber)
+{
+  BOOST_TEST(Recursion::calculate_fibonacci_number(0) == 1);
+  BOOST_TEST(Recursion::calculate_fibonacci_number(1) == 1);
+  BOOST_TEST(Recursion::calculate_fibonacci_number(2) == 1);
+  BOOST_TEST(Recursion::calculate_fibonacci_number(3) == 2);
+  BOOST_TEST(Recursion::calculate_fibonacci_number(13) == 233);
+  BOOST_TEST(Recursion::calculate_fibonacci_number(14) == 377);
+}
+
+//------------------------------------------------------------------------------
+/// 2. Sum of an Array Using Recursion
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(SumRecursiveSums)
+{
+  BOOST_TEST(Recursion::sum_recursive(array) == 15);
+  BOOST_TEST(Recursion::sum_recursive(array_2) == 21);
+  BOOST_TEST(Recursion::sum_recursive(all_same) == 20);
+}
+
+//------------------------------------------------------------------------------
+/// 3. Find the Minimum Element in an Array Using Recursion
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(FindMinFindsMin)
+{
+  BOOST_TEST(Recursion::find_min(array) == 1);
+  BOOST_TEST(Recursion::find_min(array_2) == 1);
+  BOOST_TEST(Recursion::find_min(all_same) == 5);
+}
+
+//------------------------------------------------------------------------------
+/// 4. Reverse a String Using Recursion
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ReverseStringReversesString)
+{
+  vector<int> expected_result {5, 4, 3, 2, 1};
+  Recursion::reverse_string(array);
+  BOOST_TEST((array == expected_result));
+
+  std::string test_string {"hello"};
+  Recursion::reverse_string(test_string);
+  BOOST_TEST((test_string == "olleh"));
+
+  test_string = "ab";
+  Recursion::reverse_string(test_string);
+  BOOST_TEST((test_string == "ba"));
+
+  test_string = "a";
+  Recursion::reverse_string(test_string);
+  BOOST_TEST((test_string == "a"));
+
+  test_string = "";
+  Recursion::reverse_string(test_string);
+  BOOST_TEST((test_string == ""));
+}
+
+//------------------------------------------------------------------------------
+/// 5. Check if a String is a Palindrome Using Recursion
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(IsPalindromeChecksIfStringIsPalindrome)
+{
+  BOOST_TEST(Recursion::is_palindrome(array) == false);
+  BOOST_TEST(Recursion::is_palindrome(array_2) == false);
+  BOOST_TEST(Recursion::is_palindrome(all_same) == true);
+
+  std::string test_string {"hello"};
+  BOOST_TEST(Recursion::is_palindrome(test_string) == false);
+
+  test_string = "ab";
+  BOOST_TEST(Recursion::is_palindrome(test_string) == false);
+
+  test_string = "a";
+  BOOST_TEST(Recursion::is_palindrome(test_string) == true);
+
+  test_string = "";
+  BOOST_TEST(Recursion::is_palindrome(test_string) == true);
+
+  test_string = "aba";
+  BOOST_TEST(Recursion::is_palindrome(test_string) == true);
+
+  test_string = "abba";
+  BOOST_TEST(Recursion::is_palindrome(test_string) == true);
+
+  test_string = "abcdcba";
+  BOOST_TEST(Recursion::is_palindrome(test_string) == true);
+}
+
+//------------------------------------------------------------------------------
+/// 6. Generate All Permutations of a String
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GenerateAllPermutationsGeneratesAllPermutations)
+{
+  {
+    std::string test_string {""};
+    const auto permutations = Recursion::generate_all_permutations(test_string);
+
+    BOOST_TEST(permutations.size() == 0);
+  }
+  {
+    std::string test_string {"a"};
+    const auto permutations = Recursion::generate_all_permutations(test_string);
+
+    BOOST_TEST(permutations.size() == 1);
+    BOOST_TEST(permutations[0] == "a");
+  }
+  {
+    std::string test_string {"ab"};
+    const auto permutations = Recursion::generate_all_permutations(test_string);
+
+    BOOST_TEST(permutations.size() == 2);
+    std::unordered_set<std::string> expected_permutations {"ab", "ba"};
+    for (const auto& permutation : permutations)
+    {
+      BOOST_TEST(expected_permutations.contains(permutation));
+    }
+  }
+  {
+    std::string test_string {"abc"};
+    const auto permutations = Recursion::generate_all_permutations(test_string);
+
+    BOOST_TEST(permutations.size() == 6);
+    std::unordered_set<std::string> expected_permutations {
+      "abc", "acb", "bac", "bca", "cab", "cba"};
+    for (const auto& permutation : permutations)
+    {
+      BOOST_TEST(expected_permutations.contains(permutation));
+    }
+  }
+  {
+    std::string test_string {"aba"};
+    const auto permutations = Recursion::generate_all_permutations(test_string);
+
+    BOOST_TEST(permutations.size() == 6);
+    std::unordered_set<std::string> expected_permutations {"aba", "aab", "baa"};
+    for (const auto& permutation : permutations)
+    {
+      BOOST_TEST(expected_permutations.contains(permutation));
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 7. Generate All Subsets of a Set
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(GenerateAllSubsetsWithBitfieldGeneratesPowerSet)
+{
+  {
+    std::unordered_set<int> test_set {1, 2, 3};
+    const auto power_set = Recursion::generate_all_subsets_with_bitfield(
+      test_set);
+
+    // 2^3 = 8 subsets
+    BOOST_TEST(power_set.size() == 8);
+
+    // Expected subsets (as sets of elements)
+    std::vector<std::unordered_set<int>> expected_subsets {
+      // Empty set
+      {},
+      {1},
+      {2},
+      {3},
+      {1, 2},
+      {1, 3},
+      {2, 3},
+      {1, 2, 3}
+    };
+
+    // Check that each generated subset matches an expected one
+    for (const auto& subset : power_set)
+    {
+      bool found_match = false;
+      for (const auto& expected : expected_subsets)
+      {
+        if (subset.size() == expected.size())
+        {
+          bool matches = true;
+          for (const auto& elem : subset)
+          {
+            if (expected.find(elem) == expected.end())
+            {
+              matches = false;
+              break;
+            }
+          }
+          if (matches)
+          {
+            found_match = true;
+            break;
+          }
+        }
+      }
+      BOOST_TEST(found_match);
+    }
+
+    // Also check that we have the right number of each size
+    std::unordered_map<std::size_t, std::size_t> size_counts {};
+    for (const auto& subset : power_set)
+    {
+      size_counts[subset.size()]++;
+    }
+    BOOST_TEST(size_counts[0] == 1);  // 1 empty set
+    BOOST_TEST(size_counts[1] == 3);  // 3 single-element sets
+    BOOST_TEST(size_counts[2] == 3);  // 3 two-element sets
+    BOOST_TEST(size_counts[3] == 1);  // 1 three-element set
+  }
+}
+
+BOOST_AUTO_TEST_CASE(GenerateAllSubsetsGeneratesPowerSet)
+{
+  {
+    std::unordered_set<int> test_set {1, 2, 3};
+    const auto power_set = Recursion::generate_all_subsets(test_set);
+
+    // 2^3 = 8 subsets
+    BOOST_TEST(power_set.size() == 8);
+
+    // Expected subsets (as sets of elements)
+    std::vector<std::unordered_set<int>> expected_subsets {
+      // Empty set
+      {},
+      {1},
+      {2},
+      {3},
+      {1, 2},
+      {1, 3},
+      {2, 3},
+      {1, 2, 3}
+    };
+
+    // Check that each generated subset matches an expected one
+    for (const auto& subset : power_set)
+    {
+      bool found_match = false;
+      for (const auto& expected : expected_subsets)
+      {
+        if (subset.size() == expected.size())
+        {
+          bool matches = true;
+          for (const auto& elem : subset)
+          {
+            if (expected.find(elem) == expected.end())
+            {
+              matches = false;
+              break;
+            }
+          }
+          if (matches)
+          {
+            found_match = true;
+            break;
+          }
+        }
+      }
+      BOOST_TEST(found_match);
+    }
+
+    // Also check that we have the right number of each size
+    std::unordered_map<std::size_t, std::size_t> size_counts {};
+    for (const auto& subset : power_set)
+    {
+      size_counts[subset.size()]++;
+    }
+    BOOST_TEST(size_counts[0] == 1);  // 1 empty set
+    BOOST_TEST(size_counts[1] == 3);  // 3 single-element sets
+    BOOST_TEST(size_counts[2] == 3);  // 3 two-element sets
+    BOOST_TEST(size_counts[3] == 1);  // 1 three-element set
+  }
+}
+
+BOOST_AUTO_TEST_CASE(GenerateAllSubsetsIterativelyGeneratesPowerSet)
+{
+  {
+    std::unordered_set<int> test_set {1, 2, 3};
+    const auto power_set = Recursion::generate_all_subsets(test_set);
+
+    // 2^3 = 8 subsets
+    BOOST_TEST(power_set.size() == 8);
+
+    // Expected subsets (as sets of elements)
+    std::vector<std::unordered_set<int>> expected_subsets {
+      // Empty set
+      {},
+      {1},
+      {2},
+      {3},
+      {1, 2},
+      {1, 3},
+      {2, 3},
+      {1, 2, 3}
+    };
+
+    // Check that each generated subset matches an expected one
+    for (const auto& subset : power_set)
+    {
+      bool found_match = false;
+      for (const auto& expected : expected_subsets)
+      {
+        if (subset.size() == expected.size())
+        {
+          bool matches = true;
+          for (const auto& elem : subset)
+          {
+            if (expected.find(elem) == expected.end())
+            {
+              matches = false;
+              break;
+            }
+          }
+          if (matches)
+          {
+            found_match = true;
+            break;
+          }
+        }
+      }
+      BOOST_TEST(found_match);
+    }
+
+    // Also check that we have the right number of each size
+    std::unordered_map<std::size_t, std::size_t> size_counts {};
+    for (const auto& subset : power_set)
+    {
+      size_counts[subset.size()]++;
+    }
+    BOOST_TEST(size_counts[0] == 1);  // 1 empty set
+    BOOST_TEST(size_counts[1] == 3);  // 3 single-element sets
+    BOOST_TEST(size_counts[2] == 3);  // 3 two-element sets
+    BOOST_TEST(size_counts[3] == 1);  // 1 three-element set
+  }
+}
 
 
 BOOST_AUTO_TEST_SUITE_END() // ArrayIndexing_tests
