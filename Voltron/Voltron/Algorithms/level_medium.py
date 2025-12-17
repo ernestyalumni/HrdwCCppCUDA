@@ -178,9 +178,9 @@ class SetMatrixZeroes:
         for i in range(M):
             if i in seen_rows:
                 new_matrix[i] = [0 for j in range(N)]
-            for j in range(N):
-                if j in seen_columns:
-                    new_matrix[i][j] = 0
+        for j in range(N):
+            if j in seen_columns:
+                new_matrix[i][j] = 0
         return new_matrix
 
 
