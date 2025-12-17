@@ -11,6 +11,8 @@ from Voltron.Algorithms.level_medium import (
     # 15. 3Sum
     three_number_sum,
     three_number_sum_with_sorted_array,
+    # 73. Set Matrix Zeroes
+    SetMatrixZeroes,
     # 238. Product of Array Except Self
     ProductOfArrayExceptSelf,
     # 424. Longest Repeating Substring With Replacement
@@ -156,6 +158,23 @@ def test_three_number_sum_with_sorted_array():
     results = three_number_sum_with_sorted_array(array, target)
     assert results == [[-2, 10, 49]]
 
+def test_set_matrix_zeroes_naively():
+    """
+    https://leetcode.com/problems/set-matrix-zeroes/description/
+    73. Set Matrix Zeroes
+    Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+    You must do it in place.
+    """
+    example_1 = [[1,1,1],[1,0,1],[1,1,1]]
+    output_1 = [[1,0,1],[0,0,0],[1,0,1]]
+
+    example_2 = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+    output_2 = [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+
+    set_zeroes = SetMatrixZeroes.set_zeroes_naive
+
+    assert set_zeroes(example_1) == output_1
+    assert set_zeroes(example_2) == output_2
 
 def test_product_except_self():
 

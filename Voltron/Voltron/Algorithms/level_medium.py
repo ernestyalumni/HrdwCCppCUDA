@@ -1,3 +1,5 @@
+from typing import List
+
 class LongestSubstringWithoutRepeatingCharacters:
     """
     3. Longest Substring Without Repeating Characters
@@ -147,6 +149,39 @@ def three_number_sum_with_sorted_array(array, target_sum):
                 left_index += 1
 
     return output
+
+class SetMatrixZeroes:
+    """
+    https://leetcode.com/problems/set-matrix-zeroes/description/
+    73. Set Matrix Zeroes
+    Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+    You must do it in place.
+    """
+    @staticmethod
+    def set_zeroes_naive(matrix: List[List[int]]):
+        M = len(matrix)
+        if (M == 0):
+            return matrix
+        N = len(matrix[0])
+        if (N == 0):
+            return matrix
+        seen_rows = set()
+        seen_columns = set()
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == 0:
+                    seen_rows.add(i)
+                    seen_columns.add(j)
+
+        from copy import deepcopy
+        new_matrix = deepcopy(matrix)
+        for i in range(M):
+            if i in seen_rows:
+                new_matrix[i] = [0 for j in range(N)]
+            for j in range(N):
+                if j in seen_columns:
+                    new_matrix[i][j] = 0
+        return new_matrix
 
 
 class ProductOfArrayExceptSelf:
