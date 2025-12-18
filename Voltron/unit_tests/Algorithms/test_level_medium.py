@@ -158,13 +158,16 @@ def test_three_number_sum_with_sorted_array():
     results = three_number_sum_with_sorted_array(array, target)
     assert results == [[-2, 10, 49]]
 
+"""
+https://leetcode.com/problems/set-matrix-zeroes/description/
+73. Set Matrix Zeroes
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and
+column to 0's.
+You must do it in place.
+"""
+
+
 def test_set_matrix_zeroes_naively():
-    """
-    https://leetcode.com/problems/set-matrix-zeroes/description/
-    73. Set Matrix Zeroes
-    Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
-    You must do it in place.
-    """
     example_1 = [[1,1,1],[1,0,1],[1,1,1]]
     output_1 = [[1,0,1],[0,0,0],[1,0,1]]
 
