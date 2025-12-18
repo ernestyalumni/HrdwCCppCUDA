@@ -166,13 +166,18 @@ column to 0's.
 You must do it in place.
 """
 
-
-def test_set_matrix_zeroes_naively():
+def create_set_matrix_zeroes_test_cases():
     example_1 = [[1,1,1],[1,0,1],[1,1,1]]
     output_1 = [[1,0,1],[0,0,0],[1,0,1]]
 
     example_2 = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
     output_2 = [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+
+    return [example_1, output_1, example_2, output_2]
+
+def test_set_matrix_zeroes_naively():
+    example_1, output_1, example_2, output_2 = \
+        create_set_matrix_zeroes_test_cases()
 
     set_zeroes = SetMatrixZeroes.set_zeroes_naive
 

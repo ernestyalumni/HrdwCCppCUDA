@@ -167,6 +167,8 @@ class SetMatrixZeroes:
             return matrix
         seen_rows = set()
         seen_columns = set()
+
+        # O(MN) time.
         for i in range(M):
             for j in range(N):
                 if matrix[i][j] == 0:
@@ -175,12 +177,18 @@ class SetMatrixZeroes:
 
         from copy import deepcopy
         new_matrix = deepcopy(matrix)
+
+        # O(MN) time total.
+        # O(M) time for range(M)
         for i in range(M):
             if i in seen_rows:
+                # O(N) time for range(N)
                 new_matrix[i] = [0 for j in range(N)]
+        # O(MN) time
         for j in range(N):
             if j in seen_columns:
-                new_matrix[i][j] = 0
+                for i in range(M):
+                    new_matrix[i][j] = 0
         return new_matrix
 
 
