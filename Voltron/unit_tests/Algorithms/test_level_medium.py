@@ -173,16 +173,30 @@ def create_set_matrix_zeroes_test_cases():
     example_2 = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
     output_2 = [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
 
-    return [example_1, output_1, example_2, output_2]
+    example_3 = [[[-1],[2],[3]]
+    output_3 = [[-1],[2],[3]]
+
+    return [example_1, output_1, example_2, output_2, example_3, output_3]
 
 def test_set_matrix_zeroes_naively():
-    example_1, output_1, example_2, output_2 = \
+    example_1, output_1, example_2, output_2, example_3, output_3 = \
         create_set_matrix_zeroes_test_cases()
 
     set_zeroes = SetMatrixZeroes.set_zeroes_naive
 
     assert set_zeroes(example_1) == output_1
     assert set_zeroes(example_2) == output_2
+    assert set_zeroes(example_3) == output_3
+
+def test_set_matrix_zeroes_with_negative_1():
+    example_1, output_1, example_2, output_2, example_3, output_3 = \
+        create_set_matrix_zeroes_test_cases()
+
+    set_zeroes = SetMatrixZeroes.set_zeroes_with_negative_1
+
+    assert set_zeroes(example_1) == output_1
+    assert set_zeroes(example_2) == output_2
+    assert set_zeroes(example_3) != output_3
 
 def test_product_except_self():
 

@@ -191,6 +191,32 @@ class SetMatrixZeroes:
                     new_matrix[i][j] = 0
         return new_matrix
 
+    @staticmethod
+    def set_zeroes_with_negative_1(matrix: List[List[int]]):
+        M = len(matrix)
+        if (M == 0):
+            return matrix
+        N = len(matrix[0])
+        if (N == 0):
+            return matrix
+
+        # O(MN(N + M)) time.
+        # if x_ij is marked as -1, then it won't be recognized as a 0, will
+        # later be marked as a 0.
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == 0:
+                    for j_2 in range(N):
+                        if matrix[i][j_2] != 0:
+                            matrix[i][j_2] = -1
+                    for i_2 in range(M):
+                        if matrix[i_2][j] != 0:
+                            matrix[i_2][j] = -1
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == -1:
+                    matrix[i][j] = 0
+        return matrix
 
 class ProductOfArrayExceptSelf:
     """
