@@ -193,13 +193,15 @@ class SetMatrixZeroes:
 
     @staticmethod
     def set_zeroes_with_negative_1(matrix: List[List[int]]):
+        """
+        This solution is only 
+        """
         M = len(matrix)
         if (M == 0):
             return matrix
         N = len(matrix[0])
         if (N == 0):
             return matrix
-
         # O(MN(N + M)) time.
         # if x_ij is marked as -1, then it won't be recognized as a 0, will
         # later be marked as a 0.
@@ -216,6 +218,88 @@ class SetMatrixZeroes:
             for j in range(N):
                 if matrix[i][j] == -1:
                     matrix[i][j] = 0
+        return matrix
+
+    @staticmethod
+    def set_zeroes_with_negative_1(matrix: List[List[int]]):
+        """
+        This solution is only valid if you're given that the elements are nonnegative.
+        """
+        M = len(matrix)
+        if (M == 0):
+            return matrix
+        N = len(matrix[0])
+        if (N == 0):
+            return matrix
+        # O(MN(N + M)) time.
+        # if x_ij is marked as -1, then it won't be recognized as a 0, will
+        # later be marked as a 0.
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == 0:
+                    for j_2 in range(N):
+                        if matrix[i][j_2] != 0:
+                            matrix[i][j_2] = -1
+                    for i_2 in range(M):
+                        if matrix[i_2][j] != 0:
+                            matrix[i_2][j] = -1
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == -1:
+                    matrix[i][j] = 0
+        return matrix
+
+    @staticmethod
+    def set_zeroes_with_edges(matrix: List[List[int]]):
+        """
+        If an element x_ij = 0, then x_ik = 0 for all k in [0, N-1] and x_kj = 0
+        for all k in [0, M-1]. if x_il = 0 also, then x_ik = 0 for all k in
+        [0, N-1] as well. And in both cases, x_i0 = 0. So we can mark the rows
+        by marking x_i0 = 0. Likewise, for x_0j = 0 for columns.
+
+        If for the 0th column, if exists an element x_i0 = 0 for some i, then
+        naively, we mark all x_l0 = 0 for all l in [0, M - 1]. But be careful
+        not to mark x_lk = 0 for all k in [0, N - 1] for all those l's.
+
+        Space: O(1) (in place modification)
+        """
+        M = len(matrix)
+        if (M == 0):
+            return matrix
+        N = len(matrix[0])
+        if (N == 0):
+            return matrix
+
+        # Check if first row and first column should be zeroed BEFORE using them
+        # as markers
+        first_row_has_zero = any(matrix[0][j] == 0 for j in range(N))
+        first_col_has_zero = any(matrix[i][0] == 0 for i in range(M))
+
+        # O(MN) time.
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == 0:
+                    # Mark the ith row for all zeroes.
+                    matrix[i][0] = 0
+                    # Mark the jth column for all zeroes.
+                    matrix[0][j] = 0
+
+        for i in range(1, M):
+            if matrix[i][0] == 0:
+                for j in range(1, N):
+                    matrix[i][j] = 0
+        for j in range(1, N):
+            if matrix[0][j] == 0:
+                for i in range(1, M):
+                    matrix[i][j] = 0
+
+        if first_row_has_zero:
+            for j in range(N):
+                matrix[0][j] = 0
+        if first_col_has_zero:
+            for i in range(M):
+                matrix[i][0] = 0
+
         return matrix
 
 class ProductOfArrayExceptSelf:
