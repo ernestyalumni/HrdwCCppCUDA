@@ -192,7 +192,7 @@ def create_set_matrix_zeroes_test_cases():
         output_4]
 
 def test_set_matrix_zeroes_naively():
-    example_1, output_1, example_2, output_2, example_3, output_3 = \
+    example_1, output_1, example_2, output_2, example_3, output_3, _, _ = \
         create_set_matrix_zeroes_test_cases()
 
     set_zeroes = SetMatrixZeroes.set_zeroes_naive
@@ -202,7 +202,7 @@ def test_set_matrix_zeroes_naively():
     assert set_zeroes(example_3) == output_3
 
 def test_set_matrix_zeroes_with_negative_1():
-    example_1, output_1, example_2, output_2, example_3, output_3 = \
+    example_1, output_1, example_2, output_2, example_3, output_3, _, _ = \
         create_set_matrix_zeroes_test_cases()
 
     set_zeroes = SetMatrixZeroes.set_zeroes_with_negative_1
@@ -212,7 +212,7 @@ def test_set_matrix_zeroes_with_negative_1():
     assert set_zeroes(example_3) != output_3
 
 def test_set_matrix_zeroes_with_edges():
-    example_1, output_1, example_2, output_2, example_3, output_3 = \
+    example_1, output_1, example_2, output_2, example_3, output_3, example_4, output_4 = \
         create_set_matrix_zeroes_test_cases()
 
     set_zeroes = SetMatrixZeroes.set_zeroes_with_edges
@@ -220,6 +220,8 @@ def test_set_matrix_zeroes_with_edges():
     assert set_zeroes(example_1) == output_1
     assert set_zeroes(example_2) == output_2
     assert set_zeroes(example_3) == output_3
+    # If we do not check if any 0th row or 0th column has any zeroes, then in
+    # the first pass, given x_11=0, x_20=0, x_33=0.
     assert set_zeroes(example_4) == output_4
 
 def test_product_except_self():
