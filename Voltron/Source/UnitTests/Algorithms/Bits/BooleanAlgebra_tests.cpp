@@ -339,7 +339,13 @@ BOOST_AUTO_TEST_CASE(DemonstrateBitwiseNot)
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(DemonstrateTwosComplement)
 {
+  // -x = ~x + 1
+  int16_t x {1};
+  SuperBitSet<16> bits {static_cast<uint16_t>(static_cast<signed char>(~x))};
+  BOOST_TEST(bits.to_string() == "1111111111111110");
+  BOOST_TEST(bits.to_ulong() == 65534);
 
+  BOOST_TEST(-x == ~x + 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // BooleanAlgebra_tests
