@@ -1,6 +1,7 @@
 //------------------------------------------------------------------------------
 // \file ToHexString_tests.cpp
 //------------------------------------------------------------------------------
+#include "Tools/CaptureStdOut.h"
 #include "Utilities/ToHexString.h"
 
 #include <boost/test/unit_test.hpp>
@@ -12,6 +13,7 @@
 #include <string>
 #include <vector>
 
+using Tools::CaptureStdoutFixture;
 using Utilities::ToHexString;
 using Utilities::to_hex_string;
 
@@ -96,57 +98,72 @@ BOOST_AUTO_TEST_CASE(StdGeneratePlayground)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(IncreasingAddressesPrintWorks)
+BOOST_FIXTURE_TEST_CASE(IncreasingAddressesPrintWorks, CaptureStdoutFixture)
 {
-  //std::cout << "\n IncreasingAddressesPrintWorks begins \n";
   {
     const ToHexString hex_string {1234};
 
     hex_string.increasing_addresses_print();
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "d2 4 0 0 ");
+    local_oss_.str("");
   }
   {
     constexpr short x_1 {15213};
     const ToHexString hex_string {x_1};
     hex_string.increasing_addresses_print(); // 6d 93
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "6d 3b ");
+    local_oss_.str("");
   }
   {
     constexpr short y {-15213};
     const ToHexString hex_string {y};
     hex_string.increasing_addresses_print();
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "93 c4 ");
+    local_oss_.str("");
   }
-
-  //std::cout << "\n IncreasingAddressesPrintWorks ends \n";
 
   BOOST_TEST(true);
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(DecreasingAddressesPrintWorks)
+BOOST_FIXTURE_TEST_CASE(DecreasingAddressesPrintWorks, CaptureStdoutFixture)
 {
-  std::cout << "\n DecreasingAddressesPrintWorks begins \n";
   {
     const ToHexString hex_string {1234};
 
     hex_string.decreasing_addresses_print();
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "0 0 4 d2 ");
+    local_oss_.str("");
   }
   {
     const ToHexString hex_string {0x123456789abcdef0};
 
     hex_string.decreasing_addresses_print();
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "12 34 56 78 9a bc de f0 ");
+    local_oss_.str("");
   }
   {
     constexpr short x_1 {15213};
     const ToHexString hex_string {x_1};
     hex_string.decreasing_addresses_print();
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "3b 6d ");
+    local_oss_.str("");
   }
   {
     constexpr short y {-15213};
     const ToHexString hex_string {y};
     hex_string.decreasing_addresses_print(); // 3b c4
+    capture_stdout();
+    BOOST_TEST(local_oss_.str() == "c4 93 ");
+    local_oss_.str("");
   }
-
-  std::cout << "\n DecreasingAddressesPrintWorks ends \n";
 
   BOOST_TEST(true);
 }

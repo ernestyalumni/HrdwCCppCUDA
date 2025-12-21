@@ -31,6 +31,12 @@ class BitManipulation
       x |= (1u << i);
     }
 
+    //--------------------------------------------------------------------------
+    /// Take your mask, which typically has a single 1 in the bit position you
+    /// are targeting, then do ~ so all the other bits are 1's, so that & would
+    /// let all the bits "pass through", staying 1 or 0, originally. But & with
+    /// 0 "hard sets" the target bit to 0.
+    //--------------------------------------------------------------------------
     template <typename T>
     static void clear_bit(T& x, const T i)
     {
@@ -73,6 +79,23 @@ class BitManipulation
       int input_value {static_cast<int>(x)};
 
       return (input_value & (-input_value))
+    }
+
+    //--------------------------------------------------------------------------
+    /// The idea for using & to check even or odd is checking value of lowest
+    /// valued bit.
+    //--------------------------------------------------------------------------
+
+    template <typename T>
+    static bool is_even(const T x)
+    {
+      return (x & 1u) == 0;
+    }
+
+    template <typename T>
+    static bool is_odd(const T x)
+    {
+      return (x & 1u) == 1;
     }
 };
 

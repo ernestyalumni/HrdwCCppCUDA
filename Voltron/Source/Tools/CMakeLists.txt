@@ -1,5 +1,6 @@
 ADD_LIBRARY(Tools
   CaptureCout.cpp
+  CaptureStdOut.cpp
   Filepaths.cpp
   TemporaryDirectory.cpp)
 

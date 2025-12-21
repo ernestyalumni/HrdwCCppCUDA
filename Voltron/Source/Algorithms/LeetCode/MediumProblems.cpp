@@ -1110,16 +1110,10 @@ void SetMatrixZeroes::set_zeroes(vector<vector<int>>& matrix)
   {
     for (int j {0}; j < N; ++j)
     {
-      bool is_row_seen {false};
-
       if (matrix[i][j] == 0)
       {
-        if (!is_row_seen)
-        {
-          is_row_zeroes[i / number_of_bits] |=
-            (static_cast<uint64_t>(1) << (i % number_of_bits));
-          is_row_seen = true;
-        }
+        is_row_zeroes[i / number_of_bits] |=
+          (static_cast<uint64_t>(1) << (i % number_of_bits));
 
         is_column_zeroes[j / number_of_bits] |=
           (static_cast<uint64_t>(1) << (j % number_of_bits));

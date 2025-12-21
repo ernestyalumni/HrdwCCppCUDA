@@ -221,7 +221,10 @@ def test_set_matrix_zeroes_with_edges():
     assert set_zeroes(example_2) == output_2
     assert set_zeroes(example_3) == output_3
     # If we do not check if any 0th row or 0th column has any zeroes, then in
-    # the first pass, given x_11=0, x_20=0, x_33=0.
+    # the first pass, given x_11=0, x_20=0, x_33=0, x_01, x_10, and x_20, x_00,
+    # and x_30, x_03 are marked with 0, respectively.
+    # For rows, rows x_1j, x_2j, x_3j are marked with 0's.
+    # For columns, columns x_j1, x_j3 are marked with 0's.
     assert set_zeroes(example_4) == output_4
 
 def test_product_except_self():

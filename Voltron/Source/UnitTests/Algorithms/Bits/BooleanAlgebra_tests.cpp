@@ -3,13 +3,12 @@
 // \ref https://www.cs.utexas.edu/users/fussell/courses/cs429h/lectures/Lecture_2-429h.pdf
 //------------------------------------------------------------------------------
 #include "Cpp/Utilities/SuperBitSet.h"
-#include "Utilities/ToHexString.h"
 
 #include <boost/test/unit_test.hpp>
 #include <cmath>
+#include <cstdint>
 
 using Cpp::Utilities::SuperBitSet;
-using Utilities::ToHexString;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
 BOOST_AUTO_TEST_SUITE(BooleanAlgebra_tests)
@@ -28,11 +27,19 @@ BOOST_AUTO_TEST_CASE(DemonstrateBitwiseOr)
     SuperBitSet<2> rhs_0 {0};
     BOOST_TEST_REQUIRE(rhs_0.to_string() == "00");
     BOOST_TEST_REQUIRE(rhs_0.to_ulong() == 0);   
+
+    // 0 1 |
+    // 0 0 =
+    // 0 1
     BOOST_TEST((bits | rhs_0) == bits);
     BOOST_TEST((bits | rhs_0).to_string() == "01");
     SuperBitSet<2> rhs_1 {3};
     BOOST_TEST_REQUIRE(rhs_1.to_string() == "11");
     BOOST_TEST_REQUIRE(rhs_1.to_ulong() == 3);   
+
+    // 0 1 |
+    // 1 1 =
+    // 1 1
     BOOST_TEST((bits | rhs_1) == rhs_1);
     BOOST_TEST((bits | rhs_1).to_string() == "11");
   }
@@ -65,6 +72,10 @@ BOOST_AUTO_TEST_CASE(DemonstrateBitwiseOr)
     SuperBitSet<4> expected_result {10};
     BOOST_TEST_REQUIRE(expected_result.to_string() == "1010");
     BOOST_TEST_REQUIRE(expected_result.to_ulong() == 10);
+
+    // 0 0 1 0 |
+    // 1 0 0 0 =
+    // 1 0 1 0
     BOOST_TEST((bits | rhs) == expected_result);
     BOOST_TEST((bits | rhs).to_string() == "1010");
   }
@@ -103,6 +114,11 @@ BOOST_AUTO_TEST_CASE(DemonstrateBitwiseAnd)
     SuperBitSet<4> expected_result {1};
     BOOST_TEST_REQUIRE(expected_result.to_string() == "0001");
     BOOST_TEST_REQUIRE(expected_result.to_ulong() == 1);   
+
+    // Only if "both" bits are 1, the resulting bit is 1.
+    // 0 1 0 1 &
+    // 0 0 1 1 =
+    // 0 0 0 1
     BOOST_TEST((bits & rhs) == expected_result);
     BOOST_TEST((bits & rhs).to_string() == "0001");
   }
@@ -211,6 +227,11 @@ BOOST_AUTO_TEST_CASE(DemonstrateBitwiseXor)
     SuperBitSet<4> expected_result {6};
     BOOST_TEST_REQUIRE(expected_result.to_string() == "0110");
     BOOST_TEST_REQUIRE(expected_result.to_ulong() == 6);
+
+    // 0 1 0 1 ^
+    // 0 0 1 1 =
+    // 0 1 1 0
+
     BOOST_TEST((bits ^ rhs) == expected_result);
     BOOST_TEST((bits ^ rhs).to_string() == "0110");
   }
@@ -312,6 +333,13 @@ BOOST_AUTO_TEST_CASE(DemonstrateBitwiseNot)
     BOOST_TEST((~bits).to_string() == "00000000");
     BOOST_TEST((~bits).to_ulong() == 0);
   }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(DemonstrateTwosComplement)
+{
+
 }
 
 BOOST_AUTO_TEST_SUITE_END() // BooleanAlgebra_tests

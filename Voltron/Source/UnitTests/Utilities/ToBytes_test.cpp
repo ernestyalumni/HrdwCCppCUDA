@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // \file ToBytes_test.cpp
 //------------------------------------------------------------------------------
-#include "Tools/CaptureCout.h"
+#include "Tools/CaptureStdOut.h"
 #include "Utilities/ToBytes.h"
 
 #include <boost/test/unit_test.hpp>
@@ -11,7 +11,7 @@
 #include <limits>
 #include <string>
 
-using Tools::CaptureCoutFixture;
+using Tools::CaptureStdoutFixture;
 using Utilities::ToBytes;
 
 BOOST_AUTO_TEST_SUITE(Utilities)
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(ReinterpretCastAndHexadecimalPrintExamples)
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(ToBytesWorks)
+BOOST_FIXTURE_TEST_CASE(ToBytesWorks, CaptureStdoutFixture)
 {
   constexpr unsigned short x_0 {15213};
   constexpr short x_1 {15213};
@@ -62,20 +62,37 @@ BOOST_AUTO_TEST_CASE(ToBytesWorks)
 
   const ToBytes to_bytes_x_0 {x_0};
 
-  std::cout << "\n Print 15213 with increasing addresses \n";
+  // Notice the trailing space.
+
   to_bytes_x_0.increasing_addresses_print(); // WORKS
+  capture_stdout();
+  BOOST_TEST(local_oss_.str() == "6d 3b ");
+  local_oss_.str("");
+  
   //to_bytes_x_0.decreasing_addresses_print(); // WORKS
-  std::cout << "\n END OF Print 15213 with increasing addresses \n";
 
   ToBytes to_bytes_x_1 {x_1};
 
   to_bytes_x_1.increasing_addresses_print(); // WORKS 93
+  capture_stdout();
+  BOOST_TEST(local_oss_.str() == "6d 3b ");
+  local_oss_.str("");
+
   to_bytes_x_1.decreasing_addresses_print(); // WORKS c4
+  capture_stdout();
+  BOOST_TEST(local_oss_.str() == "3b 6d ");
+  local_oss_.str("");
 
   const ToBytes to_bytes_y {y};
 
   to_bytes_y.increasing_addresses_print(); // WORKS c4
+  capture_stdout();
+  BOOST_TEST(local_oss_.str() == "93 c4 ");
+  local_oss_.str("");
+
   to_bytes_y.decreasing_addresses_print(); // WORKS 93
+  capture_stdout();
+  BOOST_TEST(local_oss_.str() == "c4 93 ");
 }
 
 //------------------------------------------------------------------------------
