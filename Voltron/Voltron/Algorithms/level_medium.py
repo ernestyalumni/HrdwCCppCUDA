@@ -232,6 +232,12 @@ class SetMatrixZeroes:
         naively, we mark all x_l0 = 0 for all l in [0, M - 1]. But be careful
         not to mark x_lk = 0 for all k in [0, N - 1] for all those l's.
 
+        Consider
+        [[0,1,2],[3,4,5],[1,3,1]]
+        For x_00, if we do not check if any 0th row or 0th column has any
+        zeroes, then only x_00 is marked. In the next for loops from range(1, M)
+        and range(1, N), those won't mark the 0th row or 0th column.
+
         Space: O(1) (in place modification)
         """
         M = len(matrix)
