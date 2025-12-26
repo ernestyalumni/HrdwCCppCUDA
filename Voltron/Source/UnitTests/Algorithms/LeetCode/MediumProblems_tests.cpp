@@ -38,6 +38,8 @@ using Algorithms::LeetCode::FindAllAnagramsInAString;
 using Algorithms::LeetCode::TwoSumII;
 // 271. String Encode and Decode
 using Algorithms::LeetCode::StringEncodeAndDecode;
+// 289. Game of Life
+using Algorithms::LeetCode::GameOfLife;
 // 347. Top K Frequent Elements
 using Algorithms::LeetCode::TopKFrequentElements;
 // 542. 01 Matrix
@@ -2049,13 +2051,16 @@ BOOST_AUTO_TEST_CASE(StringEncodeAndDecodeDecodeWithPrefixNeetDecodes)
 
 BOOST_AUTO_TEST_CASE(GameOfLifeUpdatesBoard)
 {
+  vector<vector<int>> example_1_board {{0,1,0},{0,0,1},{1,1,1},{0,0,0}};
+  vector<vector<int>> example_1_expected {{0,0,0},{1,0,1},{0,1,1},{0,1,0}};
+  vector<vector<int>> example_2_board {{1,1},{1,0}};
+  vector<vector<int>> example_2_expected {{1,1},{1,1}};
 
-  vector<vector<int>> example_1_board {{0,1,0},{0,0,1},{1,1,1},{0,0,0}}
-  vector<vector<int>> example_1_expected {{0,0,0},{1,0,1},{0,1,1},{0,1,0}}
-  vector<vector<int>> example_2_board {{1,1},{1,0}}
-  vector<vector<int>> example_2_expected {{1,1},{1,1}}
+  GameOfLife::game_of_life(example_1_board);
+  BOOST_TEST(example_1_board == example_1_expected);
 
-
+  GameOfLife::game_of_life(example_2_board);
+  BOOST_TEST(example_2_board == example_2_expected);
 }
 
 //------------------------------------------------------------------------------

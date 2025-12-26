@@ -2352,6 +2352,114 @@ vector<string> StringEncodeAndDecode::decode_with_prefix_neet(string s)
 }
 
 //------------------------------------------------------------------------------
+/// 289. Game of Life
+//------------------------------------------------------------------------------
+
+void GameOfLife::game_of_life(vector<vector<int>>& board)
+{
+  const int M {static_cast<int>(board.size())};
+  const int N {static_cast<int>(board[0].size())};
+  using Indices = tuple<int, int>;
+  auto is_valid_indices = [M, N](const Indices& indices) -> bool
+  {
+    const auto [i, j] = indices;
+    return (i >= 0 && i < M && j >= 0 && j < N);
+  };
+
+  static constexpr array<Indices, 8> directions {
+    // right
+    make_tuple(0, 1),
+    // left
+    make_tuple(0, -1),
+    // down
+    make_tuple(1, 0),
+    // up
+    make_tuple(-1, 0),
+    // down-right
+    make_tuple(1, 1),
+    // down-left
+    make_tuple(1, -1),
+    // up-right
+    make_tuple(-1, 1),
+    // down-left
+    make_tuple(-1, -1)};
+
+  static constexpr int ALIVE {1};
+  static constexpr int DEAD {0};
+  static constexpr int ALIVE_GOING_TO_DEAD {2};
+  static constexpr int DEAD_GOING_TO_ALIVE {-1};
+
+  auto get_next_state = [M, N, &is_valid_indices, &board](
+    const int i,
+    const int j) -> int
+  {
+    int live_neighbors {0};
+
+    for (const auto& [di, dj] : directions)
+    {
+      const Indices new_indices {i + di, j + dj};
+      if (is_valid_indices(new_indices))
+      {
+        const int new_value {board[get<0>(new_indices)][get<1>(new_indices)]};
+        if (new_value == ALIVE || new_value == ALIVE_GOING_TO_DEAD)
+        {
+          live_neighbors++;
+        }
+      }
+    }
+
+    const int current_value {board[i][j]};
+
+    // If under-population or over-population, die.
+    if (live_neighbors < 2 || live_neighbors > 3)
+    {
+      if (current_value == ALIVE)
+      {
+        return ALIVE_GOING_TO_DEAD;
+      }
+      return current_value;
+    }
+
+    // If reproduction, come to life, else live on.
+    if (live_neighbors == 3)
+    {
+      if (current_value == DEAD)
+      {
+        return DEAD_GOING_TO_ALIVE;
+      }
+      return current_value;
+    }
+    // live_neighbors == 2 expected, and if alive, it lives on. If dead, it
+    // stays dead.
+    return current_value;
+  };
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      board[i][j] = get_next_state(i, j);
+    }
+  }
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (board[i][j] == ALIVE_GOING_TO_DEAD)
+      {
+        board[i][j] = DEAD;
+      }
+
+      if (board[i][j] == DEAD_GOING_TO_ALIVE)
+      {
+        board[i][j] = ALIVE;
+      }
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 347. Top K Frequent Elements
 //------------------------------------------------------------------------------
 /*
