@@ -1685,6 +1685,40 @@ vector<int> TwoSumII::two_sum(vector<int>& numbers, int target)
 }
 
 //------------------------------------------------------------------------------
+/// 187. Repeated DNA Sequences
+/// https://leetcode.com/problems/repeated-dna-sequences/description/
+//------------------------------------------------------------------------------
+vector<string> RepeatedDNASequences::find_repeated_dna_sequences(string s)
+{
+  static constexpr int DNA_SEQUENCE_LENGTH {10};
+  const int N {static_cast<int>(s.size())};
+
+  if (N <= DNA_SEQUENCE_LENGTH)
+  {
+    return {};
+  }
+
+  unordered_map<string, int> substring_to_count {};
+
+  for (int i {0}; i < (N - DNA_SEQUENCE_LENGTH + 1); ++i)
+  {
+    const string substring {s.substr(i, DNA_SEQUENCE_LENGTH)};
+    substring_to_count[substring]++;
+  }
+
+  vector<string> repeated_dna_sequences {};
+  for (const auto& [substring, count] : substring_to_count)
+  {
+    if (count > 1)
+    {
+      repeated_dna_sequences.push_back(substring);
+    }
+  }
+
+  return repeated_dna_sequences;
+}
+
+//------------------------------------------------------------------------------
 /// 200. Number of Islands
 //------------------------------------------------------------------------------
 
@@ -3341,6 +3375,181 @@ vector<int> DailyTemperatures::daily_temperatures(vector<int>& temperatures)
   }
 
   return answer;
+}
+
+//------------------------------------------------------------------------------
+/// 1297. Maximum Number of Occurrences of a Substring
+/// https://leetcode.com/problems/maximum-number-of-occurrences-of-a-substring/description/
+/// Constraints:
+///
+/// 1 <= s.length <= 105
+/// 1 <= maxLetters <= 26
+/// 1 <= minSize <= maxSize <= min(26, s.length)
+/// s consists of only lowercase English letters.
+//------------------------------------------------------------------------------
+
+int MaximumNumberOfOccurrencesOfASubstring::max_freq(
+  string s,
+  int max_letters,
+  int min_size,
+  int max_size)
+{
+  auto is_valid_substring = [&](const string& substring) -> bool
+  {
+    unordered_set<char> unique_characters {};
+    for (const char c : substring)
+    {
+      unique_characters.insert(c);
+    }
+    return unique_characters.size() <= max_letters;
+  };
+
+  const int N {static_cast<int>(s.size())};
+
+  // space complexity: N * (max_size - min_size + 1) ->
+  // O(N * (max_size - min_size + 1))
+  unordered_map<string, int> substring_to_count {};
+
+  // time complexity: O(N)
+  for (int i {0}; i < (N - min_size + 1); ++i)
+  {
+    for (int k {min_size}; k <= max_size; ++k)
+    {
+      // From
+      // https://en.cppreference.com/w/cpp/string/basic_string/substr.html
+      // if requested substring extends past the end of the string, i.e. the
+      // count is greater than size() - pos, the returned substring is
+      // [pos, size()], so that we need to check if the substring doesn't extend
+      // past the end of the string.
+      if ((i + k) <= N)
+      {
+        const string substring {s.substr(i, k)};
+        if (is_valid_substring(substring))
+        {
+          substring_to_count[substring]++;
+        }
+      }
+    }
+  }
+
+  int max_freq {0};
+  for (const auto& [_, count] : substring_to_count)
+  {
+    max_freq = max(max_freq, count);
+  }
+
+  return max_freq;
+}
+
+//------------------------------------------------------------------------------
+/// Observe that the substring with the most occurrences must always be the
+/// substring of minimal size.
+//------------------------------------------------------------------------------
+
+int MaximumNumberOfOccurrencesOfASubstring::max_freq_with_bitfield(
+  string s,
+  int max_letters,
+  int min_size,
+  int max_size)
+{
+  const int N {static_cast<int>(s.size())};
+  unordered_map<string, int> substring_to_count {};
+
+  auto is_valid_substring = [&](const int i) -> bool
+  {
+    uint32_t bitfield {0};
+    int unique_characters_seen {0};
+    // Only need to check up to the min size because the substring of most
+    // occurrences must be of minimal size.
+    for (int j {i}; j < (i + min_size); ++j)
+    {
+      const int index {static_cast<int>(s[j] - 'a')};
+      const bool is_bit_set_high {(bitfield & (1u << index)) != 0};
+      if (!is_bit_set_high)
+      {
+        unique_characters_seen++;
+        bitfield |= (1 << index);
+      }
+    }
+
+    return unique_characters_seen <= max_letters;
+  };
+
+  for (int i {0}; i < (N - min_size + 1); ++i)
+  {
+    if (is_valid_substring(i))
+    {
+      substring_to_count[s.substr(i, min_size)]++;
+    }
+  }
+
+  int max_freq {0};
+  for (const auto& [_, count] : substring_to_count)
+  {
+    max_freq = max(max_freq, count);
+  }
+
+  return max_freq;
+}
+
+int MaximumNumberOfOccurrencesOfASubstring::max_freq_with_sliding_window(
+  string s,
+  int max_letters,
+  int min_size,
+  int max_size)
+{
+  const int N {static_cast<int>(s.size())};
+  unordered_map<string, int> substring_to_count {};
+
+  array<int, 26> letter_index_to_count {};
+  int unique_characters_seen {0};
+
+  // Initialize first window.
+  for (int i {0}; i < min_size; ++i)
+  {
+    const int index {static_cast<int>(s[i] - 'a')};
+    letter_index_to_count[index]++;
+    if (letter_index_to_count[index] == 1)
+    {
+      unique_characters_seen++;
+    }
+  }
+
+  // Process first window.
+  if (unique_characters_seen <= max_letters)
+  {
+    substring_to_count[s.substr(0, min_size)]++;
+  }
+
+  for (int i {min_size}; i < N; ++i)
+  {
+    const int left_most_index {static_cast<int>(s[i - min_size] - 'a')};
+    letter_index_to_count[left_most_index]--;
+    if (letter_index_to_count[left_most_index] == 0)
+    {
+      unique_characters_seen--;
+    }
+
+    const int right_most_index {static_cast<int>(s[i] - 'a')};
+    letter_index_to_count[right_most_index]++;
+    if (letter_index_to_count[right_most_index] == 1)
+    {
+      unique_characters_seen++;
+    }
+
+    if (unique_characters_seen <= max_letters)
+    {
+      substring_to_count[s.substr(i - min_size + 1, min_size)]++;
+    }
+  }
+
+  int max_freq {0};
+  for (const auto& [_, count] : substring_to_count)
+  {
+    max_freq = max(max_freq, count);
+  }
+
+  return max_freq;
 }
 
 /// \name 2944. Minimum Number of Coins for Fruits

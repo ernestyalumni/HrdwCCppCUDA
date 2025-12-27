@@ -4,6 +4,7 @@
 #include "DataStructures/BinaryTrees.h"
 
 #include <cstddef>
+#include <cstdint>
 #include <optional>
 #include <string>
 #include <tuple>
@@ -471,6 +472,38 @@ class TwoSumII
 };
 
 //------------------------------------------------------------------------------
+/// 187. Repeated DNA Sequences
+/// https://leetcode.com/problems/repeated-dna-sequences/description/
+/// The DNA sequence is composed of a series of nucleotides abbreviated as 'A',
+/// 'C', 'G', and 'T'.
+///
+/// For example, "ACGAATTCCG" is a DNA sequence.
+///
+/// When studying DNA, it is useful to identify repeated sequences within the
+/// DNA.
+///
+/// Given a string s that represents a DNA sequence, return all the
+/// 10-letter-long sequences (substrings) that occur more than once in a DNA
+/// molecule. You may return the answer in any order.
+///
+/// Constraints:
+///
+/// 1 <= s.length <= 105
+/// s[i] is either 'A', 'C', 'G', or 'T'.
+//------------------------------------------------------------------------------
+class RepeatedDNASequences
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// Leetcode: Runtime
+    /// 35ms
+    /// Beats82.71%
+    //--------------------------------------------------------------------------
+    static std::vector<std::string> find_repeated_dna_sequences(std::string s);
+};
+
+//------------------------------------------------------------------------------
 /// 200. Number of Islands
 /// Key idea: Graph. Map each matrix element / matrix cell to a vertex on the
 /// graph. Map the allowed (watch for boundaries) directions, up, down, left,
@@ -872,6 +905,63 @@ class DailyTemperatures
     /// processing elements in reverse order (LIFO).
     //--------------------------------------------------------------------------
     static std::vector<int> daily_temperatures(std::vector<int>& temperatures);
+};
+
+//------------------------------------------------------------------------------
+/// 1297. Maximum Number of Occurrences of a Substring
+///
+/// Given a string s, return the maximum number of occurrences of any substring
+/// under the following rules:
+///
+/// The number of unique characters in the substring must be less than or equal
+/// to maxLetters.
+/// The substring size must be between minSize and maxSize inclusive.
+///
+/// Constraints:
+///
+/// 1 <= s.length <= 105
+/// 1 <= maxLetters <= 26
+/// 1 <= minSize <= maxSize <= min(26, s.length)
+/// s consists of only lowercase English letters.
+///
+/// Key observations:
+/// Observe that the substring with the most occurrences must always be a
+/// a substring of minimal size.
+/// Proof by contradiction: if a substring is of size min size + 1 and has
+/// maximum occurrence, each of those occurrences contains a substring of size
+/// min size and would occur at least as much as substing of size min size + 1.
+//------------------------------------------------------------------------------
+class MaximumNumberOfOccurrencesOfASubstring
+{
+  public:
+
+    static int max_freq(
+      std::string s,
+      int max_letters,
+      int min_size,
+      int max_size);
+
+    //--------------------------------------------------------------------------
+    /// Leetcode: Runtime
+    /// 31ms
+    /// Beats83.88%
+    //--------------------------------------------------------------------------
+    static int max_freq_with_bitfield(
+      std::string s,
+      int max_letters,
+      int min_size,
+      int max_size);
+
+    //--------------------------------------------------------------------------
+    /// Leetcode: Runtime
+    /// 23ms
+    /// Beats94.89%
+    //--------------------------------------------------------------------------
+    static int max_freq_with_sliding_window(
+      std::string s,
+      int max_letters,
+      int min_size,
+      int max_size);
 };
 
 //------------------------------------------------------------------------------

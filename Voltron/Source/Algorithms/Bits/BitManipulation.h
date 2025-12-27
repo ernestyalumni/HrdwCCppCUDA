@@ -17,9 +17,9 @@ class BitManipulation
     /// Is ith bit set or not.
     //--------------------------------------------------------------------------
     template <typename T>
-    static bool check_bit(const T x, const T i)
+    static bool is_bit_high(const T x, const T i)
     {
-      return ((x & (1u << i)) == 0);
+      return ((x & (1u << i)) != 0);
     }
 
     //--------------------------------------------------------------------------
