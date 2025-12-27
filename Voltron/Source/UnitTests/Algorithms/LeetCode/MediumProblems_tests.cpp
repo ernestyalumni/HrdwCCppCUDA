@@ -46,6 +46,8 @@ using Algorithms::LeetCode::TopKFrequentElements;
 using Algorithms::LeetCode::Update01Matrix;
 // 567. Permutation in String
 using Algorithms::LeetCode::PermutationInString;
+// 692. Top K Frequent Words
+using Algorithms::LeetCode::TopKFrequentWords;
 // 1297. Maximum Number of Occurrences of a Substring
 using Algorithms::LeetCode::MaximumNumberOfOccurrencesOfASubstring;
 using DataStructures::BinaryTrees::TreeNode;
@@ -2562,6 +2564,43 @@ BOOST_AUTO_TEST_CASE(ExpandFromCenterForEachElementWorks)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // PalindromicSubstrings_0647_tests
+
+//------------------------------------------------------------------------------
+/// 692. Top K Frequent Words
+/// https://leetcode.com/problems/top-k-frequent-words/description/
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TopKFrequentWordsWithHashMapWorksForBruteForce)
+{
+  // Example 1: k = 2
+  vector<string> top_k_frequent_words_example_1_input {
+    "i","love","leetcode","i","love","coding"};
+  const vector<string> top_k_frequent_words_example_1_expected {
+     "i","love"};
+
+  auto result = TopKFrequentWords::brute_force(
+    top_k_frequent_words_example_1_input,
+    2);
+
+  BOOST_TEST(result == top_k_frequent_words_example_1_expected);
+
+  // Example 2: k = 4
+  vector<string> top_k_frequent_words_example_2_input {
+    "the","day","is","sunny","the","the","the","sunny","is","is"
+  };
+  vector<string> top_k_frequent_words_example_2_expected {
+    "the","is","sunny","day"
+  };
+
+  result = TopKFrequentWords::brute_force(
+    top_k_frequent_words_example_2_input,
+    4
+  );
+
+  BOOST_TEST(result == top_k_frequent_words_example_2_expected);
+}
 
 /// 739. Daily Temperatures
 

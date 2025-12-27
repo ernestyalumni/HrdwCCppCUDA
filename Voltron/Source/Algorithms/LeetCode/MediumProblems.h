@@ -888,6 +888,46 @@ class PalindromicSubstrings
 };
 
 //------------------------------------------------------------------------------
+/// 692. Top K Frequent Words
+/// https://leetcode.com/problems/top-k-frequent-words/description/
+/// Given an array of strings words and an integer k, return the k most frequent
+/// strings.
+///
+/// Return the answer sorted by the frequency from highest to lowest. Sort the
+/// words with the same frequency by their lexicographical order.
+///
+/// Constraints:
+///
+/// 1 <= words.length <= 500
+/// 1 <= words[i].length <= 10
+/// words[i] consists of lowercase English letters.
+/// k is in the range [1, The number of unique words[i]]
+///
+/// Follow-up: Could you solve it in O(n log(k)) time and O(n) extra space?
+//------------------------------------------------------------------------------
+class TopKFrequentWords
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// O(N log N) time.
+    /// Leetcode: Runtime
+    /// 4ms
+    /// Beats 44.72%
+    /// Memory
+    /// 17.27 MB
+    /// Beats 77.01%
+    //--------------------------------------------------------------------------
+    static std::vector<std::string> brute_force(
+      std::vector<std::string>& words,
+      int k);  
+
+    static std::vector<std::string> top_k_frequent(
+      std::vector<std::string>& words,
+      int k);
+};
+
+//------------------------------------------------------------------------------
 /// 739. Daily Temperatures
 /// Key themes: Traversing from the right. Stack. Check future values against
 /// elements identified by index or "key" in stack.

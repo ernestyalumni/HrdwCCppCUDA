@@ -2496,12 +2496,6 @@ void GameOfLife::game_of_life(vector<vector<int>>& board)
 //------------------------------------------------------------------------------
 /// 347. Top K Frequent Elements
 //------------------------------------------------------------------------------
-/*
-vector<int> TopKFrequentElements::top_k_frequent(vector<int>& nums, int k)
-{
-  return nums;
-}
-*/
 
 vector<int> TopKFrequentElements::brute_force(vector<int>& nums, int k)
 {
@@ -2559,6 +2553,11 @@ vector<int> TopKFrequentElements::bucket_sort(vector<int>& nums, int k)
   // single number can show up nums.size() times, count=nums.size() must be
   // accounted for.
   // index=0...(nums.size()).
+  // i.e.
+  // for count_to_nums, index for count_to_nums, index = frequency count, so if
+  // i = 3, frequency or count is 3.
+  // count_to_nums[3] is a list of all num's (elements?) with frequency or count
+  // 3.
   vector<vector<int>> count_to_nums (nums.size() + 1, vector<int>{});
 
   // O(N) time complexity.
@@ -3295,6 +3294,85 @@ bool PalindromicSubstrings::is_palindrome(const string& s)
   }
 
   return true;
+}
+
+//------------------------------------------------------------------------------
+/// 692. Top K Frequent Words
+/// https://leetcode.com/problems/top-k-frequent-words/description/ 
+/// Constraints:
+///
+/// 1 <= words.length <= 500
+/// 1 <= words[i].length <= 10
+/// words[i] consists of lowercase English letters.
+/// k is in the range [1, The number of unique words[i]]
+///
+/// Follow-up: Could you solve it in O(n log(k)) time and O(n) extra space?
+//------------------------------------------------------------------------------
+vector<string> TopKFrequentWords::brute_force(vector<string>& words, int k)
+{
+  // word to count map. O(N) space.
+  unordered_map<string, int> word_to_count {};
+  // O(N) time complexity
+  for (const string& word : words)
+  {
+    // O(1) time complexity amoritized for insertion, and lookup.
+    word_to_count[word]++;
+  }
+
+  // O(N) space (all the words get stored again).
+  unordered_map<int, vector<string>> count_to_words {};
+  // O(N) time.
+  for (const auto& [word, count] : word_to_count)
+  {
+    // O(1) time amoritized find and insert.
+    count_to_words[count].push_back(word);
+  }
+
+  // Sort each bucket of words by lexicographical order.
+  // O(N log N) time, as sort is O(k log k) time for k words to sort.
+  for (auto& [_, words] : count_to_words)
+  {
+    sort(words.begin(), words.end());
+  }
+
+  vector<pair<int, vector<string>>> count_to_words_sorted {};
+  for (const auto& [count, words] : count_to_words)
+  {
+    // O(1) insertion from the back of an array.
+    count_to_words_sorted.push_back({count, words});
+  }
+
+  // O(k log k) time for sorting k elements.
+  sort(
+    count_to_words_sorted.begin(),
+    count_to_words_sorted.end(),
+    [](const auto& a, const auto& b) -> bool
+    {
+      return a.first > b.first;
+    });
+
+  vector<string> result {};
+  int count_to_words_sorted_index {0};
+
+  // O(k) time
+  while (result.size() < k &&
+    count_to_words_sorted_index < count_to_words_sorted.size())
+  {
+    const auto& [count, words] = count_to_words_sorted[
+      count_to_words_sorted_index];
+    // O(N) time
+    for (const string& word : words)
+    {
+      result.push_back(word);
+      if (result.size() == k)
+      {
+        break;
+      }
+    }
+    count_to_words_sorted_index++;
+  }
+
+  return result;
 }
 
 /// \name 739. Daily Temperatures
