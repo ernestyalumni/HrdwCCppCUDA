@@ -1,6 +1,7 @@
 #ifndef DATA_STRUCTURES_PRIORITY_QUEUES_PRIORITY_QUEUE_H
 #define DATA_STRUCTURES_PRIORITY_QUEUES_PRIORITY_QUEUE_H
 
+#include <optional>
 #include <vector>
 
 namespace DataStructures
@@ -17,7 +18,31 @@ class PriorityQueue
     {
       return data_.empty();
     }
-    
+
+
+    const T& top() const {
+      if (data_.empty()) {
+          throw std::runtime_error("top() on empty priority queue");
+      }
+      return data_.front();
+  }
+
+  void push(const T& value) {
+      data_.push_back(value);
+      sift_up(data_.size() - 1);
+  }
+
+  void pop() {
+      if (data_.empty()) {
+          throw std::runtime_error("pop() on empty priority queue");
+      }
+      std::swap(data_.front(), data_.back());
+      data_.pop_back();
+      if (!data_.empty()) {
+          sift_down(0);
+      }
+  }
+
   protected:
 
     void sift_up(std::size_t i)
@@ -38,6 +63,35 @@ class PriorityQueue
       }
     }
 
+    void sift_down(std::size_t i)
+    {
+      const std::size_t N {data_.size()};
+      while (true) 
+      {
+        std::size_t largest {i};
+        // get_left_index, get_right_index are monotonically increasing.
+        std::size_t l {get_left_index<std::size_t>(i)};
+        std::size_t r {get_right_index<std::size_t>(i)};
+
+        // We first check if the values in the left or right indices are
+        // "smaller", since we want to "sift" or move our value at index i to
+        // be "lower" (i.e. higher index) in the "heap" (or data) than all the
+        // other values.        
+
+        if (l < N && data_[largest] < data_[l]) {
+            largest = l;
+        }
+        if (r < N && data_[largest] < data_[r]) {
+            largest = r;
+        }
+
+        if (largest == i) {
+            break;
+        }
+        std::swap(data_[i], data_[largest]);
+        i = largest;
+      }
+  }
 
     //--------------------------------------------------------------------------
     /// if 0, (0 - 1) / 2 = -0.5 or 0 (round to zero)
