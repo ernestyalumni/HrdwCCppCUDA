@@ -1154,10 +1154,13 @@ class Recursion
     static void generate_all_subsets_helper(
       Iterator current,
       Iterator end,
-      Set& current_subset,  // Current subset being built
-      std::vector<Set>& power_set)  // All subsets collected so far
+      // Current subset being built
+      Set& current_subset,
+      // All subsets collected so far
+      std::vector<Set>& power_set)
     {
       // Base case: processed all elements, add current subset
+      // Recursion depth: O(N), for N elements in the set.
       if (current == end)
       {
         power_set.push_back(current_subset);
@@ -1247,6 +1250,33 @@ class Recursion
       return power_set;
     }
 
+    template <typename Set>
+    static std::vector<Set> generate_all_subsets_recursively(const Set& set)
+    {
+      std::vector<Set> power_set {};
+      using ElementType = std::ranges::range_value_t<Set>;
+      if (std::ranges::empty(set))
+      {
+        power_set.push_back(set);
+        return power_set;
+      }
+
+      auto begin_iterator = std::ranges::begin(set);
+      auto end_iterator = std::ranges::end(set);
+      auto next_iterator = std::next(begin_iterator);
+
+      Set remaining_set(next_iterator, end_iterator);
+      auto other_subsets = generate_all_subsets_recursively(remaining_set);
+      power_set = other_subsets;
+      for (const auto& subset : other_subsets)
+      {
+        Set new_subset {subset};
+        new_subset.insert(*begin_iterator);
+        power_set.push_back(new_subset);
+      }
+
+      return power_set;
+    }
 };
 
 } // namespace PreEasyExercises

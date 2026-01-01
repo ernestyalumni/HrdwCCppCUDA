@@ -10,6 +10,7 @@ using Algorithms::PreEasyExercises::AccumulatorVariables;
 using Algorithms::PreEasyExercises::ArrayIndexing;
 using Algorithms::PreEasyExercises::Recursion;
 using std::get;
+using std::unordered_set;
 using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
@@ -540,58 +541,74 @@ BOOST_AUTO_TEST_CASE(GenerateAllPermutationsGeneratesAllPermutations)
   }
 }
 
+class GenerateAllSubsetsTestCases
+{
+  public:
+    static unordered_set<int> get_test_set_1()
+    {
+      return {1, 2, 3};
+    }
+
+    static vector<unordered_set<int>> get_expected_subsets_1()
+    {
+      return {{}, {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}};
+    }
+
+    static bool test_power_set_against_expected(
+      const auto& power_set,
+      const auto& expected_subsets)
+    {
+      bool all_matches_found {true};
+      for (const auto& subset : power_set)
+      {
+        bool found_match {false};
+        for (const auto& expected : expected_subsets)
+        {
+          if (subset.size() == expected.size())
+          {
+            bool matches {true};
+            for (const auto& elem : subset)
+            {
+              if (expected.find(elem) == expected.end())
+              {
+                matches = false;
+                break;
+              }
+            }
+            if (matches)
+            {
+              found_match = true;
+              break;
+            }
+          }
+        }
+        if (not found_match)
+        {
+          all_matches_found = false;
+          break;
+        }
+      }
+      return all_matches_found;
+    }
+};
+
 //------------------------------------------------------------------------------
 /// 7. Generate All Subsets of a Set
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(GenerateAllSubsetsWithBitfieldGeneratesPowerSet)
 {
   {
-    std::unordered_set<int> test_set {1, 2, 3};
+    const auto test_set = GenerateAllSubsetsTestCases::get_test_set_1();
     const auto power_set = Recursion::generate_all_subsets_with_bitfield(
       test_set);
 
     // 2^3 = 8 subsets
     BOOST_TEST(power_set.size() == 8);
 
-    // Expected subsets (as sets of elements)
-    std::vector<std::unordered_set<int>> expected_subsets {
-      // Empty set
-      {},
-      {1},
-      {2},
-      {3},
-      {1, 2},
-      {1, 3},
-      {2, 3},
-      {1, 2, 3}
-    };
-
     // Check that each generated subset matches an expected one
-    for (const auto& subset : power_set)
-    {
-      bool found_match = false;
-      for (const auto& expected : expected_subsets)
-      {
-        if (subset.size() == expected.size())
-        {
-          bool matches = true;
-          for (const auto& elem : subset)
-          {
-            if (expected.find(elem) == expected.end())
-            {
-              matches = false;
-              break;
-            }
-          }
-          if (matches)
-          {
-            found_match = true;
-            break;
-          }
-        }
-      }
-      BOOST_TEST(found_match);
-    }
+    BOOST_TEST(GenerateAllSubsetsTestCases::test_power_set_against_expected(
+      power_set,
+      GenerateAllSubsetsTestCases::get_expected_subsets_1()));
 
     // Also check that we have the right number of each size
     std::unordered_map<std::size_t, std::size_t> size_counts {};
@@ -609,51 +626,15 @@ BOOST_AUTO_TEST_CASE(GenerateAllSubsetsWithBitfieldGeneratesPowerSet)
 BOOST_AUTO_TEST_CASE(GenerateAllSubsetsGeneratesPowerSet)
 {
   {
-    std::unordered_set<int> test_set {1, 2, 3};
+    const auto test_set = GenerateAllSubsetsTestCases::get_test_set_1();
     const auto power_set = Recursion::generate_all_subsets(test_set);
 
     // 2^3 = 8 subsets
     BOOST_TEST(power_set.size() == 8);
 
-    // Expected subsets (as sets of elements)
-    std::vector<std::unordered_set<int>> expected_subsets {
-      // Empty set
-      {},
-      {1},
-      {2},
-      {3},
-      {1, 2},
-      {1, 3},
-      {2, 3},
-      {1, 2, 3}
-    };
-
-    // Check that each generated subset matches an expected one
-    for (const auto& subset : power_set)
-    {
-      bool found_match = false;
-      for (const auto& expected : expected_subsets)
-      {
-        if (subset.size() == expected.size())
-        {
-          bool matches = true;
-          for (const auto& elem : subset)
-          {
-            if (expected.find(elem) == expected.end())
-            {
-              matches = false;
-              break;
-            }
-          }
-          if (matches)
-          {
-            found_match = true;
-            break;
-          }
-        }
-      }
-      BOOST_TEST(found_match);
-    }
+    BOOST_TEST(GenerateAllSubsetsTestCases::test_power_set_against_expected(
+      power_set,
+      GenerateAllSubsetsTestCases::get_expected_subsets_1()));
 
     // Also check that we have the right number of each size
     std::unordered_map<std::size_t, std::size_t> size_counts {};
@@ -671,51 +652,15 @@ BOOST_AUTO_TEST_CASE(GenerateAllSubsetsGeneratesPowerSet)
 BOOST_AUTO_TEST_CASE(GenerateAllSubsetsIterativelyGeneratesPowerSet)
 {
   {
-    std::unordered_set<int> test_set {1, 2, 3};
+    const auto test_set = GenerateAllSubsetsTestCases::get_test_set_1();
     const auto power_set = Recursion::generate_all_subsets(test_set);
 
     // 2^3 = 8 subsets
     BOOST_TEST(power_set.size() == 8);
 
-    // Expected subsets (as sets of elements)
-    std::vector<std::unordered_set<int>> expected_subsets {
-      // Empty set
-      {},
-      {1},
-      {2},
-      {3},
-      {1, 2},
-      {1, 3},
-      {2, 3},
-      {1, 2, 3}
-    };
-
-    // Check that each generated subset matches an expected one
-    for (const auto& subset : power_set)
-    {
-      bool found_match = false;
-      for (const auto& expected : expected_subsets)
-      {
-        if (subset.size() == expected.size())
-        {
-          bool matches = true;
-          for (const auto& elem : subset)
-          {
-            if (expected.find(elem) == expected.end())
-            {
-              matches = false;
-              break;
-            }
-          }
-          if (matches)
-          {
-            found_match = true;
-            break;
-          }
-        }
-      }
-      BOOST_TEST(found_match);
-    }
+    BOOST_TEST(GenerateAllSubsetsTestCases::test_power_set_against_expected(
+      power_set,
+      GenerateAllSubsetsTestCases::get_expected_subsets_1()));
 
     // Also check that we have the right number of each size
     std::unordered_map<std::size_t, std::size_t> size_counts {};
@@ -729,7 +674,6 @@ BOOST_AUTO_TEST_CASE(GenerateAllSubsetsIterativelyGeneratesPowerSet)
     BOOST_TEST(size_counts[3] == 1);  // 1 three-element set
   }
 }
-
 
 BOOST_AUTO_TEST_SUITE_END() // ArrayIndexing_tests
 

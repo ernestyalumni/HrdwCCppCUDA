@@ -4,7 +4,8 @@ https://blog.faangshui.com/p/before-leetcode
 
 from Voltron.Algorithms.level_preeasy import (
     # 7. Generate All Subsets of a Set
-    generate_all_subsets_iterative
+    generate_all_subsets_iterative,
+    generate_all_subsets_recursive
     )
 
 import pytest
@@ -29,4 +30,10 @@ def test_generate_all_subsets_iterative(power_set_test_cases):
     test_cases = power_set_test_cases
     for test_case in test_cases:
         assert sorted(generate_all_subsets_iterative(test_case["input"])) == \
+            sorted(test_case["output"])
+
+def test_generate_all_subsets_recursive(power_set_test_cases):
+    test_cases = power_set_test_cases
+    for test_case in test_cases:
+        assert sorted(generate_all_subsets_recursive(test_case["input"])) == \
             sorted(test_case["output"])
