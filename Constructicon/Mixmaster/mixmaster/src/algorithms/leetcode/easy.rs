@@ -147,9 +147,9 @@ impl ValidPalindrome
   //----------------------------------------------------------------------------
   pub fn is_palindrome(s: String) -> bool
   {
-    let N = s.len();
+    let n = s.len();
     let mut l_ptr = 0;
-    let mut r_ptr = N - 1;
+    let mut r_ptr = n - 1;
 
     // String is a collection of UTF-8 encoded bytes, and not single char
     // elements.

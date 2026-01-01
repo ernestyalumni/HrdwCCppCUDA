@@ -134,6 +134,7 @@ ADD_EXECUTABLE(Check
   DataStructures/LinkedLists/SingleNode_tests.cpp
   DataStructures/LinkedLists_tests.cpp
   DataStructures/Lists/ArrayList_tests.cpp
+  DataStructures/PriorityQueues/PriorityQueue_tests.cpp
   DataStructures/Queues/CircularQueue_tests.cpp
   DataStructures/Queues/DynamicQueue_tests.cpp
   DataStructures/Queues/LexicographicPair_tests.cpp

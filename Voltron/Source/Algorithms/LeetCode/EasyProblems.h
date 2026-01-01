@@ -21,8 +21,14 @@ class TwoSum
 {
   public:
 
+    //--------------------------------------------------------------------------
+    /// O(N^2) time complexity, 2 nested for loops to get each value.
+    //--------------------------------------------------------------------------
     static std::vector<int> brute_force(std::vector<int>& nums, int target);
 
+    //--------------------------------------------------------------------------
+    /// O(N) time, O(N) space.
+    //--------------------------------------------------------------------------
     static std::vector<int> two_sum(std::vector<int>& nums, int target);
 };
 

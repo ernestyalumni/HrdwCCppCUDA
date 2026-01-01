@@ -2,6 +2,8 @@
 pub mod medium_tests
 {
   use mixmaster::algorithms::leetcode::medium::{
+    // 3. Longest Substring Without Repeating Characters
+    LengthOfLongestSubstring,
     // 15.
     ThreeSum,
   };
@@ -13,6 +15,38 @@ pub mod medium_tests
     vecs.into_iter()
       .map(|vec| vec.into_iter().collect::<BTreeSet<_>>())
       .collect::<BTreeSet<_>>()
+  }
+
+  //----------------------------------------------------------------------------
+  /// 3. Longest Substring Without Repeating Characters
+  /// https://leetcode.com/problems/longest-substring-without-repeating-characters/
+  //----------------------------------------------------------------------------
+  #[test]
+  fn test_length_of_longest_substring()
+  {
+    // Example 1
+    let s = "abcabcbb".to_string();
+    let expected = 3;
+    let result = LengthOfLongestSubstring::length_of_longest_substring(s);
+    assert_eq!(result, expected);
+
+    // Example 2
+    let s = "bbbbb".to_string();
+    let expected = 1;
+    let result = LengthOfLongestSubstring::length_of_longest_substring(s);
+    assert_eq!(result, expected);
+
+    // Example 3
+    let s = "pwwkew".to_string();
+    let expected = 3;
+    let result = LengthOfLongestSubstring::length_of_longest_substring(s);
+    assert_eq!(result, expected);
+
+    // Example 4
+    let s = "tmmzuxt".to_string();
+    let expected = 5;
+    let result = LengthOfLongestSubstring::length_of_longest_substring(s);
+    assert_eq!(result, expected);
   }
 
   //----------------------------------------------------------------------------

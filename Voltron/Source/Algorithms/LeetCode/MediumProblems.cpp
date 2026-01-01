@@ -56,6 +56,11 @@ namespace LeetCode
 
 //------------------------------------------------------------------------------
 /// 3. Longest Substring Without Repeating Characters
+/// https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+/// Constraints:
+///
+/// 0 <= s.length <= 5 * 104
+/// s consists of English letters, digits, symbols and spaces.
 //------------------------------------------------------------------------------
 
 int LongestSubstringWithoutRepeating::length_of_longest_substring(string s)
@@ -69,6 +74,7 @@ int LongestSubstringWithoutRepeating::length_of_longest_substring(string s)
 
   // We need a way to keep track of the characters we've seen.
   // std::map is typically O(log n)
+  // character seen to index of the character in the string.
   std::map<char, int> seen_characters {};
 
   int maximum_length {0};
@@ -119,6 +125,7 @@ int LongestSubstringWithoutRepeating::concise_length_of_longest_substring(
   {
     const char current_c {s[j]};
 
+    // Seen character before.
     if (seen_characters.count(current_c) != 0)
     {
       // You need to take the max because you could've seen the character before

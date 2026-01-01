@@ -1,4 +1,45 @@
+use std::collections::HashMap;
+
+/// 3. Longest Substring Without Repeating Characters
+pub struct LengthOfLongestSubstring;
 pub struct ThreeSum;
+
+//------------------------------------------------------------------------------
+/// 3. Longest Substring Without Repeating Characters
+/// https://leetcode.com/problems/longest-substring-without-repeating-characters/
+/// Given a string s, find the length of the longest without duplicate
+/// characters.
+//------------------------------------------------------------------------------
+impl LengthOfLongestSubstring
+{
+  pub fn length_of_longest_substring(s: String) -> i32
+  {
+    // Map each character seen before to its index along the string.
+    let mut seen_character_to_index = HashMap::new();
+
+    let mut max_length = 0;
+    // The start index of the substring under current consideration.
+    let mut start_index = 0;
+
+    for (i, c) in s.chars().enumerate()
+    {
+      // If we've already seen the character before, then we need to start a 
+      // new substring. Do this by updating the start_index.
+      if let Some(&last_index) = seen_character_to_index.get(&c)
+      {
+        // Move the start of the new substring to consider to the immediate
+        // right of the last occurence of the seen, repeated character.
+        start_index = start_index.max(last_index + 1);
+      }
+
+      seen_character_to_index.insert(c, i);
+
+      max_length = max_length.max(i - start_index + 1);
+    }
+
+    max_length.try_into().unwrap()
+  }
+}
 
 //------------------------------------------------------------------------------
 /// 15. 3Sum.

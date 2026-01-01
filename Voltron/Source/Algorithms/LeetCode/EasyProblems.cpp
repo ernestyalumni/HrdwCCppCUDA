@@ -66,8 +66,10 @@ vector<int> TwoSum::two_sum(vector<int>& nums, int target)
   const int N {static_cast<int>(nums.size())};
 
   // Use another data structure to store progress as we traverse the array nums.
+  // O(N) space. Each value considered.
   std::map<int, int> value_and_indices {};
 
+  // O(N) time.
   for (int i {0}; i < N; ++i)
   {
     const int complement {target - nums[i]};
@@ -78,6 +80,7 @@ vector<int> TwoSum::two_sum(vector<int>& nums, int target)
     }
     else
     {
+      // O(1) amoritized time for insertion.
       value_and_indices.emplace(nums[i], i);
     }
   }
