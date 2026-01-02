@@ -12,6 +12,50 @@ namespace LeetCode
 {
 
 //------------------------------------------------------------------------------
+/// https://leetcode.com/problems/merge-k-sorted-lists/description/
+/// 23. Merge k Sorted Lists
+/// You are given an array of k linked-lists lists, each linked-list is sorted
+/// in ascending order.
+///
+/// Constraints:
+///
+/// k == lists.length
+/// 0 <= k <= 104
+/// 0 <= lists[i].length <= 500
+/// -104 <= lists[i][j] <= 104
+/// lists[i] is sorted in ascending order.
+/// The sum of lists[i].length will not exceed 104.
+///
+//------------------------------------------------------------------------------
+class MergeKSortedLists
+{
+  public:
+
+    struct ListNode
+    {
+      int value_;
+      ListNode* next_;
+
+      ListNode():
+        value_{0},
+        next_{nullptr}
+      {}
+
+      ListNode(int value):
+        value_{value},
+        next_{nullptr}
+      {}
+
+      ListNode(int value, ListNode* next):
+        value_{value},
+        next_{next}
+      {}
+    };
+
+    static ListNode* merge_k_lists(std::vector<ListNode*>& lists);
+};
+
+//------------------------------------------------------------------------------
 /// 41. First Missing Positive
 /// Constraints
 /// 1 <= nums.length <= 10^5

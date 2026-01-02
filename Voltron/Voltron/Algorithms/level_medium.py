@@ -343,6 +343,92 @@ class BinaryTreeLevelOrderTraversal:
         depth_first_search(root, 0, traversed_levels)
         return traversed_levels
 
+class NumberOfIslands:
+    """
+    https://leetcode.com/problems/number-of-islands/description/
+    200. Number of Islands
+    Given an m x n 2D binary grid grid which represents a map of '1's (land) and
+    '0's (water), return the number of islands.
+
+    O(MN) time | O(1) space.
+    Space: O(1) (in place modification)
+    O(MN) time for visiting all cells.
+
+    For "connected components" problems, consider binary tree search or
+    traversal such as depth-first search or breadth-first search.
+    """
+
+    @staticmethod
+    def number_of_islands_with_depth_first_search(grid: List[List[str]]) \
+        -> int:
+
+        M = len(grid)
+        N = len(grid[0])
+        if M == 0 or N == 0:
+            return 0
+
+        def dfs(i, j):
+            if i < 0 or i >= M or j < 0 or j >= N or grid[i][j] == '0':
+                return
+            # Key insight: marks as 0 because we've visited this already. Either
+            # imagine that islands are discrete components and once we've
+            # visited an island, we can wipe it entirely off the map, or that
+            # because of the above condition, we won't visit it again.
+            grid[i][j] = '0'
+            dfs(i + 1, j)
+            dfs(i - 1, j)
+            dfs(i, j + 1)
+            dfs(i, j - 1)
+
+        count = 0
+        # O(MN) time.
+        for i in range(M):
+            for j in range(N):
+                if grid[i][j] == '1':
+                    dfs(i, j)
+                    count += 1
+        return count
+
+    @staticmethod
+    def number_of_islands_with_breadth_first_search(grid: List[List[str]]) \
+        -> int:
+        """
+        Memory Limit Exceeded
+        39 / 49 testcases passed
+        https://leetcode.com/problems/number-of-islands/submissions/1872545582/ 
+        """
+        M = len(grid)
+        N = len(grid[0])
+        if M == 0 or N == 0:
+            return 0
+
+        def bfs(i, j):
+            if i < 0 or i >= M or j < 0 or j >= N or grid[i][j] == '0':
+                return
+
+            # At this point, logically, grid[i][j] == '1'.
+            queue = deque([(i, j)])
+            while queue:
+                current_i, current_j = queue.popleft()
+                grid[current_i][current_j] = '0'
+                if current_i + 1 < M and grid[current_i + 1][current_j] == '1':
+                    queue.append((current_i + 1, current_j))
+                if current_i - 1 >= 0 and grid[current_i - 1][current_j] == '1':
+                    queue.append((current_i - 1, current_j))
+                if current_j + 1 < N and grid[current_i][current_j + 1] == '1':
+                    queue.append((current_i, current_j + 1))
+                if current_j - 1 >= 0 and grid[current_i][current_j - 1] == '1':
+                    queue.append((current_i, current_j - 1))
+            return
+
+        count = 0
+        for i in range(M):
+            for j in range(N):
+                if grid[i][j] == '1':
+                    bfs(i, j)
+                    count += 1
+        return count
+
 class ProductOfArrayExceptSelf:
     """
     https://leetcode.com/problems/product-of-array-except-self/

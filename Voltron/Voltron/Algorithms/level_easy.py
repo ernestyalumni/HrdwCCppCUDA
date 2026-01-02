@@ -1,5 +1,5 @@
-from collections import OrderedDict
-from typing import List
+from collections import deque, OrderedDict
+from typing import List, Optional
 import sys
 
 class TwoSum(object):
@@ -43,6 +43,61 @@ class TwoSum(object):
                 value_to_index[num] = i
 
         return None
+
+class MaximumDepthOfBinaryTree:
+    
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    @staticmethod
+    def max_depth_iterative(root: Optional[TreeNode]) -> int:
+        """
+        https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
+        104. Maximum Depth of Binary Tree
+        Given the root of a binary tree, return its maximum depth.
+
+        FIFO, first-in, first-out queue for level order traversal.
+        """
+
+        if root is None:
+            return 0
+        
+        queue = deque([root])
+        depth = 0
+        while queue:
+            level_size = len(queue)
+            for _ in range(level_size):
+                current_node = queue.popleft()
+
+                if current_node.left:
+                    queue.append(current_node.left)
+                if current_node.right:
+                    queue.append(current_node.right)
+            depth += 1
+        return depth
+
+    @staticmethod
+    def max_depth_recursive(root: Optional[TreeNode]) -> int:
+        """
+        https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
+        104. Maximum Depth of Binary Tree
+        Given the root of a binary tree, return its maximum depth.
+        """
+        if root is None:
+            return 0
+
+        def max_depth_recursive_step(node) -> int:
+            if node is None:
+                return 0
+            # Return max of left/right + 1 for current node.
+            return 1 + max(
+                # Recursively find depth of left and right subtrees.
+                max_depth_recursive_step(node.left),
+                max_depth_recursive_step(node.right))
+        return max_depth_recursive_step(root)
 
 class BestTimeToBuyAndSellStock(object):
     """

@@ -6,6 +6,8 @@
 #include <vector>
 
 // Ordered by Leetcode number.
+// 23. Merge k Sorted Lists
+using Algorithms::LeetCode::MergeKSortedLists;
 using Algorithms::LeetCode::FirstMissingPositive;
 using Algorithms::LeetCode::MinimumWindowSubstring;
 using Algorithms::LeetCode::SlidingWindowMaximum;
@@ -18,6 +20,49 @@ using std::vector;
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
+
+//------------------------------------------------------------------------------
+/// https://leetcode.com/problems/merge-k-sorted-lists/
+/// 23. Merge k Sorted Lists
+//------------------------------------------------------------------------------
+
+vector<vector<MergeKSortedLists::ListNode>>
+  create_merge_k_sorted_lists_test_cases()
+{
+  // Example 1
+  // First linked list
+  MergeKSortedLists::ListNode root_1_1 {1};
+  MergeKSortedLists::ListNode c1_1_1 {4};
+  MergeKSortedLists::ListNode c2_1_1 {5};
+  root_1_1.next_ = &c1_1_1;
+  c1_1_1.next_ = &c2_1_1;
+
+  MergeKSortedLists::ListNode root_1_2 {1};
+  MergeKSortedLists::ListNode c1_1_2 {3};
+  MergeKSortedLists::ListNode c2_1_2 {4};
+  root_1_2.next_ = &c1_1_2;
+  c1_1_2.next_ = &c2_1_2;
+
+  MergeKSortedLists::ListNode root_1_3 {2};
+  MergeKSortedLists::ListNode c1_1_3 {6};
+  root_1_3.next_ = &c1_1_3;
+
+  vector<MergeKSortedLists::ListNode> lists {
+    root_1_1,
+    root_1_2,
+    root_1_3
+  };
+
+  return {lists};
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(MergeKSortedListsWorks)
+{
+  {
+  }
+}
 
 /// 41. First Missing Positive
 

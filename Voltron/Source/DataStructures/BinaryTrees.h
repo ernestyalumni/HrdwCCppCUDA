@@ -58,6 +58,7 @@ std::vector<int> preorder_traversal_iterative(TreeNode* root);
 
 std::vector<int> preorder_traversal_morris(TreeNode* root);
 
+// This is also similar to depth-first search.
 void preorder_traversal_recursive_step(
   TreeNode* node_ptr,
   std::vector<int>& result);

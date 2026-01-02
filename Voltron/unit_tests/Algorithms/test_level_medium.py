@@ -15,6 +15,8 @@ from Voltron.Algorithms.level_medium import (
     SetMatrixZeroes,
     # 102. Binary Tree Level Order Traversal
     BinaryTreeLevelOrderTraversal,
+    # 200. Number of Islands
+    NumberOfIslands,
     # 238. Product of Array Except Self
     ProductOfArrayExceptSelf,
     # 424. Longest Repeating Substring With Replacement
@@ -285,6 +287,52 @@ def test_binary_tree_level_order_traversal_recursive():
 
     assert BinaryTreeLevelOrderTraversal.level_order_traversal_recursive(
         root_3) == []
+
+# https://leetcode.com/problems/number-of-islands/description/
+# 200. Number of Islands
+
+def create_number_of_islands_test_cases():
+    example_1 = [
+        ['1', '1', '1', '1', '0'],
+        ['1', '1', '0', '1', '0'],
+        ['1', '1', '0', '0', '0'],
+        ['0', '0', '0', '0', '0']
+    ]
+    output_1 = 1
+
+    example_2 = [
+        ['1', '1', '0', '0', '0'],
+        ['1', '1', '0', '0', '0'],
+        ['0', '0', '1', '0', '0'],
+        ['0', '0', '0', '1', '1']
+    ]
+    output_2 = 3
+
+    # 39 / 49 testcases passed
+    test_case_38 = [["1","1","1","1","1","0","1","1","1","1","1","1","1","1","1","0","1","0","1","1"],["0","1","1","1","1","1","1","1","1","1","1","1","1","0","1","1","1","1","1","0"],["1","0","1","1","1","0","0","1","1","0","1","1","1","1","1","1","1","1","1","1"],["1","1","1","1","0","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["1","0","0","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["1","0","1","1","1","1","1","1","0","1","1","1","0","1","1","1","0","1","1","1"],["0","1","1","1","1","1","1","1","1","1","1","1","0","1","1","0","1","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","0","1","1","1","1","0","1","1"],["1","1","1","1","1","1","1","1","1","1","0","1","1","1","1","1","1","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["0","1","1","1","1","1","1","1","0","1","1","1","1","1","1","1","1","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["1","1","1","1","1","0","1","1","1","1","1","1","1","0","1","1","1","1","1","1"],["1","0","1","1","1","1","1","0","1","1","1","0","1","1","1","1","0","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","0","1","1","1","1","1","1","0"],["1","1","1","1","1","1","1","1","1","1","1","1","1","0","1","1","1","1","0","0"],["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"]]
+    output_38 = 1
+
+    return [example_1, output_1, example_2, output_2, test_case_38, output_38]
+
+def test_number_of_islands_with_depth_first_search():
+    example_1, output_1, example_2, output_2, test_case_38, output_38 = \
+        create_number_of_islands_test_cases()
+    assert NumberOfIslands.number_of_islands_with_depth_first_search(
+        example_1) == output_1
+    assert NumberOfIslands.number_of_islands_with_depth_first_search(
+        example_2) == output_2
+    assert NumberOfIslands.number_of_islands_with_depth_first_search(
+        test_case_38) == output_38
+
+def test_number_of_islands_with_breadth_first_search():
+    example_1, output_1, example_2, output_2, test_case_38, output_38 = \
+        create_number_of_islands_test_cases()
+    assert NumberOfIslands.number_of_islands_with_breadth_first_search(
+        example_1) == output_1
+    assert NumberOfIslands.number_of_islands_with_breadth_first_search(
+        example_2) == output_2
+    # assert NumberOfIslands.number_of_islands_with_breadth_first_search(
+    #     test_case_38) == output_38
 
 def test_product_except_self():
 

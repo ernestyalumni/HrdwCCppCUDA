@@ -11,6 +11,8 @@ from Voltron.Algorithms.level_easy import (
     # In order of appearance or usage.
     # 1. Two Sum
     TwoSum,
+    # 104. Maximum Depth of Binary Tree
+    MaximumDepthOfBinaryTree,
     # 121. Best Time to Buy and Sell Stock
     BestTimeToBuyAndSellStock,
     # 217. Contains Duplicate
@@ -107,6 +109,35 @@ def test_two_sum():
     nums = [5,5]; target = 10
 
     assert set(TwoSum.two_sum(nums, target)) == set([0,1])
+
+# 104. Maximum Depth of Binary Tree
+
+def create_maximum_depth_of_binary_tree_test_cases():
+    TreeNode = MaximumDepthOfBinaryTree.TreeNode
+    # Example 1
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    expected = 3
+
+    # Example 2
+    root_2 = TreeNode(1)
+    root_2.right = TreeNode(2)
+    expected_2 = 2
+
+    return [root, expected], [root_2, expected_2]
+
+def test_maximum_depth_of_binary_tree_iterative():
+    test_cases = create_maximum_depth_of_binary_tree_test_cases()
+    for root, expected in test_cases:
+        assert MaximumDepthOfBinaryTree.max_depth_iterative(root) == expected
+
+def test_maximum_depth_of_binary_tree_recursive():
+    test_cases = create_maximum_depth_of_binary_tree_test_cases()
+    for root, expected in test_cases:
+        assert MaximumDepthOfBinaryTree.max_depth_recursive(root) == expected
 
 def test_best_time_to_buy_and_sell_stock_max_profit():
     """

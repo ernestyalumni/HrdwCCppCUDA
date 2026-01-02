@@ -522,6 +522,7 @@ class RepeatedDNASequences
 /// right, i.e. horizontal, vertical adjacent, to edges between vertices.
 /// An island is surrounded by water, so if we hit water, we can end looking
 /// from there.
+///
 /// Key insight is to reuse the grid and that it's ok to mark a visited element
 /// with a '0' for seen.
 //------------------------------------------------------------------------------

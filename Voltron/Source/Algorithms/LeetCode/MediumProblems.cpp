@@ -1813,34 +1813,34 @@ int NumberOfIslands::number_of_islands_with_breadth_first_search(
 
           //for (int element {0}; element < level_size; ++element)
           //{
-            const auto ij = unvisited_cells.front();
-            const int I {get<0>(ij)};
-            const int J {get<1>(ij)};
-            unvisited_cells.pop();
+          const auto ij = unvisited_cells.front();
+          const int I {get<0>(ij)};
+          const int J {get<1>(ij)};
+          unvisited_cells.pop();
 
-            // Remember to check if (i, j) are within the bounds.
+          // Remember to check if (i, j) are within the bounds.
 
-            if (is_valid(I + 1, J))
-            {
-              unvisited_cells.push(make_pair(I + 1, J));
-              // Mark immediately as visited.
-              grid[I + 1][J] = '0';
-            }
-            if (is_valid(I - 1, J))
-            {
-              unvisited_cells.push(make_pair(I - 1, J));
-              grid[I - 1][J] = '0';
-            }
-            if (is_valid(I, J + 1))
-            {
-              unvisited_cells.push(make_pair(I, J + 1));
-              grid[I][J + 1] = '0';
-            }
-            if (is_valid(I, J - 1))
-            {
-              unvisited_cells.push(make_pair(I, J - 1));
-              grid[I][J - 1] = '0';
-            }
+          if (is_valid(I + 1, J))
+          {
+            unvisited_cells.push(make_pair(I + 1, J));
+            // Mark immediately as visited.
+            grid[I + 1][J] = '0';
+          }
+          if (is_valid(I - 1, J))
+          {
+            unvisited_cells.push(make_pair(I - 1, J));
+            grid[I - 1][J] = '0';
+          }
+          if (is_valid(I, J + 1))
+          {
+            unvisited_cells.push(make_pair(I, J + 1));
+            grid[I][J + 1] = '0';
+          }
+          if (is_valid(I, J - 1))
+          {
+            unvisited_cells.push(make_pair(I, J - 1));
+            grid[I][J - 1] = '0';
+          }
           //}
         }
 
