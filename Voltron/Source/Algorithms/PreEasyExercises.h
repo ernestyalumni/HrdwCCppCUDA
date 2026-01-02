@@ -6,6 +6,8 @@
 #include <iostream>
 #include <iterator> // std::next, std::prev
 #include <limits> // std::numeric_limits
+#include <string>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
@@ -1277,6 +1279,83 @@ class Recursion
 
       return power_set;
     }
+
+    //--------------------------------------------------------------------------
+    /// https://blog.faangshui.com/i/149072585/recursion
+    /// 8. Compute the Sum of Digits of a Number
+    /// Given an integer, write a recursive function to compute the sum of its
+    /// digits.
+    //--------------------------------------------------------------------------
+
+    template <typename T>
+    static unsigned int compute_sum_of_digits_iteratively(const T n)
+    {
+      unsigned int sum {0};
+      T remaining_value {n};
+      while (remaining_value > 0)
+      {
+        sum += remaining_value % 10;
+        remaining_value /= 10;
+      }
+      return sum;
+    }
+
+  protected:
+
+    template <typename T>
+    static unsigned int compute_sum_of_digits_helper(
+      const T n,
+      const unsigned int sum)
+    {
+      return (n == 0) ?
+        sum : compute_sum_of_digits_helper<T>(n / 10, sum + n % 10);
+    }
+
+  public:
+
+    template <typename T>
+    static unsigned int compute_sum_of_digits(const T n)
+    {
+      return compute_sum_of_digits_helper<T>(n, 0);
+    }
+
+    //--------------------------------------------------------------------------
+    /// 8. Compute the Power of a Number
+    /// Write a recursive function to compute x raised to the power n (i.e.,
+    /// compute x^n), where n is a non-negative integer.
+    //--------------------------------------------------------------------------
+
+  protected:
+
+    template <typename T, typename U>
+    static T compute_power_of_number_helper(
+      const T x,
+      const U n)
+    {
+      return (n == static_cast<U>(0)) ?
+        1 : x * compute_power_of_number_helper<T>(x, n - 1);
+    }
+
+    static uint64_t count_number_of_occurrences_of_a_character_helper(
+      const std::string_view& s,
+      const char c,
+      const uint64_t current_count);
+
+  public:
+
+    template <typename T, typename U>
+    static T compute_power_of_number(const T x, const U n)
+    {
+      return compute_power_of_number_helper<T, U>(x, n);
+    }
+
+    static uint64_t count_number_of_occurrences_of_a_character_iteratively(
+      const std::string& s,
+      const char c);
+
+    static uint64_t count_number_of_occurrences_of_a_character(
+      const std::string& s,
+      const char c);
 };
 
 } // namespace PreEasyExercises

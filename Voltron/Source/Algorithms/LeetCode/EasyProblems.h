@@ -200,6 +200,9 @@ class NumberOf1Bits
 
 //------------------------------------------------------------------------------
 /// 217. Contains Duplicate
+/// Given an integer array nums, return true if any value appears at least twice
+/// in the array, and return false if every element is distinct.
+///
 /// Key ideas: unordered_set<int> to track duplicate values. 
 /// Or you can sort. Then 1 pass is enough. Because the duplicate would be next
 /// to the digit.
@@ -208,6 +211,9 @@ class ContainsDuplicate
 {
   public:
 
+    //--------------------------------------------------------------------------
+    /// O(N) time, O(N) space (store all distinct values)
+    //--------------------------------------------------------------------------
     static bool contains_duplicate(std::vector<int>& nums);
 
     // O(nlogn) (with sorting), O(1) space.

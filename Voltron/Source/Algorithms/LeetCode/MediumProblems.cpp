@@ -1375,6 +1375,7 @@ vector<vector<int>> BinaryTreeLevelOrderTraversal::level_order_iterative(
 
     for (int i {0}; i < level_size; ++i)
     {
+      // FIFO - first in, first out.
       traversed_nodes.emplace_back(level_nodes.front()->value_);
 
       if (level_nodes.front()->left_ != nullptr)

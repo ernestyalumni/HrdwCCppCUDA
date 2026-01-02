@@ -3,6 +3,10 @@ pub struct ValidParentheses;
 pub struct BestTimeToBuyAndSellStock;
 // 125. Valid Palindrome
 pub struct ValidPalindrome;
+// 217. Contains Duplicate
+pub struct ContainsDuplicate;
+
+use std::collections::HashSet;
 
 //------------------------------------------------------------------------------
 /// 1. Two Sum.
@@ -189,5 +193,52 @@ impl ValidPalindrome
     }
 
     result
+  }
+}
+
+//------------------------------------------------------------------------------
+/// https://leetcode.com/problems/contains-duplicate/description/
+/// 217. Contains Duplicate
+/// Given an integer array nums, return true if any value appears at least twice
+/// in the array, and return false if every element is distinct.
+//------------------------------------------------------------------------------
+impl ContainsDuplicate
+{
+  //----------------------------------------------------------------------------
+  /// O(N) time, O(N) space (store all distinct values)
+  //----------------------------------------------------------------------------
+  pub fn contains_duplicate_with_hashset(nums: Vec<i32>) -> bool
+  {
+    let mut seen = HashSet::new();
+
+    for num in nums
+    {
+      if seen.contains(&num)
+      {
+        return true;
+      }
+      else
+      {
+        seen.insert(num);
+      }
+    }
+
+    false
+  }
+
+  pub fn contains_duplicate_with_sort(nums: Vec<i32>) -> bool
+  {
+    let mut nums = nums;
+    nums.sort();
+
+    for i in 0..nums.len() - 2
+    {
+      if nums[i] == nums[i + 1]
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

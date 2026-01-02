@@ -9,7 +9,10 @@ pub mod easy_tests
     // 121.
     BestTimeToBuyAndSellStock,
     // 125.
-    ValidPalindrome};
+    ValidPalindrome,
+    // 217.
+    ContainsDuplicate,
+  };
 
   use std::collections::HashSet;
 
@@ -150,6 +153,26 @@ pub mod easy_tests
     let input = String::from("tab a cat");
 
     assert!(!ValidPalindrome::is_palindrome(input));
+  }
+
+  //----------------------------------------------------------------------------
+  /// https://leetcode.com/problems/contains-duplicate/
+  /// 217. Contains Duplicate
+  //----------------------------------------------------------------------------
+  #[test]
+  fn test_contains_duplicate_with_hashset()
+  {
+    // Example 1
+    let nums = vec![1,2,3,1];
+    assert!(ContainsDuplicate::contains_duplicate_with_hashset(nums));
+
+    // Example 2
+    let nums = vec![1,2,3,4];
+    assert!(!ContainsDuplicate::contains_duplicate_with_hashset(nums));
+
+    // Example 3
+    let nums = vec![1,1,1,3,3,4,3,2,4,2];
+    assert!(ContainsDuplicate::contains_duplicate_with_hashset(nums));
   }
 }
 

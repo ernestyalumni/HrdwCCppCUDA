@@ -1,6 +1,7 @@
 #include "Algorithms/PreEasyExercises.h"
 
 #include <boost/test/unit_test.hpp>
+#include <cstdint>
 #include <string>
 #include <tuple>
 #include <unordered_set>
@@ -595,6 +596,9 @@ class GenerateAllSubsetsTestCases
 //------------------------------------------------------------------------------
 /// 7. Generate All Subsets of a Set
 //------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(GenerateAllSubsetsWithBitfieldGeneratesPowerSet)
 {
   {
@@ -623,6 +627,8 @@ BOOST_AUTO_TEST_CASE(GenerateAllSubsetsWithBitfieldGeneratesPowerSet)
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(GenerateAllSubsetsGeneratesPowerSet)
 {
   {
@@ -649,6 +655,8 @@ BOOST_AUTO_TEST_CASE(GenerateAllSubsetsGeneratesPowerSet)
   }
 }
 
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(GenerateAllSubsetsIterativelyGeneratesPowerSet)
 {
   {
@@ -672,6 +680,113 @@ BOOST_AUTO_TEST_CASE(GenerateAllSubsetsIterativelyGeneratesPowerSet)
     BOOST_TEST(size_counts[1] == 3);  // 3 single-element sets
     BOOST_TEST(size_counts[2] == 3);  // 3 two-element sets
     BOOST_TEST(size_counts[3] == 1);  // 1 three-element set
+  }
+}
+
+//------------------------------------------------------------------------------
+/// 8. Compute the Sum of Digits of a Number
+//------------------------------------------------------------------------------
+
+BOOST_AUTO_TEST_CASE(ComputeSumOfDigitsIterativelyComputesSumOfDigits)
+{
+  {
+    const int n {12345};
+    const unsigned int result {
+      Recursion::compute_sum_of_digits_iteratively(n)};
+    const unsigned int output {15};
+    BOOST_TEST(result == output);
+  }
+  {
+    const int n {10000};
+    const unsigned int result {
+      Recursion::compute_sum_of_digits_iteratively(n)};
+    const unsigned int output {1};
+    BOOST_TEST(result == output);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ComputeSumOfDigitsComputesSumOfDigitsRecursively)
+{
+  {
+    const int n {12345};
+    const unsigned int result {
+      Recursion::compute_sum_of_digits(n)};
+    const unsigned int output {15};
+    BOOST_TEST(result == output);
+  }
+  {
+    const int n {10000};
+    const unsigned int result {
+      Recursion::compute_sum_of_digits(n)};
+    const unsigned int output {1};
+    BOOST_TEST(result == output);
+  }
+}
+
+//------------------------------------------------------------------------------
+/// https://blog.faangshui.com/i/149072585/recursion
+/// 9. Compute the Power of a Number
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(ComputePowerOfNumberComputesPowerOfNumberRecursively)
+{
+  {
+    const int x {2};
+    const int n {3};
+    const int result {
+      Recursion::compute_power_of_number(x, n)};
+    const int output {8};
+    BOOST_TEST(result == output);
+  }
+  {
+    const int x {3};
+    const unsigned int n {4};
+    const int result {
+      Recursion::compute_power_of_number(x, n)};
+    const int output {81};
+    BOOST_TEST(result == output);
+  }
+}
+
+//------------------------------------------------------------------------------
+/// https://blog.faangshui.com/i/149072585/recursion
+/// 10. Count the Number of Occurrences of a Character in a String Using
+/// Recursion
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(CountNumberOfOccurrencesOfACharacterCounts)
+{
+  {
+    const std::string s {"hello"};
+    const char c {'l'};
+    const uint64_t result {
+      Recursion::count_number_of_occurrences_of_a_character(s, c)};
+
+    const uint64_t output {2};
+    BOOST_TEST(result == output);
+
+    const char c2 {'h'};
+    const uint64_t result2 {
+      Recursion::count_number_of_occurrences_of_a_character(s, c2)};
+
+    const uint64_t output2 {1};
+    BOOST_TEST(result2 == output2);
+  }
+  {
+    const std::string s {"wrappworld"};
+    const char c {'w'};
+    const uint64_t result {
+      Recursion::count_number_of_occurrences_of_a_character(s, c)};
+
+    const uint64_t output {2};
+    BOOST_TEST(result == output);
+
+    const char c2 {'o'};
+    const uint64_t result2 {
+      Recursion::count_number_of_occurrences_of_a_character(s, c2)};
+
+    const uint64_t output2 {1};
+    BOOST_TEST(result2 == output2);
   }
 }
 

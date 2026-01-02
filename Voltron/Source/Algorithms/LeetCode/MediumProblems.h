@@ -111,7 +111,14 @@ class ContainerWithMostWater
 };
 
 //------------------------------------------------------------------------------
+/// https://leetcode.com/problems/3sum/description/
 /// 15. 3Sum
+/// Given an integer array nums, return all the triplets
+/// [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and
+/// nums[i] + nums[j] + nums[k] == 0.
+///
+/// Notice that the solution set must not contain duplicate triplets.
+///
 /// Key idea: Sort the array first. Avoid duplicates by iterating past them.
 /// Iterate through every element. For each element, use the two pointer method
 /// from the left and right.
@@ -334,7 +341,12 @@ class ValidateBinarySearchTree
 };
 
 //------------------------------------------------------------------------------
+/// https://leetcode.com/problems/binary-tree-level-order-traversal/
 /// 102. Binary Tree Level Order Traversal
+///
+/// Given the root of a binary tree, return the level order traversal of its
+/// nodes' values. (i.e., from left to right, level by level).
+///
 /// Key idea: Use a queue for level order traversal. Use size of queue to get
 /// size of each level, so that we know how many to pop out.
 //------------------------------------------------------------------------------

@@ -1,4 +1,6 @@
-from typing import List
+# deque for double-ended queue
+from collections import deque
+from typing import List, Optional
 
 class LongestSubstringWithoutRepeatingCharacters:
     """
@@ -278,6 +280,68 @@ class SetMatrixZeroes:
                 matrix[i][0] = 0
 
         return matrix
+
+class BinaryTreeLevelOrderTraversal:
+    """
+    https://leetcode.com/problems/binary-tree-level-order-traversal/
+    102. Binary Tree Level Order Traversal
+    """
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    @staticmethod
+    def level_order_traversal_iterative(root: Optional[TreeNode]) \
+        -> List[List[int]]:
+        if root is None:
+            return []
+
+        # Place root in the queue.
+        # While the FIFO (first-in, first-out) queue is not empty,
+        # consider the front or the left element of the queue and traverse its
+        # value.
+        # Add this element's left and right children to the back of the queue.
+        queue = deque([root])
+        traversed_levels = []
+        # O(n) time, O(n) space (all nodes all on one side is worse case)
+        while queue:
+            level_size = len(queue)
+            traversed_nodes = []
+            for _ in range(level_size):
+                current_node = queue.popleft()
+                traversed_nodes.append(current_node.val)
+
+                if current_node.left:
+                    queue.append(current_node.left)
+                if current_node.right:
+                    queue.append(current_node.right)
+            traversed_levels.append(traversed_nodes)
+        return traversed_levels
+
+    @staticmethod
+    def level_order_traversal_recursive(root: Optional[TreeNode]) \
+        -> List[List[int]]:
+        if root is None:
+            return []
+
+        traversed_levels = []
+
+        def depth_first_search(node, level, traversed_levels):
+            if node is None:
+                return
+            # We'll need more "traversed level" list to access by index if level
+            # value exceeds the available "traversed level"'s in
+            # traversed_levels.
+            if level >= len(traversed_levels):
+                traversed_levels.append([])
+            traversed_levels[level].append(node.val)
+            depth_first_search(node.left, level + 1, traversed_levels)
+            depth_first_search(node.right, level + 1, traversed_levels)
+
+        depth_first_search(root, 0, traversed_levels)
+        return traversed_levels
 
 class ProductOfArrayExceptSelf:
     """
