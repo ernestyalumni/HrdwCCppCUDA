@@ -26,50 +26,92 @@ BOOST_AUTO_TEST_SUITE(LeetCode)
 /// 23. Merge k Sorted Lists
 //------------------------------------------------------------------------------
 
-vector<vector<MergeKSortedLists::ListNode>>
-  create_merge_k_sorted_lists_test_cases()
+class MergeKSortedListsTestCases
 {
-  // Example 1
-  // First linked list
-  MergeKSortedLists::ListNode root_1_1 {1};
-  MergeKSortedLists::ListNode c1_1_1 {4};
-  MergeKSortedLists::ListNode c2_1_1 {5};
-  root_1_1.next_ = &c1_1_1;
-  c1_1_1.next_ = &c2_1_1;
+  public:
 
-  MergeKSortedLists::ListNode root_1_2 {1};
-  MergeKSortedLists::ListNode c1_1_2 {3};
-  MergeKSortedLists::ListNode c2_1_2 {4};
-  root_1_2.next_ = &c1_1_2;
-  c1_1_2.next_ = &c2_1_2;
+    MergeKSortedListsTestCases():
+      test_cases_{}
+    {
+      // Example 1
+      // First linked list
+      MergeKSortedLists::ListNode root_1_1 {1};
+      MergeKSortedLists::ListNode c1_1_1 {4};
+      MergeKSortedLists::ListNode c2_1_1 {5};
+      root_1_1.next_ = &c1_1_1;
+      c1_1_1.next_ = &c2_1_1;
 
-  MergeKSortedLists::ListNode root_1_3 {2};
-  MergeKSortedLists::ListNode c1_1_3 {6};
-  root_1_3.next_ = &c1_1_3;
+      vector<MergeKSortedLists::ListNode> example_1_1 {root_1_1, c1_1_1, c2_1_1};
 
-  vector<MergeKSortedLists::ListNode> lists {
-    root_1_1,
-    root_1_2,
-    root_1_3
+      MergeKSortedLists::ListNode root_1_2 {1};
+      MergeKSortedLists::ListNode c1_1_2 {3};
+      MergeKSortedLists::ListNode c2_1_2 {4};
+      root_1_2.next_ = &c1_1_2;
+      c1_1_2.next_ = &c2_1_2;
+
+      vector<MergeKSortedLists::ListNode> example_1_2 {root_1_2, c1_1_2, c2_1_2};
+
+      MergeKSortedLists::ListNode root_1_3 {2};
+      MergeKSortedLists::ListNode c1_1_3 {6};
+      root_1_3.next_ = &c1_1_3;
+
+      vector<MergeKSortedLists::ListNode> example_1_3 {root_1_3, c1_1_3};
+
+      vector<vector<MergeKSortedLists::ListNode>> example_1 {
+        example_1_1,
+        example_1_2,
+        example_1_3};
+
+      test_cases_.push_back(example_1);
+    }
+
+    vector<vector<vector<MergeKSortedLists::ListNode>>> test_cases_;
   };
 
-  return {lists};
+vector<vector<int>> create_merge_k_sorted_lists_expected_output()
+{
+  return {{1,1,2,3,4,4,5,6}};
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(MergeKSortedListsBruteForceWorks)
 {
-  const vector<vector<MergeKSortedLists::ListNode>> test_cases {
-    create_merge_k_sorted_lists_test_cases()
+  MergeKSortedListsTestCases test_cases {};
+
+  const vector<vector<int>> expected_output {
+    create_merge_k_sorted_lists_expected_output()
   };
 
-  for (const auto& test_case : test_cases)
+  for (size_t i {0}; i < test_cases.test_cases_.size(); ++i)
   {
-    const auto& lists = test_case;
-    const auto& expected = test_case[0];
-    const auto& output = MergeKSortedLists::merge_k_lists_brute_force(lists);
-    BOOST_TEST(output == expected);
+    vector<MergeKSortedLists::ListNode*> test_input {};
+    for (const auto& nodes : test_cases.test_cases_[i])
+    {
+      MergeKSortedLists::ListNode* node_ptr {
+        const_cast<MergeKSortedLists::ListNode*>(&(nodes[0]))};
+
+      test_input.push_back(node_ptr);
+    }
+
+    auto output = MergeKSortedLists::merge_k_lists_brute_force(test_input);
+
+    if (output != nullptr)
+    {
+      for (size_t j {0}; j < expected_output[i].size(); ++j)
+      {
+        BOOST_TEST(output->value_ == expected_output[i][j]);
+        output = output->next_;
+        if (output == nullptr && j < expected_output[i].size() - 1)
+        {
+          BOOST_FAIL("Output list is shorter than expected");
+        }
+      }
+    }
+    else
+    {
+      BOOST_FAIL("Output is nullptr");
+    }
   }
 }
 
