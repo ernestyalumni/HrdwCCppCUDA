@@ -3,24 +3,26 @@
 #include "DataStructures/BinaryTrees.h"
 
 #include <algorithm> // std::swap
-#include <array>
 #include <bitset>
 #include <climits>
+#include <cstddef> // std::size_t
 #include <deque>
 #include <functional>
+#include <limits> // std::numeric_limits
 #include <limits.h> // INT_MAX, INT_MIN
+#include <optional>
 #include <stack>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 using DataStructures::BinaryTrees::TreeNode;
-using std::array;
 using std::deque;
 using std::function;
 using std::max;
 using std::min;
 using std::stack;
+using std::size_t;
 using std::string;
 using std::swap;
 using std::unordered_map;
@@ -30,6 +32,92 @@ namespace Algorithms
 {
 namespace LeetCode
 {
+
+//------------------------------------------------------------------------------
+/// https://leetcode.com/problems/merge-k-sorted-lists/description/
+/// 23. Merge k Sorted Lists
+//------------------------------------------------------------------------------
+MergeKSortedLists::ListNode* MergeKSortedLists::merge_k_lists_brute_force(
+  vector<MergeKSortedLists::ListNode*>& lists)
+{
+  if (lists.empty())
+  {
+    return nullptr;
+  }
+
+  const size_t K {lists.size()};
+
+  if (K == 1)
+  {
+    return lists[0];
+  }
+
+  vector<MergeKSortedLists::ListNode*> current_nodes (K, nullptr);
+
+  for (size_t i {0}; i < K; ++i)
+  {
+    current_nodes[i] = lists[i];
+  }
+
+  MergeKSortedLists::ListNode* new_head {nullptr};
+  MergeKSortedLists::ListNode* current_node {nullptr};
+
+  auto get_local_minimum = [&]() -> std::optional<size_t>
+  {
+    bool all_nodes_are_nullptr {true};
+    int local_minimum_value {std::numeric_limits<int>::max()};
+    int local_minimum_index {-1};
+
+    for (size_t i {0}; i < K; ++i)
+    {
+      if (current_nodes[i] != nullptr)
+      {
+        all_nodes_are_nullptr = false;
+        if (current_nodes[i]->value_ < local_minimum_value)
+        {
+          local_minimum_value = current_nodes[i]->value_;
+          local_minimum_index = i;
+        }
+      }
+    }
+
+    if (all_nodes_are_nullptr ||
+      local_minimum_value == std::numeric_limits<int>::max() ||
+      local_minimum_index == -1)
+    {
+      return std::nullopt;
+    }
+
+    return local_minimum_index;
+  };
+
+  while (true)
+  {
+    const std::optional<size_t> local_minimum_index {get_local_minimum()};
+
+    if (!local_minimum_index.has_value())
+    {
+      break;
+    }
+
+    if (new_head == nullptr)
+    {
+      new_head = current_nodes[*local_minimum_index];
+      current_node = new_head;
+    }
+    else
+    {
+      current_node->next_ = current_nodes[*local_minimum_index];
+      current_node = current_node->next_;
+    }
+
+    current_nodes[*local_minimum_index] = current_nodes[
+      *local_minimum_index]->next_;
+  }
+
+  return new_head;
+}
+
 
 //------------------------------------------------------------------------------
 /// 41. First Missing Positive

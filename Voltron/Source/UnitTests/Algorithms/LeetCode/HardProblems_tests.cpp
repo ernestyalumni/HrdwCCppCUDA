@@ -58,9 +58,18 @@ vector<vector<MergeKSortedLists::ListNode>>
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-BOOST_AUTO_TEST_CASE(MergeKSortedListsWorks)
+BOOST_AUTO_TEST_CASE(MergeKSortedListsBruteForceWorks)
 {
+  const vector<vector<MergeKSortedLists::ListNode>> test_cases {
+    create_merge_k_sorted_lists_test_cases()
+  };
+
+  for (const auto& test_case : test_cases)
   {
+    const auto& lists = test_case;
+    const auto& expected = test_case[0];
+    const auto& output = MergeKSortedLists::merge_k_lists_brute_force(lists);
+    BOOST_TEST(output == expected);
   }
 }
 

@@ -52,7 +52,7 @@ class MergeKSortedLists
       {}
     };
 
-    static ListNode* merge_k_lists(std::vector<ListNode*>& lists);
+    static ListNode* merge_k_lists_brute_force(std::vector<ListNode*>& lists);
 };
 
 //------------------------------------------------------------------------------
