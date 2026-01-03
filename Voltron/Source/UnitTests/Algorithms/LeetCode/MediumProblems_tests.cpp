@@ -2156,6 +2156,28 @@ BOOST_AUTO_TEST_CASE(BucketSortGetsTopK)
 }
 
 //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(WithMaxHeapGetsTopK)
+{
+  {
+    vector<int> nums {1,1,1,2,2,3}; int k {2};
+    vector<int> output {1, 2};
+
+    vector<int> expected {TopKFrequentElements::with_max_heap(nums, k)};
+
+    BOOST_TEST(output == expected);
+  }
+  {
+    vector<int> nums {1}; int k {1};
+    vector<int> output {1};
+
+    vector<int> expected {TopKFrequentElements::with_max_heap(nums, k)};
+
+    BOOST_TEST(output == expected);
+  }  
+}
+
+//------------------------------------------------------------------------------
 /// 357. Count Numbers With Unique Digits
 //------------------------------------------------------------------------------
 

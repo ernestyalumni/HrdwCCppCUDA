@@ -746,6 +746,8 @@ class TopKFrequentElements
 
     // https://youtu.be/YPTqKIgVk-k?si=KbHT9oTwGare3dkl
     static std::vector<int> bucket_sort(std::vector<int>& nums, int k);
+
+    static std::vector<int> with_max_heap(std::vector<int>& nums, int k);
 };
 
 //------------------------------------------------------------------------------

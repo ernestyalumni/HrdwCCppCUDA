@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_SUITE(Permutations_tests)
 // https://www.oreilly.com/library/view/optimized-c/9781491922057/ch04.html
 // String problems:
 // strings are dynamically allocated
-// amoritizes cost of reallocating storage for character buffer as string grows
+// amortized cost of reallocating storage for character buffer as string grows
 // allocated dynamically once any operation makes string longer
 // Cost is unused space.
 // Strings are values (in expressions)

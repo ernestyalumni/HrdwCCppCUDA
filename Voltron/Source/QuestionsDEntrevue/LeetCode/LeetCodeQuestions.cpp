@@ -66,7 +66,7 @@ bool is_valid_parentheses(string s)
 
   //----------------------------------------------------------------------------
   /// \ref https://www.geeksforgeeks.org/unordered_map-in-cpp-stl/
-  /// Implemented internally using HashTable, amoritized, search, insert, delete
+  /// Implemented internally using HashTable, amortized, search, insert, delete
   /// is O(1).
   //----------------------------------------------------------------------------
 

@@ -149,7 +149,7 @@ class SingleNumber
 //------------------------------------------------------------------------------
 /// 169. Majority Element
 /// Array - Linear traversal.
-/// 1. Use std::unordered_map for O(1) amoritized lookup and insertion and count
+/// 1. Use std::unordered_map for O(1) amortized lookup and insertion and count
 /// frequencies.
 /// 2. Boyer-Moore Voting Algorithm - you are guaranteed a majority element that
 /// appears more than floor(n/2) times in an array. Let all other elements be a

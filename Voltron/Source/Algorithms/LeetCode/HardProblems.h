@@ -53,6 +53,12 @@ class MergeKSortedLists
     };
 
     static ListNode* merge_k_lists_brute_force(std::vector<ListNode*>& lists);
+
+    //--------------------------------------------------------------------------
+    /// O(K) space since we have K linked list and we only keep at most K nodes,
+    /// 1 from each linked list, in the heap at any time.
+    //--------------------------------------------------------------------------
+    static ListNode* merge_k_lists_min_heap(std::vector<ListNode*>& lists);
 };
 
 //------------------------------------------------------------------------------

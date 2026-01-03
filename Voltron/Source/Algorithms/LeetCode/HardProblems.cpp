@@ -11,6 +11,7 @@
 #include <limits> // std::numeric_limits
 #include <limits.h> // INT_MAX, INT_MIN
 #include <optional>
+#include <queue>
 #include <stack>
 #include <string>
 #include <unordered_map>
@@ -21,6 +22,7 @@ using std::deque;
 using std::function;
 using std::max;
 using std::min;
+using std::priority_queue;
 using std::stack;
 using std::size_t;
 using std::string;
@@ -37,6 +39,7 @@ namespace LeetCode
 /// https://leetcode.com/problems/merge-k-sorted-lists/description/
 /// 23. Merge k Sorted Lists
 //------------------------------------------------------------------------------
+
 MergeKSortedLists::ListNode* MergeKSortedLists::merge_k_lists_brute_force(
   vector<MergeKSortedLists::ListNode*>& lists)
 {
@@ -118,6 +121,88 @@ MergeKSortedLists::ListNode* MergeKSortedLists::merge_k_lists_brute_force(
   return new_head;
 }
 
+MergeKSortedLists::ListNode* MergeKSortedLists::merge_k_lists_min_heap(
+  vector<MergeKSortedLists::ListNode*>& lists)
+{
+  if (lists.empty())
+  {
+    return nullptr;
+  }
+
+  const size_t K {lists.size()};
+
+  if (K == 1)
+  {
+    return lists[0];
+  }
+
+  auto greater_than = [](
+    const MergeKSortedLists::ListNode* a,
+    const MergeKSortedLists::ListNode* b) -> bool
+  {
+    return a->value_ > b->value_;
+  };
+
+  // O(K) space since we have K linked lists and at any time during while loop
+  // only K nodes in the heap.
+  // https://en.cppreference.com/w/cpp/container/priority_queue.html
+  // "Compare" type providing strict weak ordering. "Note that the Compare"
+  // parameter is defined such that it returns true if its first argument comes
+  // before its second argument in a weak ordering. But because the priority
+  // queue outputs largest elements first, the elements that "come before" are
+  // actually output last.
+  priority_queue<
+    MergeKSortedLists::ListNode*,
+    vector<MergeKSortedLists::ListNode*>,
+    decltype(greater_than)> min_heap {greater_than};
+
+  // For each linked list, place each node in the min heap.
+  // O(K log K) times, since we have K linked lists.
+  // Key insight: just have the "head" of each linked list in the heap for now
+  // and pop each of the linked list's next into the heap while iterating
+  // through it.
+
+  // K times.
+  for (size_t i {0}; i < K; ++i)
+  {
+    MergeKSortedLists::ListNode* current_node_ptr {lists[i]};
+
+    // O(log N) time for insertion (need to "rebalance" heap each time).
+    if (current_node_ptr != nullptr)
+    {
+      min_heap.push(current_node_ptr);
+    }
+  }
+
+  MergeKSortedLists::ListNode* new_head {nullptr};
+  MergeKSortedLists::ListNode* tail {nullptr};
+
+  // O(N log K) time, since we have N nodes and at most K nodes in heap.
+  while (!min_heap.empty())
+  {
+    MergeKSortedLists::ListNode* top_node_ptr {min_heap.top()};
+    min_heap.pop();
+
+    if (new_head == nullptr)
+    {
+      new_head = top_node_ptr;
+      tail = new_head;
+    }
+    else
+    {
+      tail->next_ = top_node_ptr;
+      tail = tail->next_;
+    }
+
+    // Key insight: just push next node of current top into the heap now.
+    if (top_node_ptr->next_ != nullptr)
+    {
+      min_heap.push(top_node_ptr->next_);
+    }
+  }
+
+  return new_head;
+}
 
 //------------------------------------------------------------------------------
 /// 41. First Missing Positive
@@ -160,7 +245,7 @@ string MinimumWindowSubstring::minimum_window(string s, string t)
   const int N {static_cast<int>(t.size())};
 
   // Use unordered_map, implemented as a hash table, over map, implemented as a 
-  // red-black tree, for O(1) amoritized access.
+  // red-black tree, for O(1) amortized access.
 
   // Keep count of each character's frequency in 't'. This helps to know how
   // many of each character we need to find in 's'.

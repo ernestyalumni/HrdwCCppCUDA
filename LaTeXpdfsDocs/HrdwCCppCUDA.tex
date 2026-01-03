@@ -2474,7 +2474,7 @@ If your algorithm is "do this ($A$), then, when completed, do that ($B$)" then a
 
 If your algorithm is "do this for each time you do that", then multiply runtimes: $O(A*B)$.
 
-\subsection{Amoritized Time (e.g. dynamically resizing array "ArrayList" or maybe \texttt{std::vector})}
+\subsection{Amortized Time (e.g. dynamically resizing array "ArrayList" or maybe \texttt{std::vector})}
 
 Dynamically resize array $x$: if there are $N$ elements, s.t. $N= $ max. capacity at $N$, $|x| = N \mapsto |x| = 2N$ and there are $N$ copies to be made ($T=N$). 
 
@@ -2493,7 +2493,7 @@ Note that $\begin{aligned} & \quad \\
 X & = 2^y \\ 
 \log_2{X} & = y \end{aligned}$ 
 
-$X$ insertions take $O(2X)$.  "Amoritized" time for each insertion is $O(1)$.
+$X$ insertions take $O(2X)$.  "Amortized" time for each insertion is $O(1)$.
 
 \subsection{$\log{N}$ runtimes ($O(\log{N})$)} 
 
@@ -2723,7 +2723,7 @@ cf. \url{https://wiki.python.org/moin/TimeComplexity}, from 4. Quiz: Python List
 \begin{center}
 	\begin{tabular}{ l | c | r }
 		\hline
-		Operation & Average & Amoritized Worst Case \\ \hline
+		Operation & Average & Amortized Worst Case \\ \hline
 		Copy & $O(N)$ & $O(N)$ \\ \hline
 		Append(1) & $O(1)$ & $O(1)$ \\ \hline
 		pop last & $O(1)$ & $O(1)$ \\ \hline
@@ -2816,7 +2816,7 @@ List data structures comparison \\
 		& Linked list & Array & Dynamic Array & Balanced Tree & Hashed array tree \\ \hline 
 		indexing & $O(N)$ & $O(1)$ & $O(1)$ & $O(\log{N})$ & $O(1)$ \\ \hline 
 		insert/delete at beginning & $O(1)$ &  & $O(N)$ & $O(\log{N})$ & $O(N)$ \\ \hline 
-		insert/delete at end & $\begin{gathered} O(1) \text{ when last element is known } \\ O(N) \text{ when last element is unknown }\end{gathered}$ &  & $O(1)$ amoritized  & $O(\log{N})$  & $O(N)$ \\ \hline 
+		insert/delete at end & $\begin{gathered} O(1) \text{ when last element is known } \\ O(N) \text{ when last element is unknown }\end{gathered}$ &  & $O(1)$ amortized  & $O(\log{N})$  & $O(N)$ \\ \hline 
 		insert/delete in middle & search time $+ O(1)$ &  & $O(N)$ & $O(\log{N})$ & $O(N)$ \\ \hline 
 		wasted space (average) & $O(N)$ & 0  & $O(N)$ & $O(\log{N})$ & $O(\sqrt{N})$ \\ \hline 
 		\hline

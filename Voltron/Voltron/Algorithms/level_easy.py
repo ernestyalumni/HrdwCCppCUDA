@@ -142,11 +142,11 @@ class ContainsDuplicate(object):
         seen = set()
         # O(N) time complexity.
         for num in nums:
-            # O(1) amoritized.
+            # O(1) amortized.
             if num in seen:
                 return True
             else:
-                # O(1) amoritized.
+                # O(1) amortized.
                 seen.add(num)
         return False
 

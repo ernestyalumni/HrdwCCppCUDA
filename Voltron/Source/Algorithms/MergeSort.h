@@ -154,9 +154,9 @@ void merge(
   const std::size_t low,
   const std::size_t high)
 {
-  // End of the "left" halve
+  // End of the "left" half
   std::size_t l_end {low + (high - low) / 2};
-  // Start of the "right" halve
+  // Start of the "right" half
   std::size_t r_start {l_end + 1};  
 
   std::size_t l {low};

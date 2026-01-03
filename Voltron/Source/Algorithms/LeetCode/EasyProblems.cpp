@@ -80,7 +80,7 @@ vector<int> TwoSum::two_sum(vector<int>& nums, int target)
     }
     else
     {
-      // O(1) amoritized time for insertion.
+      // O(1) amortized time for insertion.
       value_and_indices.emplace(nums[i], i);
     }
   }
@@ -472,8 +472,8 @@ int MajorityElement::majority_element_with_map(vector<int>& nums)
   // O(N) time complexity.
   for (int num : nums)
   {
-    // O(1) amoritized (each hash map operation, insertion and lookup, is O(1)
-    // amoritized).
+    // O(1) amortized (each hash map operation, insertion and lookup, is O(1)
+    // amortized).
     if (element_to_count.count(num) == 0)
     {
       element_to_count[num] = 1;
@@ -664,7 +664,7 @@ bool ContainsDuplicate::contains_duplicate(vector<int>& nums)
   // O(N) time.
   for (const auto num : nums)
   {
-    // O(1) time complexity, amoritized.
+    // O(1) time complexity, amortized.
     if (seen_numbers.count(num) == 0)
     {
       seen_numbers.emplace(num);
@@ -796,7 +796,7 @@ bool ValidAnagram::is_anagram(string s, string t)
   {
     return false;
   }
-  // Use unordered_map for O(1) amoritized access.
+  // Use unordered_map for O(1) amortized access.
   // For each letter, map it to the number of times it was seen in string s.
   // O(S) space complexity, where S is number of unique characters in s.
   std::unordered_map<char, int> letter_to_counts {};

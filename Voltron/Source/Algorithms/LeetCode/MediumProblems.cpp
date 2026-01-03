@@ -115,7 +115,7 @@ int LongestSubstringWithoutRepeating::concise_length_of_longest_substring(
   }
 
   // Keep track of the characters we've seen using std::unordered_set for
-  // O(1) amoritized access.
+  // O(1) amortized access.
   unordered_map<char, int> seen_characters {};
 
   int length {0};
@@ -1444,7 +1444,7 @@ int LongestConsecutiveSequence::longest_consecutive_with_set(vector<int>& nums)
   // O(N) time.
   for (const int num : nums)
   {
-    // O(1) amoritized to insert.
+    // O(1) amortized to insert.
     nums_as_set.insert(num);
   }
 
@@ -1470,10 +1470,10 @@ int LongestConsecutiveSequence::longest_consecutive_with_set(vector<int>& nums)
 
     bool is_consecutive {true};
 
-    // O(1) amoritized.
+    // O(1) amortized.
     while (is_consecutive)
     {
-      // O(1) amoritized to find a key in a set.
+      // O(1) amortized to find a key in a set.
       if (nums_as_set.count(current_value - 1) != 0)
       {
         current_length += 1;
@@ -2600,6 +2600,39 @@ vector<int> TopKFrequentElements::bucket_sort(vector<int>& nums, int k)
   return result;
 }
 
+vector<int> TopKFrequentElements::with_max_heap(vector<int>& nums, int k)
+{
+  // O(N) space.
+  unordered_map<int, int> num_to_count {};
+  // O(N) time.
+  for (const int num : nums)
+  {
+    // O(1) amortized insertion.
+    num_to_count[num]++;
+  }
+
+  // Order by first element, which is the count. Second element is associated
+  // num.
+  priority_queue<tuple<int, int>> max_heap {};
+  // O(N log N) time, N x (log N for insertion).
+  for (const auto [num, count] : num_to_count)
+  {
+    // O(log N) time for insertion.
+    max_heap.push(make_tuple(count, num));
+  }
+
+  // O(k) space.
+  vector<int> result {};
+  for (int i {0}; i < k; ++i)
+  {
+    // O(1) time.
+    result.push_back(get<1>(max_heap.top()));
+    // O(log N) time for pop (need to "rebalance" heap).
+    max_heap.pop();
+  }
+  return result;  
+}
+
 //------------------------------------------------------------------------------
 /// 357. Count Numbers With Unique Digits
 //------------------------------------------------------------------------------
@@ -3323,7 +3356,7 @@ vector<string> TopKFrequentWords::brute_force(vector<string>& words, int k)
   // O(N) time complexity
   for (const string& word : words)
   {
-    // O(1) time complexity amoritized for insertion, and lookup.
+    // O(1) time complexity amortized for insertion, and lookup.
     word_to_count[word]++;
   }
 
@@ -3332,7 +3365,7 @@ vector<string> TopKFrequentWords::brute_force(vector<string>& words, int k)
   // O(N) time.
   for (const auto& [word, count] : word_to_count)
   {
-    // O(1) time amoritized find and insert.
+    // O(1) time amortized find and insert.
     count_to_words[count].push_back(word);
   }
 
