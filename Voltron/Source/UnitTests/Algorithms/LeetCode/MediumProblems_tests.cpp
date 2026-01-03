@@ -2588,6 +2588,94 @@ BOOST_AUTO_TEST_CASE(ExpandFromCenterForEachElementWorks)
 BOOST_AUTO_TEST_SUITE_END() // PalindromicSubstrings_0647_tests
 
 //------------------------------------------------------------------------------
+/// 621. Task Scheduler
+/// https://leetcode.com/problems/task-scheduler/description/
+///
+/// Constraints:
+///
+/// 1 <= tasks.length <= 104
+/// tasks[i] is an uppercase English letter.
+/// 0 <= n <= 100
+//------------------------------------------------------------------------------
+
+class TaskSchedulerTestCases
+{
+  public:
+    vector<vector<char>> test_cases_tasks_;
+    // n intervals between two tasks with the same label.
+    vector<int> test_cases_n_;
+    // Expected output
+    vector<int> test_cases_expected_;
+
+    TaskSchedulerTestCases():
+      test_cases_tasks_{},
+      test_cases_n_{},
+      test_cases_expected_{}
+    {
+      // Example 1
+      // ["A","A","A","B","B","B"], n = 2
+      vector<char> example_1_tasks {'A','A','A','B','B','B'};
+      int example_1_n {2};
+      int example_1_expected {8};
+
+      test_cases_tasks_.push_back(example_1_tasks);
+      test_cases_n_.push_back(example_1_n);
+      test_cases_expected_.push_back(example_1_expected);
+
+      // Example 2
+      // ["A","C","A","B","D","B"], n = 1
+      vector<char> example_2_tasks {'A','C','A','B','D','B'};
+      int example_2_n {1};
+      int example_2_expected {6};
+
+      test_cases_tasks_.push_back(example_2_tasks);
+      test_cases_n_.push_back(example_2_n);
+      test_cases_expected_.push_back(example_2_expected);
+
+      // Example 3
+      // ["A","A","A", "B","B","B"], n = 3
+      vector<char> example_3_tasks {'A','A','A', 'B','B','B'};
+      int example_3_n {3};
+      int example_3_expected {10};
+
+      test_cases_tasks_.push_back(example_3_tasks);
+      test_cases_n_.push_back(example_3_n);
+      test_cases_expected_.push_back(example_3_expected);
+
+      // Test case 25
+      // 24 / 72 testcases passed
+      // ["B","C","D","A","A","A","A","G"]
+      // https://leetcode.com/problems/task-scheduler/submissions/1873600428/
+      // n = 1
+      vector<char> test_case_25_tasks {'B','C','D','A','A','A','A','G'};
+      int test_case_25_n {1};
+      int test_case_25_expected {8};
+
+      test_cases_tasks_.push_back(test_case_25_tasks);
+      test_cases_n_.push_back(test_case_25_n);
+      test_cases_expected_.push_back(test_case_25_expected);
+    }
+};
+
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TaskSchedulerLeastIntervalWorksWithMinHeap)
+{
+  TaskSchedulerTestCases test_cases {};
+
+  const size_t N {test_cases.test_cases_tasks_.size()};
+
+  for (size_t i {0}; i < N; ++i)
+  {
+    const int result {
+      TaskScheduler::with_min_heap(
+        test_cases.test_cases_tasks_[i],
+        test_cases.test_cases_n_[i])};
+
+    BOOST_TEST(result == test_cases.test_cases_expected_[i]);
+  }
+}
+
+//------------------------------------------------------------------------------
 /// 692. Top K Frequent Words
 /// https://leetcode.com/problems/top-k-frequent-words/description/
 //------------------------------------------------------------------------------

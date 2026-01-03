@@ -885,6 +885,36 @@ class PermutationInString
 };
 
 //------------------------------------------------------------------------------
+/// \name 621. Task Scheduler
+/// \url https://leetcode.com/problems/task-scheduler/description/
+/// You are given an array of CPU tasks, each labeled with a letter from A to Z,
+/// and a number n. Each CPU interval can be idle or allow the completion of one
+/// task. Tasks can be completed in any order, but there's a constraint: there
+/// has to be a gap of at least n intervals between two tasks with the same
+/// label.
+///
+/// Return the minimum number of CPU intervals required to complete all tasks.
+///
+/// Constraints:
+///
+/// 1 <= tasks.length <= 104
+/// tasks[i] is an uppercase English letter.
+/// 0 <= n <= 100
+//------------------------------------------------------------------------------
+class TaskScheduler
+{
+  public:
+
+    //--------------------------------------------------------------------------
+    /// Observe: Because the tasks are guaranteed to be uppercase English
+    /// letters, use an array of fixed size 26.
+    /// For every cycle, find the most frequent letter that can be placed in
+    /// this cycle. After placing, decrease the frequency of that letter by one.
+    //--------------------------------------------------------------------------
+    static int with_min_heap(std::vector<char>& tasks, int n);
+};
+
+//------------------------------------------------------------------------------
 /// \name 647. Palindromic Substrings
 /// Constraints
 /// 1 <= s.length <= 1000

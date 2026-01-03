@@ -2,7 +2,7 @@
 
 #include "DataStructures/BinaryTrees.h"
 
-#include <algorithm> // std::sort, std::swap;
+#include <algorithm> // std::fill, std::sort, std::swap;
 #include <array>
 #include <climits> // INT_MIN
 #include <cstddef> // std::size_t
@@ -27,6 +27,7 @@
 
 using DataStructures::BinaryTrees::TreeNode;
 using std::array;
+using std::fill;
 using std::function;
 using std::get;
 using std::make_pair;
@@ -3269,6 +3270,84 @@ bool PermutationInString::check_inclusion(string s1, string s2)
   */
 }
 
+//------------------------------------------------------------------------------
+/// 621. Task Scheduler
+/// https://leetcode.com/problems/task-scheduler/description/
+//------------------------------------------------------------------------------
+
+int TaskScheduler::with_min_heap(vector<char>& tasks, int n)
+{
+  if (tasks.empty())
+  {
+    return 0;
+  }
+
+  // O(26) space.
+  array<int, 26> task_to_count {};
+  fill(task_to_count.begin(), task_to_count.end(), 0);
+  // O(N) time.
+  for (const char task : tasks)
+  {
+    task_to_count[static_cast<int>(task - 'A')]++;
+  }
+
+  // Order by first element, which is the count, and order by most frequent to
+  // least frequent. Second element is the task associated.
+  using CountToTask = tuple<int, char>;
+  priority_queue<CountToTask> max_heap {};
+  for (int i {0}; i < 26; ++i)
+  {
+    if (task_to_count[i] > 0)
+    {
+      // O(log 26) time for insertion (need to "rebalance" heap).
+      max_heap.push(make_tuple(task_to_count[i], static_cast<char>('A' + i)));
+    }
+  }
+
+  array<int, 26> task_to_intervals_passed {};
+  // -1 means task has not been seen before.
+  fill(task_to_intervals_passed.begin(), task_to_intervals_passed.end(), -1);
+
+  int time {0};
+  while (!max_heap.empty())
+  {
+    // Hold decremented count to task for next cycle.
+    vector<CountToTask> temporary {};
+    // Number of tasks scheduled for this cycle.
+    int number_of_cycle_tasks {0};
+
+    // Fill up to n+1 tasks or "slots" for the highest frequency tasks.
+    // The idea is that you want to "spread out" the highest frequency tasks and
+    // not repeat a high frequency task too soon (don't throw a task back in yet
+    // so soon)
+    for (int i {0}; i <= n; ++i)
+    {
+      if (!max_heap.empty())
+      {
+        auto [top_count, top_task] = max_heap.top();
+        temporary.emplace_back(top_count - 1, top_task);
+        max_heap.pop();
+        number_of_cycle_tasks += 1;
+      }
+      else
+      {
+        break;
+      }
+    }
+  
+    for (const auto& [count, task] : temporary)
+    {
+      if (count > 0)
+      {
+        max_heap.push(make_tuple(count, task));
+      }
+    }
+
+    time += max_heap.empty() ? number_of_cycle_tasks : n + 1;
+  }
+
+  return time;
+}
 /// \name 647. Palindromic Substrings
 
 int PalindromicSubstrings::brute_force(string s)
