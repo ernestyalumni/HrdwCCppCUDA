@@ -912,6 +912,8 @@ class TaskScheduler
     /// this cycle. After placing, decrease the frequency of that letter by one.
     //--------------------------------------------------------------------------
     static int with_min_heap(std::vector<char>& tasks, int n);
+
+    static int least_interval_by_math(std::vector<char>& tasks, int n);
 };
 
 //------------------------------------------------------------------------------

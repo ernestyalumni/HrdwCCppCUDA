@@ -2658,6 +2658,7 @@ class TaskSchedulerTestCases
 };
 
 //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(TaskSchedulerLeastIntervalWorksWithMinHeap)
 {
   TaskSchedulerTestCases test_cases {};
@@ -2668,6 +2669,25 @@ BOOST_AUTO_TEST_CASE(TaskSchedulerLeastIntervalWorksWithMinHeap)
   {
     const int result {
       TaskScheduler::with_min_heap(
+        test_cases.test_cases_tasks_[i],
+        test_cases.test_cases_n_[i])};
+
+    BOOST_TEST(result == test_cases.test_cases_expected_[i]);
+  }
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(TaskSchedulerLeastIntervalWorksWithMathFormula)
+{
+  TaskSchedulerTestCases test_cases {};
+
+  const size_t N {test_cases.test_cases_tasks_.size()};
+
+  for (size_t i {0}; i < N; ++i)
+  {
+    const int result {
+      TaskScheduler::least_interval_by_math(
         test_cases.test_cases_tasks_[i],
         test_cases.test_cases_n_[i])};
 

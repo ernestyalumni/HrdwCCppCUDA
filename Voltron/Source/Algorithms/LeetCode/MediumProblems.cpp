@@ -3304,9 +3304,9 @@ int TaskScheduler::with_min_heap(vector<char>& tasks, int n)
     }
   }
 
-  array<int, 26> task_to_intervals_passed {};
-  // -1 means task has not been seen before.
-  fill(task_to_intervals_passed.begin(), task_to_intervals_passed.end(), -1);
+  // array<int, 26> task_to_intervals_passed {};
+  // // -1 means task has not been seen before.
+  // fill(task_to_intervals_passed.begin(), task_to_intervals_passed.end(), -1);
 
   int time {0};
   while (!max_heap.empty())
@@ -3348,6 +3348,42 @@ int TaskScheduler::with_min_heap(vector<char>& tasks, int n)
 
   return time;
 }
+
+int TaskScheduler::least_interval_by_math(vector<char>& tasks, int n)
+{
+  if (tasks.empty())
+  {
+    return 0;
+  }
+
+  // O(26) space.
+  array<int, 26> task_to_count {};
+  fill(task_to_count.begin(), task_to_count.end(), 0);
+  // O(N) time.
+  for (const char task : tasks)
+  {
+    task_to_count[static_cast<int>(task - 'A')]++;
+  }
+
+  int max_count {std::numeric_limits<int>::min()};
+  int number_of_highest_count_tasks {0};
+  for (const int count : task_to_count)
+  {
+    if (count > max_count)
+    {
+      max_count = count;
+      number_of_highest_count_tasks = 1;
+    }
+    else if (count == max_count)
+    {
+      number_of_highest_count_tasks++;
+    }
+  }
+
+  const int result {(max_count - 1) * (n + 1) + number_of_highest_count_tasks};
+  return max(result, static_cast<int>(tasks.size()));
+}
+
 /// \name 647. Palindromic Substrings
 
 int PalindromicSubstrings::brute_force(string s)
