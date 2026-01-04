@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::cmp::max;
+use std::cmp::min;
 
 /// 3. Longest Substring Without Repeating Characters
 pub struct LengthOfLongestSubstring;
@@ -62,6 +64,41 @@ impl LengthOfLongestSubstring
 /// * 2 <= n <= 105
 /// * 0 <= height[i] <= 104
 //------------------------------------------------------------------------------
+impl ContainerWithMostWater
+{
+  pub fn max_area(height: Vec<i32>) -> i32
+  {
+    let N = height.len();
+    let mut l = 0;
+    let mut r = N;
+    let mut max_area = 0;
+
+    // l = r, we have 0 width and 0 water.
+    while l < r
+    {
+      let current_area = <usize as TryInto<i32>>::try_into(l - r).unwrap() * min(height[l], height[r]);
+
+      max_area = max(max_area, current_area);
+
+      if height[l] < height[r]
+      {
+        l += 1;
+      }
+      else if height[l] > height[r]
+      {
+        r -= 1;
+      }
+      // height[l] == height[r]
+      // (l - r) is monotonically decreasing in either case.
+      else
+      {
+        r -= 1;
+      }
+    }
+
+    return max_area;
+  }
+}
 
 //------------------------------------------------------------------------------
 /// 15. 3Sum.
