@@ -4,6 +4,8 @@ pub mod medium_tests
   use mixmaster::algorithms::leetcode::medium::{
     // 3. Longest Substring Without Repeating Characters
     LengthOfLongestSubstring,
+    // 11. Container With Most Water
+    ContainerWithMostWater,
     // 15.
     ThreeSum,
   };
@@ -46,6 +48,33 @@ pub mod medium_tests
     let s = "tmmzuxt".to_string();
     let expected = 5;
     let result = LengthOfLongestSubstring::length_of_longest_substring(s);
+    assert_eq!(result, expected);
+  }
+
+  //----------------------------------------------------------------------------
+  /// https://leetcode.com/problems/container-with-most-water/description/
+  /// 11. Container With Most Water
+  /// n == height.length
+  /// * 2 <= n <= 105
+  /// * 0 <= height[i] <= 104
+  //----------------------------------------------------------------------------
+  #[test]
+  fn test_container_with_most_water()
+  {
+    // Example 1
+    // Input: height = [1,8,6,2,5,4,8,3,7]
+    // Output: 49
+    let height = vec![1,8,6,2,5,4,8,3,7];
+    let expected = 49;
+    let result = ContainerWithMostWater::max_area(height);
+    assert_eq!(result, expected);
+
+    // Example 2:
+    // Input: height = [1,1]
+    // Output: 1
+    let height = vec![1,1];
+    let expected = 1;
+    let result = ContainerWithMostWater::max_area(height);
     assert_eq!(result, expected);
   }
 

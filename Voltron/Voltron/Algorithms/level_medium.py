@@ -152,6 +152,86 @@ def three_number_sum_with_sorted_array(array, target_sum):
 
     return output
 
+class GroupAnagrams:
+    """
+    https://leetcode.com/problems/group-anagrams/
+    49. Group Anagrams
+
+    Given an array of strings strs, group the anagrams together. You can return
+    the answer in any order.
+
+    Constraints:
+
+    1 <= strs.length <= 104
+    0 <= strs[i].length <= 100
+    strs[i] consists of lowercase English letters.
+
+    An anagram is a word or phrase formed by rearranging the letters of a
+    different word or phrase, using all the original letters exactly once.
+
+    Anagram property is transitive: suppose s and t are anagrams. Suppose t and
+    u are anagrams. Suppose s and u are not anagrams. Then suppose s contains a
+    letter not in u (otherwise, consider u to have the extra letter). Then t
+    contains this extra letter. But t is an anagram of u. Contradiction.
+    """
+    @staticmethod
+    def is_anagram_sorted(s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        # O(n log n) time for sorting. n = max(len(s), len(t)).
+        return sorted(s) == sorted(t)
+
+    @staticmethod
+    def group_anagrams(strs: List[str]) -> List[List[str]]:
+        anagram_groups = []
+        # O(N) time for N strings.
+        for str in strs:
+            if not anagram_groups:
+                anagram_groups.append([str])
+            else:
+                str_belongs_to_a_group = False
+                # N * (k log k)
+                for group in anagram_groups:
+                    if GroupAnagrams.is_anagram_sorted(str, group[0]):
+                        group.append(str)
+                        str_belongs_to_a_group = True
+                        break
+                if not str_belongs_to_a_group:
+                    anagram_groups.append([str])
+        return anagram_groups
+
+    @staticmethod
+    def group_anagrams_by_hashmap(strs: List[str]) -> List[List[str]]:
+        """
+        Once sorted, all strings of the same anagram have the same sorted string.
+
+        Use hashmap to map sorted string to anagram group.
+        """
+        anagram_to_group = {}
+        for str in strs:
+            sorted_str = "".join(sorted(str))
+            if sorted_str in anagram_to_group:
+                anagram_to_group[sorted_str].append(str)
+            else:
+                anagram_to_group[sorted_str] = [str]
+        return list(anagram_to_group.values())
+
+class MergeIntervals:
+    """
+    https://leetcode.com/problems/merge-intervals/description/
+    56. Merge Intervals
+    Given an array of intervals where intervals[i] = [starti, endi], merge all
+    overlapping intervals, and return an array of the non-overlapping intervals
+    that cover all the intervals in the input.
+
+    Constraints:
+
+    1 <= intervals.length <= 104
+    intervals[i].length == 2
+    0 <= starti <= endi <= 104
+    """
+
+
 class SetMatrixZeroes:
     """
     https://leetcode.com/problems/set-matrix-zeroes/description/

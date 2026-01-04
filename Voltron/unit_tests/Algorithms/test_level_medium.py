@@ -11,6 +11,8 @@ from Voltron.Algorithms.level_medium import (
     # 15. 3Sum
     three_number_sum,
     three_number_sum_with_sorted_array,
+    # 49. Group Anagrams
+    GroupAnagrams,
     # 73. Set Matrix Zeroes
     SetMatrixZeroes,
     # 102. Binary Tree Level Order Traversal
@@ -161,6 +163,75 @@ def test_three_number_sum_with_sorted_array():
 
     results = three_number_sum_with_sorted_array(array, target)
     assert results == [[-2, 10, 49]]
+
+"""
+49. Group Anagrams
+"""
+
+def create_group_anagrams_test_cases():
+#     Example 1:
+
+# Input: strs = ["eat","tea","tan","ate","nat","bat"]
+
+# Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+    example_1 = ["eat","tea","tan","ate","nat","bat"]
+    output_1 = [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+# Example 2:
+
+# Input: strs = [""]
+
+# Output: [[""]]
+    example_2 = [""]
+    output_2 = [[""]]
+
+# Example 3:
+
+# Input: strs = ["a"]
+
+# Output: [["a"]]
+    example_3 = ["a"]
+    output_3 = [["a"]]
+
+    return [example_1, output_1, example_2, output_2, example_3, output_3]
+
+def test_group_anagrams():
+    example_1, output_1, example_2, output_2, example_3, output_3 = \
+        create_group_anagrams_test_cases()
+
+    result_1 = GroupAnagrams.group_anagrams(example_1)
+    assert len(result_1) == len(output_1)
+    for group in result_1:
+        assert sorted(group) in output_1
+
+    result_2 = GroupAnagrams.group_anagrams(example_2)
+    assert len(result_2) == len(output_2)
+    for group in result_2:
+        assert sorted(group) in output_2
+
+    result_3 = GroupAnagrams.group_anagrams(example_3)
+    assert len(result_3) == len(output_3)
+    for group in result_3:
+        assert sorted(group) in output_3
+
+def test_group_anagrams_by_hashmap():
+    example_1, output_1, example_2, output_2, example_3, output_3 = \
+        create_group_anagrams_test_cases()
+
+    result_1 = GroupAnagrams.group_anagrams_by_hashmap(example_1)
+    assert len(result_1) == len(output_1)
+    for group in result_1:
+        assert sorted(group) in output_1
+
+    result_2 = GroupAnagrams.group_anagrams_by_hashmap(example_2)
+    assert len(result_2) == len(output_2)
+    for group in result_2:
+        assert sorted(group) in output_2
+
+    result_3 = GroupAnagrams.group_anagrams_by_hashmap(example_3)
+    assert len(result_3) == len(output_3)
+    for group in result_3:
+        assert sorted(group) in output_3
 
 """
 https://leetcode.com/problems/set-matrix-zeroes/description/
