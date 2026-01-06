@@ -13,6 +13,8 @@ from Voltron.Algorithms.level_medium import (
     three_number_sum_with_sorted_array,
     # 49. Group Anagrams
     GroupAnagrams,
+    # 56. Merge Intervals
+    MergeIntervals,
     # 73. Set Matrix Zeroes
     SetMatrixZeroes,
     # 102. Binary Tree Level Order Traversal
@@ -232,6 +234,63 @@ def test_group_anagrams_by_hashmap():
     assert len(result_3) == len(output_3)
     for group in result_3:
         assert sorted(group) in output_3
+
+"""
+https://leetcode.com/problems/merge-intervals/description/
+56. Merge Intervals
+"""
+
+def create_merge_intervals_test_cases():
+
+# Example 1:
+
+# Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+# Output: [[1,6],[8,10],[15,18]]
+# Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+# Example 2:
+
+# Input: intervals = [[1,4],[4,5]]
+# Output: [[1,5]]
+# Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+# Example 3:
+
+# Input: intervals = [[4,7],[1,4]]
+# Output: [[1,7]]
+# Explanation: Intervals [1,4] and [4,7] are considered overlapping.
+
+    example_1 = [[1,3],[2,6],[8,10],[15,18]]
+    output_1 = [[1,6],[8,10],[15,18]]
+
+    example_2 = [[1,4],[4,5]]
+    output_2 = [[1,5]]
+
+    example_3 = [[4,7],[1,4]]
+    output_3 = [[1,7]]
+
+    return [example_1, output_1, example_2, output_2, example_3, output_3]
+
+def test_merge_intervals():
+    example_1, output_1, example_2, output_2, example_3, output_3 = \
+        create_merge_intervals_test_cases()
+
+    # Uncomment to see the sorted intervals.
+    #sorted(example_1, key=lambda interval: (interval[0], interval[1]))
+    #print(example_1)
+
+    result_1 = MergeIntervals.merge(example_1)
+    assert len(result_1) == len(output_1)
+    for interval in result_1:
+        assert interval in output_1
+
+    result_2 = MergeIntervals.merge(example_2)
+    assert len(result_2) == len(output_2)
+    for interval in result_2:
+        assert interval in output_2
+
+    result_3 = MergeIntervals.merge(example_3)
+    assert len(result_3) == len(output_3)
+    # for interval in result_3:
+    #     assert interval in output_3
 
 """
 https://leetcode.com/problems/set-matrix-zeroes/description/

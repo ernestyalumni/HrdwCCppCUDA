@@ -1176,6 +1176,64 @@ BOOST_AUTO_TEST_CASE(SingleNumberIITracksSeenNumbers)
 }
 
 //------------------------------------------------------------------------------
+/// 146. LRU Cache
+//------------------------------------------------------------------------------
+
+// Example 1:
+
+// Input
+// ["LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"]
+// [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
+// Output
+// [null, null, null, 1, null, -1, null, -1, 3, 4]
+
+class LRUCacheTestCases
+{
+  public:
+    vector<vector<std::string>> test_cases_input_actions_;
+    vector<vector<vector<int>>> test_cases_inputs_;
+    vector<vector<std::optional<int>>> test_cases_expected_;
+
+    LRUCacheTestCases():
+      test_cases_input_actions_{},
+      test_cases_inputs_{},
+      test_cases_expected_{}
+    {
+      // Example 1
+      vector<std::string> example_1_input_actions {
+        "LRUCache", "put", "put", "get", "put", "get", "put", "get", "get", "get"};
+      vector<vector<int>> example_1_inputs {
+        {2}, {1, 1}, {2, 2}, {1}, {3, 3}, {2}, {4, 4}, {1}, {3}, {4}};
+      vector<std::optional<int>> example_1_expected {
+        std::nullopt, std::nullopt, std::nullopt, 1, std::nullopt, -1, std::nullopt, -1, 3, 4};
+
+      test_cases_input_actions_.push_back(example_1_input_actions);
+      test_cases_inputs_.push_back(example_1_inputs);
+      test_cases_expected_.push_back(example_1_expected);
+    }
+
+    std::optional<int> run_input_action(
+      const std::string& action,
+      const vector<int>& input,
+      LRUCache* lru_cache_ptr)
+    {
+      if (action == "put")
+      {
+        lru_cache_ptr->put(input[0], input[1]);
+        return std::nullopt;
+      }
+      else if (action == "get")
+      {
+        return lru_cache_ptr->get(input[0]);
+      }
+      else
+      {
+        throw std::invalid_argument("Invalid action: " + action);
+      }
+    }
+};
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 

@@ -230,6 +230,25 @@ class MergeIntervals:
     intervals[i].length == 2
     0 <= starti <= endi <= 104
     """
+    @staticmethod
+    def merge(intervals: List[List[int]]) -> List[List[int]]:
+        intervals.sort(key=lambda interval: (interval[0], interval[1]))
+
+        merged_intervals = []
+        output_index = None
+        for input_index in range(len(intervals)):
+            if output_index is None:
+                output_index = input_index
+                merged_intervals.append(intervals[input_index])
+            else:
+                if intervals[input_index][0] <= merged_intervals[output_index][1]:
+                    merged_intervals[output_index][1] = max(
+                        intervals[input_index][1],
+                        merged_intervals[output_index][1])
+                else:
+                    merged_intervals.append(intervals[input_index])    
+                    output_index += 1
+        return merged_intervals
 
 
 class SetMatrixZeroes:
