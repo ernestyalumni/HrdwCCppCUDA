@@ -420,6 +420,13 @@ class SingleNumberII
 /// * 0 <= value <= 105
 /// * At most 2 * 105 calls will be made to get and put.
 //------------------------------------------------------------------------------
+class LRUCache
+{
+  public:
+    LRUCache(int capacity);
+    int get(int key);
+    void put(int key, int value);
+};
 
 //------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray

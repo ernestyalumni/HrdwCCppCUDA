@@ -1224,7 +1224,7 @@ class LRUCacheTestCases
       }
       else if (action == "get")
       {
-        return lru_cache_ptr->get(input[0]);
+        return  lru_cache_ptr->get(input[0]);
       }
       else
       {
