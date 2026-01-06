@@ -1272,6 +1272,7 @@ void SortColors::one_pass(vector<int>& nums)
     {
       current_index++;
     }
+    // We're guaranteed that the value is 2.
     else
     {
       swap(nums[current_index], nums[high_index]);
@@ -1552,6 +1553,103 @@ int SingleNumberII::single_number_track_seen(vector<int>& nums)
 }
 
 //------------------------------------------------------------------------------
+/// https://leetcode.com/problems/lru-cache/description/
+/// 146. LRU Cache
+//------------------------------------------------------------------------------
+
+LRUCache::LRUCache(int capacity):
+  key_to_pair_ptr_{},
+  capacity_{capacity}
+{
+  head_ = new KeyValuePair{};
+  tail_ = new KeyValuePair{};
+  head_->next_ = tail_;
+  tail_->previous_ = head_;
+}
+
+int LRUCache::get(int key)
+{
+  // O(1) amortized to find a key in a map.
+  if (key_to_pair_ptr_.count(key) == 0)
+  {
+    return -1;
+  }
+
+  KeyValuePair* pair_ptr {key_to_pair_ptr_.at(key)};
+
+  delink_node(pair_ptr);
+  move_to_head(pair_ptr);
+
+  return pair_ptr->value_;
+}
+
+void LRUCache::put(int key, int value)
+{
+  if (key_to_pair_ptr_.count(key) == 0)  
+  {
+    if (key_to_pair_ptr_.size() >= capacity_)
+    {
+      // Remember, tail is in this case a sentinel node, a node that "stays"
+      // in place.
+      KeyValuePair* least_recently_used_ptr {tail_->previous_};
+      delink_node(least_recently_used_ptr);
+
+      int key_to_remove {least_recently_used_ptr->key_};
+      // O(1) amortized to erase key in a map.
+      key_to_pair_ptr_.erase(key_to_remove);
+      delete least_recently_used_ptr;
+    }
+
+    KeyValuePair* new_pair_ptr {new KeyValuePair(key, value)};
+    move_to_head(new_pair_ptr);
+    key_to_pair_ptr_[key] = new_pair_ptr;
+  }
+  else
+  {
+    KeyValuePair* pair_ptr {key_to_pair_ptr_.at(key)};
+    pair_ptr->value_ = value;
+    move_to_head(pair_ptr);
+  }
+}
+
+LRUCache::KeyValuePair::KeyValuePair(int key, int value):
+  key_{key},
+  value_{value},
+  next_{nullptr},
+  previous_{nullptr}
+{}
+
+LRUCache::~LRUCache()
+{
+  KeyValuePair* current_ptr {head_};
+  while (current_ptr != nullptr)
+  {
+    KeyValuePair* next_ptr {current_ptr->next_};
+    delete current_ptr;
+    current_ptr = next_ptr;
+  }
+}
+
+void LRUCache::move_to_head(KeyValuePair* pair_ptr)
+{
+  pair_ptr->next_ = head_->next_;
+  pair_ptr->previous_ = head_;
+
+  head_->next_->previous_ = pair_ptr;
+  head_->next_ = pair_ptr;
+}
+
+void LRUCache::delink_node(KeyValuePair* pair_ptr)
+{
+  // Since we can assume that we are not delinking a head or tail because they
+  // are "sentinel" nodes (they stay in place), then we can do the following:
+
+  pair_ptr->previous_->next_ = pair_ptr->next_;
+
+  pair_ptr->next_->previous_ = pair_ptr->previous_;
+}
+
+//------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
 //------------------------------------------------------------------------------
 int MaximumProductSubarray::max_product(vector<int>& nums)
@@ -1793,65 +1891,121 @@ int NumberOfIslands::number_of_islands_with_breadth_first_search(
     return (i >= 0 && i < M && 0 <= j && j < N && grid[i][j] != '0');
   };
 
-  int count {0};
+  // bfs breadth-first search
+  auto bfs = [&](const int i, const int j)
+  {
+    if (!is_valid(i, j))
+    {
+      return;
+    }
 
-  queue<pair<int, int>> unvisited_cells {};
+    queue<pair<int, int>> unvisited_cells {};
+    unvisited_cells.push(make_pair(i, j));
+    // Mark as visited
+    grid[i][j] = '0';
+
+    // It should stop because the number of cells that can be visited is finite
+    // from the boundary conditions.
+    while (!unvisited_cells.empty())
+    {
+      const auto [i, j] = unvisited_cells.front();
+      unvisited_cells.pop();
+      //grid[i][j] = '0';
+
+      if (is_valid(i + 1, j))
+      {
+        unvisited_cells.push(make_pair(i + 1, j));
+        grid[i + 1][j] = '0';
+      }
+      if (is_valid(i - 1, j))
+      {
+        unvisited_cells.push(make_pair(i - 1, j));
+        grid[i - 1][j] = '0';
+      }
+      if (is_valid(i, j + 1))
+      {
+        unvisited_cells.push(make_pair(i, j + 1));
+        grid[i][j + 1] = '0';
+      }
+      if (is_valid(i, j - 1))
+      {
+        unvisited_cells.push(make_pair(i, j - 1));
+        grid[i][j - 1] = '0';
+      }
+    }
+
+    return;
+  };
+
+  int count {0};
 
   for (int i {0}; i < M; ++i)
   {
     for (int j {0}; j < N; ++j)
     {
-      if (grid[i][j] != '0')
+      if (grid[i][j] == '1')
       {
-        unvisited_cells.push(make_pair(i, j));
-        // Mark as visited immediately, to avoid processing a cell multiple
-        // times.
-        grid[i][j] = '0';
-
-        while (!unvisited_cells.empty())
-        {
-          //const int level_size {static_cast<int>(unvisited_cells.size())};
-
-          //for (int element {0}; element < level_size; ++element)
-          //{
-          const auto ij = unvisited_cells.front();
-          const int I {get<0>(ij)};
-          const int J {get<1>(ij)};
-          unvisited_cells.pop();
-
-          // Remember to check if (i, j) are within the bounds.
-
-          if (is_valid(I + 1, J))
-          {
-            unvisited_cells.push(make_pair(I + 1, J));
-            // Mark immediately as visited.
-            grid[I + 1][J] = '0';
-          }
-          if (is_valid(I - 1, J))
-          {
-            unvisited_cells.push(make_pair(I - 1, J));
-            grid[I - 1][J] = '0';
-          }
-          if (is_valid(I, J + 1))
-          {
-            unvisited_cells.push(make_pair(I, J + 1));
-            grid[I][J + 1] = '0';
-          }
-          if (is_valid(I, J - 1))
-          {
-            unvisited_cells.push(make_pair(I, J - 1));
-            grid[I][J - 1] = '0';
-          }
-          //}
-        }
-
+        bfs(i, j);
         // We completed tracing through 1 island.
         count++;
       }
     }
   }
-
   return count;
+}
+
+//------------------------------------------------------------------------------
+/// 207. Course Schedule
+//------------------------------------------------------------------------------
+bool CourseSchedule::can_finish(
+  int numCourses,
+  std::vector<std::vector<int>>& prerequisites)
+{
+  // Model the problem as a directed graph.
+  // - Each course is a node (0 to numCourses - 1).
+  // - Each prerequisite [ai, bi] is a directed edge from bi to ai, meaning "bi
+  // must be done before ai" (bi -> ai)
+  vector<vector<int>> adjacency_list(numCourses);
+  // For each, how many prerequisites each course still has. 
+  vector<int> prerequisites_left(numCourses, 0);
+
+  for (const auto& prerequisite : prerequisites)
+  {
+    int a {prerequisite[0]};
+    int b {prerequisite[1]};
+    adjacency_list[b].push_back(a);
+    prerequisites_left[a]++;
+  }
+
+  // Queue all courses that currently have no prerequisites
+  queue<int> courses {};
+  for (int course {0}; course < numCourses; ++course)
+  {
+    if (prerequisites_left[course] == 0)
+    {
+      courses.push(course);
+    }
+  }
+
+  int courses_taken {0};
+
+  while (!courses.empty())
+  {
+    const int current_course {courses.front()};
+    courses.pop();
+    courses_taken++;
+
+    for (int next_course : adjacency_list[current_course])
+    {
+      prerequisites_left[next_course]--;
+      if (prerequisites_left[next_course] == 0)
+      {
+        courses.push(next_course);
+      }
+    }
+  }
+
+  return courses_taken == numCourses;
 }
 
 /// \name 209. Minimum Size Subarray Sum
@@ -1960,6 +2114,7 @@ int BitwiseANDOfNumbersRange::common_mask(int left, int right)
 }
 
 //------------------------------------------------------------------------------
+/// https://leetcode.com/problems/kth-largest-element-in-an-array/description/
 /// 215. Kth Largest Element in an Array
 //------------------------------------------------------------------------------
 

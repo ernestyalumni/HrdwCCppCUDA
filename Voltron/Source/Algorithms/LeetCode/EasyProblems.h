@@ -244,6 +244,46 @@ class PowerOfTwo
 };
 
 //------------------------------------------------------------------------------
+/// https://leetcode.com/problems/palindrome-linked-list/description/
+/// 234. Palindrome Linked List
+/// Given the head of a singly linked list, return true if it is a or false
+/// otherwise.
+///
+/// Constraints:
+/// The number of nodes in the list is in the range [1, 105].
+/// 0 <= Node.val <= 9
+//------------------------------------------------------------------------------
+class PalindromeLinkedList
+{
+  public:
+    struct ListNode
+    {
+      int value_;
+      ListNode* next_;
+      ListNode():
+        value_{0},
+        next_{nullptr}
+      {}
+      ListNode(int x):
+        value_{x},
+        next_{nullptr}
+      {}
+      ListNode(int x, ListNode* next):
+        value_{x},
+        next_{next}
+      {}
+    };
+
+    static bool is_palindrome_brute_force(ListNode* head);
+
+    static bool is_palindrome_two_pointers(ListNode* head);
+
+  protected:
+    static ListNode* reverse_list(ListNode* head);
+};
+
+
+//------------------------------------------------------------------------------
 /// 242. Valid Anagram
 //------------------------------------------------------------------------------
 class ValidAnagram

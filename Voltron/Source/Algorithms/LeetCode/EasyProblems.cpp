@@ -786,6 +786,92 @@ bool PowerOfTwo::is_power_of_two_and(int n)
   return (n & (n - 1)) == 0;
 }
 
+//------------------------------------------------------------------------------
+/// https://leetcode.com/problems/palindrome-linked-list/description/
+/// 234. Palindrome Linked List
+//------------------------------------------------------------------------------
+
+bool PalindromeLinkedList::is_palindrome_brute_force(
+  PalindromeLinkedList::ListNode* head)
+{
+  using ListNode = PalindromeLinkedList::ListNode;
+
+  vector<int> values {};
+
+  int N {0};
+  ListNode* current_node {head};
+  while (current_node != nullptr)
+  {
+    values.emplace_back(current_node->value_);
+    current_node = current_node->next_;
+    ++N;
+  }
+
+  for (int i {0}; i < N / 2; ++i)
+  {
+    if (values[i] != values[N - 1 - i])
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool PalindromeLinkedList::is_palindrome_two_pointers(
+  PalindromeLinkedList::ListNode* head)
+{
+  if (head == nullptr || head->next_ == nullptr)
+  {
+    return true;
+  }
+
+  ListNode* slow {head};
+  ListNode* fast {head};
+  // By math, slow will be at the middle, for both even or odd length.
+  while (fast != nullptr && fast->next_ != nullptr)
+  {
+    slow = slow->next_;
+    fast = fast->next_->next_;
+  }
+
+  // Reverse list will take the head, which in this case is now at the middle,
+  // and iterate all the way to the end (tail?) and make that the new head. The
+  // new tail is the previous head, which in this case is the "middle" node.
+  ListNode* reversed_second_half {reverse_list(slow)};
+  ListNode* first_half {head};
+  while (reversed_second_half != nullptr)
+  {
+    if (first_half->value_ != reversed_second_half->value_)
+    {
+      return false;
+    }
+    first_half = first_half->next_;
+    reversed_second_half = reversed_second_half->next_;
+  }
+  reverse_list(reversed_second_half);
+  return true;
+}
+
+PalindromeLinkedList::ListNode* PalindromeLinkedList::reverse_list(
+  PalindromeLinkedList::ListNode* head)
+{
+  ListNode* previous {nullptr};
+  ListNode* current {head};
+
+  // O(N) time where N is number of nodes from head.
+  // Consider x2 as current.
+  // x1 -> x2 -> x3 to
+  // x1 <- x2 <- x3
+  while (current != nullptr)
+  {
+    ListNode* next {current->next_};
+    current->next_ = previous;
+    previous = current;
+    current = next;
+  }
+  return previous;
+}
 
 //------------------------------------------------------------------------------
 /// 242. Valid Anagram

@@ -8,6 +8,7 @@
 #include <optional>
 #include <string>
 #include <tuple>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -426,7 +427,33 @@ class LRUCache
     LRUCache(int capacity);
     int get(int key);
     void put(int key, int value);
-};
+
+    struct KeyValuePair
+    {
+      int key_;
+      int value_;
+      KeyValuePair* next_;
+      KeyValuePair* previous_;
+
+      KeyValuePair(int key = 0, int value = 0);
+    };
+
+    virtual ~LRUCache();
+
+  protected:
+
+    void move_to_head(KeyValuePair* pair_ptr);
+
+    void delink_node(KeyValuePair* pair_ptr);
+
+    // key to index in the array.
+    std::unordered_map<int, KeyValuePair*> key_to_pair_ptr_;
+    const int capacity_;
+
+    // These are "sentinel" nodes to simplify the code.
+    KeyValuePair* head_;
+    KeyValuePair* tail_;
+  };
 
 //------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
@@ -585,6 +612,18 @@ class BitwiseANDOfNumbersRange
 };
 
 //------------------------------------------------------------------------------
+/// 207. Course Schedule
+//------------------------------------------------------------------------------
+class CourseSchedule
+{
+  public:
+
+    static bool can_finish(
+      int numCourses,
+      std::vector<std::vector<int>>& prerequisites);
+};
+
+//------------------------------------------------------------------------------
 /// \name 209. Minimum Size Subarray Sum
 /// We're given an array of positive integers (that are non-zero).
 /// A subarray is a contiguous non-empty sequence of elements within an array.
@@ -607,7 +646,8 @@ class MinimumSizeSubarraySum
 };
 
 //------------------------------------------------------------------------------
-/// 215. Product of Array Except self
+/// https://leetcode.com/problems/kth-largest-element-in-an-array/description/
+/// 215. Kth Largest Element in an Array
 //------------------------------------------------------------------------------
 class KthLargestElementInAnArray
 {

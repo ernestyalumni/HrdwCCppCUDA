@@ -11,6 +11,7 @@ class LongestSubstringWithoutRepeatingCharacters:
     @staticmethod
     def length_of_longest_substring(s: str) -> int:
 
+        # Map each character to its index in the string.
         seen_character_to_place = {}        
 
         maximum_length = 0
@@ -492,9 +493,21 @@ class NumberOfIslands:
     def number_of_islands_with_breadth_first_search(grid: List[List[str]]) \
         -> int:
         """
+        This
         Memory Limit Exceeded
         39 / 49 testcases passed
         https://leetcode.com/problems/number-of-islands/submissions/1872545582/ 
+        was fixed, and now obtains
+        Runtime
+        219ms
+        Beats98.29%
+
+        Memory
+        21.72MB
+        Beats33.40%
+
+        https://leetcode.com/problems/number-of-islands/submissions/1876928052/
+        what helped was marking grid once we add to queue.
         """
         M = len(grid)
         N = len(grid[0])
@@ -507,17 +520,23 @@ class NumberOfIslands:
 
             # At this point, logically, grid[i][j] == '1'.
             queue = deque([(i, j)])
+            # Mark as visited to avoid duplicate.
+            grid[i][j] = '0'
             while queue:
                 current_i, current_j = queue.popleft()
-                grid[current_i][current_j] = '0'
                 if current_i + 1 < M and grid[current_i + 1][current_j] == '1':
                     queue.append((current_i + 1, current_j))
+                    # Marking immediately each neighbor avoids duplicates.
+                    grid[current_i + 1][current_j] = '0'
                 if current_i - 1 >= 0 and grid[current_i - 1][current_j] == '1':
                     queue.append((current_i - 1, current_j))
+                    grid[current_i - 1][current_j] = '0'
                 if current_j + 1 < N and grid[current_i][current_j + 1] == '1':
                     queue.append((current_i, current_j + 1))
+                    grid[current_i][current_j + 1] = '0'
                 if current_j - 1 >= 0 and grid[current_i][current_j - 1] == '1':
                     queue.append((current_i, current_j - 1))
+                    grid[current_i][current_j - 1] = '0'
             return
 
         count = 0

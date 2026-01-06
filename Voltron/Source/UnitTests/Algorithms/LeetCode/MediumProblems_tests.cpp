@@ -34,6 +34,8 @@ using Algorithms::LeetCode::ProductOfArrayExceptSelf;
 using Algorithms::LeetCode::ThreeSum;
 using Algorithms::LeetCode::LongestRepeatingCharacterReplacement;
 using Algorithms::LeetCode::FindAllAnagramsInAString;
+// 146. LRU Cache
+using Algorithms::LeetCode::LRUCache;
 // 167. Two Sum II - Input Array Is Sorted
 using Algorithms::LeetCode::TwoSumII;
 // 271. String Encode and Decode
@@ -54,6 +56,15 @@ using DataStructures::BinaryTrees::TreeNode;
 using std::string;
 using std::unordered_set;
 using std::vector;
+
+class TestableLRUCache: public LRUCache
+{
+  public:
+
+    using LRUCache::LRUCache;
+    using LRUCache::capacity_;
+    using LRUCache::key_to_pair_ptr_;
+};
 
 BOOST_AUTO_TEST_SUITE(Algorithms)
 BOOST_AUTO_TEST_SUITE(LeetCode)
@@ -1232,6 +1243,39 @@ class LRUCacheTestCases
       }
     }
 };
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(LRUCacheConstructsAndDestructs)
+{
+  {
+    TestableLRUCache lru_cache {2};
+    BOOST_TEST(lru_cache.capacity_ == 2);
+    BOOST_TEST(lru_cache.key_to_pair_ptr_.size() == 0);
+    BOOST_TEST(lru_cache.get(1) == -1);
+    BOOST_TEST(lru_cache.capacity_ == 2);
+    BOOST_TEST(lru_cache.key_to_pair_ptr_.size() == 0);
+    lru_cache.put(1, 1);
+    BOOST_TEST(lru_cache.capacity_ == 2);
+    BOOST_TEST(lru_cache.key_to_pair_ptr_.size() == 1);
+    lru_cache.put(2, 2);
+    BOOST_TEST(lru_cache.capacity_ == 2);
+    BOOST_TEST(lru_cache.key_to_pair_ptr_.size() == 2);
+    BOOST_TEST(lru_cache.get(1) == 1);
+    BOOST_TEST(lru_cache.capacity_ == 2);
+    BOOST_TEST(lru_cache.key_to_pair_ptr_.size() == 2);
+    lru_cache.put(3, 3);
+    BOOST_TEST(lru_cache.capacity_ == 2);
+    BOOST_TEST(lru_cache.key_to_pair_ptr_.size() == 2);
+    BOOST_TEST(lru_cache.get(2) == -1);
+    lru_cache.put(4, 4);
+    BOOST_TEST(lru_cache.get(1) == -1);
+    BOOST_TEST(lru_cache.get(3) == 3);
+    BOOST_TEST(lru_cache.get(4) == 4);
+  }
+
+  BOOST_TEST(true);
+}
 
 //------------------------------------------------------------------------------
 /// 152. Maximum Product Subarray
