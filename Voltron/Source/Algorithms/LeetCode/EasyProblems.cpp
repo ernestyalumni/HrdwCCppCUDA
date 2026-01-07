@@ -491,6 +491,37 @@ int MajorityElement::majority_element_with_map(vector<int>& nums)
   return INT_MIN;
 }
 
+//------------------------------------------------------------------------------
+/// The algorithm maintains a pair (c, v), where c \in \mathbb{Z}_0 is a counter
+/// (i.e. count) and v is the current candidate value.
+///
+/// Loop invariant (key invariant).
+/// Let the algorithm process (a_1, ..., a_k), k <= N, and let (c_k, v_k) be the
+/// counter and candidate after step k.
+/// Invariant: After processing k elements, it's possible to partition first k
+/// elements into 
+/// * multiset R_k consisting of c_k copies of v_k,
+/// * multiset of disjoint pairs {x,y} with x != y
+/// i.e. equivalently, the unmatched elements after all pair cancellations are
+/// exactly c_k copies of current candidate v_k. (because c_k is the "net" after
+/// incrementing and decrementing c_k for each of the c_i's, i < k)
+///  
+/// Base case, k = 0, no elements to process, c_0 = 0, claim holds trivially.
+/// Step: Suppose invariant holds for k. Now process a_{k+1} = x.
+/// if c_k=0, set v_{k+1} = x, c_{k+1} = 1, R_{k+1} = {x}, pairs set unchanged.
+/// if c_k > 0, x=v_k, c_{k+1} = c_k + 1, and R_{k+1}=R_k, unchanged.
+/// if c_k > 0, x!=v_k, c_{k+1} = c_k - 1, and so this pair (x, v_k) is added to
+/// disjoint pairs set.
+///
+/// Let k=N. By invariant, \forall x != v_n, x can appear at most as many times
+/// there are pairs in R_n.
+/// Let m be the true majority element, suppose v_n != m. Since m appears more
+/// than N/2 times, it must also appear more times than any other element after
+/// we remove all unequal pairs (because each pair removes at most 1 copy of m).
+/// Thus, m must be the value of all remaining unmatched elements, so v_n = m,
+/// contradicting v_n != m.
+//------------------------------------------------------------------------------
+
 int MajorityElement::majority_element_with_voting(vector<int>& nums)
 {
   const size_t N {nums.size()};
@@ -503,6 +534,7 @@ int MajorityElement::majority_element_with_voting(vector<int>& nums)
   {
     if (nums[i] == candidate)
     {
+      // Short circuit the for loop if we've already found the majority element.
       if (++count > floor_half_of_N)
       {
         return candidate;
