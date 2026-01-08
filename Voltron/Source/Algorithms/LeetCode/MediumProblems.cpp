@@ -3767,6 +3767,91 @@ vector<int> DailyTemperatures::daily_temperatures(vector<int>& temperatures)
 }
 
 //------------------------------------------------------------------------------
+/// 994. Rotting Oranges
+/// https://leetcode.com/problems/rotting-oranges/description/
+///
+/// You are given an m x n grid where each cell can have one of three values:
+/// * 0 representing an empty cell,
+/// * 1 representing a fresh orange, or
+/// * 2 representing a rotten orange.
+/// Every minute, any fresh orange that is 4-directionally adjacent to a rotten
+/// orange becomes rotten.
+///
+/// Return the minimum number of minutes that must elapse until no cell has a
+/// fresh orange. If this is impossible, return -1.
+//------------------------------------------------------------------------------
+
+int RottingOranges::oranges_rotting(vector<vector<int>>& grid)
+{
+  const int M {static_cast<int>(grid.size())};
+  const int N {static_cast<int>(grid[0].size())};
+
+  auto is_valid_fresh_orange = [&](const int i, const int j)
+  {
+    return (i >= 0) && (j >= 0) && (i < M) && (j < N) && grid[i][j] == 1;
+  };
+
+  queue<pair<int, int>> rotten_oranges {};
+  int number_of_fresh_oranges {0};
+  int minutes {0};
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      if (grid[i][j] == 1)
+      {
+        number_of_fresh_oranges++;
+      }
+      else if (grid[i][j] == 2)
+      {
+        rotten_oranges.push({i, j});
+      }
+    }
+  }
+
+  while (!rotten_oranges.empty() && number_of_fresh_oranges > 0)
+  {
+    const int number_of_rotten_oranges_in_this_minute {
+      static_cast<int>(rotten_oranges.size())};
+
+    for (int k {0}; k < number_of_rotten_oranges_in_this_minute; ++k)
+    {
+      const auto [i, j] = rotten_oranges.front();
+      rotten_oranges.pop();
+
+      if (is_valid_fresh_orange(i + 1, j))
+      {
+        grid[i + 1][j] = 2;
+        rotten_oranges.push({i + 1, j});
+        number_of_fresh_oranges--;
+      }
+      if (is_valid_fresh_orange(i - 1, j))
+      {
+        grid[i - 1][j] = 2;
+        rotten_oranges.push({i - 1, j});
+        number_of_fresh_oranges--;
+      }
+      if (is_valid_fresh_orange(i, j + 1))
+      {
+        grid[i][j + 1] = 2;
+        rotten_oranges.push({i, j + 1});
+        number_of_fresh_oranges--;
+      }
+      if (is_valid_fresh_orange(i, j - 1))
+      {
+        grid[i][j - 1] = 2;
+        rotten_oranges.push({i, j - 1});
+        number_of_fresh_oranges--;
+      }
+    }
+    minutes++;
+  }
+
+  return number_of_fresh_oranges > 0 ? -1 : minutes;
+}
+
+//------------------------------------------------------------------------------
 /// 1297. Maximum Number of Occurrences of a Substring
 /// https://leetcode.com/problems/maximum-number-of-occurrences-of-a-substring/description/
 /// Constraints:

@@ -50,6 +50,8 @@ using Algorithms::LeetCode::Update01Matrix;
 using Algorithms::LeetCode::PermutationInString;
 // 692. Top K Frequent Words
 using Algorithms::LeetCode::TopKFrequentWords;
+// 994. Rotting Oranges
+using Algorithms::LeetCode::RottingOranges;
 // 1297. Maximum Number of Occurrences of a Substring
 using Algorithms::LeetCode::MaximumNumberOfOccurrencesOfASubstring;
 using DataStructures::BinaryTrees::TreeNode;
@@ -2899,6 +2901,67 @@ BOOST_AUTO_TEST_CASE(WorksWithStack)
 }
 
 BOOST_AUTO_TEST_SUITE_END() // DailyTemperatures_0739_tests
+
+//------------------------------------------------------------------------------
+/// https://leetcode.com/problems/rotting-oranges/description/
+/// 994. Rotting Oranges
+//------------------------------------------------------------------------------
+
+class CreateRottingOrangesTestCases
+{
+  public:
+
+    vector<vector<vector<int>>> test_input_;
+    vector<int> test_output_;
+
+    CreateRottingOrangesTestCases():
+      test_input_{}
+    {
+      // Example 1:
+
+      // Input: grid = [[2,1,1],[1,1,0],[0,1,1]]
+      // Output: 4
+      vector<vector<int>> example_1_input {{2,1,1},{1,1,0},{0,1,1}};
+      const int example_1_output {4};
+
+      // Example 2:
+
+      // Input: grid = [[2,1,1],[0,1,1],[1,0,1]]
+      // Output: -1
+      vector<vector<int>> example_2_input {{2,1,1},{0,1,1},{1,0,1}};
+      const int example_2_output {-1};
+
+      // Example 3:
+
+      // Input: grid = [[0,2]]
+      // Output: 0
+      vector<vector<int>> example_3_input {{0,2}};
+      const int example_3_output {0};
+
+      test_input_.push_back(example_1_input);
+      test_output_.push_back(example_1_output);
+
+      test_input_.push_back(example_2_input);
+      test_output_.push_back(example_2_output);
+
+      test_input_.push_back(example_3_input);
+      test_output_.push_back(example_3_output);
+    }
+};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(RottingOrangesWithBreadthFirstSearchWorks)
+{
+  CreateRottingOrangesTestCases test_cases {};
+  
+  for (size_t i {0}; i < test_cases.test_input_.size(); ++i)
+  {
+    BOOST_TEST(
+      RottingOranges::oranges_rotting(test_cases.test_input_.at(i)) ==
+        test_cases.test_output_.at(i));
+  }
+}
 
 //------------------------------------------------------------------------------
 /// 1297. Maximum Number of Occurrences of a Substring
