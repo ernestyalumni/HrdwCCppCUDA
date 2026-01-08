@@ -150,6 +150,49 @@ class ContainsDuplicate(object):
                 seen.add(num)
         return False
 
+class InvertBinaryTree:
+    """
+    https://leetcode.com/problems/invert-binary-tree/description/
+    226. Invert Binary Tree
+    Given the root of a binary tree, invert the tree, and return its root.
+
+    Constraints:
+
+    * The number of nodes in the tree is in the range [0, 100].
+    * -100 <= Node.val <= 100
+    """
+
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    @staticmethod
+    def invert_tree_recursive(root: Optional[TreeNode]) -> Optional[TreeNode]:
+
+        if root is None:
+            return None
+
+        def invert_tree_recursive_step(node: Optional[TreeNode]) -> Optional[TreeNode]:
+            if node is None:
+                return None
+
+            # If node is a leaf, return it.
+            if node.left is None and node.right is None:
+                return node
+
+            # Invert the left and right children.
+            left_child_inverted = invert_tree_recursive_step(node.left)
+            right_child_inverted = invert_tree_recursive_step(node.right)
+
+            # Swap the left and right children.
+            node.left = right_child_inverted
+            node.right = left_child_inverted
+            return node
+
+        return invert_tree_recursive_step(root)
+
 class ValidAnagram(object):
     """
     242. Valid Anagram
