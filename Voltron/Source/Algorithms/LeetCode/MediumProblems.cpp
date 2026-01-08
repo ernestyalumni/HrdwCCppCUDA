@@ -1832,7 +1832,6 @@ vector<string> RepeatedDNASequences::find_repeated_dna_sequences(string s)
 int NumberOfIslands::number_of_islands_with_depth_first_search(
   vector<vector<char>>& grid)
 {
-
   function<void(vector<vector<char>>&, const int, const int)>
     search_for_an_island = [&](
       vector<vector<char>>& grid,
