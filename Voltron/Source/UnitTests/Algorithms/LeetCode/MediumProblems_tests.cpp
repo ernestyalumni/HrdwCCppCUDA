@@ -2,6 +2,8 @@
 #include "DataStructures/BinaryTrees.h"
 
 #include <boost/test/unit_test.hpp>
+#include <cstdint>
+#include <limits>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -40,6 +42,8 @@ using Algorithms::LeetCode::LRUCache;
 using Algorithms::LeetCode::TwoSumII;
 // 271. String Encode and Decode
 using Algorithms::LeetCode::StringEncodeAndDecode;
+// 286. Walls and Gates
+using Algorithms::LeetCode::WallsAndGates;
 // 289. Game of Life
 using Algorithms::LeetCode::GameOfLife;
 // 347. Top K Frequent Elements
@@ -2190,6 +2194,58 @@ BOOST_AUTO_TEST_CASE(StringEncodeAndDecodeDecodeWithPrefixNeetDecodes)
 
     BOOST_TEST(strs == result);
   }
+}
+
+//------------------------------------------------------------------------------
+/// https://www.hellointerview.com/community/questions/walls-gates/cm5eh7nrh04uy838ome63sg1p
+/// Leetcode 286. Walls and Gates
+//------------------------------------------------------------------------------
+
+class WallsAndGatesTestCases
+{
+  public:
+
+    vector<vector<vector<int>>> test_input_;
+    vector<vector<vector<int>>> test_output_;
+
+    static constexpr int32_t inf {std::numeric_limits<int32_t>::max()};
+
+    WallsAndGatesTestCases():
+      test_input_{},
+      test_output_{}
+    {
+//       Input:
+// [[2147483647,-1,0,2147483647],
+// [2147483647,2147483647,2147483647,-1],
+// [2147483647,-1,2147483647,-1],
+// [0,-1,2147483647,2147483647]]
+// Output:
+// [[3,-1,0,1],
+// [2,2,1,-1],
+// [1,-1,2,-1],
+// [0,-1,3,4]]
+      vector<vector<int>> example_1_input {
+        {inf,-1,0,inf},
+        {inf,inf,inf,-1},
+        {inf,-1,inf,-1},
+        {0,-1,inf,inf}
+      };
+      vector<vector<int>> example_1_output {
+        {3,-1,0,1},
+        {2,2,1,-1},
+        {1,-1,2,-1},
+        {0,-1,3,4}
+      };
+      test_input_.push_back(example_1_input);
+      test_output_.push_back(example_1_output);
+    }
+};
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+BOOST_AUTO_TEST_CASE(WallsAndGatesNaiveGetsWallsAndGates)
+{
+
 }
 
 //------------------------------------------------------------------------------

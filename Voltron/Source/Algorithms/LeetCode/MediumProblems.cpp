@@ -2549,6 +2549,19 @@ vector<string> StringEncodeAndDecode::decode_with_prefix_neet(string s)
 }
 
 //------------------------------------------------------------------------------
+/// https://www.hellointerview.com/community/questions/walls-gates/cm5eh7nrh04uy838ome63sg1p
+/// Leetcode 286. Walls and Gates
+//------------------------------------------------------------------------------
+
+vector<vector<int>> WallsAndGates::walls_and_gates_naive(vector<vector<int>>& grid)
+{
+  const int M {static_cast<int>(grid.size())};
+  const int N {static_cast<int>(grid[0].size())};
+
+  return grid;
+}
+
+//------------------------------------------------------------------------------
 /// 289. Game of Life
 //------------------------------------------------------------------------------
 

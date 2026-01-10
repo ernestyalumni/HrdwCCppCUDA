@@ -761,6 +761,39 @@ class StringEncodeAndDecode
 };
 
 //------------------------------------------------------------------------------
+/// https://www.hellointerview.com/community/questions/walls-gates/cm5eh7nrh04uy838ome63sg1p
+/// Leetcode 286. Walls and Gates
+/// Given a 2D grid of empty rooms (INF), walls (-1), and gates (0), fill each
+/// empty room with the distance to its nearest gate (leave walls and gates
+/// unchanged). This is a multi-source shortest-path problem on a grid that is
+/// typically solved by running a BFS from all gates simultaneously to compute
+/// minimum distances in O(mn) time.
+/// Asked at:
+/// Doordash,
+/// Spotify,
+///
+/// DESCRIPTION
+/// You have a grid representing a floor plan with rooms, walls, and gates.
+/// The grid is an m x n matrix where each cell contains one of three values:
+/// * -1 → a wall or obstacle that cannot be passed through
+/// * 0 → a gate
+/// * 2147483647 (which is 2^31 - 1, also referred to as INF) → an empty room
+/// You are tasked to fill each empty room with its shortest distance to the
+/// nearest gate.
+/// Distance is measured as the minimum number of steps needed to reach a gate.
+/// Movement is only allowed horizontally or vertically (not diagonally).
+/// If an empty room cannot reach any gate (blocked by walls), it should remain
+/// INF.
+//------------------------------------------------------------------------------
+class WallsAndGates
+{
+  public:
+
+    static std::vector<std::vector<int>> walls_and_gates_naive(
+      std::vector<std::vector<int>>& grid);
+};
+
+//------------------------------------------------------------------------------
 /// 289. Game of Life
 /// https://leetcode.com/problems/game-of-life/description/
 /// According to Wikipedia's article: "The Game of Life, also known simply as
