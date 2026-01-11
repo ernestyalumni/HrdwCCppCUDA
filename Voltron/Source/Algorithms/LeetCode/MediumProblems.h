@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <optional>
 #include <string>
 #include <tuple>
@@ -789,7 +790,9 @@ class WallsAndGates
 {
   public:
 
-    static std::vector<std::vector<int>> walls_and_gates_naive(
+    static constexpr int inf {std::numeric_limits<int32_t>::max()};
+
+    static std::vector<std::vector<int>> walls_and_gates(
       std::vector<std::vector<int>>& grid);
 };
 

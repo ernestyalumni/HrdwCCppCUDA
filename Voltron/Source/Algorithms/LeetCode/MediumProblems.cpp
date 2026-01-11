@@ -2551,12 +2551,84 @@ vector<string> StringEncodeAndDecode::decode_with_prefix_neet(string s)
 //------------------------------------------------------------------------------
 /// https://www.hellointerview.com/community/questions/walls-gates/cm5eh7nrh04uy838ome63sg1p
 /// Leetcode 286. Walls and Gates
+///
+/// Traverse each cell once.
+/// If the cell is a gate, add it to the queue.
+/// We will use bfs (breadth-first search). BFS obtains the shortest path. The
+/// proof of this is because bfs explores level by level, in increasing distance
+/// at each "level".
+/// Because bfs obtains shortest path, we don't have to worry about backtracking
+/// that would occur if we didn't have a way to mark that an empty room had
+/// already been visited.
 //------------------------------------------------------------------------------
 
-vector<vector<int>> WallsAndGates::walls_and_gates_naive(vector<vector<int>>& grid)
+vector<vector<int>> WallsAndGates::walls_and_gates(vector<vector<int>>& grid)
 {
   const int M {static_cast<int>(grid.size())};
   const int N {static_cast<int>(grid[0].size())};
+
+  if (M == 0 || N == 0)
+  {
+    return grid;
+  }
+
+  auto is_valid_empty_room = [&](const int i, const int j) -> bool
+  {
+    return (i >= 0) && (i < M) && (j >= 0) && (j < N) && grid[i][j] ==
+      WallsAndGates::inf;
+  };
+
+  using IJ = tuple<int, int>;
+
+  queue<IJ> q {};
+
+  for (int i {0}; i < M; ++i)
+  {
+    for (int j {0}; j < N; ++j)
+    {
+      // If the cell is a gate, add it to be the queue.
+      if (grid[i][j] == 0)
+      {
+        q.push(make_tuple(i, j));
+      }
+    }
+  }
+
+  // Instead of keeping track of distance, we can reuse the previous grid value
+  // since the distance to the next neighbor is just +1 more.
+  int distance {1};
+
+  const vector<IJ> directions {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+  while (!q.empty())
+  {
+    // This tells us the "level size" of each "level" of the queue at any step.
+    const int queue_size {static_cast<int>(q.size())};
+
+    for (int k {0}; k < queue_size; ++k)
+    {
+      const auto [i, j] = q.front();
+      q.pop();
+
+      // Alternatively, we can use the grid value from before to track distance
+      // and increment by 1 for its neighbors.
+      const int current_value {grid[i][j]};
+
+      for (const auto& [di, dj] : directions)
+      {
+        const int new_i {i + di};
+        const int new_j {j + dj};
+        if (is_valid_empty_room(new_i, new_j))
+        {
+          //grid[new_i][new_j] = min(grid[new_i][new_j], distance);
+          // Alternatively,
+          grid[new_i][new_j] = current_value + 1;
+          q.push(make_tuple(new_i, new_j));
+        }
+      }
+    }
+    distance++;
+  }
 
   return grid;
 }

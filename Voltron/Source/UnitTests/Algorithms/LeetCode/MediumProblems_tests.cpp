@@ -2245,7 +2245,14 @@ class WallsAndGatesTestCases
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE(WallsAndGatesNaiveGetsWallsAndGates)
 {
-
+  const auto test_cases = WallsAndGatesTestCases();
+  for (size_t i {0}; i < test_cases.test_input_.size(); ++i)
+  {
+    auto input = test_cases.test_input_[i];
+    const auto output = test_cases.test_output_[i];
+    const auto result = WallsAndGates::walls_and_gates(input);
+    BOOST_TEST(result == output);
+  }
 }
 
 //------------------------------------------------------------------------------
