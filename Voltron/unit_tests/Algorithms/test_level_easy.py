@@ -39,7 +39,9 @@ from Voltron.Algorithms.level_easy import (
     caesar_cipher_encryptor,
     run_length_encoding,
     generate_document,
-    first_non_repeating_character_with_ordered_dict
+    first_non_repeating_character_with_ordered_dict,
+    # 733. Flood Fill
+    FloodFill,
     )
 
 from Voltron.Algorithms.Sorting.bubble_sort import (
@@ -674,3 +676,52 @@ def test_first_non_repeating_character_with_ordered_dict():
     s = "abc"
     results = first_non_repeating_character_with_ordered_dict(s)
     assert results == 0
+
+# https://leetcode.com/problems/flood-fill/
+# 733. Flood Fill
+
+class CreateFloodFillTestCases:
+#     Example 1:
+
+# Input: image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2
+
+# Output: [[2,2,2],[2,2,0],[2,0,1]]
+
+# Example 2:
+
+# Input: image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, color = 0
+
+# Output: [[0,0,0],[0,0,0]]
+    image_1 = [[1,1,1],[1,1,0],[1,0,1]]
+    sr_1 = 1
+    sc_1 = 1
+    color_1 = 2
+    expected_1 = [[2,2,2],[2,2,0],[2,0,1]]
+
+    image_2 = [[0,0,0],[0,0,0]]
+    sr_2 = 0
+    sc_2 = 0
+    color_2 = 0
+    expected_2 = [[0,0,0],[0,0,0]]
+
+    test_cases = [
+        (image_1, sr_1, sc_1, color_1, expected_1),
+        (image_2, sr_2, sc_2, color_2, expected_2)]
+
+def test_flood_fill_with_depth_first_search():
+    test_cases = CreateFloodFillTestCases()
+    for image, sr, sc, color, expected in test_cases.test_cases:
+        assert FloodFill.flood_fill_with_depth_first_search(
+            image,
+            sr,
+            sc,
+            color) == expected
+
+def test_flood_fill_with_breadth_first_search():
+    test_cases = CreateFloodFillTestCases()
+    for image, sr, sc, color, expected in test_cases.test_cases:
+        assert FloodFill.flood_fill_with_breadth_first_search(
+            image,
+            sr,
+            sc,
+            color) == expected

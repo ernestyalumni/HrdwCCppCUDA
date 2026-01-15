@@ -586,7 +586,6 @@ class ProductOfArrayExceptSelf:
 
         return output
 
-
 class LongestRepeatingCharacterReplacement:
     """
     424. Longest Repeating Character Replacement

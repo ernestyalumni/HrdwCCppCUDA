@@ -782,3 +782,90 @@ def first_non_repeating_character_with_ordered_dict(input_s):
             return input_s.find(character)
 
     return -1
+
+class FloodFill:
+    """
+    733. Flood Fill
+    https://leetcode.com/problems/flood-fill/description/
+
+    You are given an image represented by an m x n grid of integers image,
+    where image[i][j] represents the pixel value of the image. You are also
+    given three integers sr, sc, and color. Your task is to perform a flood fill
+    on the image starting from the pixel image[sr][sc].
+
+    To perform a flood fill:
+
+    * Begin with the starting pixel and change its color to color.
+    * Perform the same process for each pixel that is directly adjacent (pixels
+      that share a side with the original pixel, either horizontally or
+      vertically) and shares the same color as the starting pixel.
+    * Keep repeating this process by checking neighboring pixels of the updated
+      pixels and modifying their color if it matches the original color of the
+      starting pixel.
+    * The process stops when there are no more adjacent pixels of the original
+      color to update.
+    Return the modified image after performing the flood fill.    
+    """
+    @staticmethod
+    def flood_fill_with_depth_first_search(
+        image: List[List[int]],
+        sr: int,
+        sc: int,
+        color: int) -> List[List[int]]:
+        
+        M = len(image)
+        N = len(image[0])
+        if M == 0 or N == 0:
+            return image
+        original_color = image[sr][sc]
+        if original_color == color:
+            return image
+        # We want to check if a pixel is the original color of the starting pixel.
+        def is_valid(i, j):
+            return 0 <= i < M and 0 <= j < N and image[i][j] == original_color
+
+        # Directions to move in the image.
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        def dfs(i, j):
+            if not is_valid(i, j):
+                return
+            image[i][j] = color
+
+            for di, dj in directions:
+                new_i = i + di
+                new_j = j + dj
+                dfs(new_i, new_j)
+
+        dfs(sr, sc)
+        return image
+
+    @staticmethod
+    def flood_fill_with_breadth_first_search(
+        image: List[List[int]],
+        sr: int,
+        sc: int,
+        color: int) -> List[List[int]]:
+        M = len(image)
+        N = len(image[0])
+        if M == 0 or N == 0:
+            return image
+        return image
+        original_color = image[sr][sc]
+        if original_color == color:
+            return image
+        def is_valid(i, j):
+            return 0 <= 1 < M and 0 <= j < N and image[i][j] == original_color
+
+        queue = deque([(sr, sc)])
+        image[sr][sc] = color
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        while queue:
+            i, j = queue.popleft()
+            for di, dj in directions:
+                new_i = i + di
+                new_j = j + dj
+                if is_valid(new_i, new_j):
+                    queue.append((new_i, new_j))
+                    image[new_i][new_j] = color
+        return image
