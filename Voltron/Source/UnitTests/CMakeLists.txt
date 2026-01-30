@@ -172,6 +172,7 @@ ADD_EXECUTABLE(Check
   Hierarchy/AccessAndInheritance_tests.cpp
   IO/Epoll/ControlInterestList_tests.cpp
   IO/Epoll/EpollFd_tests.cpp
+  IO/Hardware/PeripheralRegister_tests.cpp
   IPC/MessageQueue/CreateOrOpen_tests.cpp
   IPC/Sockets/Bind_tests.cpp
   IPC/Sockets/CreateSocket_tests.cpp
@@ -189,6 +190,8 @@ ADD_EXECUTABLE(Check
   Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextFile_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextLine_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/ReversePolishNotation_tests.cpp
+  QuestionsDEntrevue/LookupTableInterpolation_tests.cpp
+  QuestionsDEntrevue/Streams/FrameParser_tests.cpp
   Tools/CaptureCout_tests.cpp
   Tools/Filepaths_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp

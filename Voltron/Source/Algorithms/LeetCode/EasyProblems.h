@@ -195,6 +195,7 @@ class NumberOf1Bits
   public:
 
     static int hamming_weight_loop_all_bits(int n);
+    static int hamming_weight_loop_while_nonzero(int n);
     static int hamming_weight_kernighan_trick(int n);
 };
 

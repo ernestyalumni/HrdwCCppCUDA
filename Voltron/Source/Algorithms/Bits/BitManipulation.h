@@ -97,6 +97,47 @@ class BitManipulation
     {
       return (x & 1u) == 1;
     }
+
+    //--------------------------------------------------------------------------
+    /// Swap two variables using XOR (no temporary variable)
+    /// Recall
+    ///   0101
+    /// ^ 1100
+    /// = 1001
+    ///
+    ///   1001
+    /// ^ 0101
+    /// = 1100
+    ///
+    ///   1001
+    /// ^ 1100
+    /// = 0101
+    /// HOW IT WORKS:
+    /// Step 1: a ^= b  →  a = a XOR b (stores "difference")
+    /// Step 2: b ^= a  →  b = b XOR (a XOR b) = a (original a)
+    /// Step 3: a ^= b  →  a = (a XOR b) XOR a = b (original b)
+    ///
+    /// WARNING: 
+    /// - Undefined behavior if a and b reference the same variable!
+    /// - Not faster than std::swap on modern CPUs (often slower)
+    /// - Mainly useful for interview questions and memory-constrained systems
+    //--------------------------------------------------------------------------
+    template <typename T>
+    static void swap_xor(T& a, T& b)
+    {
+      // Safety check: prevent undefined behavior if same variable
+      if (&a == &b)
+      {
+        // No-op if swapping with itself
+        return;
+      }
+      // a now holds (a XOR b)
+      a ^= b;
+      // b now holds original a
+      b ^= a;
+      // a now holds original b
+      a ^= b;
+    }
 };
 
 //------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 #ifndef QUESTIONS_D_ENTREVUE_STREAMS_FIRE_ALERT_PARSER_H
 #define QUESTIONS_D_ENTREVUE_STREAMS_FIRE_ALERT_PARSER_H
 
+#include <array>
 #include <cstdint>
 #include <vector>
 
@@ -15,6 +16,11 @@ class FireAlertParser
 
     static constexpr float TEMPERATURE_THRESHOLD {50.0f};
 
+    // Tag constants (as arrays for easy comparison)
+    static constexpr std::array<uint8_t, 3> PRESSURE_TAG {{'P', 'R', 'S'}};
+    static constexpr std::array<uint8_t, 4> TEMPERATURE_TAG {
+      {'T', 'E', 'M', 'P'}};
+
     enum State
     {
       FIND_TAG,
@@ -23,11 +29,10 @@ class FireAlertParser
       READ_TEMPERATURE,
     };
 
-
     FireAlertParser();
     virtual ~FireAlertParser() = default;
 
-    bool process_byte(uint8_t byte);
+    bool process_byte(uint8_t byte, const bool is_big_endian=true);
 
     inline State get_state() const
     {

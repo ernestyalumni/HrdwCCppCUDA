@@ -668,6 +668,19 @@ int NumberOf1Bits::hamming_weight_loop_all_bits(int n)
   return count;
 }
 
+int NumberOf1Bits::hamming_weight_loop_while_nonzero(int n)
+{
+  int value {n};
+  int count {0};
+  while (value > 0)
+  {
+    count += (value & 1);
+    value >>= 1;
+  }
+
+  return count;
+}
+
 int NumberOf1Bits::hamming_weight_kernighan_trick(int n)
 {
   int count {0};
@@ -1125,6 +1138,10 @@ string ConvertToHexadecimal::to_hex(int num)
 //------------------------------------------------------------------------------
 int HammingDistance::hamming_distance(int x, int y)
 {
+  // Recall XOR truth table,
+  //   0 0 1 1
+  // ^ 0 1 1 0
+  //   1 0 1 0
   int z {x ^ y};
   int count {0};
   while (z > 0)

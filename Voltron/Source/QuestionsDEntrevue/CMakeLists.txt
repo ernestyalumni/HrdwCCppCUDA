@@ -11,5 +11,6 @@ ADD_LIBRARY(QuestionsDEntrevue
   PageFaults.cpp
   PassionneDordinateurRang.cpp
   Streams/FireAlertParser.cpp
+  Streams/FrameParser.cpp
   TirePressureSensor.cpp)
 
