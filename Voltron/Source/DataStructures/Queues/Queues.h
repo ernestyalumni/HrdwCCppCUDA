@@ -16,6 +16,7 @@
 
 #include <cstddef> // std::size_t
 #include <memory>
+#include <optional>
 
 namespace DataStructures
 {
@@ -130,6 +131,10 @@ class QueueWithVector
 
 //------------------------------------------------------------------------------
 /// https://leetcode.com/explore/learn/card/queue-stack/228/first-in-first-out-data-structure/1395/
+///
+/// Empty: h = -1 (sentinel, not in Z_n)
+/// Full: (t + 1) mod n = h
+/// Elements: indices in [h, t]
 //------------------------------------------------------------------------------
 template <typename T>
 class CircularQueue
@@ -155,6 +160,7 @@ class CircularQueue
       {
         head_ = 0;
       }
+      // Modular arithmetic: t' = (t + 1) mod n (wraps at n)
       tail_ = (tail_ + 1) % size_;
       data_[tail_] = value;
       return true;
@@ -174,25 +180,26 @@ class CircularQueue
         tail_ = -1;
         return true;
       }
+      // Modular arithmetic: h' = (h + 1) mod n
       head_ = (head_ + 1) % size_;
       return true;
     }
 
-    T front()
+    std::optional<T> front()
     {
       if (is_empty())
       {
-        return static_cast<T>(-1);
+        return std::nullopt;
       }
 
       return data_[head_];
     }
 
-    T rear()
+    std::optional<T> rear()
     {
       if (is_empty())
       {
-        return static_cast<T>(-1);
+        return std::nullopt;
       }
       return data_[tail_];
     }
@@ -206,6 +213,17 @@ class CircularQueue
     bool is_full()
     {
       return ((tail_ + 1) % size_) == head_;
+    }
+
+    int size() const
+    {
+      if (is_empty()) {
+          return 0;
+      }
+      if (head_ <= tail_) {
+          return tail_ - head_ + 1;
+      }
+      return size_ - head_ + tail_ + 1;
     }
 
   private:

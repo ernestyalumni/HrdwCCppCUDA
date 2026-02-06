@@ -23,11 +23,11 @@ BOOST_AUTO_TEST_CASE(CircularQueueIsAQueue)
   BOOST_TEST(queue.enqueue(2));
   BOOST_TEST(queue.enqueue(3));
   BOOST_TEST(!queue.enqueue(4)); // Return false, queue is full.
-  BOOST_TEST(queue.rear() == 3);
+  BOOST_TEST(queue.rear().value() == 3);
   BOOST_TEST(queue.is_full());
   BOOST_TEST(queue.dequeue()); // return true
   BOOST_TEST(queue.enqueue(4)); // return true
-  BOOST_TEST(queue.rear() == 4);
+  BOOST_TEST(queue.rear().value() == 4);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // Queues
