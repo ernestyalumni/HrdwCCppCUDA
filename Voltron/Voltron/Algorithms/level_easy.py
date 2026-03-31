@@ -812,11 +812,13 @@ class FloodFill:
         sr: int,
         sc: int,
         color: int) -> List[List[int]]:
-        
+
+        if not image or not image[0]:
+            return image
+
         M = len(image)
         N = len(image[0])
-        if M == 0 or N == 0:
-            return image
+
         original_color = image[sr][sc]
         if original_color == color:
             return image
@@ -846,16 +848,17 @@ class FloodFill:
         sr: int,
         sc: int,
         color: int) -> List[List[int]]:
+        if not image or not image[0]:
+            return image
+
         M = len(image)
         N = len(image[0])
-        if M == 0 or N == 0:
-            return image
-        return image
+
         original_color = image[sr][sc]
         if original_color == color:
             return image
         def is_valid(i, j):
-            return 0 <= 1 < M and 0 <= j < N and image[i][j] == original_color
+            return 0 <= i < M and 0 <= j < N and image[i][j] == original_color
 
         queue = deque([(sr, sc)])
         image[sr][sc] = color

@@ -462,10 +462,11 @@ class NumberOfIslands:
     def number_of_islands_with_depth_first_search(grid: List[List[str]]) \
         -> int:
 
+        if not grid or not grid[0]:
+            return 0
+
         M = len(grid)
         N = len(grid[0])
-        if M == 0 or N == 0:
-            return 0
 
         def dfs(i, j):
             if i < 0 or i >= M or j < 0 or j >= N or grid[i][j] == '0':
