@@ -37,12 +37,16 @@ from Voltron.Algorithms.level_medium import (
     brute_force_first_duplicate_value,
     first_duplicate_value_with_ds,
     sorted_merge_overlapping_intervals,
-    remove_islands
+    remove_islands,
+    # 1115. Print FooBar Alternately
+    PrintFooBarAlternately,
+    PrintFooBarAlternatelyWithSemaphores,
     )
 
 from Voltron.Algorithms.LeetCode import UTF8Validation
 
 import pytest
+import threading
 
 def test_longest_substring_without_repeating_characters_work():
     """
@@ -863,3 +867,89 @@ def test_utf8_validation_int_to_bitfield():
     examples = [240,162,138,147,145]
     examples_2 = [240,162,138,147,17]
     examples_3 = [39,89,227,83,132,95,10,0]
+
+################################################################################
+### 1115. Print FooBar Alternately
+### https://leetcode.com/problems/print-foobar-alternately/description/
+################################################################################
+
+def test_print_foobar_alternately():
+
+    result = ""
+
+    print_foobar_alternately = PrintFooBarAlternately(10)
+
+    def print_foo():
+        #print("foo")
+        # If we don't use nonlocal, we get this error:
+        # UnboundLocalError: cannot access local variable 'result' where it is not associated with a value
+        # Without nonlocal, result += binds result to local variable.
+        nonlocal result
+        result += "foo"
+
+    def print_bar():
+        #print("bar")
+        nonlocal result
+        result += "bar"
+
+    thread1 = threading.Thread(
+        target=print_foobar_alternately.foo,
+        args=(print_foo,))
+    thread2 = threading.Thread(
+        target=print_foobar_alternately.bar,
+        args=(print_bar,))
+
+    thread1.start()
+    thread2.start()
+    thread1.join()
+    thread2.join()
+
+    assert result == "foobar" * 10
+
+def test_print_foobar_alternately_with_semaphores():
+
+    result = ""
+
+    print_foobar_alternately = PrintFooBarAlternatelyWithSemaphores(10)
+
+    def print_foo():
+        #print("foo")
+        # If we don't use nonlocal, we get this error:
+        # UnboundLocalError: cannot access local variable 'result' where it is not associated with a value
+        # Without nonlocal, result += binds result to local variable.
+        nonlocal result
+        result += "foo"
+
+    def print_bar():
+        #print("bar")
+        nonlocal result
+        result += "bar"
+
+    thread1 = threading.Thread(
+        target=print_foobar_alternately.foo,
+        args=(print_foo,))
+    thread2 = threading.Thread(
+        target=print_foobar_alternately.bar,
+        args=(print_bar,))
+
+    thread1.start()
+    thread2.start()
+    thread1.join()
+    thread2.join()
+
+    assert result == "foobar" * 10
+
+    result = ""
+    print_foobar_alternately = PrintFooBarAlternatelyWithSemaphores(11)
+    thread1 = threading.Thread(
+        target=print_foobar_alternately.foo,
+        args=(print_foo,))
+    thread2 = threading.Thread(
+        target=print_foobar_alternately.bar,
+        args=(print_bar,))
+
+    thread1.start()
+    thread2.start()
+    thread1.join()
+    thread2.join()
+    assert result == "foobar" * 11

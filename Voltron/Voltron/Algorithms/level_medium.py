@@ -2,6 +2,8 @@
 from collections import deque
 from typing import List, Optional
 
+import threading
+
 class LongestSubstringWithoutRepeatingCharacters:
     """
     3. Longest Substring Without Repeating Characters
@@ -1230,6 +1232,84 @@ def remove_islands(matrix):
 
     return matrix
 
+################################################################################
+### 1115. Print FooBar Alternately
+### https://leetcode.com/problems/print-foobar-alternately/description/
+################################################################################
+
+class PrintFooBarAlternately:
+    def __init__(self, n):
+        self.n = n
+
+        # Internal, shared resources.
+        self.foo_turn = True
+        self.condition = threading.Condition()
+
+    def foo(self, printFoo: 'Callable[[], None]') -> None:
+        """
+        https://leetcode.com/problems/print-foobar-alternately/submissions/1976831637/
+        Runtime
+        84ms
+        Beats28.56%
+        Memory
+        19.86MB
+        Beats58.09%
+        """
+
+        # Originally,
+        # for i in range(self.n):
+
+        #     # printFoo() outputs "foo". Do not change or remove this line.
+        # 	printFoo()
+
+        with self.condition:
+            for _ in range(self.n):
+                while not self.foo_turn:
+                    self.condition.wait()
+                printFoo()
+                self.foo_turn = False
+                self.condition.notify_all()
 
 
+    def bar(self, printBar: 'Callable[[], None]') -> None:
+        
+        # Originally,
+        # for i in range(self.n):
+            
+        #     # printBar() outputs "bar". Do not change or remove this line.
+        # 	printBar()
 
+        with self.condition:
+            for _ in range(self.n):
+                while self.foo_turn:
+                    self.condition.wait()
+                printBar()
+                self.foo_turn = True
+                self.condition.notify_all()
+
+class PrintFooBarAlternatelyWithSemaphores:
+    """
+    Semaphore: for each semaphore object, analogy is this:
+    for each semaphore object, there is 1 bucket of permits.
+    .acquire() decrements bucket by 1 permit.
+    .release() increments bucket by 1 permit.
+
+    In this case, semaphore becomes a token that foo and bar "passes" back and
+    forth between them.
+    """
+    def __init__(self, n):
+        self.n = n
+        self.foo_turn = threading.Semaphore(1)
+        self.bar_turn = threading.Semaphore(0)
+
+    def foo(self, printFoo: 'Callable[[], None]') -> None:
+        for _ in range(self.n):
+            self.foo_turn.acquire()
+            printFoo()
+            self.bar_turn.release()
+
+    def bar(self, printBar: 'Callable[[], None]') -> None:
+        for _ in range(self.n):
+            self.bar_turn.acquire()
+            printBar()
+            self.foo_turn.release()
