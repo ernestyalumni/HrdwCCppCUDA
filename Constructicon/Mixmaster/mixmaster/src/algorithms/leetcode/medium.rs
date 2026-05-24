@@ -70,13 +70,14 @@ impl ContainerWithMostWater
   {
     let N = height.len();
     let mut l = 0;
-    let mut r = N;
+    let mut r = N - 1;
     let mut max_area = 0;
 
     // l = r, we have 0 width and 0 water.
     while l < r
     {
-      let current_area = <usize as TryInto<i32>>::try_into(l - r).unwrap() * min(height[l], height[r]);
+      let current_area = <usize as TryInto<i32>>::try_into(r - l)
+        .unwrap() * min(height[l], height[r]);
 
       max_area = max(max_area, current_area);
 

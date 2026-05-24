@@ -550,6 +550,51 @@ class NumberOfIslands:
                     count += 1
         return count
 
+################################################################################
+### https://leetcode.com/problems/course-schedule/
+### 207. Course Schedule
+################################################################################
+
+class CourseSchedule:
+    @staticmethod
+    def can_finish(numCourses: int, prerequisites: List[List[int]]) -> bool:
+        """
+        Create a graph.
+        nodes are 0..numCourses -1
+        Track indegree = number of incoming nodes
+
+        Use queue to process nodes with no prerequisites.
+        Mutate indegree to track when a course already has prerequisites done.
+        """
+        graph = [set() for _ in range(numCourses)]
+        indegree = [0 for _ in range(numCourses)]
+
+        # To take a, you must take b
+        for a,b in prerequisites:
+            if a not in graph[b]:
+                graph[b].add(a)
+            indegree[a] += 1
+
+        finished_courses = 0
+
+        q = deque()
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                q.append(i)
+
+        while q:
+            current_course = q.popleft()
+
+            # Indegree == 0 enforces visit-once property; a course is enqueued
+            # exactly when its in-degree drops to 0.
+            finished_courses += 1
+            for next_course in graph[current_course]:
+                indegree[next_course] -= 1
+                if indegree[next_course] == 0:
+                    q.append(next_course)
+        return finished_courses == numCourses
+
+
 class ProductOfArrayExceptSelf:
     """
     https://leetcode.com/problems/product-of-array-except-self/
@@ -559,16 +604,6 @@ class ProductOfArrayExceptSelf:
     """
     @staticmethod
     def product_except_self(nums):
-        """
-        :type nums: List[int]
-        :rtype: List[int]
-        
-        Idea:, given a target product,
-        prod_{j=0, i\neq j}^{N-1} a[j], split the product into a "left" product
-        and "right" product:
-        prod_{j=0}^{i-1} a[j] if i > 0, else 1 and
-        prod_{j=i+1}^{N-1} a[j] if i < N-1, else 1
-        """        
         N = len(nums)
 
         # Use output also as an intermediary for left products.
