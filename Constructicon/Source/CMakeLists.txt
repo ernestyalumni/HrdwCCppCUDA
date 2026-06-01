@@ -72,18 +72,19 @@ ENDIF()
 INCLUDE(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 
 FetchContent_MakeAvailable(googletest)
 
-# cf. https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-# Follow this for a lightweight download of nlohmann/json.
+# cf. https://github.com/nlohmann/json#cmake
 FetchContent_Declare(json
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-  GIT_PROGRESS TRUE
-  GIT_SHALLOW TRUE
-  GIT_TAG v3.10.5)
+  URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+
+SET(JSON_BuildTests OFF CACHE INTERNAL "")
 
 FetchContent_MakeAvailable(json)
 
