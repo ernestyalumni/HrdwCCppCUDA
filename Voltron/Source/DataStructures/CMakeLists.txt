@@ -11,5 +11,6 @@ ADD_LIBRARY(DataStructures
   HashTables/HashFunctions.cpp
   LinkedLists.cpp
   Trees/SuffixTrie.cpp
+  UnionFind.cpp
   )
 #  Lists.cpp)
