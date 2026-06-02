@@ -79,6 +79,13 @@ bool FireAlertParser::process_byte(uint8_t byte, const bool is_big_endian)
       }
       break;
     case READ_PRESSURE:
+      value_buffer_.push_back(byte);
+      if (value_buffer_.size() == 4)
+      {
+        uint32_t be_value {bytes_to_uint32(value_buffer_, 0, is_big_endian)};
+        last_pressure_ = static_cast<int32_t>(be_value);
+      }
+      break;
     case READ_TEMPERATURE:
       value_buffer_.push_back(byte);
       if (value_buffer_.size() == 4)

@@ -159,12 +159,6 @@ ADD_EXECUTABLE(Check
   DataStructures/Trees/Trie_tests.cpp
   DataStructures/Vector_tests.cpp
   DeskCalculator/Token_tests.cpp
-  Entrevue/CameraCSIDataParser_tests.cpp
-  Entrevue/Entrevue_tests.cpp
-  Entrevue/LeetCode/LeetCode_tests.cpp
-  Entrevue/MiscellaneousQuestions_tests.cpp
-  Entrevue/PageFaults_tests.cpp
-  Entrevue/TirePressureSensor_tests.cpp
   FileIO/ExampleTestValues.cpp
   FileIO/GetFileSize_tests.cpp
   FileIO/OpenFile_tests.cpp
@@ -190,8 +184,15 @@ ADD_EXECUTABLE(Check
   Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextFile_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/ParseTextLine_tests.cpp
   Projects/CsVtEdu/InfinitePrecisionCalculator/ReversePolishNotation_tests.cpp
+  QuestionsDEntrevue/CameraCSIDataParser_tests.cpp
+  QuestionsDEntrevue/Entrevue_tests.cpp
+  QuestionsDEntrevue/LeetCode/LeetCode_tests.cpp
   QuestionsDEntrevue/LookupTableInterpolation_tests.cpp
+  QuestionsDEntrevue/MiscellaneousQuestions_tests.cpp
+  QuestionsDEntrevue/PageFaults_tests.cpp
+  QuestionsDEntrevue/Streams/FireAlertParser_tests.cpp
   QuestionsDEntrevue/Streams/FrameParser_tests.cpp
+  QuestionsDEntrevue/TirePressureSensor_tests.cpp
   Tools/CaptureCout_tests.cpp
   Tools/Filepaths_tests.cpp
   Tools/TemporaryDirectoriesAndFiles_tests.cpp
@@ -303,7 +304,7 @@ ADD_EXECUTABLE(StringViewAvoidsCopying
 # LeetCode
 
 ADD_EXECUTABLE(LeetCodePlayground
-  Entrevue/LeetCode/LeetCodePlayground.cpp)
+  QuestionsDEntrevue/LeetCode/LeetCodePlayground.cpp)
 
 SET_TARGET_PROPERTIES(LeetCodePlayground
   PROPERTIES
